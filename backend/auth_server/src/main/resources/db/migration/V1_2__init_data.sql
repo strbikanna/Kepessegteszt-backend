@@ -10,26 +10,26 @@ VALUES (3, 'teacher_user', 'imaTeacher@education.hu', 'easyPie', 'Teacher', 'Ter
 
 -- roles
 INSERT INTO ROLES(id, role_name)
-VALUES(1, 'teacher');
+VALUES (1, 'TEACHER');
 
 INSERT INTO ROLES(id, role_name)
-VALUES(2, 'scientist');
+VALUES (2, 'SCIENTIST');
 
 INSERT INTO ROLES(id, role_name)
-VALUES(3, 'student');
+VALUES (3, 'STUDENT');
 
 INSERT INTO ROLES(id, role_name)
-VALUES(4, 'admin');
+VALUES (4, 'ADMIN');
 
 -- user roles
 INSERT INTO USER_ROLES(user_id, role_id)
-VALUES(1, 3);
+VALUES (1, 3);
 
 INSERT INTO USER_ROLES(user_id, role_id)
-VALUES(2, 3);
+VALUES (2, 3);
 
 INSERT INTO USER_ROLES(user_id, role_id)
-VALUES(3, 1);
+VALUES (3, 1);
 
 -- contacts
 INSERT INTO CONTACTS(user_id, contact_id)

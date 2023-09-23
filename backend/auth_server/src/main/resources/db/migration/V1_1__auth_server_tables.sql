@@ -1,10 +1,11 @@
 CREATE TABLE USERS(
-    id int PRIMARY KEY,
-    username varchar(50) UNIQUE NOT NULL,
-    email varchar(50) NOT NULL,
-    password varchar(50) NOT NULL,
-    first_name varchar(50) NOT NULL,
-    last_name varchar(50) NOT NULL
+                      id         int PRIMARY KEY,
+                      username   varchar(51) UNIQUE NOT NULL,
+                      email      varchar(50)        NOT NULL,
+                      password   varchar(50)        NOT NULL,
+                      first_name varchar(50)        NOT NULL,
+                      last_name  varchar(50)        NOT NULL,
+                      enabled    boolean DEFAULT TRUE
 );
 CREATE TABLE ROLES(
     id int PRIMARY KEY,
