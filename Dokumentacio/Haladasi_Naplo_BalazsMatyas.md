@@ -16,3 +16,11 @@ kedden fogom bepótolni.
 Angular (teljesen új, még soha nem használtam)  
 Kotlin (korábban csak nagyon kicsi egyetemi feladatban használtam)
 
+## 09.25.
+### Ezen a héten a következőkkel haladtam:
+
+Annával átbeszéltük az ütemterv kapcsán, hogy melyik feladatot melyikünk fogja csinálni, ez az ütemterv doksiban látható.
+A REST API endpointok megtervezését megcsináltam, valamint egy tervezett beosztást a saját feladataim kapcsán (minden hétre csak annyit osztottam be, amennyit
+úgy gondoltam, hogy lesz rá időm). Ezen felül az Angularral kezdtem el ismerkedni, hogy majd amikor eljutok addig, hogy
+a rám osztott oldalakat csináljam ne akkor lássam először. 
+
