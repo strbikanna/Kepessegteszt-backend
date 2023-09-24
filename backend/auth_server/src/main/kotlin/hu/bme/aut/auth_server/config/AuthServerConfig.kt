@@ -28,6 +28,9 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import java.security.KeyPairGenerator
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
@@ -49,6 +52,7 @@ class AuthServerConfig {
         http.getConfigurer(OAuth2AuthorizationServerConfigurer::class.java).oidc(withDefaults())
 
         http
+            .cors(withDefaults())
             .sessionManagement { SessionCreationPolicy.STATELESS }
             // Redirect to the login page when not authenticated from the authorization endpoint
             .exceptionHandling { exceptions ->
@@ -68,6 +72,7 @@ class AuthServerConfig {
     @Order(2)
     fun defaultSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
+            .cors(withDefaults())
             .sessionManagement { SessionCreationPolicy.STATELESS }
             .authorizeHttpRequests {
                 it.anyRequest().authenticated()
@@ -125,6 +130,17 @@ class AuthServerConfig {
     @Bean
     fun authorizationServerSettings(): AuthorizationServerSettings {
         return AuthorizationServerSettings.builder().issuer("http://localhost:9000").build()
+    }
+
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val configuration = CorsConfiguration()
+        configuration.allowedOrigins = listOf("http://localhost:4200")
+        configuration.allowedMethods = listOf("*")
+        configuration.allowedHeaders = listOf("*")
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+        return source
     }
 
     private fun generateRsaKey(): RSAKey {
