@@ -15,7 +15,7 @@ class GrantedAuthoritiesCustomizer(
     override fun convert(source: Jwt): Collection<GrantedAuthority>? {
         val userEntity = userInfoService.loadUserByUsername(source.subject)
 
-        return userEntity.get().roleEntities
+        return userEntity.get().roles
             .map { role -> SimpleGrantedAuthority("ROLE_${role.roleName.name}") }
     }
 }

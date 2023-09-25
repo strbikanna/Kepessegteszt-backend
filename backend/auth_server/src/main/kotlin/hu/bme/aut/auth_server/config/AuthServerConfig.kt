@@ -45,11 +45,16 @@ class AuthServerConfig {
 
     @Bean
     @Order(1)
-    fun authServerSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    fun authServerSecurityFilterChain(http: HttpSecurity, userInfoMapper: UserInfoMapper): SecurityFilterChain {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http)
 
-        //openID 1.0 connection
-        http.getConfigurer(OAuth2AuthorizationServerConfigurer::class.java).oidc(withDefaults())
+        //openID 1.0 connection with custom userinfo endpoint
+        http.getConfigurer(OAuth2AuthorizationServerConfigurer::class.java)
+            .oidc { oidc ->
+                oidc.userInfoEndpoint { userinfo ->
+                    userinfo.userInfoMapper { context -> userInfoMapper.mapUserInfo(context) }
+                }
+            }
 
         http
             .cors(withDefaults())
@@ -75,11 +80,14 @@ class AuthServerConfig {
             .cors(withDefaults())
             .sessionManagement { SessionCreationPolicy.STATELESS }
             .authorizeHttpRequests {
+                it.requestMatchers("/register").permitAll()
                 it.anyRequest().authenticated()
             }
             .oauth2ResourceServer { it.jwt(withDefaults()) }
             // Redirect to the login page from the authorization server filter chain
-            .formLogin(withDefaults())
+            .formLogin {
+                it.loginPage("/login").permitAll()
+            }
         return http.build()
     }
 
