@@ -6,13 +6,14 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 
 enum class Role {
-    ADMIN, PARENT, SCIENTIST, STUDENT, TEACHER
+    ADMIN, PARENT, SCIENTIST, STUDENT, TEACHER,
+    PARENT_REQUEST, STUDENT_REQUEST, TEACHER_REQUEST, SCIENTIST_REQUEST
 }
 
 @Entity(name = "ROLES")
 data class RoleEntity(
     @Id
-    val id: Int,
+    val id: Int? = null,
 
     @Enumerated(EnumType.STRING)
     val roleName: Role

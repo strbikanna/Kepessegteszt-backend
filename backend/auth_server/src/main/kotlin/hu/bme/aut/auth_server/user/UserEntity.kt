@@ -8,7 +8,7 @@ import jakarta.persistence.*
 data class UserEntity(
     @Id
     @GeneratedValue
-    val id: Int,
+    val id: Int? = null,
 
     val email: String,
 
@@ -28,7 +28,7 @@ data class UserEntity(
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")],
     )
-    val roleEntities: MutableSet<RoleEntity>,
+    val roles: MutableSet<RoleEntity>,
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

@@ -17,7 +17,7 @@ class UserInfoService(@Autowired private var userRepository: UserRepository) {
             .email(user.get().email)
             .familyName(user.get().firstName)
             .givenName(user.get().lastName)
-            .claim("roles", user.get().roleEntities.map { it.roleName })
+            .claim("roles", user.get().roles.map { it.roleName })
             .build()
     }
 
@@ -41,7 +41,7 @@ class UserInfoService(@Autowired private var userRepository: UserRepository) {
     fun hasMimicRole(username: String): Boolean {
         val user = userRepository.findByUsername(username)
         if (user.isEmpty) throw UsernameNotFoundException("No user with username: $username")
-        return user.get().roleEntities.any { it.isMimicRole() }
+        return user.get().roles.any { it.isMimicRole() }
 
     }
 
@@ -59,7 +59,7 @@ class UserInfoService(@Autowired private var userRepository: UserRepository) {
         if (userEntity.isEmpty) throw UsernameNotFoundException("Invalid username: $username")
         val contacts = userEntity.get().contacts
         return contacts
-            .filter { it.roleEntities.any { roleEntity -> roleEntity.roleName == Role.STUDENT } }
+            .filter { it.roles.any { roleEntity -> roleEntity.roleName == Role.STUDENT } }
             .map { convertUserDao(it) }
     }
 
@@ -69,7 +69,7 @@ class UserInfoService(@Autowired private var userRepository: UserRepository) {
             email = userEntity.email,
             firstName = userEntity.firstName,
             lastName = userEntity.lastName,
-            roles = userEntity.roleEntities.map { entity -> entity.roleName }.toMutableSet(),
+            roles = userEntity.roles.map { entity -> entity.roleName }.toMutableSet(),
         )
     }
 }
