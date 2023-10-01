@@ -24,3 +24,18 @@ A REST API endpointok megtervezését megcsináltam, valamint egy tervezett beos
 úgy gondoltam, hogy lesz rá időm). Ezen felül az Angularral kezdtem el ismerkedni, hogy majd amikor eljutok addig, hogy
 a rám osztott oldalakat csináljam ne akkor lássam először. 
 
+## 10.02.
+### Ezen a héten a következőkkel haladtam:
+
+Angular tutorialokat nézegettem, egyelőre nem sikerült értelmes bármit alkotnom ilyen téren, 
+szóval azt nem is commitoltam. Egészen sokat vacakoltam vele, hogy IntelliJ-ben értelmesen lássák
+az sql fájlok egymást/a másik fájlokban létrehozott táblákat. Megcsináltam a játék, játékmenet
+és ajánlott játéktáblákat (az sql fájlokat hozzájuk), pár mock adat betöltését is megírtam,
+de tesztelésig nem jutottam el (kódból sql-ezni újdonság nekem, szóval ezt is tanulnom kell). 
+A játékokhoz kapcsolódó REST API endpointokat felvázoltam, a működésüket még nem implementáltam.
+
+### Amit következőnek meg kell csinálnom:
+
+A betervezett kezdőoldal, valamint a megcsinált táblákhoz kapcsolódó Kotlinos dolgok (például a
+REST API endpointok implementálása). Ezen felül a teszteket is meg kell írnom a játékokhoz kötődő
+táblákhoz.

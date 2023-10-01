@@ -1,40 +1,23 @@
-package hu.bme.aut.auth_server.user
+package hu.bme.aut.resource_server.game
 
-import hu.bme.aut.auth_server.role.RoleEntity
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "USERS")
-data class UserEntity(
+@Table(name = "GAMES")
+data class GameEntity(
     @Id
     @GeneratedValue
     val id: Int,
 
-    val email: String,
+    val game_name: String,
 
-    val firstName: String,
+    val game_description: String
 
-    val lastName: String,
+    val icon: String,
 
-    val username: String,
+    val game_active: Boolean,
 
-    val password: String,
+    val url: String,
 
-    val enabled: Boolean,
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "USER_ROLES",
-        joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")],
-    )
-    val roleEntities: MutableSet<RoleEntity>,
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "CONTACTS",
-        joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "contact_id", referencedColumnName = "id")],
-    )
-    val contacts: MutableSet<UserEntity>,
+    val json_descriptor: String
 )
