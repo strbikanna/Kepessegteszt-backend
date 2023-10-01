@@ -2,13 +2,17 @@ package hu.bme.aut.auth_server.user
 
 import hu.bme.aut.auth_server.role.Role
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class UserInfoService(@Autowired private var userRepository: UserRepository) {
+class UserInfoService(
+    @Autowired private var userRepository: UserRepository,
+    @Autowired private var pagingUserRepository: PagingUserRepository
+) {
     fun loadUserInfoByUsername(username: String): OidcUserInfo {
         val user = userRepository.findByUsername(username)
         if (user.isEmpty) throw UsernameNotFoundException("No user with username: $username found.")
@@ -38,7 +42,7 @@ class UserInfoService(@Autowired private var userRepository: UserRepository) {
         return contacts.any { contact -> contact.username == contactUsername && contact.id == contactEntity.get().id }
     }
 
-    fun hasMimicRole(username: String): Boolean {
+    fun hasImpersonationRole(username: String): Boolean {
         val user = userRepository.findByUsername(username)
         if (user.isEmpty) throw UsernameNotFoundException("No user with username: $username")
         return user.get().roles.any { it.isMimicRole() }
@@ -61,6 +65,11 @@ class UserInfoService(@Autowired private var userRepository: UserRepository) {
         return contacts
             .filter { it.roles.any { roleEntity -> roleEntity.roleName == Role.STUDENT } }
             .map { convertUserDao(it) }
+    }
+
+    fun getUsersWithoutContact(pageNumber: Int, pageSize: Int): List<UserDao> {
+        val users = pagingUserRepository.findAll(PageRequest.of(pageNumber, pageSize))
+        return users.content.map { entity -> convertUserDao(entity) }
     }
 
     private fun convertUserDao(userEntity: UserEntity): UserDao {

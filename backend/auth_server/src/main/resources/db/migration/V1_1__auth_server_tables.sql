@@ -1,5 +1,5 @@
 CREATE TABLE USERS(
-                      id         int PRIMARY KEY,
+                      id         int PRIMARY KEY AUTO_INCREMENT,
                       username   varchar(51) UNIQUE NOT NULL,
                       email      varchar(50)        NOT NULL,
                       password   varchar(50)        NOT NULL,
@@ -7,8 +7,9 @@ CREATE TABLE USERS(
                       last_name  varchar(50)        NOT NULL,
                       enabled    boolean DEFAULT TRUE
 );
-CREATE TABLE ROLES(
-    id int PRIMARY KEY,
+CREATE TABLE ROLES
+(
+    id        int PRIMARY KEY AUTO_INCREMENT,
     role_name varchar(20) UNIQUE NOT NULL
 );
 
