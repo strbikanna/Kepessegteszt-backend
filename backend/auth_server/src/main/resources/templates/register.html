@@ -27,11 +27,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
-                    <input th:if="!${param.error}" type="text" class="form-control" id="username" th:field="*{username}"
+                    <input th:if="!*{error}==true" type="text" class="form-control" id="username" th:field="*{username}"
                            placeholder="Choose a username" required>
-                    <input th:if="${param.error}" type="text" class="form-control alert-danger" id="username-error"
+                    <input th:if="*{error}" type="text" class="form-control alert-danger" id="username-error"
                            th:field="*{username}" placeholder="Choose a username" required>
-                    <p th:if="${param.error}" class="text-danger"> Choose a unique username</p>
+                    <p th:if="*{error}" class="text-danger"> Choose a unique username</p>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>

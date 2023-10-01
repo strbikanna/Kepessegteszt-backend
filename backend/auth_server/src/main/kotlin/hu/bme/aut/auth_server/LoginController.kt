@@ -4,14 +4,17 @@ import hu.bme.aut.auth_server.user.UserRegistrationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
-import java.sql.SQLException
+import java.sql.SQLIntegrityConstraintViolationException
 
 @Controller
 class LoginController(
     @Autowired private var userService: UserRegistrationService
 ) {
+    private val badRegistrationCache: MutableList<RegistrationData> = mutableListOf()
+
     @GetMapping("/login")
     fun loginPage(): String {
         return "login"
@@ -25,17 +28,29 @@ class LoginController(
 
     @PostMapping("/register")
     fun registerUser(user: RegistrationData): String {
-        try {
-            userService.saveUserOrThrowException(user)
-        } catch (exception: SQLException) {
-            return "redirect:register/?error"
-        }
+        badRegistrationCache.add(user)
+        userService.saveUserOrThrowException(user)
+        badRegistrationCache.remove(user)
         return "register-success"
     }
+
+    @ExceptionHandler
+    fun handleDuplicateUsername(ex: SQLIntegrityConstraintViolationException, model: Model): String {
+        val possibleUsers = badRegistrationCache.filter { ex.message?.contains(it.username) ?: false }
+        if (possibleUsers.size == 1) {
+            val user = possibleUsers[0]
+            user.error = true
+            model.addAttribute("user", user)
+        } else {
+            model.addAttribute("user", RegistrationData(error = true))
+        }
+        return "register"
+    }
+
 }
 
 class RegistrationData(
-
+    error: Boolean = false
 ) {
     var email: String = ""
 
@@ -48,4 +63,6 @@ class RegistrationData(
     var role: String = ""
 
     var password: String = ""
+
+    var error = error
 }
