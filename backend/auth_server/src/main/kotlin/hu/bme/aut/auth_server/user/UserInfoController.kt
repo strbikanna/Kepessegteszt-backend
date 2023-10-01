@@ -5,9 +5,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/user")
@@ -28,8 +26,15 @@ class UserInfoController(
         return ResponseEntity(userInfoService.getUserDao(username), HttpStatus.OK)
     }
 
+    @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
+    fun getAll(@RequestParam pageNumber: Int?, @RequestParam pageSize: Int?): List<UserDao> {
+        return userInfoService.getUsersWithoutContact(pageNumber ?: 0, pageSize ?: 1)
+    }
+
     @GetMapping("/status")
-    fun status(): ResponseEntity<String> {
+    fun statusTest(): ResponseEntity<String> {
         return ResponseEntity(HttpStatus.OK)
     }
 }

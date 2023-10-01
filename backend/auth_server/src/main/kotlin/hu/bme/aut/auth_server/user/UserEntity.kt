@@ -7,7 +7,7 @@ import jakarta.persistence.*
 @Table(name = "USERS")
 data class UserEntity(
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
 
     val email: String,
@@ -22,7 +22,7 @@ data class UserEntity(
 
     val enabled: Boolean,
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST, CascadeType.REFRESH])
     @JoinTable(
         name = "USER_ROLES",
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],

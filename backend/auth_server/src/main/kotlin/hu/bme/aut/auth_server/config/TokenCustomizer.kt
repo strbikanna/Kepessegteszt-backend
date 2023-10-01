@@ -24,7 +24,7 @@ class TokenCustomizer(
     }
 
     private fun checkActAsRequestedUsername(context: JwtEncodingContext, username: String): String {
-        if (!userInfoService.hasMimicRole(username)) return username
+        if (!userInfoService.hasImpersonationRole(username)) return username
         var originalUsername = username
         val authRequest =
             context.authorization?.attributes?.get("org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest") as OAuth2AuthorizationRequest?
@@ -39,7 +39,7 @@ class TokenCustomizer(
         return originalUsername
     }
 
-    private fun getRequestedUsername(map: Map<String, Any>): String? {
+    private fun getRequestedUsername(map: Map<String, Any>): String {
         val requestedUsername = map["act_as"] as String
         if (userInfoService.existsByUsername(requestedUsername)) return requestedUsername
         throw UsernameNotFoundException("No user found for mimic request \"$requestedUsername\".")

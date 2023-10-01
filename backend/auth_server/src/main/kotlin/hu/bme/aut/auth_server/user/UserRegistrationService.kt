@@ -13,7 +13,7 @@ class UserRegistrationService(
     @Autowired private var userRepository: UserRepository,
     @Autowired private var passwordEncoder: PasswordEncoder
 ) {
-    fun saveUser(userData: RegistrationData) {
+    fun saveUserOrThrowException(userData: RegistrationData) {
         val encodedPassword = passwordEncoder.encode(userData.password)
         val userEntity = UserEntity(
             firstName = userData.firstName,

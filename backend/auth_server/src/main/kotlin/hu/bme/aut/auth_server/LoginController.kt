@@ -2,12 +2,11 @@ package hu.bme.aut.auth_server
 
 import hu.bme.aut.auth_server.user.UserRegistrationService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import java.sql.SQLException
 
 @Controller
 class LoginController(
@@ -25,9 +24,13 @@ class LoginController(
     }
 
     @PostMapping("/register")
-    fun registerUser(user: RegistrationData): ResponseEntity<Unit> {
-        println("POST REACHED CONTROLLER")
-        return ResponseEntity(HttpStatus.OK)
+    fun registerUser(user: RegistrationData): String {
+        try {
+            userService.saveUserOrThrowException(user)
+        } catch (exception: SQLException) {
+            return "redirect:register/?error"
+        }
+        return "register-success"
     }
 }
 
