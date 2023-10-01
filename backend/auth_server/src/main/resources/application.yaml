@@ -11,8 +11,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: <login user to smtp server>
-    password: <login password to smtp server>
+    username: cognitive.auth@gmail.com
+    password: sitb uqob dppc flqf
     properties:
       mail:
         smtp:
@@ -31,3 +31,7 @@ logging:
         security: info
         data:
           repository: trace
+
+cognitive-app:
+  mail: noreply@cognitiveapp.hu
+  subject: Email cím megerősítése

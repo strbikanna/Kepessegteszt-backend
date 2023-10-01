@@ -20,9 +20,9 @@ data class UserEntity(
 
     val password: String,
 
-    val enabled: Boolean,
+    var enabled: Boolean,
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST, CascadeType.REFRESH])
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "USER_ROLES",
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],

@@ -1,5 +1,8 @@
 package hu.bme.aut.auth_server
 
+import hu.bme.aut.auth_server.mail_service.EmailService
+import hu.bme.aut.auth_server.mail_service.EmailVerificationService
+import hu.bme.aut.auth_server.user.UserEntity
 import hu.bme.aut.auth_server.user.UserRegistrationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -11,7 +14,9 @@ import java.sql.SQLIntegrityConstraintViolationException
 
 @Controller
 class LoginController(
-    @Autowired private var userService: UserRegistrationService
+    @Autowired private var userService: UserRegistrationService,
+    @Autowired private var emailVerificationService: EmailVerificationService,
+    @Autowired private var emailSenderService: EmailService
 ) {
     private val badRegistrationCache: MutableList<RegistrationData> = mutableListOf()
 
@@ -29,9 +34,16 @@ class LoginController(
     @PostMapping("/register")
     fun registerUser(user: RegistrationData): String {
         badRegistrationCache.add(user)
-        userService.saveUserOrThrowException(user)
+        val userEntity = userService.saveUserOrThrowException(user)
+        sendVerificationMail(userEntity)
         badRegistrationCache.remove(user)
         return "register-success"
+    }
+
+    private fun sendVerificationMail(userEntity: UserEntity) {
+        val verification = emailVerificationService.createVerificationEntity(userEntity)
+        val message = emailVerificationService.createVerificationMessage(verification)
+        emailSenderService.sendSimpleEmail(to = userEntity.email, text = message)
     }
 
     @ExceptionHandler

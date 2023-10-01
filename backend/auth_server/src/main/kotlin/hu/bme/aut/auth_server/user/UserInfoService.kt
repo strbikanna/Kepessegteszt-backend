@@ -27,6 +27,7 @@ class UserInfoService(
 
     fun loadUserByUsername(username: String) = userRepository.findByUsername(username)
 
+    fun save(userEntity: UserEntity) = userRepository.save(userEntity)
     fun loadUserByUsernameWithContacts(username: String): Optional<UserEntity> {
         val user = userRepository.findByUsername(username)
         if (user.isEmpty) return user

@@ -1,4 +1,4 @@
-package hu.bme.aut.auth_server
+package hu.bme.aut.auth_server.repository
 
 import hu.bme.aut.auth_server.role.Role
 import hu.bme.aut.auth_server.role.RoleEntity
