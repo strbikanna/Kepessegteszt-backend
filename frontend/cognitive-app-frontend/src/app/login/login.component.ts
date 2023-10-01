@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {LoginResponse, OidcSecurityService} from "angular-auth-oidc-client";
+import {User} from "../model/user.model";
+import {LoginService} from "./login.service";
 
 @Component({
   selector: 'app-login',
@@ -7,29 +8,25 @@ import {LoginResponse, OidcSecurityService} from "angular-auth-oidc-client";
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  public isLoggedIn = false;
-
-  constructor(private oidcSecurityService: OidcSecurityService) {
-    console.log('login component created')
-  }
+  public isLoggedIn = false
+  public user: User | undefined = undefined
+  constructor(private loginService: LoginService) {}
 
   ngOnInit() {
-    this.oidcSecurityService
-      .checkAuth()
-      .subscribe((loginResponse: LoginResponse) => {
-        const {isAuthenticated, userData, accessToken, idToken, configId} = loginResponse;
-        console.log(loginResponse)
-        /*...*/
-      });
+    this.loginService.initAuthentication()
+    this.loginService.loginStatus.subscribe(loginStatus => {
+      this.isLoggedIn = loginStatus
+      if(this.isLoggedIn){
+        this.user = this.loginService.userInfo
+      }
+    });
   }
 
   login() {
-    this.oidcSecurityService.authorize();
+    this.loginService.login()
   }
 
   logout() {
-    this.oidcSecurityService
-      .logoff()
-      .subscribe((result) => console.log(result));
+    this.loginService.logout()
   }
 }

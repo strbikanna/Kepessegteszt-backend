@@ -1,6 +1,12 @@
-<div>
 
-  <app-login></app-login>
+  <mat-toolbar class="navbar">
+    <div>
+      <button mat-button routerLink="/">Cognitive App</button>
+    </div>
+    <app-login></app-login>
+  </mat-toolbar>
+  <div class="page-content">
+    <router-outlet></router-outlet>
+  </div>
 
-</div>
 

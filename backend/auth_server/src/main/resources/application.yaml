@@ -7,11 +7,27 @@ spring:
     username: dev
     password: dev.1122
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: <login user to smtp server>
+    password: <login password to smtp server>
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
 #  profiles:
+#    active: test
+
 logging:
   level:
     org:
       springframework:
-        security: trace
-
-#    active: test
+        security: info
+        data:
+          repository: trace
