@@ -5,7 +5,7 @@ data class GameDao(
 
     val game_name: String,
 
-    val game_description: String
+    val game_description: String,
 
     val icon: String,
 

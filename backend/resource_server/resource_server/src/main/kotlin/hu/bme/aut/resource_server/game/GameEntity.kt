@@ -9,15 +9,15 @@ data class GameEntity(
     @GeneratedValue
     val id: Int,
 
-    val game_name: String,
+    val name: String,
 
-    val game_description: String
+    val description: String,
 
     val icon: String,
 
-    val game_active: Boolean,
+    val active: Boolean,
 
     val url: String,
 
-    val json_descriptor: String
+    val jsonDescriptor: String
 )

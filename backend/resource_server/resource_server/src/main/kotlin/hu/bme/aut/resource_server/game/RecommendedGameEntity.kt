@@ -4,17 +4,17 @@ import jakarta.persistence.*
 import java.sql.Date
 
 @Entity
-@Table(name = "GAMEPLAY")
+@Table(name = "RECOMMENDED_GAMES")
 data class RecommendedGameEntity(
     @Id
     @GeneratedValue
     val id: Int,
 
-    val time_stamp: Date,
+    val timestamp: Date,
 
-    val score: String,
+    val recommender_id: Int,
 
-    val user_id: Int,
+    val recommendee_id: Int,
 
     val game_id: Int,
 )
