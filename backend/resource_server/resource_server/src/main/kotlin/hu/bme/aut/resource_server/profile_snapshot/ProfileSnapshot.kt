@@ -1,5 +1,6 @@
-package hu.bme.aut.resource_server.user
+package hu.bme.aut.resource_server.profile_snapshot
 
+import hu.bme.aut.resource_server.user.UserEntity
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -26,5 +27,5 @@ data class ProfileSnapshot (
 
     @OneToMany(cascade = [CascadeType.PERSIST])
     @JoinColumn(name = "snapshot_id")
-    val profile: Set<ProfileSnapshotItem>,
+    val profile: MutableSet<ProfileSnapshotItem>,
 )

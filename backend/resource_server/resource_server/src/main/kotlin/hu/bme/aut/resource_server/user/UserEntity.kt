@@ -1,8 +1,11 @@
 package hu.bme.aut.resource_server.user
 
+import hu.bme.aut.resource_server.profile.ProfileItem
+import hu.bme.aut.resource_server.user.role.Role
 import jakarta.persistence.*
 
 @Entity
+@Table(name="user")
 data class UserEntity(
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -16,7 +19,7 @@ data class UserEntity(
 
     @OneToMany
     @JoinColumn(name="user_id")
-    val profile: Set<ProfileItem>,
+    val profile: MutableSet<ProfileItem>,
 
     @ManyToMany
     @JoinTable(

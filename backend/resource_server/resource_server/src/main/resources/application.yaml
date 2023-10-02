@@ -6,3 +6,5 @@ spring:
     username: dev
     password: dev.1122
     driver-class-name: com.mysql.cj.jdbc.Driver
+  profiles:
+    active: test

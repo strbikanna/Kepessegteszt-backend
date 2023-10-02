@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.user
+package hu.bme.aut.resource_server.ability
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
