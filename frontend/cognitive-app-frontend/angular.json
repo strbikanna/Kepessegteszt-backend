@@ -30,8 +30,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss",
-              "../node_modules/roboto-fontface/css/roboto/roboto-fontface.css"
+              "src/styles.scss"
             ],
             "scripts": []
           },

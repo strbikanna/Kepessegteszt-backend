@@ -32,7 +32,7 @@ class EmailVerificationService(
             return false
         }
         val user = verification.get().user
-        return user.username == username && verification.get().valid.isBefore(LocalDateTime.now())
+        return user.username == username && verification.get().valid.isAfter(LocalDateTime.now())
     }
 
     fun createVerificationEntity(user: UserEntity): EmailVerificationEntity {

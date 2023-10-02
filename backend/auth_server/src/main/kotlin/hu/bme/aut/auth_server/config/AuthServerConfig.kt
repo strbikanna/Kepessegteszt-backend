@@ -81,6 +81,7 @@ class AuthServerConfig {
             .sessionManagement { SessionCreationPolicy.STATELESS }
             .authorizeHttpRequests {
                 it.requestMatchers("/register").permitAll()
+                it.requestMatchers("/mail/**").permitAll()
                 it.anyRequest().authenticated()
             }
             .oauth2ResourceServer { it.jwt(withDefaults()) }
