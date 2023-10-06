@@ -1,16 +1,13 @@
 package hu.bme.aut.resource_server.user.role
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 @Entity
 data class Role(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = null,
-    val roleName: RoleName
+    @Enumerated(value= EnumType.STRING)
+    @Column(name="_name")
+    val roleName: RoleName,
 )
 
 enum class RoleName{

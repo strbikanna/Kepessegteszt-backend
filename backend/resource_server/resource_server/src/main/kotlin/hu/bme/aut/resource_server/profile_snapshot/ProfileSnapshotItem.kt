@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import org.hibernate.annotations.Cascade
+import org.hibernate.annotations.CascadeType
 
 @Entity
 data class ProfileSnapshotItem (
@@ -17,6 +19,7 @@ data class ProfileSnapshotItem (
 
     @ManyToOne
     @JoinColumn(name = "ability_id")
+    @Cascade(CascadeType.PERSIST)
     val ability: Ability,
 
     @Column

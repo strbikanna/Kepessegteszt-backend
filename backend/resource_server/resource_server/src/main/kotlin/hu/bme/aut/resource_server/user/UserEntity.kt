@@ -25,7 +25,7 @@ data class UserEntity(
     @JoinTable(
         name = "role_to_user",
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "_name")],
     )
     val roles: Set<Role>,
 )

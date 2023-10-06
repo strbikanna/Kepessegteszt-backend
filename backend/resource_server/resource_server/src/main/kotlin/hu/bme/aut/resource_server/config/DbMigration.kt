@@ -10,7 +10,6 @@ class DbMigration {
     @Bean
     fun flywayMigration(): FlywayMigrationStrategy? {
         return FlywayMigrationStrategy { flyway: Flyway ->
-            flyway.baseline()
             flyway.repair()
             flyway.migrate()
         }

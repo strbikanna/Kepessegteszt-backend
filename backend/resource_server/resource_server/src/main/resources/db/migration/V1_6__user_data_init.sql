@@ -10,20 +10,20 @@ values(3,'Thom', 'ScienceLover', 'scientist_user');
 
 -- roles
 insert into role
-values(1, 'ADMIN');
+values('ADMIN');
 insert into role
-values(2, 'STUDENT');
+values('STUDENT');
 insert into role
-values(3, 'SCIENTIST');
+values('SCIENTIST');
 insert into role
-values(4, 'TEACHER');
+values('TEACHER');
 insert into role
-values(5, 'PARENT');
+values('PARENT');
 
 -- users with roles
-insert into role_to_user(user_id, role_id) values(1,4);
-insert into role_to_user(user_id, role_id) values(2,2);
-insert into role_to_user(user_id, role_id) values(3,3);
+insert into role_to_user(user_id, role_id) values(1,'TEACHER');
+insert into role_to_user(user_id, role_id) values(2,'STUDENT');
+insert into role_to_user(user_id, role_id) values(3,'SCIENTIST');
 
 -- example abilities
 insert into ability(code, name, description)
