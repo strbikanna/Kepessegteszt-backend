@@ -1,10 +1,37 @@
 server:
   port: 9000
+
 spring:
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/app_users
     username: dev
     password: dev.1122
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: cognitive.auth@gmail.com
+    password: sitb uqob dppc flqf
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
 #  profiles:
 #    active: test
+
+logging:
+  level:
+    org:
+      springframework:
+        security: info
+        data:
+          repository: trace
+
+cognitive-app:
+  mail: noreply@cognitiveapp.hu
+  subject: Email cím megerősítése

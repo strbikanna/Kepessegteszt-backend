@@ -2,13 +2,17 @@ package hu.bme.aut.auth_server.user
 
 import hu.bme.aut.auth_server.role.Role
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class UserInfoService(@Autowired private var userRepository: UserRepository) {
+class UserInfoService(
+    @Autowired private var userRepository: UserRepository,
+    @Autowired private var pagingUserRepository: PagingUserRepository
+) {
     fun loadUserInfoByUsername(username: String): OidcUserInfo {
         val user = userRepository.findByUsername(username)
         if (user.isEmpty) throw UsernameNotFoundException("No user with username: $username found.")
@@ -17,12 +21,13 @@ class UserInfoService(@Autowired private var userRepository: UserRepository) {
             .email(user.get().email)
             .familyName(user.get().firstName)
             .givenName(user.get().lastName)
-            .claim("roles", user.get().roleEntities.map { it.roleName })
+            .claim("roles", user.get().roles.map { it.roleName })
             .build()
     }
 
     fun loadUserByUsername(username: String) = userRepository.findByUsername(username)
 
+    fun save(userEntity: UserEntity) = userRepository.save(userEntity)
     fun loadUserByUsernameWithContacts(username: String): Optional<UserEntity> {
         val user = userRepository.findByUsername(username)
         if (user.isEmpty) return user
@@ -38,10 +43,10 @@ class UserInfoService(@Autowired private var userRepository: UserRepository) {
         return contacts.any { contact -> contact.username == contactUsername && contact.id == contactEntity.get().id }
     }
 
-    fun hasMimicRole(username: String): Boolean {
+    fun hasImpersonationRole(username: String): Boolean {
         val user = userRepository.findByUsername(username)
         if (user.isEmpty) throw UsernameNotFoundException("No user with username: $username")
-        return user.get().roleEntities.any { it.isMimicRole() }
+        return user.get().roles.any { it.isMimicRole() }
 
     }
 
@@ -59,8 +64,13 @@ class UserInfoService(@Autowired private var userRepository: UserRepository) {
         if (userEntity.isEmpty) throw UsernameNotFoundException("Invalid username: $username")
         val contacts = userEntity.get().contacts
         return contacts
-            .filter { it.roleEntities.any { roleEntity -> roleEntity.roleName == Role.STUDENT } }
+            .filter { it.roles.any { roleEntity -> roleEntity.roleName == Role.STUDENT } }
             .map { convertUserDao(it) }
+    }
+
+    fun getUsersWithoutContact(pageNumber: Int, pageSize: Int): List<UserDao> {
+        val users = pagingUserRepository.findAll(PageRequest.of(pageNumber, pageSize))
+        return users.content.map { entity -> convertUserDao(entity) }
     }
 
     private fun convertUserDao(userEntity: UserEntity): UserDao {
@@ -69,7 +79,7 @@ class UserInfoService(@Autowired private var userRepository: UserRepository) {
             email = userEntity.email,
             firstName = userEntity.firstName,
             lastName = userEntity.lastName,
-            roles = userEntity.roleEntities.map { entity -> entity.roleName }.toMutableSet(),
+            roles = userEntity.roles.map { entity -> entity.roleName }.toMutableSet(),
         )
     }
 }

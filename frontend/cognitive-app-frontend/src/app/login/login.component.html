@@ -1,10 +1,20 @@
-<div class="container" >
-  <button *ngIf= "!isLoggedIn" class="btn btn-primary" (click) ="login()" type="submit">
+  <button mat-flat-button color="primary" *ngIf= "!isLoggedIn" (click) ="login()" type="submit">
     Login
   </button>
-  <div *ngIf= "isLoggedIn" class="content">
-    <span>Welcome !!</span>
-    <a class="btn btn-default pull-right" (click) ="logout()" href="#">Logout</a>
+  <div *ngIf= "isLoggedIn" class="user-container" >
+    <p class="user-name">{{user?.firstName}} {{user?.lastName}}</p>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item routerLink="/profile">
+        <mat-icon>manage_accounts</mat-icon>
+        <span>View Profile</span>
+      </button>
+      <button mat-menu-item (click) ="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Log out</span>
+      </button>
+    </mat-menu>
     <br/>
   </div>
-</div>

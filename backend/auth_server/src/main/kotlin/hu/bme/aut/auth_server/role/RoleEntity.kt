@@ -1,18 +1,17 @@
 package hu.bme.aut.auth_server.role
 
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 enum class Role {
-    ADMIN, PARENT, SCIENTIST, STUDENT, TEACHER
+    ADMIN, PARENT, SCIENTIST, STUDENT, TEACHER,
+    PARENT_REQUEST, TEACHER_REQUEST, SCIENTIST_REQUEST
 }
 
 @Entity(name = "ROLES")
 data class RoleEntity(
     @Id
-    val id: Int,
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Int? = null,
 
     @Enumerated(EnumType.STRING)
     val roleName: Role

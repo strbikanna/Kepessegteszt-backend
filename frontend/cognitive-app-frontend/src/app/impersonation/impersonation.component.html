@@ -1,0 +1,16 @@
+<div class="welcome-container">
+  <h2 *ngIf="user">Hi {{user?.lastName}}!</h2>
+  <div *ngIf="canImpersonate">
+    <p>You can sign in in the name of the following people or stay signed in in your name.</p>
+    <div *ngFor="let user of contacts | async" class="welcome-container">
+      <button mat-stroked-button color="primary" (click)="signInAs(user.username)" class="imperson-button">
+        {{user.firstName}} {{user.lastName}}
+      </button>
+      <button mat-flat-button color="primary" class="remain-button" (click)="canImpersonate=false">
+        Stay signed in my name
+      </button>
+    </div>
+  </div>
+</div>
+
+

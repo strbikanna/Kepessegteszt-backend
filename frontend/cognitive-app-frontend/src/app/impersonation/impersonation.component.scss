@@ -1,0 +1,21 @@
+.imperson-button{
+  width: 10em;
+  height: 5em;
+  margin: 1em;
+}
+h2,p{
+  text-align: center;
+}
+p{
+  font-size: larger;
+}
+
+.welcome-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.remain-button{
+  margin: 1em;
+  width: max-content;
+}

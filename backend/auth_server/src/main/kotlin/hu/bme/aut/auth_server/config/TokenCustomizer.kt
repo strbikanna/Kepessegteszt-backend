@@ -15,7 +15,7 @@ class TokenCustomizer(
 ) : OAuth2TokenCustomizer<JwtEncodingContext> {
     override fun customize(context: JwtEncodingContext) {
         var username = context.getPrincipal<Authentication>().name
-        username = checkMimicRequestedUsername(context, username)
+        username = checkActAsRequestedUsername(context, username)
         val userInfo = userInfoService.loadUserInfoByUsername(username)
         context.claims
             .claims { claims ->
@@ -23,14 +23,14 @@ class TokenCustomizer(
             }
     }
 
-    private fun checkMimicRequestedUsername(context: JwtEncodingContext, username: String): String {
-        if (!userInfoService.hasMimicRole(username)) return username
+    private fun checkActAsRequestedUsername(context: JwtEncodingContext, username: String): String {
+        if (!userInfoService.hasImpersonationRole(username)) return username
         var originalUsername = username
         val authRequest =
             context.authorization?.attributes?.get("org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest") as OAuth2AuthorizationRequest?
                 ?: return username
 
-        if (authRequest.additionalParameters.containsKey("mimic")) {
+        if (authRequest.additionalParameters.containsKey("act_as")) {
             val requestedUsername = getRequestedUsername(authRequest.additionalParameters)
             requestedUsername?.let {
                 if (userInfoService.existsContact(originalUsername, it)) originalUsername = requestedUsername
@@ -39,8 +39,8 @@ class TokenCustomizer(
         return originalUsername
     }
 
-    private fun getRequestedUsername(map: Map<String, Any>): String? {
-        val requestedUsername = map["mimic"] as String
+    private fun getRequestedUsername(map: Map<String, Any>): String {
+        val requestedUsername = map["act_as"] as String
         if (userInfoService.existsByUsername(requestedUsername)) return requestedUsername
         throw UsernameNotFoundException("No user found for mimic request \"$requestedUsername\".")
     }
