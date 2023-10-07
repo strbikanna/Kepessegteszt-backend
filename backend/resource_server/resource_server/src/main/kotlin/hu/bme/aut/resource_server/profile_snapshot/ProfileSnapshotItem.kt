@@ -9,7 +9,7 @@ data class ProfileSnapshotItem (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 
-    @ManyToOne(cascade=[CascadeType.PERSIST])
+    @ManyToOne(cascade=[CascadeType.REFRESH], fetch=FetchType.EAGER)
     @JoinColumn(name = "ability_id")
     val ability: Ability,
 

@@ -1,12 +1,13 @@
 package hu.bme.aut.resource_server.user
 
 import hu.bme.aut.resource_server.ability.Ability
+import hu.bme.aut.resource_server.ability.AbilityRepository
 import hu.bme.aut.resource_server.profile.ProfileItem
 import hu.bme.aut.resource_server.user.role.Role
 import hu.bme.aut.resource_server.user.role.RoleName
 import jakarta.transaction.Transactional
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -15,24 +16,33 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles("test")
 @SpringBootTest
 class UserRepositoryTest(
-    @Autowired private var userRepository: UserRepository
+    @Autowired private var userRepository: UserRepository,
+    @Autowired private var abilityRepository: AbilityRepository,
 ) {
+    private val abilityGv = Ability("Gv", "Visual processing", "?")
+    private val abilityGs = Ability("Gs", "Processing speed", "?")
+    @BeforeEach
+    fun emptyRepo() {
+        userRepository.deleteAll()
+        abilityRepository.saveAll(listOf(abilityGv, abilityGs))
+    }
+
     @Transactional
     @Test
-    fun shouldSaveUser(){
+    fun shouldSaveUser() {
         val profile = mutableSetOf(
             ProfileItem(
-                ability = Ability("Gv", "Visual processing", "?"),
+                ability = abilityGv,
                 abilityValue = 10
-                ),
+            ),
             ProfileItem(
-                ability = Ability("Gs", "Processing speed", "?"),
+                ability = abilityGs,
                 abilityValue = 4
-                ),
+            ),
         )
         val user = UserEntity(
             firstName = "Test", lastName = "User", username = "test_user",
-            profile = profile, roles = mutableSetOf(Role(roleName= RoleName.PARENT))
+            profile = profile, roles = mutableSetOf(Role(roleName = RoleName.PARENT))
         )
         userRepository.save(user)
         assertNotNull(user.id)
@@ -40,5 +50,70 @@ class UserRepositoryTest(
         assertNotNull(savedUser.id)
         assertNotNull(savedUser.profile.first().id)
         assertEquals(2, savedUser.profile.size)
+    }
+
+    @Test
+    fun shouldSaveMoreUsersCorrectly() {
+        val user1 = saveAndTestUser1()
+        val user2 = saveAndTestUser2()
+
+        testSavedUsers(user1, user2)
+    }
+
+    @Transactional
+    private fun testSavedUsers(
+        user1: UserEntity,
+        user2: UserEntity
+    ) {
+        val savedUser1 = userRepository.findByIdWithProfile(user1.id!!).get()
+        val savedUser2 = userRepository.findByIdWithProfile(user2.id!!).get()
+        assertEquals(2, savedUser1.profile.size)
+        assertEquals(1, savedUser2.profile.size)
+        assertTrue(savedUser1.profile.any { it.ability.code == "Gv" })
+        assertTrue(savedUser1.profile.any { it.ability.code == "Gs" })
+        assertTrue(savedUser2.profile.any { it.ability.code == "Gs" })
+    }
+
+    @Transactional
+    fun saveAndTestUser1(): UserEntity {
+        val profile1 = mutableSetOf(
+            ProfileItem(
+                ability = abilityGv,
+                abilityValue = 10
+            ),
+            ProfileItem(
+                ability = abilityGs,
+                abilityValue = 4
+            ),
+        )
+        //user with Gv and Gs
+        val user1 = UserEntity(
+            firstName = "Test", lastName = "User", username = "test_user1",
+            profile = profile1, roles = mutableSetOf(Role(roleName = RoleName.STUDENT))
+        )
+
+        userRepository.save(user1)
+        assertNotNull(user1.id)
+        assertNotNull(user1.profile.first().id)
+        return user1
+    }
+
+    @Transactional
+    fun saveAndTestUser2(): UserEntity {
+        val profile2 = mutableSetOf(
+            ProfileItem(
+                ability = abilityGs,
+                abilityValue = 4
+            ),
+        )
+        //user with Gs
+        val user2 = UserEntity(
+            firstName = "Test", lastName = "User", username = "test_user2",
+            profile = profile2, roles = mutableSetOf(Role(roleName = RoleName.STUDENT))
+        )
+        userRepository.save(user2)
+        assertEquals(2, userRepository.count())
+        assertNotNull(user2.id)
+        return user2
     }
 }
