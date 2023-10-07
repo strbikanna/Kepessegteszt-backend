@@ -38,7 +38,7 @@ create table profile_item
 (
     id            bigint primary key auto_increment,
     ability_id    varchar(5) not null,
-    user_id       int        not null,
+    user_id       int,
     ability_value int,
     constraint fk_profile_profile foreign key (user_id) references user (id),
     constraint fk_ability_profile foreign key (ability_id) references ability (code)

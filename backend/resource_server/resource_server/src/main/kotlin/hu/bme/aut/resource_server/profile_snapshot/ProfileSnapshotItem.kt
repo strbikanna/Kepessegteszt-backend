@@ -1,15 +1,7 @@
 package hu.bme.aut.resource_server.profile_snapshot
 
 import hu.bme.aut.resource_server.ability.Ability
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import org.hibernate.annotations.Cascade
-import org.hibernate.annotations.CascadeType
+import jakarta.persistence.*
 
 @Entity
 data class ProfileSnapshotItem (
@@ -17,9 +9,8 @@ data class ProfileSnapshotItem (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 
-    @ManyToOne
+    @ManyToOne(cascade=[CascadeType.PERSIST])
     @JoinColumn(name = "ability_id")
-    @Cascade(CascadeType.PERSIST)
     val ability: Ability,
 
     @Column

@@ -4,6 +4,7 @@ import hu.bme.aut.resource_server.ability.Ability
 import hu.bme.aut.resource_server.profile.ProfileItem
 import hu.bme.aut.resource_server.user.role.Role
 import hu.bme.aut.resource_server.user.role.RoleName
+import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -16,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles
 class UserRepositoryTest(
     @Autowired private var userRepository: UserRepository
 ) {
+    @Transactional
     @Test
     fun shouldSaveUser(){
         val profile = mutableSetOf(
