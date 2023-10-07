@@ -30,7 +30,7 @@ import {MatTabsModule} from "@angular/material/tabs";
     UserInfoComponent,
     ProfileComponent,
     ImpersonationComponent,
-    GamesComponent
+    GamesComponent,
   ],
     imports: [
         BrowserModule,

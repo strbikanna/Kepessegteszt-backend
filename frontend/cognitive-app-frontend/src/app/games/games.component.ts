@@ -18,7 +18,7 @@ export class GamesComponent implements OnInit {
             [
                 {
                     id: "balloon001-223-554",
-                    name: "Tick the balloons",
+                    name: "Pop the balloons",
                     description: "Try not to die from the bombs.",
                     thumbnail: "../../assets/balloon_game.jpg",
                     config: JSON.stringify({level: 1}),
