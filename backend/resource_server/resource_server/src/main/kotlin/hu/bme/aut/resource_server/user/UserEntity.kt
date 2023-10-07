@@ -19,7 +19,7 @@ data class UserEntity(
 
     @OneToMany(cascade=[CascadeType.PERSIST, CascadeType.REFRESH])
     @JoinColumn(name="user_id")
-    val profile: MutableSet<ProfileItem>,
+    var profile: MutableSet<ProfileItem>,
 
     @ManyToMany
     @JoinTable(
