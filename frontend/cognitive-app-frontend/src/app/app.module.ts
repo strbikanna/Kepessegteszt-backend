@@ -21,6 +21,8 @@ import { ImpersonationComponent } from './impersonation/impersonation.component'
 import {AuthInterceptor} from "./utils/auth.interceptor";
 import { GamesComponent } from './games/games.component';
 import {MatTabsModule} from "@angular/material/tabs";
+import { PlaygroundComponent } from './playground/playground.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -31,6 +33,7 @@ import {MatTabsModule} from "@angular/material/tabs";
     ProfileComponent,
     ImpersonationComponent,
     GamesComponent,
+    PlaygroundComponent,
   ],
     imports: [
         BrowserModule,
@@ -50,7 +53,7 @@ import {MatTabsModule} from "@angular/material/tabs";
                 logLevel: LogLevel.Debug,
             },
         }),
-        MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule, MatTabsModule,
+        MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule, MatTabsModule, MatDialogModule,
     ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent]
