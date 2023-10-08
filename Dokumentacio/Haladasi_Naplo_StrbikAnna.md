@@ -49,3 +49,36 @@ Tehát a jelenlegi státusz: kezdetlegesen működik az auth server és a kliens
 - hozzáadtam egy interceptort, ez az access tokent felteszi minden kérésre
 - van egy mindenhonnan elérhető UserInfo model osztály, ami a bejelentkezés eseményét publikálja, és az aktuális user adatait elérhetővé teszi
 
+# 10.08.
+## Ezen a héten a következőket valósítottam meg:
+
+### Frontend
+- kicsit szebb
+- van külön oldal a játékoknak: itt listázva megjelennek külön tabfüleken a tanár/kutató/rendszer által ajánlott játékok és az összes játék
+- egyelőre mockolt adatokkal működik, de a data flow már teljesen ki van alakítva
+- lokalizáltam a sztringeket, így egy helyen van gyűjtve az összes üzenet, amit az alkalmazás megjelenít
+- sikerült integrálni a játékokat, beillesztettem Csaba szkriptjét, és az elkészült játékokat az Angular projektbe: egy külön komponens jeleníti meg, külön rout-on érhető el
+- sikerült összekötni a mockolt adatokkal, és így paraméterezetten elindítani a játékokat, hozzáadtam egyszerű hibakezelést is
+
+### Backend - Resource server
+- a felhasználókkal és profillal kapcsolatos funkciókon dolgoztam
+- létrehoztam a resource server projektet, h2 in memory és mysql adatbázisokkal tesztelésre/fejlesztésre külön profilokkal
+- felállítottam flyway data migrationt
+- létrehoztam az adatmodellt leíró SQL szkriptet, ezt futtatja a flyway
+- újragondoltam az adatmodellt, és változtattam néhány dolgon, szerintem így rugalmasabb lesz
+- létrehoztam az adatmodellnek megfelelő Entity osztályokat és a köztük lévő kapcsolatokat
+- létrehoztam repository-kat, service osztályokat
+- készítettem külön DTO osztályokat is a user-hez, a PlainUserDto nem tartalmazza a profilt, míg a UserProfileDto igen
+- írtam teszteket a repository-khoz és a service-ekhez, ezek alapján javítottam a hibákat
+- létrehoztam a UserController-t, egyelőre csak két metódussal (nem láttam értelmét többnek): GET -> saját profil, PUT -> adminjoggal
+- megírtam a security releváns részeit is, ezt azonban egyelőre "kikapcsoltam" a dev és test profilon, mert még nem tudtam tesztelni
+- (a controller-ben már kell autentikáció, de ez még nem fog működni az inaktív security miatt)
+
+### Kérdéseim
+- most van a resource serveren Role entitás, hozzákapcsolva a User-hez, de szerintem erre nincs szükség, törölhetem?
+- gondolkoztam azon, hogyan lehetne minél egyszerűbben megoldani, hogy a képesség különféle típusú lehessen, javaslataim:
+ - varchar-ként tárolni az abilityValue-t és felvenni egy abilityType mezőt az Ability-be, ami megadja, hogyan kell értelmezni
+ - a ProfileItem-nek lehetnek speciális leszármazottai, különböző típusokkal (de akkor ezeket külön táblán kell tárolni, és egyben a ProfileSnapshotItemnek is lesznek ugyanilyen leszármazottai)
+ - lehet többféle abilityValue field-je a ProfileItemnek, és nem mind van kitöltve, ennek megfelelően több nullable oszlopa lenne a táblának is...
+- nyilván mindnek van hátránya, nekem most ezek jutottak eszembe, a legjobb megoldás szerintem attól is nagyban függ, hogy a gyakorlatban mennyire lehet sokféle value típusra számítani
+
