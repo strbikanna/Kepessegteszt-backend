@@ -9,6 +9,8 @@ import java.util.Optional
 interface UserRepository: CrudRepository<UserEntity, Int> {
     fun findByUsername(username: String): Optional<UserEntity>
 
+    fun existsByUsername(username: String): Boolean
+
     @Query("SELECT u FROM UserEntity u JOIN FETCH u.profile WHERE u.id = :id")
     fun findByIdWithProfile(id: Int): Optional<UserEntity>
 
