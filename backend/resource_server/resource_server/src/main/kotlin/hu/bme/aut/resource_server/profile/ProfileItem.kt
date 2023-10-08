@@ -12,9 +12,9 @@ data class ProfileItem(
     var id: Long? = null,
 
     @ManyToOne(cascade=[CascadeType.REFRESH], fetch= FetchType.EAGER)
-    @JoinColumn(name="ability_id")
+    @JoinColumn(name="ability_id", referencedColumnName = "code")
     val ability: Ability,
 
     @Column
-    val abilityValue: Int
+    var abilityValue: Int
 )

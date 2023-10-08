@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.user
 
+import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
@@ -18,6 +19,7 @@ interface UserRepository: CrudRepository<UserEntity, Int> {
     fun findByIdWithRoles(id: Int): Optional<UserEntity>
 
     @Modifying
+    @Transactional
     @Query("UPDATE UserEntity u SET u.firstName = :firstName, u.lastName = :lastName WHERE u.id = :id")
-    fun updateUserData(firstName: String, lastName: String, id: Int): UserEntity
+    fun updateUserData(firstName: String, lastName: String, id: Int): Int
 }

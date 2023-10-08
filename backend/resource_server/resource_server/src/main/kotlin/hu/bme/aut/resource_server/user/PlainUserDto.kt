@@ -1,9 +1,9 @@
 package hu.bme.aut.resource_server.user
 
-class PlainUserDto(
-    val firstName: String,
+open class PlainUserDto(
+    var firstName: String,
 
-    val lastName: String,
+    var lastName: String,
 
     val username: String,
 ) {
