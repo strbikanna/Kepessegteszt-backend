@@ -5,6 +5,7 @@ import hu.bme.aut.resource_server.user.UserRepository
 import hu.bme.aut.resource_server.user.role.Role
 import hu.bme.aut.resource_server.user.role.RoleName
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Profile
 import org.springframework.core.convert.converter.Converter
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -12,6 +13,7 @@ import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.stereotype.Service
 
 @Service
+@Profile("prod")
 class GrantedAuthoritiesConverter(
     @Autowired private var userRepository: UserRepository,
 ) : Converter<Jwt, Collection<GrantedAuthority>> {
