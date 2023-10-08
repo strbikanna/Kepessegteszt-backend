@@ -6,5 +6,5 @@ import java.time.Instant
 
 interface ProfileSnapshotRepository : CrudRepository<ProfileSnapshot, Long> {
     fun findAllByUser(user: UserEntity): List<ProfileSnapshot>
-    fun findAllByTimestampBetween(begin: Instant, end: Instant): List<ProfileSnapshot>
+    fun findAllByUserAndTimestampBetween(user: UserEntity, begin: Instant, end: Instant): List<ProfileSnapshot>
 }

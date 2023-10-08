@@ -12,8 +12,6 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import java.time.Instant
 
 @Entity
@@ -30,7 +28,7 @@ data class ProfileSnapshot (
     @JoinColumn(name = "user_id")
     val user: UserEntity,
 
-    @OneToMany(cascade = [CascadeType.PERSIST], fetch = FetchType.EAGER)
+    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "snapshot_id")
-    val profile: MutableSet<ProfileSnapshotItem>,
+    val profile: Set<ProfileSnapshotItem>,
 )

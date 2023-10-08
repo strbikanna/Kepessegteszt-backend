@@ -49,6 +49,9 @@ class TestUtilsService(
                 roles = mutableSetOf(Role(RoleName.STUDENT))
             )
     }
+    fun saveUser(user: UserEntity): UserEntity{
+        return userRepository.save(user)
+    }
 
     fun fillUserRepository(){
         userRepository.deleteAll()
