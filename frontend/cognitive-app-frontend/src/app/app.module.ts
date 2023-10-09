@@ -19,6 +19,10 @@ import {MatCardModule} from "@angular/material/card";
 import {MatListModule} from "@angular/material/list";
 import { ImpersonationComponent } from './impersonation/impersonation.component';
 import {AuthInterceptor} from "./utils/auth.interceptor";
+import { GamesComponent } from './games/games.component';
+import {MatTabsModule} from "@angular/material/tabs";
+import { PlaygroundComponent } from './playground/playground.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -27,28 +31,30 @@ import {AuthInterceptor} from "./utils/auth.interceptor";
     HomeComponent,
     UserInfoComponent,
     ProfileComponent,
-    ImpersonationComponent
+    ImpersonationComponent,
+    GamesComponent,
+    PlaygroundComponent,
   ],
-  imports: [
-    BrowserModule,
-    RouterModule.forRoot(appRoutes),
-    HttpClientModule,
-    AuthModule.forRoot({
-      config: {
-        configId: 'baseConfig',
-        authority: 'http://localhost:9000',
-        redirectUrl: 'http://localhost:4200',
-        postLogoutRedirectUri: 'http://localhost:4200',
-        clientId: 'frontend-client-002233',
-        scope: 'openid',
-        responseType: 'code',
-        silentRenew: true,
-        useRefreshToken: true,
-        logLevel: LogLevel.Debug,
-      },
-    }),
-    MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule,
-  ],
+    imports: [
+        BrowserModule,
+        RouterModule.forRoot(appRoutes),
+        HttpClientModule,
+        AuthModule.forRoot({
+            config: {
+                configId: 'baseConfig',
+                authority: 'http://localhost:9000',
+                redirectUrl: 'http://localhost:4200',
+                postLogoutRedirectUri: 'http://localhost:4200',
+                clientId: 'frontend-client-002233',
+                scope: 'openid',
+                responseType: 'code',
+                silentRenew: true,
+                useRefreshToken: true,
+                logLevel: LogLevel.Debug,
+            },
+        }),
+        MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule, MatTabsModule, MatDialogModule,
+    ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })
