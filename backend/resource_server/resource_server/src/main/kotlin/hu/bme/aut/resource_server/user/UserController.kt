@@ -1,8 +1,8 @@
 package hu.bme.aut.resource_server.user
 
+import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 
@@ -14,13 +14,7 @@ class UserController(@Autowired private var userService: UserService) {
     @ResponseStatus(HttpStatus.OK)
     fun getUserProfile(authentication: Authentication): UserProfileDto {
         val username = authentication.name
-        return userService.getUserWithProfileByUsername(username)
+        return userService.getUserDtoWithProfileByUsername(username)
     }
 
-    @PutMapping("/profile")
-    @PreAuthorize("hasRole('ADMIN')")
-    @ResponseStatus(HttpStatus.OK)
-    fun updateUserProfile(@RequestBody userProfileDto: UserProfileDto) {
-        userService.updateUserProfile(userProfileDto)
-    }
 }

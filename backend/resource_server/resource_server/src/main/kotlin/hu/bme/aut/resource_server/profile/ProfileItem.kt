@@ -1,20 +1,11 @@
 package hu.bme.aut.resource_server.profile
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import hu.bme.aut.resource_server.ability.Ability
-import jakarta.persistence.*
 
-@Entity
-data class ProfileItem(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long? = null,
+sealed class ProfileItem {
+    abstract var id: Long?
 
-    @ManyToOne(cascade=[CascadeType.REFRESH], fetch= FetchType.EAGER)
-    @JoinColumn(name="ability_id", referencedColumnName = "code")
-    val ability: Ability,
+    abstract val ability: Ability
 
-    @Column
-    var abilityValue: Int
-)
+    abstract val abilityValue: Any
+}

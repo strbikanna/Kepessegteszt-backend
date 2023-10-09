@@ -26,9 +26,9 @@ insert into role_to_user(user_id, role_id) values(2,'STUDENT');
 insert into role_to_user(user_id, role_id) values(3,'SCIENTIST');
 
 -- example abilities
-insert into ability(code, name, description)
+insert into ability
 values('Gf', 'Fluid reasoning', 'The use of deliberate and controlled mental operations to solve
-novel problems that cannot be performed automatically.');
+novel problems that cannot be performed automatically.', 'FLOATING');
 
 insert into ability values('Gsm', 'Short-trem memory', 'The ability to apprehend and maintain awareness of a limited
-number of elements of information in the immediate situation.');
+number of elements of information in the immediate situation.', 'FLOATING');

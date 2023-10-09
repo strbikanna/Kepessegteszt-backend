@@ -1,7 +1,7 @@
 package hu.bme.aut.resource_server.ability
 
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
+import hu.bme.aut.resource_server.utils.AbilityType
+import jakarta.persistence.*
 
 @Entity
 data class Ability(
@@ -10,5 +10,9 @@ data class Ability(
 
     val name: String,
 
-    val description: String
+    val description: String,
+
+    @Column(name = "ability_type")
+    @Enumerated(EnumType.STRING)
+    val type: AbilityType = AbilityType.FLOATING,
 )

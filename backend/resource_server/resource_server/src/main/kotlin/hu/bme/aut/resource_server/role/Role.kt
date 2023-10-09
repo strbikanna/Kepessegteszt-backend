@@ -1,5 +1,6 @@
-package hu.bme.aut.resource_server.user.role
+package hu.bme.aut.resource_server.role
 
+import hu.bme.aut.resource_server.utils.RoleName
 import jakarta.persistence.*
 
 @Entity
@@ -10,7 +11,4 @@ data class Role(
     val roleName: RoleName,
 )
 
-enum class RoleName{
-    ADMIN, TEACHER, PARENT, STUDENT, SCIENTIST
-}
 

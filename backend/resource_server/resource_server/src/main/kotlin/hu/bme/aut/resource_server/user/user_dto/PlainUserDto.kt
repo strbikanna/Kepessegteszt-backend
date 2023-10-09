@@ -1,4 +1,6 @@
-package hu.bme.aut.resource_server.user
+package hu.bme.aut.resource_server.user.user_dto
+
+import hu.bme.aut.resource_server.user.UserEntity
 
 open class PlainUserDto(
     var firstName: String,

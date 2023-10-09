@@ -1,18 +1,17 @@
 package hu.bme.aut.resource_server.profile_snapshot
 
 import hu.bme.aut.resource_server.ability.Ability
-import jakarta.persistence.*
+import hu.bme.aut.resource_server.user.UserEntity
+import java.time.LocalDateTime
 
-@Entity
-data class ProfileSnapshotItem (
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null,
+sealed class ProfileSnapshotItem {
+    abstract var id: Long?
 
-    @ManyToOne(cascade=[CascadeType.REFRESH], fetch=FetchType.EAGER)
-    @JoinColumn(name = "ability_id")
-    val ability: Ability,
+    abstract val ability: Ability
 
-    @Column
-    val abilityValue: Int,
-)
+    abstract val timestamp: LocalDateTime?
+
+    abstract val user: UserEntity
+
+    abstract val abilityValue: Any
+}

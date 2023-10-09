@@ -19,37 +19,52 @@ create table role_to_user
     constraint fk_user_to_role foreign key (role_id) references role (_name)
 );
 
-create table profile_snapshot
-(
-    id         bigint primary key auto_increment,
-    user_id    int              not null,
-    _timestamp timestamp unique not null,
-    constraint fk_snapshot_to_user foreign key (user_id) references user (id)
-);
-
 create table ability
 (
     code        varchar(5) primary key not null,
     name        varchar(30),
-    description varchar(1000)
+    description varchar(1000),
+    ability_type varchar(30)
 );
 
-create table profile_item
+create table float_profile_item
 (
     id            bigint primary key auto_increment,
     ability_id    varchar(5) not null,
     user_id       int,
-    ability_value int,
-    constraint fk_profile_profile foreign key (user_id) references user (id),
-    constraint fk_ability_profile foreign key (ability_id) references ability (code)
+    ability_value float,
+    constraint fk_float_profile_user foreign key (user_id) references user (id),
+    constraint fk_ability_float_profile foreign key (ability_id) references ability (code)
 );
 
-create table profile_snapshot_item
+create table enum_profile_item
 (
     id            bigint primary key auto_increment,
     ability_id    varchar(5) not null,
-    snapshot_id   bigint,
-    ability_value int,
-    constraint fk_profile_snapshot foreign key (snapshot_id) references profile_snapshot (id),
-    constraint fk_ability_snapshot foreign key (ability_id) references ability (code)
+    user_id       int,
+    ability_value varchar(30),
+    constraint fk_enum_profile_user foreign key (user_id) references user (id),
+    constraint fk_ability_enum_profile foreign key (ability_id) references ability (code)
+);
+
+create table float_profile_snapshot_item
+(
+    id            bigint primary key auto_increment,
+    ability_id    varchar(5) not null,
+    user_id    int              not null,
+    _timestamp datetime unique not null,
+    ability_value float,
+    constraint fk_float_snapshot_to_user foreign key (user_id) references user (id),
+    constraint fk_ability_float_snapshot foreign key (ability_id) references ability (code)
+);
+
+create table enum_profile_snapshot_item
+(
+    id            bigint primary key auto_increment,
+    ability_id    varchar(5) not null,
+    user_id    int              not null,
+    _timestamp datetime unique not null,
+    ability_value varchar(30),
+    constraint fk_enum_snapshot_to_user foreign key (user_id) references user (id),
+    constraint fk_ability_enum_snapshot foreign key (ability_id) references ability (code)
 );

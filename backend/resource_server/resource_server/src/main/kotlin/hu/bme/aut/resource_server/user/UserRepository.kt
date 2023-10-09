@@ -11,10 +11,10 @@ interface UserRepository: CrudRepository<UserEntity, Int> {
 
     fun existsByUsername(username: String): Boolean
 
-    @Query("SELECT u FROM UserEntity u JOIN FETCH u.profile WHERE u.id = :id")
+    @Query("SELECT u FROM UserEntity u LEFT JOIN FETCH u.profileFloat LEFT JOIN FETCH u.profileEnum WHERE u.id = :id")
     fun findByIdWithProfile(id: Int): Optional<UserEntity>
 
-    @Query("SELECT u FROM UserEntity u JOIN FETCH u.profile WHERE u.username = :userName")
+    @Query("SELECT u FROM UserEntity u LEFT JOIN FETCH u.profileFloat LEFT JOIN FETCH u.profileEnum WHERE u.username = :userName")
     fun findByUsernameWithProfile(userName: String): Optional<UserEntity>
 
     @Query("SELECT u FROM UserEntity u JOIN FETCH u.roles WHERE u.id = :id")

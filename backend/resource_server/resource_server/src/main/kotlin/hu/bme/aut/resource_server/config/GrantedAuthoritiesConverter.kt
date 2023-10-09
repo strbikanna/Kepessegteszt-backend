@@ -2,8 +2,8 @@ package hu.bme.aut.resource_server.config
 
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
-import hu.bme.aut.resource_server.user.role.Role
-import hu.bme.aut.resource_server.user.role.RoleName
+import hu.bme.aut.resource_server.role.Role
+import hu.bme.aut.resource_server.utils.RoleName
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Profile
 import org.springframework.core.convert.converter.Converter
@@ -36,10 +36,15 @@ class GrantedAuthoritiesConverter(
                     username = username,
                     firstName = source.getClaimAsString("family_name"),
                     lastName = source.getClaimAsString("given_name"),
-                    profile = mutableSetOf(),
+                    profileFloat = mutableSetOf(),
+                    profileEnum = mutableSetOf(),
                     roles = roles.toSet()
                 )
             )
+        }else{
+            var user = userRepository.findByUsername(username).get()
+            user = user.copy(roles = roles.toSet())
+            userRepository.save(user)
         }
     }
 

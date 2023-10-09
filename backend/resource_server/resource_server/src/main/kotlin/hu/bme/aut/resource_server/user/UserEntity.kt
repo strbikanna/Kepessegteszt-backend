@@ -1,7 +1,9 @@
 package hu.bme.aut.resource_server.user
 
+import hu.bme.aut.resource_server.profile.EnumProfileItem
+import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.profile.ProfileItem
-import hu.bme.aut.resource_server.user.role.Role
+import hu.bme.aut.resource_server.role.Role
 import jakarta.persistence.*
 
 @Entity
@@ -17,9 +19,13 @@ data class UserEntity(
 
     val username: String,
 
-    @OneToMany(cascade=[CascadeType.ALL, CascadeType.REFRESH])
+    @OneToMany(cascade=[CascadeType.ALL])
     @JoinColumn(name="user_id")
-    var profile: MutableSet<ProfileItem>,
+    var profileFloat: MutableSet<FloatProfileItem>,
+
+    @OneToMany(cascade=[CascadeType.ALL])
+    @JoinColumn(name="user_id")
+    var profileEnum: MutableSet<EnumProfileItem>,
 
     @ManyToMany
     @JoinTable(
@@ -28,4 +34,11 @@ data class UserEntity(
         inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "_name")],
     )
     val roles: Set<Role>,
-)
+){
+    fun getProfile(): MutableSet<ProfileItem>{
+        val profile = mutableSetOf<ProfileItem>()
+        profile.addAll(profileFloat)
+        profile.addAll(profileEnum)
+        return profile
+    }
+}
