@@ -1,11 +1,11 @@
 -- games
-INSERT INTO GAMES(id, game_name, game_description, icon, game_active, url, json_descriptor)
+INSERT INTO GAMES(id, name, description, icon, active, url, json_descriptor)
 VALUES (1, 'game1', 'this is a very epic game with the best game mechanics', 'this is the icon, what should be here?', true, 'game1url.com', '{"parameters": [{"max_point": "","min_point": "","level": ""}]}');
 
-INSERT INTO GAMES(id, game_name, game_description, icon, game_active, url, json_descriptor)
+INSERT INTO GAMES(id, name, description, icon, active, url, json_descriptor)
 VALUES (2, 'game2', 'this is a very epic game with the best graphics ever', 'this is the icon, what should be here?', true, 'game2url.com', '{"parameters": [{"max_point": "","min_point": "","level": ""}]}');
 
-INSERT INTO GAMES(id, game_name, game_description, icon, game_active, url, json_descriptor)
+INSERT INTO GAMES(id, name, description, icon, active, url, json_descriptor)
 VALUES (3, 'game3', 'this is an acceptable game I made', 'this is the icon, still do not know what should be here', true, 'game3url.com', '{"parameters": [{"max_point": "","min_point": "","level": ""}]}');
 
 -- gameplays

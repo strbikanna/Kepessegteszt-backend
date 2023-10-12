@@ -3,11 +3,11 @@ package hu.bme.aut.resource_server.game
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "GAMES")
+@Table(name = "games")
 data class GameEntity(
     @Id
-    @GeneratedValue
-    val id: Int,
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    var id: Int? = null,
 
     val name: String,
 
