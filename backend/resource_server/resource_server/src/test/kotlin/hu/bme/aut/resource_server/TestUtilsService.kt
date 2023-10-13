@@ -25,13 +25,12 @@ class TestUtilsService(
     val abilityGsm = Ability(code = "Gsm", name="Short term memory", description = "Ability to attend to and immediately recall temporally ordered elements in the correct order after a single presentation." )
     val abilityGv = Ability("Gv", "Visual processing", "?", )
     val abilityColorsense = Ability("Cls", "Color sense", "If the brain/eye is capable to differentiate colors", AbilityType.ENUMERATED)
-
     fun emptyRepositories(){
         floatProfileSnapshotRepository.deleteAll()
         enumProfileSnapshotRepository.deleteAll()
         userRepository.deleteAll()
-        abilityRepository.deleteAll()
     }
+
     fun fillAbilityRepository(){
         abilityRepository.deleteAll()
         abilityRepository.saveAll(listOf(abilityGf, abilityGq, abilityGsm, abilityGv, abilityColorsense))
