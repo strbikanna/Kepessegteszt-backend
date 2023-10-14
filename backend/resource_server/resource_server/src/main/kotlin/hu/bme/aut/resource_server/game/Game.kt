@@ -1,6 +1,5 @@
 package hu.bme.aut.resource_server.game
 
-import com.fasterxml.jackson.databind.JsonNode
 import jakarta.persistence.*
 import org.hibernate.annotations.Type
 import io.hypersistence.utils.hibernate.type.json.JsonType
@@ -10,10 +9,12 @@ import io.hypersistence.utils.hibernate.type.json.JsonType
 data class Game(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    var id: Int? = null,
 
+    @Column(name ="_name")
     val name: String,
 
+    @Column(name ="_description")
     val description: String,
 
     val icon: String,
@@ -25,5 +26,5 @@ data class Game(
     val url: String,
 
     @Type(JsonType::class)
-    val configDescription: JsonNode
+    val configDescription: Map<String, Any>
 )

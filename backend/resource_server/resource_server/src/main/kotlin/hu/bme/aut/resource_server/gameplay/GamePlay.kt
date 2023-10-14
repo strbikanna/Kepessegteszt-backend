@@ -1,6 +1,5 @@
 package hu.bme.aut.resource_server.gameplay
 
-import com.fasterxml.jackson.databind.JsonNode
 import hu.bme.aut.resource_server.game.Game
 import hu.bme.aut.resource_server.user.UserEntity
 import io.hypersistence.utils.hibernate.type.json.JsonType
@@ -10,6 +9,7 @@ import org.hibernate.annotations.Type
 import java.time.LocalDateTime
 
 @Entity
+@Table(name = "GAMEPLAY")
 data class GamePlay(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,9 +20,9 @@ data class GamePlay(
     val timestamp: LocalDateTime? = null,
 
     @Type(JsonType::class)
-    val result: JsonNode,
+    val result: Map<String, Any>,
 
-    @ManyToOne(fetch= FetchType.EAGER)
+    @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "user_id")
     val user: UserEntity,
 

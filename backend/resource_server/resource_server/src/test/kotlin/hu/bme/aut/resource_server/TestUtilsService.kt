@@ -2,6 +2,9 @@ package hu.bme.aut.resource_server
 
 import hu.bme.aut.resource_server.ability.Ability
 import hu.bme.aut.resource_server.ability.AbilityRepository
+import hu.bme.aut.resource_server.game.Game
+import hu.bme.aut.resource_server.game.GameRepository
+import hu.bme.aut.resource_server.gameplay.GamePlay
 import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.profile_snapshot.EnumProfileSnapshotRepository
 import hu.bme.aut.resource_server.profile_snapshot.FloatProfileSnapshotRepository
@@ -10,6 +13,7 @@ import hu.bme.aut.resource_server.user.UserRepository
 import hu.bme.aut.resource_server.role.Role
 import hu.bme.aut.resource_server.utils.AbilityType
 import hu.bme.aut.resource_server.utils.RoleName
+import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -18,7 +22,8 @@ class TestUtilsService(
     @Autowired  var userRepository: UserRepository,
     @Autowired  var abilityRepository: AbilityRepository,
     @Autowired  var floatProfileSnapshotRepository: FloatProfileSnapshotRepository,
-    @Autowired  var enumProfileSnapshotRepository: EnumProfileSnapshotRepository
+    @Autowired  var enumProfileSnapshotRepository: EnumProfileSnapshotRepository,
+    @Autowired  var gameRepository: GameRepository,
 ) {
     val authHeaderName = "authUser"
     var authUsername = "authenticated-test-user"
@@ -96,5 +101,34 @@ class TestUtilsService(
             roles = mutableSetOf(Role(RoleName.STUDENT))
         )
         userRepository.save(user2)
+    }
+
+    fun createAndSaveGame(): Game{
+        val json = JSONObject()
+        json.put("ability", "Gf")
+        val game = Game(
+            name = "Test game",
+            icon= "test",
+            thumbnailPath = "test/files/assets",
+            description = "Test game description",
+            active = true,
+            url = "testUrl",
+            configDescription = json.toMap()
+        )
+        return gameRepository.save(game)
+    }
+    fun createGamePlay(): GamePlay{
+        val json = JSONObject()
+        json.put("time", 100)
+        json.put("correct", 10)
+        json.put("all", 10)
+        json.put("level", 2)
+        val user = createUnsavedTestUser()
+        userRepository.save(user)
+        return GamePlay(
+            result = json.toMap(),
+            user = user,
+            game = createAndSaveGame()
+        )
     }
 }
