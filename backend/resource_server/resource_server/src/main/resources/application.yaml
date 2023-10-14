@@ -7,6 +7,10 @@ spring:
     password: dev.1122
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  data:
+    rest:
+      default-media-type: application/json
+
   security:
     oauth2:
       resourceserver:

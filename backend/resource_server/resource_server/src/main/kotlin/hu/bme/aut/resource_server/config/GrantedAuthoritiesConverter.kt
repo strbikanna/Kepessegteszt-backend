@@ -13,7 +13,6 @@ import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.stereotype.Service
 
 @Service
-@Profile("prod")
 class GrantedAuthoritiesConverter(
     @Autowired private var userRepository: UserRepository,
 ) : Converter<Jwt, Collection<GrantedAuthority>> {
@@ -23,7 +22,7 @@ class GrantedAuthoritiesConverter(
 
         val grantedAuthorities = mutableListOf<GrantedAuthority>()
         roles.forEach { role ->
-            grantedAuthorities.add(SimpleGrantedAuthority(role.roleName.toString()))
+            grantedAuthorities.add(SimpleGrantedAuthority("ROLE_${role.roleName.toString()}"))
         }
         return grantedAuthorities
     }
