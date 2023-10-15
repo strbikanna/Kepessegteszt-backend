@@ -1,7 +1,6 @@
 package hu.bme.aut.resource_server.user
 
-import hu.bme.aut.resource_server.ability.Ability
-import hu.bme.aut.resource_server.ability.AbilityRepository
+import hu.bme.aut.resource_server.TestUtilsService
 import hu.bme.aut.resource_server.profile.EnumProfileItem
 import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.role.Role
@@ -18,34 +17,32 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles("test")
 @SpringBootTest
 class UserRepositoryTest(
-    @Autowired private var userRepository: UserRepository,
-    @Autowired private var abilityRepository: AbilityRepository,
+        @Autowired private var userRepository: UserRepository,
+        @Autowired private var testService: TestUtilsService,
 ) {
-    private val abilityGv = Ability("Gv", "Visual processing", "?")
-    private val abilityGs = Ability("Gs", "Processing speed", "?")
     @BeforeEach
     fun emptyRepo() {
-        userRepository.deleteAll()
-        abilityRepository.saveAll(listOf(abilityGv, abilityGs))
+        testService.emptyRepositories()
+        testService.fillAbilityRepository()
     }
 
     @Transactional
     @Test
     fun shouldSaveUser() {
         val profile = mutableSetOf(
-            FloatProfileItem(
-                ability = abilityGv,
-                abilityValue = 10.0
-            ),
-            FloatProfileItem(
-                ability = abilityGs,
-                abilityValue = 4.0
-            ),
+                FloatProfileItem(
+                        ability = testService.abilityGv,
+                        abilityValue = 10.0
+                ),
+                FloatProfileItem(
+                        ability = testService.abilityGsm,
+                        abilityValue = 4.0
+                ),
         )
         val user = UserEntity(
-            firstName = "Test", lastName = "User", username = "test_user",
-            profileFloat = profile, profileEnum = mutableSetOf(),
-            roles = mutableSetOf(Role(roleName = RoleName.PARENT))
+                firstName = "Test", lastName = "User", username = "test_user",
+                profileFloat = profile, profileEnum = mutableSetOf(),
+                roles = mutableSetOf(Role(roleName = RoleName.PARENT))
         )
         userRepository.save(user)
         assertNotNull(user.id)
@@ -65,8 +62,8 @@ class UserRepositoryTest(
 
     @Transactional
     private fun testSavedUsers(
-        user1: UserEntity,
-        user2: UserEntity
+            user1: UserEntity,
+            user2: UserEntity
     ) {
         val savedUser1 = userRepository.findByIdWithProfile(user1.id!!).get()
         val savedUser2 = userRepository.findByIdWithProfile(user2.id!!).get()
@@ -75,33 +72,33 @@ class UserRepositoryTest(
         assertEquals(1, savedUser2.profileFloat.size)
         assertTrue(savedUser1.profileFloat.any { it.ability.code == "Gv" })
         assertTrue(savedUser1.profileEnum.any { it.ability.code == "Gv" })
-        assertTrue(savedUser1.profileFloat.any { it.ability.code == "Gs" })
-        assertTrue(savedUser2.profileFloat.any { it.ability.code == "Gs" })
+        assertTrue(savedUser1.profileFloat.any { it.ability.code == "Gsm" })
+        assertTrue(savedUser2.profileFloat.any { it.ability.code == "Gsm" })
     }
 
     @Transactional
     fun saveAndTestUser1(): UserEntity {
         val profileFloat = mutableSetOf(
-            FloatProfileItem(
-                ability = abilityGv,
-                abilityValue = 10.0
-            ),
-            FloatProfileItem(
-                ability = abilityGs,
-                abilityValue = 4.0
-            ),
+                FloatProfileItem(
+                        ability = testService.abilityGv,
+                        abilityValue = 10.0
+                ),
+                FloatProfileItem(
+                        ability = testService.abilityGsm,
+                        abilityValue = 4.0
+                ),
         )
         val profileEnum = mutableSetOf(
-            EnumProfileItem(
-                ability = abilityGv,
-                abilityValue = EnumAbilityValue.YES
-            ),
+                EnumProfileItem(
+                        ability = testService.abilityGv,
+                        abilityValue = EnumAbilityValue.YES
+                ),
         )
-        //user with Gv and Gs
+        //user with Gv and Gsm
         val user1 = UserEntity(
-            firstName = "Test", lastName = "User", username = "test_user1",
-            profileFloat = profileFloat, profileEnum = profileEnum,
-            roles = mutableSetOf(Role(roleName = RoleName.STUDENT))
+                firstName = "Test", lastName = "User", username = "test_user1",
+                profileFloat = profileFloat, profileEnum = profileEnum,
+                roles = mutableSetOf(Role(roleName = RoleName.STUDENT))
         )
 
         userRepository.save(user1)
@@ -113,16 +110,16 @@ class UserRepositoryTest(
     @Transactional
     fun saveAndTestUser2(): UserEntity {
         val profile2 = mutableSetOf(
-            FloatProfileItem(
-                ability = abilityGs,
-                abilityValue = 4.0
-            ),
+                FloatProfileItem(
+                        ability = testService.abilityGsm,
+                        abilityValue = 4.0
+                ),
         )
-        //user with Gs
+        //user with Gsm
         val user2 = UserEntity(
-            firstName = "Test", lastName = "User", username = "test_user2",
-            profileFloat = profile2, profileEnum = mutableSetOf(),
-            roles = mutableSetOf(Role(roleName = RoleName.STUDENT))
+                firstName = "Test", lastName = "User", username = "test_user2",
+                profileFloat = profile2, profileEnum = mutableSetOf(),
+                roles = mutableSetOf(Role(roleName = RoleName.STUDENT))
         )
         userRepository.save(user2)
         assertEquals(2, userRepository.count())

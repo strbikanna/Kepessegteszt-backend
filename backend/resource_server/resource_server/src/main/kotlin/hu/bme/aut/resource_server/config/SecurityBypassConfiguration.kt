@@ -5,29 +5,30 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.security.config.Customizer
-import org.springframework.security.config.Customizer.withDefaults
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.session.ConcurrentSessionFilter
+
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@Profile( "!test & !dev" )
-@ConditionalOnProperty(name = ["cognitive-app.resource-server.security.bypass"], havingValue = "false", matchIfMissing = false)
-class SecurityConfiguration {
+@Profile( "test", "dev" )
+@ConditionalOnProperty(name = ["cognitive-app.resource-server.security.bypass"], havingValue = "true", matchIfMissing = true)
+class SecurityBypassConfiguration {
     @Bean
-    fun filterChain(http: HttpSecurity): SecurityFilterChain{
+    fun filterChain(http: HttpSecurity, bypassFilter: BypassFilter): SecurityFilterChain {
         http
-                .csrf{ it.disable()}
-                .cors(withDefaults())
-                .sessionManagement { SessionCreationPolicy.STATELESS }
-                .authorizeHttpRequests{
-                    it.anyRequest().authenticated()
-                }
-                .oauth2ResourceServer { it.jwt(withDefaults()) }
+            .csrf { it.disable() }
+            .cors(Customizer.withDefaults())
+            .sessionManagement { SessionCreationPolicy.STATELESS }
+            .authorizeHttpRequests {
+                it.anyRequest().authenticated()
+            }
+            .addFilterAfter(bypassFilter, ConcurrentSessionFilter::class.java)
         return http.build()
     }
 }

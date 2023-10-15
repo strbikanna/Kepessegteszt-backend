@@ -23,6 +23,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -32,6 +33,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations")
+    implementation("io.hypersistence:hypersistence-utils-hibernate-62:3.5.0")
+    implementation("org.json:json:20230227")
     runtimeOnly("com.h2database:h2")
     runtimeOnly("com.mysql:mysql-connector-j")
     implementation ("org.flywaydb:flyway-core")
@@ -39,6 +43,8 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("io.rest-assured:rest-assured:5.3.1")
+    testImplementation("org.hamcrest:hamcrest:2.2")
 }
 
 tasks.withType<KotlinCompile> {
