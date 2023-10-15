@@ -8,8 +8,6 @@ import io.restassured.filter.log.RequestLoggingFilter
 import io.restassured.filter.log.ResponseLoggingFilter
 import io.restassured.http.ContentType
 import io.restassured.specification.RequestSpecification
-import org.json.JSONObject
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -46,7 +44,7 @@ class GameplayControllerTest(
     fun shouldReturnForbiddenWithoutCorrectAuthentication(){
         testService.saveAuthUserWithRights(RoleName.STUDENT)
         val game = testService.createAndSaveGame()
-        val gameplayData = GamePlayDto(result= mapOf(), username = testService.authUsername, gameId = game.id!! )
+        val gameplayData = GameplayDto(result= mapOf(), username = testService.authUsername, gameId = game.id!! )
         given(requestSpec)
             .header(testService.authHeaderName, testService.authUsername)
             .body(gameplayData)
@@ -59,7 +57,7 @@ class GameplayControllerTest(
         testService.saveAuthUserWithRights(RoleName.STUDENT)
         testService.saveAuthGame()
         val result = mapOf(Pair("success", true))
-        val gameplayData = GamePlayDto(result= result, username = testService.authUsername, gameId = testService.authGameId)
+        val gameplayData = GameplayDto(result= result, username = testService.authUsername, gameId = testService.authGameId)
         given(requestSpec)
             .header(testService.authHeaderName, testService.authUsername)
             .header(testService.gameAuthHeaderName, testService.authGameId)

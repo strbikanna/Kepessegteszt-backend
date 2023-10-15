@@ -6,7 +6,7 @@ import io.hypersistence.utils.hibernate.type.json.JsonType
 
 @Entity
 @Table(name = "GAME")
-data class Game(
+data class GameEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null,

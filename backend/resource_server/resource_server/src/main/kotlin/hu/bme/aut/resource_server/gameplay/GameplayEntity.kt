@@ -1,7 +1,7 @@
 package hu.bme.aut.resource_server.gameplay
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import hu.bme.aut.resource_server.game.Game
+import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.user.UserEntity
 import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.*
@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "GAMEPLAY")
-data class GamePlay(
+data class GameplayEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -30,6 +30,6 @@ data class GamePlay(
 
     @ManyToOne(fetch= FetchType.EAGER)
     @JoinColumn(name = "game_id")
-    val game: Game
+    val game: GameEntity
 ) {
 }

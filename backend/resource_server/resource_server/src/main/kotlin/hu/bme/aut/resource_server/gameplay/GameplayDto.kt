@@ -1,8 +1,6 @@
 package hu.bme.aut.resource_server.gameplay
 
-import org.json.JSONObject
-
-data class GamePlayDto(
+data class GameplayDto(
 
     val result: Map<String, Any?>,
 

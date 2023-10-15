@@ -28,7 +28,7 @@ class GameplayController(
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('GAME')")
-    fun saveGameplay(@RequestBody gameplayData: GamePlayDto, authentication: Authentication){
+    fun saveGameplay(@RequestBody gameplayData: GameplayDto, authentication: Authentication){
         gameplayService.checkGameAccessAndThrow(authentication, gameplayData)
         val username = gameplayData.username
         if(!profileSnapshotService.existsSnapshotToday(username)){
@@ -39,7 +39,7 @@ class GameplayController(
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    fun getByUser(authentication: Authentication): List<GamePlay>{
+    fun getByUser(authentication: Authentication): List<GameplayEntity>{
         val username = authentication.name
         return gameplayService.getAllByUser(username)
     }

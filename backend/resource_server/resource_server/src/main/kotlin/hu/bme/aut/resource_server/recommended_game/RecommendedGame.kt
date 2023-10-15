@@ -1,6 +1,6 @@
 package hu.bme.aut.resource_server.recommended_game
 
-import hu.bme.aut.resource_server.game.Game
+import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.user.UserEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
@@ -27,5 +27,5 @@ data class RecommendedGame(
 
     @ManyToOne
     @JoinColumn(name = "game_id")
-    val game: Game
+    val game: GameEntity
 )

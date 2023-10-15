@@ -81,20 +81,20 @@ class GameplayRepositoryTest(
         assertEquals(0, emptyResult.size)
     }
 
-    private fun createGameplays(user: UserEntity): List<GamePlay>{
+    private fun createGameplays(user: UserEntity): List<GameplayEntity>{
         val game = testService.createAndSaveGame()
-        val gameplayList = listOf<GamePlay>(
-            GamePlay(
+        val gameplayList = listOf<GameplayEntity>(
+            GameplayEntity(
                 result = mapOf(Pair("level", 1), Pair("score", 2)),
                 user = user,
                 game = game
             ),
-            GamePlay(
+            GameplayEntity(
                 result = mapOf(Pair("level", 2), Pair("time", 210)),
                 user = user,
                 game = game
             ),
-            GamePlay(
+            GameplayEntity(
                 result = mapOf(Pair("level", 3), Pair("score", 0)),
                 user = user,
                 game = game

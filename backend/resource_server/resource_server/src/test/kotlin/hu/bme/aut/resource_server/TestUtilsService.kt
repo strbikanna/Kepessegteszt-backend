@@ -2,9 +2,9 @@ package hu.bme.aut.resource_server
 
 import hu.bme.aut.resource_server.ability.Ability
 import hu.bme.aut.resource_server.ability.AbilityRepository
-import hu.bme.aut.resource_server.game.Game
+import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.GameRepository
-import hu.bme.aut.resource_server.gameplay.GamePlay
+import hu.bme.aut.resource_server.gameplay.GameplayEntity
 import hu.bme.aut.resource_server.gameplay.GameplayRepository
 import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.profile_snapshot.EnumProfileSnapshotRepository
@@ -81,7 +81,7 @@ class TestUtilsService(
     }
 
     fun saveAuthGame(){
-        val game = Game(
+        val game = GameEntity(
             name = "Auth game",
             icon = "auth icon",
             thumbnailPath = "test/files/assets",
@@ -123,10 +123,10 @@ class TestUtilsService(
         userRepository.save(user2)
     }
 
-    fun createAndSaveGame(): Game{
+    fun createAndSaveGame(): GameEntity{
         val json = JSONObject()
         json.put("ability", "Gf")
-        val game = Game(
+        val game = GameEntity(
             name = "Test game",
             icon= "test",
             thumbnailPath = "test/files/assets",
@@ -137,7 +137,7 @@ class TestUtilsService(
         )
         return gameRepository.save(game)
     }
-    fun createGamePlay(): GamePlay{
+    fun createGamePlay(): GameplayEntity{
         val json = mutableMapOf<String, Any?>()
         json["time"] = 100
         json["correct"] = 10
@@ -145,7 +145,7 @@ class TestUtilsService(
         json["level"] = 2
         val user = createUnsavedTestUser()
         userRepository.save(user)
-        return GamePlay(
+        return GameplayEntity(
             result = json.toMap(),
             user = user,
             game = createAndSaveGame()

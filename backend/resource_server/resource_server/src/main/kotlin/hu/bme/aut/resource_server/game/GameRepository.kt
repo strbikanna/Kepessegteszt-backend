@@ -6,8 +6,8 @@ import java.util.*
 /**
  * Repository for the game entity with default CRUD methods
  */
-interface GameRepository : CrudRepository<Game, Int> {
-    fun findGameByName(name: String): Optional<Game>
+interface GameRepository : CrudRepository<GameEntity, Int> {
+    fun findGameByName(name: String): Optional<GameEntity>
     fun existsByName(name: String): Boolean
 
 }

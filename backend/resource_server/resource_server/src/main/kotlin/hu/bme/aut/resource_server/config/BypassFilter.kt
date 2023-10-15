@@ -1,6 +1,5 @@
 package hu.bme.aut.resource_server.config
 
-import hu.bme.aut.resource_server.game.Game
 import hu.bme.aut.resource_server.game.GameRepository
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
