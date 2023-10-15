@@ -39,6 +39,10 @@ class ProfileSnapshotService(
         val entity = userRepository.findByUsernameWithProfile(user.username).orElseThrow()
         saveSnapshotOfUser(entity)
     }
+    fun saveSnapshotOfUser(username: String){
+        val entity = userRepository.findByUsernameWithProfile(username).orElseThrow()
+        saveSnapshotOfUser(entity)
+    }
 
     fun getSnapshotsOfUser(user: PlainUserDto): List<ProfileSnapshotItem>{
         val entity = userRepository.findByUsername(user.username).orElseThrow()
@@ -59,4 +63,25 @@ class ProfileSnapshotService(
         snapShots.addAll(enumSnapshots)
         return snapShots
     }
+
+    fun existsSnapshotToday(username: String):Boolean{
+        val user = userRepository.findByUsername(username).orElseThrow()
+        val todayStart = getTodayStart()
+        val todayEnd = getTodayEnd()
+        return floatProfileSnapshotRepository.existsByUserAndTimestampBetween(user, todayStart, todayEnd)
+                && enumProfileSnapshotRepository.existsByUserAndTimestampBetween(user, todayStart, todayEnd)
+    }
+    private fun getTodayStart() = LocalDateTime.of(
+            LocalDateTime.now().year,
+            LocalDateTime.now().month,
+            LocalDateTime.now().dayOfMonth,
+            0,0,0
+        )
+    private fun getTodayEnd() = LocalDateTime.of(
+            LocalDateTime.now().year,
+            LocalDateTime.now().month,
+            LocalDateTime.now().dayOfMonth,
+            23,59,59
+        )
+
 }
