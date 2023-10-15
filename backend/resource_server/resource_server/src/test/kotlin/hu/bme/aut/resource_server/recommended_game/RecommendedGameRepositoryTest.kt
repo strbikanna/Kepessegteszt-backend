@@ -25,6 +25,7 @@ class RecommendedGameRepositoryTest(
     @BeforeEach
     fun emptyRepo() {
         recommendedGameRepository.deleteAll()
+        testUtilsService.emptyRepositories()
         userRepository.deleteAll()
     }
 
