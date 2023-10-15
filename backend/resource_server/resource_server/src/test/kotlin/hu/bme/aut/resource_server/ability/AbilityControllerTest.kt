@@ -1,6 +1,6 @@
-package hu.bme.aut.resource_server
+package hu.bme.aut.resource_server.ability
 
-import hu.bme.aut.resource_server.ability.Ability
+import hu.bme.aut.resource_server.TestUtilsService
 import hu.bme.aut.resource_server.utils.RoleName
 import io.restassured.RestAssured.given
 import io.restassured.matcher.RestAssuredMatchers.*
@@ -34,6 +34,7 @@ class AbilityControllerTest(
 
     @BeforeEach
     fun init() {
+        testService.emptyRepositories()
         testService.fillAbilityRepository()
         requestSpec = RequestSpecBuilder()
             .setBaseUri("http://localhost")

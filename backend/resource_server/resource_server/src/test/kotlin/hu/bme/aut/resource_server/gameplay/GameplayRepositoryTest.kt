@@ -29,7 +29,12 @@ class GameplayRepositoryTest(
     @Test
     fun shouldSaveGameplay(){
         val gameplay = testService.createGamePlay()
-        gameplayRepository.save(gameplay)
+        var saved = gameplayRepository.save(gameplay)
+        saved = gameplayRepository.findById(saved.id!!).get()
+        assertEquals(saved.game, gameplay.game)
+        assertEquals(100, saved.result["time"])
+        assertEquals(10, saved.result["correct"])
+        assertEquals(4, saved.result.size)
 
     }
 
