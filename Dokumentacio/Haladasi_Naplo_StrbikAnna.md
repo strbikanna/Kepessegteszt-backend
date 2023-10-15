@@ -82,3 +82,25 @@ Tehát a jelenlegi státusz: kezdetlegesen működik az auth server és a kliens
  - lehet többféle abilityValue field-je a ProfileItemnek, és nem mind van kitöltve, ennek megfelelően több nullable oszlopa lenne a táblának is...
 - nyilván mindnek van hátránya, nekem most ezek jutottak eszembe, a legjobb megoldás szerintem attól is nagyban függ, hogy a gyakorlatban mennyire lehet sokféle value típusra számítani
 
+# 10.15.
+## Ezen a héten a következőket valósítottam meg:
+### Resource server:
+- refaktoráltam a user és profile adatmodellt és a hozzá tartozó repókat, service-t
+- teszteltem a refaktorált osztályok működését
+- megírtam a képességekhez kapcsolódó kontroller osztály kódját, ezt is teszteltem
+- kijavítottam a játékok adatmodelljét, ehhez létrehoztam az entitásokat, a köztük lévő kapcsolatokat
+- elkészítettem a játékmenethez tartozó repository, service, controller és dto osztályokat, ezek működését is teszteltem
+- a játékmenetnél működik az autentikáció és a profilsnapshot mentése napi egyszer
+
+### Security update:
+- a resource serveren csináltam dev security beállítást, így az auth server éles működése nélkül is lehet tesztelni
+- lett egy új role: GAME, ez arra jó, hogy játékmenetek eredményeit jogosult elmenteni (illetve akár biz. user infok lekérdezésére)
+- az auth serveren készítettem egy további autentikációs módot a játékok számára: token, amiben a játék id, userinfo és GAME role szerepel
+- frontenden is működőképes ez a metódus, de még csak tesztüzemben van
+
+### Kérdéseim:
+- jwt token tárolása frontenden: in-memory nem járható, mivel redirect/frissítés esetén kiürül a memória, jó lesz httpOnly cookie? elvileg ez még egész biztonságos
+- kell a profilsnapshot mentésnél most foglalkozni azzal, hogy profilozó vagy tréning játékról van szó? Egyáltalán van előrehaladás, hogy mi alapján különböztetjük meg?
+
+### Egyéb:
+- a játékok integrálásához A) változat: a beépített játékok beágyazódnak az Angular kliensbe, B) változat: külső játék esetén url-címre redirect + access token?
