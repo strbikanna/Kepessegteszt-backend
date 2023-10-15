@@ -26,6 +26,7 @@ class SecurityBypassConfiguration {
             .cors(Customizer.withDefaults())
             .sessionManagement { SessionCreationPolicy.STATELESS }
             .authorizeHttpRequests {
+                it.requestMatchers("/error").permitAll()
                 it.anyRequest().authenticated()
             }
             .addFilterAfter(bypassFilter, ConcurrentSessionFilter::class.java)

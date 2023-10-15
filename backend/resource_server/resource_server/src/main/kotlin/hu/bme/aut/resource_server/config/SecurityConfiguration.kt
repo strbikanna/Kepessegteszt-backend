@@ -25,6 +25,7 @@ class SecurityConfiguration {
             .cors(withDefaults())
             .sessionManagement { SessionCreationPolicy.STATELESS }
             .authorizeHttpRequests{
+                it.requestMatchers("/error").permitAll()
                 it.anyRequest().authenticated()
             }
             .oauth2ResourceServer { it.jwt(withDefaults()) }
