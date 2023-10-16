@@ -3,6 +3,7 @@ import {LoginResponse, OidcSecurityService} from "angular-auth-oidc-client";
 import {User} from "../model/user.model";
 import {BehaviorSubject} from "rxjs";
 import {UserInfo} from "../utils/userInfo";
+import {GameInfo} from "../utils/GameInfo";
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class LoginService {
       .subscribe((loginResponse: LoginResponse) => {
         const {isAuthenticated, userData, accessToken, idToken, configId} = loginResponse;
         if(isAuthenticated){
+          console.log('User authentication happened')
           this.userInfo = this.convertUserData(userData)
           UserInfo.currentUser = this.userInfo
           UserInfo.accessToken = accessToken
@@ -27,13 +29,24 @@ export class LoginService {
         this.loginStatus.next(isAuthenticated)
         UserInfo.loginStatus.next(isAuthenticated)
       });
+    this.oidcSecurityService.checkAuth(undefined, 'gameTokenConfig').subscribe((loginResponse: LoginResponse) => {
+        console.log('Game authentication happened: ' + loginResponse.isAuthenticated)
+        GameInfo.authStatus.next(loginResponse.isAuthenticated)
+        GameInfo.accessToken = loginResponse.accessToken
+        return
+    }
+    );
   }
   login() {
-    this.oidcSecurityService.authorize();
+    this.oidcSecurityService.authorize('baseConfig');
   }
   loginAs(username: string){
     console.log(username)
     this.oidcSecurityService.authorize('baseConfig', {customParams: { 'act_as': username } })
+  }
+
+  getGameToken(id: number) {
+    this.oidcSecurityService.authorize('gameTokenConfig', {customParams: { 'game_id': id } })
   }
 
   logout() {

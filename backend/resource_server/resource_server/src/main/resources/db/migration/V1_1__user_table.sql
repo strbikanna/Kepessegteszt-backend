@@ -52,7 +52,7 @@ create table float_profile_snapshot_item
     id            bigint primary key auto_increment,
     ability_id    varchar(5) not null,
     user_id    int              not null,
-    _timestamp datetime unique not null,
+    _timestamp datetime not null,
     ability_value float,
     constraint fk_float_snapshot_to_user foreign key (user_id) references user (id),
     constraint fk_ability_float_snapshot foreign key (ability_id) references ability (code)
@@ -63,7 +63,7 @@ create table enum_profile_snapshot_item
     id            bigint primary key auto_increment,
     ability_id    varchar(5) not null,
     user_id    int              not null,
-    _timestamp datetime unique not null,
+    _timestamp datetime not null,
     ability_value varchar(30),
     constraint fk_enum_snapshot_to_user foreign key (user_id) references user (id),
     constraint fk_ability_enum_snapshot foreign key (ability_id) references ability (code)
