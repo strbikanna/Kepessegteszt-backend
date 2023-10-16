@@ -72,9 +72,13 @@ class UserInfoService(
         val users = pagingUserRepository.findAll(PageRequest.of(pageNumber, pageSize))
         return users.content.map { entity -> convertUserDao(entity) }
     }
+    fun getUsersCount(): Long {
+        return userRepository.count()
+    }
 
     private fun convertUserDao(userEntity: UserEntity): UserDao {
         return UserDao(
+            id = userEntity.id,
             username = userEntity.username,
             email = userEntity.email,
             firstName = userEntity.firstName,

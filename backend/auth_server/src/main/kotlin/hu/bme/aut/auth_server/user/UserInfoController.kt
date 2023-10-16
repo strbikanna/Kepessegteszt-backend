@@ -33,6 +33,13 @@ class UserInfoController(
         return userInfoService.getUsersWithoutContact(pageNumber ?: 0, pageSize ?: 1)
     }
 
+    @GetMapping("/count")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
+    fun getAllCount(): Long {
+        return userInfoService.getUsersCount()
+    }
+
     @GetMapping("/status")
     fun statusTest(): ResponseEntity<String> {
         return ResponseEntity(HttpStatus.OK)
