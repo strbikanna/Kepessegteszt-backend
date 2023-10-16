@@ -4,3 +4,7 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+cognititve-app:
+  resource-server:
+    secutity:
+      bypass: true

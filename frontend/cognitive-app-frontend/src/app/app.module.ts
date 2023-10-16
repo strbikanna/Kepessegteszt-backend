@@ -34,7 +34,7 @@ import {AuthInterceptor} from "./utils/auth.interceptor";
     RouterModule.forRoot(appRoutes),
     HttpClientModule,
     AuthModule.forRoot({
-      config: {
+      config: [{
         configId: 'baseConfig',
         authority: 'http://localhost:9000',
         redirectUrl: 'http://localhost:4200',
@@ -46,6 +46,19 @@ import {AuthInterceptor} from "./utils/auth.interceptor";
         useRefreshToken: true,
         logLevel: LogLevel.Debug,
       },
+        {
+          configId: 'gameTokenConfig',
+          authority: 'http://localhost:9000',
+          redirectUrl: 'http://localhost:4200',
+          postLogoutRedirectUri: 'http://localhost:4200',
+          clientId: 'frontend-client-002233',
+          scope: 'openid game',
+          responseType: 'code',
+          silentRenew: true,
+          useRefreshToken: true,
+          logLevel: LogLevel.Debug,
+        },
+      ],
     }),
     MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule,
   ],

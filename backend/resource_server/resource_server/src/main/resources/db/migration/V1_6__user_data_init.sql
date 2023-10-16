@@ -19,6 +19,8 @@ insert into role
 values('TEACHER');
 insert into role
 values('PARENT');
+insert into role
+values('GAME');
 
 -- users with roles
 insert into role_to_user(user_id, role_id) values(1,'TEACHER');

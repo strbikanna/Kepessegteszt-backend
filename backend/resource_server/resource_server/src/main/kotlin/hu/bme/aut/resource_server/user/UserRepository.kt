@@ -17,8 +17,8 @@ interface UserRepository: CrudRepository<UserEntity, Int> {
     @Query("SELECT u FROM UserEntity u LEFT JOIN FETCH u.profileFloat LEFT JOIN FETCH u.profileEnum WHERE u.username = :userName")
     fun findByUsernameWithProfile(userName: String): Optional<UserEntity>
 
-    @Query("SELECT u FROM UserEntity u JOIN FETCH u.roles WHERE u.id = :id")
-    fun findByIdWithRoles(id: Int): Optional<UserEntity>
+    @Query("SELECT u FROM UserEntity u JOIN FETCH u.roles WHERE u.username = :username")
+    fun findByUsernameWithRoles(username: String): Optional<UserEntity>
 
     @Modifying
     @Transactional

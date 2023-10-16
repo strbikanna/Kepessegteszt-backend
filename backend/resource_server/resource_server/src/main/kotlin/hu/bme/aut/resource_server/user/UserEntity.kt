@@ -19,11 +19,11 @@ data class UserEntity(
 
     val username: String,
 
-    @OneToMany(cascade=[CascadeType.ALL])
+    @OneToMany(cascade=[CascadeType.ALL], orphanRemoval = true)
     @JoinColumn(name="user_id")
     var profileFloat: MutableSet<FloatProfileItem>,
 
-    @OneToMany(cascade=[CascadeType.ALL])
+    @OneToMany(cascade=[CascadeType.ALL], orphanRemoval = true)
     @JoinColumn(name="user_id")
     var profileEnum: MutableSet<EnumProfileItem>,
 
