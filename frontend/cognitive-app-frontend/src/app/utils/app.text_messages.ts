@@ -30,5 +30,12 @@ export const TEXTS = {
                 'Sajnos az előző játékot nem tudod folytatni, térj vissza a játékok oldalra és válassz egy új játékot.',
             action: 'Vissza a játékokhoz',
         }
-    }
+    },
+    paging:{
+        firstPage : 'Első oldal',
+        itemsPerPage : 'Találatok száma oldalanként',
+        lastPage : 'Utolsó oldal',
+        nextPage : 'Következő oldal',
+        previousPage : 'Előző oldal',
+    },
 }

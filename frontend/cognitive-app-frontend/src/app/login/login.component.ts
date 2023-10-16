@@ -24,10 +24,10 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    UserInfo.loginStatus.next(true)
-    this.isLoggedIn = true
-    this.user = UserInfo.currentUser
-    //this.loginService.login()
+    // UserInfo.loginStatus.next(true)
+    // this.isLoggedIn = true
+    // this.user = UserInfo.currentUser
+    this.loginService.login()
   }
 
   logout() {

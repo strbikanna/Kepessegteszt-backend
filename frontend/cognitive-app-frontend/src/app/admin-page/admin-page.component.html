@@ -1,0 +1,64 @@
+<mat-paginator [length]="dataLength"
+               [pageSize]="defaultPageSize"
+               [pageSizeOptions]="pageSizeOptions"
+               aria-label="Select page"
+               (page)="handlePageEvent($event)">
+</mat-paginator>
+<div *ngFor="let user of users | async" >
+    <div *ngIf="user !== userToEdit" class="user-data-container">
+    <div>
+        <button mat-button class="name" (click)="setContactsOfUserToEdit(user)">{{user.firstName}} {{user.lastName}}</button>
+        <p class="username">{{user.username}}</p>
+    </div>
+    <div class="role-container">
+        <mat-chip *ngIf="user.roles.includes('ADMIN')">ADMIN</mat-chip>
+        <mat-chip *ngIf="user.roles.includes('TEACHER')">TANÁR</mat-chip>
+        <mat-chip *ngIf="user.roles.includes('STUDENT')">DIÁK</mat-chip>
+        <mat-chip *ngIf="user.roles.includes('SCIENTIST')">KUTATÓ</mat-chip>
+        <mat-chip *ngIf="user.roles.includes('PARENT')">SZÜLŐ</mat-chip>
+        <mat-icon *ngIf="hasRequestedRole(user)">help</mat-icon>
+    </div>
+    </div>
+
+    <div *ngIf="user === userToEdit">
+        <form [formGroup]="userDataForm">
+            <mat-form-field>
+                <mat-label>Vezetéknév</mat-label>
+                <input matInput placeholder="" value="{{user.firstName}}">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Keresztnév</mat-label>
+                <input matInput placeholder="" value="{{user.lastName}}">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Felhasználónév</mat-label>
+                <input matInput placeholder="" value="{{user.username}}">
+            </mat-form-field>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Szerepkörök
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-checkbox *ngIf="user.roles.includes('ADMIN')" checked>ADMIN</mat-checkbox>
+                <mat-checkbox *ngIf="user.roles.includes('TEACHER')" checked>TANÁR</mat-checkbox>
+                <mat-checkbox *ngIf="user.roles.includes('STUDENT')" checked>DIÁK</mat-checkbox>
+                <mat-checkbox *ngIf="user.roles.includes('SCIENTIST')" checked>KUTATÓ</mat-checkbox>
+                <mat-checkbox *ngIf="user.roles.includes('PARENT')" checked>SZÜLŐ</mat-checkbox>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Kontaktok
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <p *ngFor="let contact of user.contacts">{{contact.firstName}} {{contact.lastName}}</p>
+            </mat-expansion-panel>
+
+            <button mat-button (click)="userToEdit = undefined">Mégse</button>
+            <button mat-button color="primary">Mentés</button>
+        </form>
+    </div>
+
+    <mat-divider></mat-divider>
+</div>
