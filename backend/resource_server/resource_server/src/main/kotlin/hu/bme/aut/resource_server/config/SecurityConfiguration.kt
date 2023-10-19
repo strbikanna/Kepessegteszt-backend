@@ -21,14 +21,14 @@ class SecurityConfiguration {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain{
         http
-                .csrf{ it.disable()}
-                .cors(withDefaults())
-                .sessionManagement { SessionCreationPolicy.STATELESS }
-                .authorizeHttpRequests{
-                    it.requestMatchers("/error").permitAll()
-                    it.anyRequest().authenticated()
-                }
-                .oauth2ResourceServer { it.jwt(withDefaults()) }
+            .csrf{ it.disable()}
+            .cors(withDefaults())
+            .sessionManagement { SessionCreationPolicy.STATELESS }
+            .authorizeHttpRequests{
+                it.requestMatchers("/error").permitAll()
+                it.anyRequest().authenticated()
+            }
+            .oauth2ResourceServer { it.jwt(withDefaults()) }
         return http.build()
     }
 }
