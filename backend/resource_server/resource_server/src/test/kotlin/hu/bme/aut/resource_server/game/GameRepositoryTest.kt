@@ -33,6 +33,19 @@ class GameRepositoryTest(
 
     @Transactional
     @Test
+    fun testFindByName() {
+        val config = mapOf<String, Any>("Level" to 0)
+        val game = GameEntity(
+                name = "TestGame", description = "test_game_description", icon="test", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game",
+                active = true, url = "test_game_url", configDescription = config)
+        gameRepository.save(game)
+        assertNotNull(game.id)
+        assertTrue(gameRepository.existsByName("TestGame"))
+        assertEquals(Optional.of(game), gameRepository.findGameByName("TestGame"))
+    }
+
+    @Transactional
+    @Test
     fun shouldSaveMultipleGames() {
         val config1 = mapOf<String, Any>("Level" to 0)
         val config2 = mapOf<String, Any>("Level" to 3, "Ability" to "Gf")
