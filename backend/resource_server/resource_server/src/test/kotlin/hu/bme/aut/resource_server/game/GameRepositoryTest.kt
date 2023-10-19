@@ -25,7 +25,7 @@ class GameRepositoryTest(
     fun shouldSaveGame() {
         val config = mapOf<String, Any>("Level" to 0)
         val game = GameEntity(
-            name = "TestGame", description = "test_game_description", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game",
+            name = "TestGame", description = "test_game_description", icon="test", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game",
                 active = true, url = "test_game_url", configDescription = config)
         gameRepository.save(game)
         assertNotNull(game.id)
@@ -37,10 +37,10 @@ class GameRepositoryTest(
         val config1 = mapOf<String, Any>("Level" to 0)
         val config2 = mapOf<String, Any>("Level" to 3, "Ability" to "Gf")
         val game1 = GameEntity(
-                name = "TestGame1", description = "test_game_description1", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game1",
+                name = "TestGame1", description = "test_game_description1", icon="test1", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game1",
                 active = true, url = "test_game_url1", configDescription = config1)
         val game2 = GameEntity(
-                name = "TestGame2", description = "test_game_description2", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game2",
+                name = "TestGame2", description = "test_game_description2", icon="test2", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game2",
                 active = true, url = "test_game_url2", configDescription = config2)
         val savedGame1 = gameRepository.save(game1)
         val savedGame2 = gameRepository.save(game2)
@@ -56,7 +56,7 @@ class GameRepositoryTest(
     fun shouldSaveThenDeleteGame() {
         val config = mapOf<String, Any>("Level" to 0)
         val game = GameEntity(
-                name = "TestGame", description = "test_game_description", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game",
+                name = "TestGame", description = "test_game_description", icon="test", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game",
                 active = true, url = "test_game_url", configDescription = config)
         gameRepository.save(game)
         assertNotNull(game.id)

@@ -17,6 +17,8 @@ data class GameEntity(
         @Column(name ="_description")
         val description: String,
 
+        val icon: String,
+
         val thumbnailPath: String,
 
         @Column(name ="_active")

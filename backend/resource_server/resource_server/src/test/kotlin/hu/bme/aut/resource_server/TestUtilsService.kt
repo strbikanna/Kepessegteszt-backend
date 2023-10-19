@@ -108,6 +108,7 @@ class TestUtilsService(
         json.put("ability", "Gf")
         val game = GameEntity(
                 name = "Test game",
+                icon = "test",
                 thumbnailPath = "test/files/assets",
                 description = "Test game description",
                 active = true,

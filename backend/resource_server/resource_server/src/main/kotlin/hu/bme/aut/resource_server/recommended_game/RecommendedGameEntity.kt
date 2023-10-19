@@ -22,6 +22,9 @@ data class RecommendedGameEntity(
         @Column(name = "_level")
         val level: Int = 0,
 
+        @Type(JsonType::class)
+        val config: Map<String, Any>,
+
         val completed: Boolean = false,
 
         @JoinColumn(name = "recommender_id")
