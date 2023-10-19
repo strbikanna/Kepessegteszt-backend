@@ -5,7 +5,6 @@ import hu.bme.aut.resource_server.user.UserRepository
 import hu.bme.aut.resource_server.role.Role
 import hu.bme.aut.resource_server.utils.RoleName
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Profile
 import org.springframework.core.convert.converter.Converter
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
