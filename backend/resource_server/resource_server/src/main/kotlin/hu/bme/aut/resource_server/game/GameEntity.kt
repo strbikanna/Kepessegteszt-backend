@@ -21,10 +21,12 @@ data class GameEntity(
 
     val thumbnailPath: String,
 
+    @Column(name ="_active")
     val active: Boolean,
 
     val url: String,
 
     @Type(JsonType::class)
     val configDescription: Map<String, Any>
+
 )
