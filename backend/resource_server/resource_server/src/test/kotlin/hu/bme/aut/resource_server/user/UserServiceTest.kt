@@ -16,9 +16,9 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles("test")
 @SpringBootTest
 class UserServiceTest(
-        @Autowired private var userService: UserService,
-        @Autowired private var testService: TestUtilsService,
-        @Autowired private var profileRepository: FloatProfileRepository,
+    @Autowired private var userService: UserService,
+    @Autowired private var testService: TestUtilsService,
+    @Autowired private var profileRepository: FloatProfileRepository,
 ) {
     @BeforeEach
     fun clearDb() {
@@ -108,10 +108,10 @@ class UserServiceTest(
         assertEquals(2, testUser1.profileFloat.size)
         testUser1.profileFloat.add(FloatProfileItem(ability = testService.abilityGsm, abilityValue = 5.0))
         testUser1.profileEnum.add(
-                EnumProfileItem(
-                        ability = testService.abilityColorsense,
-                        abilityValue = EnumAbilityValue.POSSIBLE
-                )
+            EnumProfileItem(
+                ability = testService.abilityColorsense,
+                abilityValue = EnumAbilityValue.POSSIBLE
+            )
         )
         val updatedUser = userService.updateUserProfile(testUser1)
         assertEquals(4, updatedUser.profile.size)

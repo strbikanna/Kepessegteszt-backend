@@ -6,7 +6,6 @@ import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 
-
 interface RecommendedGameRepository: CrudRepository<RecommendedGameEntity, Long>, PagingAndSortingRepository<RecommendedGameEntity, Long> {
     fun findAllByRecommendedTo(recommendedTo: UserEntity): List<RecommendedGameEntity>
     fun findAllPagedByRecommendedTo(recommendedTo: UserEntity, page: Pageable): List<RecommendedGameEntity>

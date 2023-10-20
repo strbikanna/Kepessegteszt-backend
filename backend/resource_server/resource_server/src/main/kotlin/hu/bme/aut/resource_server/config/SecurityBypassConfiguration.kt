@@ -22,14 +22,14 @@ class SecurityBypassConfiguration {
     @Bean
     fun filterChain(http: HttpSecurity, bypassFilter: BypassFilter): SecurityFilterChain {
         http
-                .csrf { it.disable() }
-                .cors(Customizer.withDefaults())
-                .sessionManagement { SessionCreationPolicy.STATELESS }
-                .authorizeHttpRequests {
-                    it.requestMatchers("/error").permitAll()
-                    it.anyRequest().authenticated()
-                }
-                .addFilterAfter(bypassFilter, ConcurrentSessionFilter::class.java)
+            .csrf { it.disable() }
+            .cors(Customizer.withDefaults())
+            .sessionManagement { SessionCreationPolicy.STATELESS }
+            .authorizeHttpRequests {
+                it.requestMatchers("/error").permitAll()
+                it.anyRequest().authenticated()
+            }
+            .addFilterAfter(bypassFilter, ConcurrentSessionFilter::class.java)
         return http.build()
     }
 }

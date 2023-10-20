@@ -17,8 +17,8 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles("test")
 @SpringBootTest
 class UserRepositoryTest(
-        @Autowired private var userRepository: UserRepository,
-        @Autowired private var testService: TestUtilsService,
+    @Autowired private var userRepository: UserRepository,
+    @Autowired private var testService: TestUtilsService,
 ) {
     @BeforeEach
     fun emptyRepo() {
@@ -30,14 +30,14 @@ class UserRepositoryTest(
     @Test
     fun shouldSaveUser() {
         val profile = mutableSetOf(
-                FloatProfileItem(
-                        ability = testService.abilityGv,
-                        abilityValue = 10.0
-                ),
-                FloatProfileItem(
-                        ability = testService.abilityGsm,
-                        abilityValue = 4.0
-                ),
+            FloatProfileItem(
+                ability = testService.abilityGv,
+                abilityValue = 10.0
+            ),
+            FloatProfileItem(
+                ability = testService.abilityGsm,
+                abilityValue = 4.0
+            ),
         )
         val user = UserEntity(
                 firstName = "Test", lastName = "User", username = "test_user",
@@ -79,20 +79,20 @@ class UserRepositoryTest(
     @Transactional
     fun saveAndTestUser1(): UserEntity {
         val profileFloat = mutableSetOf(
-                FloatProfileItem(
-                        ability = testService.abilityGv,
-                        abilityValue = 10.0
-                ),
-                FloatProfileItem(
-                        ability = testService.abilityGsm,
-                        abilityValue = 4.0
-                ),
+            FloatProfileItem(
+                ability = testService.abilityGv,
+                abilityValue = 10.0
+            ),
+            FloatProfileItem(
+                ability = testService.abilityGsm,
+                abilityValue = 4.0
+            ),
         )
         val profileEnum = mutableSetOf(
-                EnumProfileItem(
-                        ability = testService.abilityGv,
-                        abilityValue = EnumAbilityValue.YES
-                ),
+            EnumProfileItem(
+                ability = testService.abilityGv,
+                abilityValue = EnumAbilityValue.YES
+            ),
         )
         //user with Gv and Gsm
         val user1 = UserEntity(
@@ -110,10 +110,10 @@ class UserRepositoryTest(
     @Transactional
     fun saveAndTestUser2(): UserEntity {
         val profile2 = mutableSetOf(
-                FloatProfileItem(
-                        ability = testService.abilityGsm,
-                        abilityValue = 4.0
-                ),
+            FloatProfileItem(
+                ability = testService.abilityGsm,
+                abilityValue = 4.0
+            ),
         )
         //user with Gsm
         val user2 = UserEntity(

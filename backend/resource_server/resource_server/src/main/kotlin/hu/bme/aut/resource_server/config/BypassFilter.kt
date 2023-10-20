@@ -20,13 +20,13 @@ import org.springframework.web.filter.OncePerRequestFilter
 @Profile( "test", "dev" )
 @ConditionalOnProperty(name = ["cognitive-app.resource-server.security.bypass"], havingValue = "true", matchIfMissing = true)
 class BypassFilter(
-        @Autowired private var userRepository: UserRepository,
-        @Autowired private var gameRepository: GameRepository
+    @Autowired private var userRepository: UserRepository,
+    @Autowired private var gameRepository: GameRepository
 ) : OncePerRequestFilter() {
     override fun doFilterInternal(
-            request: HttpServletRequest,
-            response: HttpServletResponse,
-            filterChain: FilterChain
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        filterChain: FilterChain
     ) {
         val requestedUsername = request.getHeader("authUser")
         val requestedGameId = request.getHeader("authGame")
@@ -50,9 +50,9 @@ class BypassFilter(
         }
         val game = gameOptional.get()
         val jwt = Jwt.withTokenValue("devgame")
-                .header("alg", "none")
-                .subject(requestedGameId)
-                .build()
+            .header("alg", "none")
+            .subject(requestedGameId)
+            .build()
         SecurityContextHolder.getContext().authentication = JwtAuthenticationToken(jwt, listOf(SimpleGrantedAuthority("ROLE_GAME"), SimpleGrantedAuthority(requestedUsername)))
     }
 
@@ -65,9 +65,9 @@ class BypassFilter(
             return
         }
         val jwt = Jwt.withTokenValue("devuser")
-                .header("alg", "none")
-                .subject(requestedUsername)
-                .build()
+            .header("alg", "none")
+            .subject(requestedUsername)
+            .build()
         SecurityContextHolder.getContext().authentication = JwtAuthenticationToken(jwt, user.roles.map{SimpleGrantedAuthority("ROLE_${it.roleName.toString()}")})
     }
 }
