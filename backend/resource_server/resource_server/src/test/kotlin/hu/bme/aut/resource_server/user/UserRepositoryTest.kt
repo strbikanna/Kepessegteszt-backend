@@ -40,9 +40,9 @@ class UserRepositoryTest(
             ),
         )
         val user = UserEntity(
-            firstName = "Test", lastName = "User", username = "test_user",
-            profileFloat = profile, profileEnum = mutableSetOf(),
-            roles = mutableSetOf(Role(roleName = RoleName.PARENT))
+                firstName = "Test", lastName = "User", username = "test_user",
+                profileFloat = profile, profileEnum = mutableSetOf(),
+                roles = mutableSetOf(Role(roleName = RoleName.PARENT))
         )
         userRepository.save(user)
         assertNotNull(user.id)
@@ -62,8 +62,8 @@ class UserRepositoryTest(
 
     @Transactional
     private fun testSavedUsers(
-        user1: UserEntity,
-        user2: UserEntity
+            user1: UserEntity,
+            user2: UserEntity
     ) {
         val savedUser1 = userRepository.findByIdWithProfile(user1.id!!).get()
         val savedUser2 = userRepository.findByIdWithProfile(user2.id!!).get()
@@ -96,9 +96,9 @@ class UserRepositoryTest(
         )
         //user with Gv and Gsm
         val user1 = UserEntity(
-            firstName = "Test", lastName = "User", username = "test_user1",
-            profileFloat = profileFloat, profileEnum = profileEnum,
-            roles = mutableSetOf(Role(roleName = RoleName.STUDENT))
+                firstName = "Test", lastName = "User", username = "test_user1",
+                profileFloat = profileFloat, profileEnum = profileEnum,
+                roles = mutableSetOf(Role(roleName = RoleName.STUDENT))
         )
 
         userRepository.save(user1)
@@ -117,9 +117,9 @@ class UserRepositoryTest(
         )
         //user with Gsm
         val user2 = UserEntity(
-            firstName = "Test", lastName = "User", username = "test_user2",
-            profileFloat = profile2, profileEnum = mutableSetOf(),
-            roles = mutableSetOf(Role(roleName = RoleName.STUDENT))
+                firstName = "Test", lastName = "User", username = "test_user2",
+                profileFloat = profile2, profileEnum = mutableSetOf(),
+                roles = mutableSetOf(Role(roleName = RoleName.STUDENT))
         )
         userRepository.save(user2)
         assertEquals(2, userRepository.count())

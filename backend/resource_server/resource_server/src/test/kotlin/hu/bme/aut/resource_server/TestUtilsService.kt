@@ -50,14 +50,14 @@ class TestUtilsService(
     }
     fun createUnsavedTestUser(): UserEntity{
         val profile  = mutableSetOf(
-            FloatProfileItem(
-                ability = abilityGf,
-                abilityValue = 10.0
-            ),
-            FloatProfileItem(
-                ability = abilityGq,
-                abilityValue = 4.0
-            ),
+                FloatProfileItem(
+                        ability = abilityGf,
+                        abilityValue = 10.0
+                ),
+                FloatProfileItem(
+                        ability = abilityGq,
+                        abilityValue = 4.0
+                ),
         )
         return UserEntity(
                 username = "test_user",
@@ -66,7 +66,18 @@ class TestUtilsService(
                 profileFloat = profile,
                 profileEnum = mutableSetOf(),
                 roles = mutableSetOf(Role(RoleName.STUDENT))
-            )
+        )
+    }
+    fun saveAuthUserWithRights(vararg roles: RoleName){
+        val user = UserEntity(
+                username = authUsername,
+                firstName = "Test",
+                lastName = "User",
+                profileFloat = mutableSetOf(),
+                profileEnum = mutableSetOf(),
+                roles = roles.map { Role(it) }.toMutableSet()
+        )
+        userRepository.save(user)
     }
     fun saveAuthUserWithRights(vararg roles: RoleName){
         val user = UserEntity(
@@ -103,22 +114,22 @@ class TestUtilsService(
         val user1 = createUnsavedTestUser().copy(username = "test_user1")
         userRepository.save(user1)
         val profile  = mutableSetOf(
-            FloatProfileItem(
-                ability = abilityGsm,
-                abilityValue = 2.0
-            ),
-            FloatProfileItem(
-                ability = abilityGq,
-                abilityValue = 7.0
-            ),
+                FloatProfileItem(
+                        ability = abilityGsm,
+                        abilityValue = 2.0
+                ),
+                FloatProfileItem(
+                        ability = abilityGq,
+                        abilityValue = 7.0
+                ),
         )
         val user2 = UserEntity(
-            username = "test_user2",
-            firstName = "Test",
-            lastName = "User",
-            profileFloat = profile,
-            profileEnum = mutableSetOf(),
-            roles = mutableSetOf(Role(RoleName.STUDENT))
+                username = "test_user2",
+                firstName = "Test",
+                lastName = "User",
+                profileFloat = profile,
+                profileEnum = mutableSetOf(),
+                roles = mutableSetOf(Role(RoleName.STUDENT))
         )
         userRepository.save(user2)
     }

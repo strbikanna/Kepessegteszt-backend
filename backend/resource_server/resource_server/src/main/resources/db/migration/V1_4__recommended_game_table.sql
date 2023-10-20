@@ -1,6 +1,8 @@
 CREATE TABLE RECOMMENDED_GAME (
-                                  id                 bigint             PRIMARY KEY AUTO_INCREMENT,
+                                  id                 bigint          PRIMARY KEY AUTO_INCREMENT,
                                   _timestamp         datetime,
+                                  _level             smallint,
+                                  config             json,
                                   recommender_id     int             NOT NULL,
                                   recommendee_id     int             NOT NULL,
                                   game_id            int             NOT NULL,

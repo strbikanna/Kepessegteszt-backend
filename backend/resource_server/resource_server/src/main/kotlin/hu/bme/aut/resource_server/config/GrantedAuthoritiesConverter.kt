@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class GrantedAuthoritiesConverter(
-    @Autowired private var userRepository: UserRepository,
+        @Autowired private var userRepository: UserRepository,
 ) : Converter<Jwt, Collection<GrantedAuthority>> {
     override fun convert(source: Jwt): Collection<GrantedAuthority> {
         val roles = getRolesFromJwt(source)
@@ -31,14 +31,14 @@ class GrantedAuthoritiesConverter(
         val username = source.subject
         if (!userRepository.existsByUsername(username)) {
             userRepository.save(
-                UserEntity(
-                    username = username,
-                    firstName = source.getClaimAsString("family_name"),
-                    lastName = source.getClaimAsString("given_name"),
-                    profileFloat = mutableSetOf(),
-                    profileEnum = mutableSetOf(),
-                    roles = roles.toSet()
-                )
+                    UserEntity(
+                            username = username,
+                            firstName = source.getClaimAsString("family_name"),
+                            lastName = source.getClaimAsString("given_name"),
+                            profileFloat = mutableSetOf(),
+                            profileEnum = mutableSetOf(),
+                            roles = roles.toSet()
+                    )
             )
         }else{
             var user = userRepository.findByUsername(username).get()
