@@ -38,4 +38,21 @@ export const TEXTS = {
         nextPage : 'Következő oldal',
         previousPage : 'Előző oldal',
     },
+    admin_page: {
+        user_data: {
+            first_name: 'Keresztnév',
+            last_name: 'Vezetéknév',
+            email: 'E-mail',
+            username: 'Felhasználónév',
+            roles: 'Szerepkörök',
+            contacts: 'Kapcsolatok',
+        },
+        actions:{
+            cancel: 'Mégse',
+            save: 'Mentés',
+            add_contact: 'Kapcsolat hozzáadása',
+            add: 'Hozzáadás',
+            role_request: 'Igényelt szerpkörök',
+        }
+    }
 }

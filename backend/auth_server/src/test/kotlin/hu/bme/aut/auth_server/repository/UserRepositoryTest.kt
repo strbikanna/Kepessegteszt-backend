@@ -40,4 +40,5 @@ class UserRepositoryTest(@Autowired private var userRepository: UserRepository) 
         assertNotNull(userEntity.id)
     }
 
+
 }

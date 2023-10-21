@@ -11,10 +11,12 @@ export class AdminService {
 
   constructor(private http: HttpClient) { }
 
-  getAllUsers(pageNumber: number, pageSize: number):Observable<UserForAdmin[]>{
+  getAllUsers(pageNumber?: number, pageSize?: number):Observable<UserForAdmin[]>{
     let params = new HttpParams();
-    params = params.append('pageNumber', pageNumber);
-    params = params.append('pageSize', pageSize);
+    if(pageNumber !== undefined && pageSize !== undefined){
+      params = params.append('pageNumber', pageNumber);
+      params = params.append('pageSize', pageSize);
+    }
     return this.http.get<UserForAdmin[]>(`${AppConstants.authServerUrl}/user/all`, {params: params});
   }
   getContactsOfUser(user: UserForAdmin):Observable<UserForAdmin[]>{
@@ -22,5 +24,8 @@ export class AdminService {
   }
   getNumberOfUsers():Observable<number>{
     return this.http.get<number>(`${AppConstants.authServerUrl}/user/count`);
+  }
+  updateUserData(user: UserForAdmin): Observable<UserForAdmin>{
+    return this.http.put<UserForAdmin>(`${AppConstants.authServerUrl}/user/${user.id}`, user);
   }
 }

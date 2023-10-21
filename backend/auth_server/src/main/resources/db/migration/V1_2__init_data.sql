@@ -30,6 +30,9 @@ VALUES (3, 'STUDENT');
 INSERT INTO ROLES(id, role_name)
 VALUES (4, 'ADMIN');
 
+INSERT INTO ROLES(id, role_name)
+VALUES (5, 'PARENT');
+
 -- user roles
 INSERT INTO USER_ROLES(user_id, role_id)
 VALUES (1, 3);

@@ -4,59 +4,103 @@
                aria-label="Select page"
                (page)="handlePageEvent($event)">
 </mat-paginator>
-<div *ngFor="let user of users | async" >
+<div *ngFor="let user of users | async" class="page-content">
     <div *ngIf="user !== userToEdit" class="user-data-container">
-    <div>
-        <button mat-button class="name" (click)="setContactsOfUserToEdit(user)">{{user.firstName}} {{user.lastName}}</button>
-        <p class="username">{{user.username}}</p>
-    </div>
-    <div class="role-container">
-        <mat-chip *ngIf="user.roles.includes('ADMIN')">ADMIN</mat-chip>
-        <mat-chip *ngIf="user.roles.includes('TEACHER')">TANÁR</mat-chip>
-        <mat-chip *ngIf="user.roles.includes('STUDENT')">DIÁK</mat-chip>
-        <mat-chip *ngIf="user.roles.includes('SCIENTIST')">KUTATÓ</mat-chip>
-        <mat-chip *ngIf="user.roles.includes('PARENT')">SZÜLŐ</mat-chip>
-        <mat-icon *ngIf="hasRequestedRole(user)">help</mat-icon>
-    </div>
+        <div>
+            <button mat-button class="name"
+                    (click)="setUpUserToEdit(user)">{{user.firstName}} {{user.lastName}}</button>
+            <p class="username">{{user.username}}</p>
+        </div>
+        <div class="role-container">
+            <mat-chip *ngIf="user.roles.includes('ADMIN')">ADMIN</mat-chip>
+            <mat-chip *ngIf="user.roles.includes('TEACHER')">TANÁR</mat-chip>
+            <mat-chip *ngIf="user.roles.includes('STUDENT')">DIÁK</mat-chip>
+            <mat-chip *ngIf="user.roles.includes('SCIENTIST')">KUTATÓ</mat-chip>
+            <mat-chip *ngIf="user.roles.includes('PARENT')">SZÜLŐ</mat-chip>
+            <mat-icon *ngIf="hasRequestedRole(user)">help</mat-icon>
+        </div>
     </div>
 
     <div *ngIf="user === userToEdit">
-        <form [formGroup]="userDataForm">
-            <mat-form-field>
-                <mat-label>Vezetéknév</mat-label>
-                <input matInput placeholder="" value="{{user.firstName}}">
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Keresztnév</mat-label>
-                <input matInput placeholder="" value="{{user.lastName}}">
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Felhasználónév</mat-label>
-                <input matInput placeholder="" value="{{user.username}}">
-            </mat-form-field>
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Szerepkörök
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <mat-checkbox *ngIf="user.roles.includes('ADMIN')" checked>ADMIN</mat-checkbox>
-                <mat-checkbox *ngIf="user.roles.includes('TEACHER')" checked>TANÁR</mat-checkbox>
-                <mat-checkbox *ngIf="user.roles.includes('STUDENT')" checked>DIÁK</mat-checkbox>
-                <mat-checkbox *ngIf="user.roles.includes('SCIENTIST')" checked>KUTATÓ</mat-checkbox>
-                <mat-checkbox *ngIf="user.roles.includes('PARENT')" checked>SZÜLŐ</mat-checkbox>
-            </mat-expansion-panel>
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Kontaktok
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <p *ngFor="let contact of user.contacts">{{contact.firstName}} {{contact.lastName}}</p>
-            </mat-expansion-panel>
+        <form [formGroup]="userDataForm" (ngSubmit)="saveChangesOfUserToEdit()">
+            <div class="user-data-form">
+                <mat-form-field>
+                    <mat-label>{{text.user_data.first_name}}</mat-label>
+                    <input matInput formControlName="firstName" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{text.user_data.last_name}}</mat-label>
+                    <input matInput formControlName="lastName" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{text.user_data.username}}</mat-label>
+                    <input matInput formControlName="username" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{text.user_data.email}}</mat-label>
+                    <input matInput formControlName="email" required>
+                </mat-form-field>
+            </div>
 
-            <button mat-button (click)="userToEdit = undefined">Mégse</button>
-            <button mat-button color="primary">Mentés</button>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{text.user_data.roles}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-checkbox *ngFor="let role of actualRolesOfUser(user)" checked
+                              (change)="onRoleCheckChanged(role, $event)">{{role}}</mat-checkbox>
+                <mat-checkbox *ngFor="let role of notRolesOfUser(user)"
+                              (change)="onRoleCheckChanged(role, $event)">{{role}}</mat-checkbox>
+                <div *ngIf="hasRequestedRole(user)">
+                    {{text.actions.role_request}}:
+                    <p *ngFor="let request of requestedRolesOfUser(user)"> {{request}} </p>
+                </div>
+
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{text.user_data.contacts}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="contact-panel">
+                    <div class="add-contact">
+                        <mat-form-field>
+                            <mat-label>{{text.user_data.contacts}}</mat-label>
+                            <input type="text"
+                                   placeholder="Új kapcsolat"
+                                   aria-label="Text"
+                                   matInput
+                                   formControlName="contactAutocompleteForm"
+                                   [matAutocomplete]="auto">
+                            <mat-hint>{{text.actions.add_contact}}</mat-hint>
+                            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="convertDisplay">
+                                <mat-option *ngFor="let option of filteredContactOptions" [value]="option">
+                                    {{option.firstName}} {{option.lastName}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                        <button matSuffix mat-flat-button aria-label="Submit" type="button" (click)="onAddContact()" color="primary">
+                            {{text.actions.add}}
+                        </button>
+                    </div>
+
+                    <div class="contact-list">
+                        <div *ngFor="let contact of user.contacts" class="existing-contact">
+                            <div>{{contact.firstName}} {{contact.lastName}} </div>
+                            <button mat-icon-button (click)="onContactDeleted(contact)" type="button" color="warn">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+            <div class="end-button-container">
+                <button mat-button (click)="userToEdit = undefined" color="primary">{{text.actions.cancel}}</button>
+                <button mat-flat-button color="primary" type="submit">{{text.actions.save}}</button>
+            </div>
+
         </form>
     </div>
 
