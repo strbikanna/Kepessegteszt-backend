@@ -18,12 +18,11 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatCardModule} from "@angular/material/card";
 import {MatListModule} from "@angular/material/list";
 import { ImpersonationComponent } from './impersonation/impersonation.component';
-import {AuthInterceptor} from "./utils/auth.interceptor";
+import {AuthInterceptor} from "./auth/auth.interceptor";
 import { GamesComponent } from './games/games.component';
 import {MatTabsModule} from "@angular/material/tabs";
 import { PlaygroundComponent } from './playground/playground.component';
 import {MatDialogModule} from "@angular/material/dialog";
-import { AdminPageComponent } from './admin-page/admin-page.component';
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatChipsModule} from "@angular/material/chips";
 import {ReactiveFormsModule} from "@angular/forms";
@@ -31,6 +30,9 @@ import {MatInputModule} from "@angular/material/input";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {NgOptimizedImage} from "@angular/common";
+import {AdminModule} from "./admin/admin.module";
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,7 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
     ImpersonationComponent,
     GamesComponent,
     PlaygroundComponent,
-    AdminPageComponent,
+    HeaderComponent,
   ],
     imports: [
         BrowserModule,
@@ -62,7 +64,8 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
                 logLevel: LogLevel.Debug,
             },
         }),
-        MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule, MatTabsModule, MatDialogModule, MatPaginatorModule, MatChipsModule, ReactiveFormsModule, MatInputModule, MatExpansionModule, MatCheckboxModule, MatAutocompleteModule,
+        AdminModule,
+        MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule, MatTabsModule, MatDialogModule, MatPaginatorModule, MatChipsModule, ReactiveFormsModule, MatInputModule, MatExpansionModule, MatCheckboxModule, MatAutocompleteModule, NgOptimizedImage,
     ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent]

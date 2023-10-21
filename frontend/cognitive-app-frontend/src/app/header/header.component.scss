@@ -1,0 +1,23 @@
+.navbar{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 4em;
+  padding: 1.5em;
+}
+div.menubar{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+button{
+  font-size: larger;
+  font-weight: normal;
+}
+a{
+  display: block;
+  margin-right: 2em;
+  height: 2em;
+  font-size: large;
+  font-weight: normal;
+}

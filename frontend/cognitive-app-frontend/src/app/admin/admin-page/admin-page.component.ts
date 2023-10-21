@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {AdminService} from "./service/admin.service";
+import {AdminService} from "../service/admin.service";
 import {map, Observable, of} from "rxjs";
-import {UserForAdmin} from "./model/user-contacts.model";
+import {UserForAdmin} from "../model/user-contacts.model";
 import {FormControl, FormGroup} from "@angular/forms";
 import {PageEvent} from "@angular/material/paginator";
-import {Role} from "../utils/constants";
+import {Role} from "../../utils/constants";
 import {MatCheckboxChange} from "@angular/material/checkbox";
-import {TEXTS} from "../utils/app.text_messages";
+import {TEXTS} from "../../utils/app.text_messages";
 
 @Component({
     selector: 'app-admin-page',
@@ -58,6 +58,7 @@ export class AdminPageComponent implements OnInit {
         this.userDataForm.controls.lastName.setValue(user.lastName);
         this.userDataForm.controls.username.setValue(user.username);
         this.userDataForm.controls.email.setValue(user.email);
+        this.resetAutoComplete()
     }
     initContactAutocomplete(): void {
         console.log('init contact autocomplete')
@@ -97,6 +98,11 @@ export class AdminPageComponent implements OnInit {
         }
         if(this.userToEdit!!.contacts.find(existing => existing.id === contact.id) !== undefined) return;
         this.userToEdit!!.contacts.push(contact);
+        this.resetAutoComplete();
+    }
+
+    resetAutoComplete(){
+        this.userDataForm.controls.contactAutocompleteForm.setValue('');
     }
 
     handlePageEvent(event: PageEvent): void {
