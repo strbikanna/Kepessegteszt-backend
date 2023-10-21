@@ -2,12 +2,13 @@ package hu.bme.aut.auth_server.user
 
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
+import org.springframework.data.repository.PagingAndSortingRepository
 import java.util.*
 
 /**
  * Repository for the user entity with default CRUD methods
  */
-interface UserRepository : CrudRepository<UserEntity, Int> {
+interface UserRepository : CrudRepository<UserEntity, Int>, PagingAndSortingRepository<UserEntity, Int> {
     fun findByUsername(username: String): Optional<UserEntity>
     fun existsByUsername(userName: String): Boolean
 
@@ -22,4 +23,8 @@ interface UserRepository : CrudRepository<UserEntity, Int> {
         nativeQuery = true
     )
     fun getContactsByUsername(username: String): List<UserEntity>
+
+    fun findByIdIn(ids: Set<Int>): List<UserEntity>
+
+    override fun findAll(): List<UserEntity>
 }

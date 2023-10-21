@@ -28,9 +28,9 @@ logging:
   level:
     org:
       springframework:
-        security: info
+        security: trace
         data:
-          repository: trace
+          repository: info
 
 cognitive-app:
   mail: noreply@cognitiveapp.hu

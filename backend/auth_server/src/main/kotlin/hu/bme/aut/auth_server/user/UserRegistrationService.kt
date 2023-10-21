@@ -24,7 +24,7 @@ class UserRegistrationService(
             username = userData.username,
             password = encodedPassword,
             roles = mutableSetOf(mapRole(userData.role)),
-            contacts = mutableSetOf(),
+            contacts = mutableListOf(),
             enabled = false
         )
         userRepository.save(userEntity)

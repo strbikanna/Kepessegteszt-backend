@@ -7,4 +7,5 @@ import org.springframework.data.repository.CrudRepository
  */
 interface RoleRepository : CrudRepository<RoleEntity, Int> {
     fun findByRoleName(name: Role): RoleEntity
+    fun findByRoleNameIn(names: Set<Role>): List<RoleEntity>
 }

@@ -1,6 +1,6 @@
 package hu.bme.aut.auth_server.repository
 
-import hu.bme.aut.auth_server.user.PagingUserRepository
+import hu.bme.aut.auth_server.user.UserRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
 
 @SpringBootTest
-class PagingUserRepositoryTest(@Autowired private var pagingUserRepository: PagingUserRepository) {
+class PagingUserRepositoryTest(@Autowired private var pagingUserRepository: UserRepository) {
     @Test
     fun shouldFindAll() {
         val users = pagingUserRepository.findAll(PageRequest.of(0, 3))

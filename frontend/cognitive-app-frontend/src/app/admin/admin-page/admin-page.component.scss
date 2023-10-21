@@ -1,0 +1,82 @@
+:host{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 1em;
+}
+.page-content{
+  width: 80%;
+}
+.name{
+  font-size: large;
+  margin-bottom: 0.2em;
+}
+.username{
+  font-size: medium;
+  color: darkgray;
+  margin-top: 0.2em;
+  margin-left: 0.6em;
+}
+.user-data-container{
+  padding: 0.7em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.role-container{
+  display: flex;
+  flex-direction: row-reverse;
+  margin-top: 1em;
+  margin-left: 1em;
+}
+.existing-contact{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 0.8em;
+  border: darkgray 1px solid;
+  border-radius: 0.5em;
+  width: 15em;
+}
+.contact-panel{
+  display: flex;
+  flex-direction: column;
+  padding-inline: 0.8em;
+}
+.end-button-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    button{
+      margin: 1em;
+    }
+}
+.add-contact{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    button{
+      height: 4em;
+      margin-left: 0.5em;
+    }
+  margin-bottom: 2em;
+}
+.contact-list{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  div{
+    margin: 0.3em;
+  }
+}
+.user-data-form{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  mat-form-field{
+    flex-grow: 1;
+    margin-inline: 0.4em;
+  }
+}
