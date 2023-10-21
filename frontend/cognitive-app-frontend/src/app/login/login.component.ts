@@ -30,6 +30,10 @@ export class LoginComponent implements OnInit {
     this.loginService.login()
   }
 
+  gameToken(){
+    this.loginService.getGameToken(11)
+  }
+
   logout() {
     this.loginService.logout()
   }
