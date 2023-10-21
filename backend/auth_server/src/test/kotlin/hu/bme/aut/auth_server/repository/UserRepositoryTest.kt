@@ -33,7 +33,7 @@ class UserRepositoryTest(@Autowired private var userRepository: UserRepository) 
             username = "username",
             password = "encodedPassword",
             roles = mutableSetOf(RoleEntity(roleName = Role.PARENT_REQUEST)),
-            contacts = mutableSetOf(),
+            contacts = mutableListOf(),
             enabled = true
         )
         userRepository.save(userEntity)

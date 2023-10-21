@@ -15,5 +15,5 @@ data class UserDto(
 
     val roles: MutableSet<Role>,
 
-    val contacts: MutableSet<UserDto> = mutableSetOf(),
+    val contacts: MutableList<UserDto> = mutableListOf(),
 )
