@@ -2,7 +2,9 @@ package hu.bme.aut.auth_server.user
 
 import hu.bme.aut.auth_server.role.Role
 
-data class UserDao(
+data class UserDto(
+    var id: Int?,
+
     val email: String,
 
     val firstName: String,
@@ -12,4 +14,6 @@ data class UserDao(
     val username: String,
 
     val roles: MutableSet<Role>,
+
+    val contacts: MutableList<UserDto> = mutableListOf(),
 )

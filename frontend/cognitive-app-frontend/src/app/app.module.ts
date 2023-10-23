@@ -18,7 +18,21 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatCardModule} from "@angular/material/card";
 import {MatListModule} from "@angular/material/list";
 import { ImpersonationComponent } from './impersonation/impersonation.component';
-import {AuthInterceptor} from "./utils/auth.interceptor";
+import {AuthInterceptor} from "./auth/auth.interceptor";
+import { GamesComponent } from './games/games.component';
+import {MatTabsModule} from "@angular/material/tabs";
+import { PlaygroundComponent } from './playground/playground.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatChipsModule} from "@angular/material/chips";
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatInputModule} from "@angular/material/input";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {NgOptimizedImage} from "@angular/common";
+import {AdminModule} from "./admin/admin.module";
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +41,9 @@ import {AuthInterceptor} from "./utils/auth.interceptor";
     HomeComponent,
     UserInfoComponent,
     ProfileComponent,
+    GamesComponent,
+    PlaygroundComponent,
+    HeaderComponent,
     ImpersonationComponent
   ],
   imports: [
@@ -60,8 +77,9 @@ import {AuthInterceptor} from "./utils/auth.interceptor";
         },
       ],
     }),
-    MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule,
-  ],
+        AdminModule,
+        MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule, MatTabsModule, MatDialogModule, MatPaginatorModule, MatChipsModule, ReactiveFormsModule, MatInputModule, MatExpansionModule, MatCheckboxModule, MatAutocompleteModule,
+    ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })

@@ -36,5 +36,5 @@ data class UserEntity(
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "contact_id", referencedColumnName = "id")],
     )
-    val contacts: MutableSet<UserEntity>,
+    var contacts: MutableList<UserEntity>,
 )
