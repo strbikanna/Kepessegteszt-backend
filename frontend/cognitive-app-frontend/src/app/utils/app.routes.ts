@@ -3,8 +3,8 @@
 import { Routes } from '@angular/router';
 import {HomeComponent} from "../home/home.component";
 import {ProfileComponent} from "../profile/profile.component";
-import {GamesComponent} from "../games/games.component";
-import {PlaygroundComponent} from "../playground/playground.component";
+import {GamesComponent} from "../game/games-page/games.component";
+import {PlaygroundComponent} from "../game/playground/playground.component";
 import {AdminPageComponent} from "../admin/admin-page/admin-page.component";
 
 

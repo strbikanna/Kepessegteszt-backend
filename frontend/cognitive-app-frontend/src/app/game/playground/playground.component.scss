@@ -1,6 +1,6 @@
 /* Update the background properties for the host component */
 :host {
-  background-image: url('../../assets/game-background.jpg');
+  background-image: url('../../../assets/game-background.jpg');
   background-size: auto;  /* Resetting this to auto */
   background-repeat: repeat;  /* Make the background image repeat */
   background-attachment: fixed;

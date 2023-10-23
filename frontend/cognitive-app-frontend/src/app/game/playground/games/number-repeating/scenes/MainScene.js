@@ -1,4 +1,4 @@
-import { config } from '../../../common/config.js';
+import * as common from '../../../common/common.js';
 
 export const MainScene = {
     key: 'MainScene',
@@ -20,12 +20,8 @@ let inputDisplay;
 let roundText;
 let instructionText;
 
-// Game settings
-let retroStyle;
-let soundSettings;
-
 function preload() {
-    this.load.setBaseURL(`${config.baseFolder}number-repeating/`);
+    this.load.setBaseURL(common.getBaseFolder('number-repeating'));
     
     for (let i = 1; i <= 9; i++) {
         this.load.audio(`${i}`, [`${i}.mp3`]);
@@ -38,18 +34,16 @@ function preload() {
 }
 
 function create() {
-    gameParams = this.registry.get('gameParams');
-    retroStyle = this.registry.get('retrostyle');
-    soundSettings = this.registry.get('soundSettings');
+    gameParams = this.game.registry.get('gameParams');
     currentRound = 1;
     inputEnabled = false;
 
     this.add.image(400, 300, 'background').setScale(1.7);
-    instructionText = this.add.text(400, 50, 'Hallgasd a számokat!', retroStyle).setFontSize('32px').setOrigin(0.5);
-    roundText = this.add.text(30, 30, `${currentRound}/${gameParams.maxRound}`, retroStyle).setFontSize('32px');
+    instructionText = this.add.text(400, 50, 'Hallgasd a számokat!', common.retroStyle).setFontSize('32px').setOrigin(0.5);
+    roundText = this.add.text(30, 30, `${currentRound}/${gameParams.maxRound}`, common.retroStyle).setFontSize('32px');
 
     // Digital-style input display
-    inputDisplay = this.add.text(400, 100, '', retroStyle).setFontSize('32px').setOrigin(0.5);
+    inputDisplay = this.add.text(400, 100, '', common.retroStyle).setFontSize('32px').setOrigin(0.5);
 
     // Adding on-screen number buttons 1-9
     for (let i = 1; i <= 9; i++) {
@@ -112,10 +106,10 @@ function createNumberButton(scene, x, y, text) {
         .setStrokeStyle(2, 0xA8FF98)  // Green outline
         .setInteractive();  // Make it interactive
 
-    let buttonStyle = retroStyle;
+    let buttonStyle = common.retroStyle;
     if (text === 'C' || text === 'OK') {
         buttonStyle = {
-            ...retroStyle,
+            ...common.retroStyle,
             fontSize: '32px' // Larger font size for 'C' and 'OK'
         };
     }
@@ -148,30 +142,30 @@ function createNumberButton(scene, x, y, text) {
       
         if (text === 'C') {
             inputSequence = [];
-            scene.sound.play('click', soundSettings);
+            scene.sound.play('click', common.soundSettings);
         } else if (text === 'OK') {
             if (JSON.stringify(inputSequence) === JSON.stringify(numberSequence)) {
                 // Player got the correct sequence
                 if (currentRound === gameParams.maxRound) {
                     // Player has completed all rounds, move to the end scene
                     scene.registry.set('gameResult', true);
-                    scene.sound.play('win', soundSettings);
+                    scene.sound.play('win', common.soundSettings);
                     scene.scene.start('EndScene');
                 } else {
                     // Move to the next round
                     currentRound++;
-                    scene.sound.play('win', soundSettings);
+                    scene.sound.play('win', common.soundSettings);
                     startGame.call(scene);
                     updateDisplay();
                 }
             } else {
                 // Incorrect sequence, move to end scene
                 scene.registry.set('gameResult', false);
-                scene.sound.play('game_over', soundSettings);
+                scene.sound.play('game_over', common.soundSettings);
                 scene.scene.start('EndScene');
             }
         } else {
-            scene.sound.play('click', soundSettings);
+            scene.sound.play('click', common.soundSettings);
             inputSequence.push(parseInt(text));
         }
         updateDisplay();

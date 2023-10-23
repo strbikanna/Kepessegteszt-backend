@@ -1,41 +1,46 @@
-import { config } from '../../../common/config.js';
+import * as common from '../../../common/common.js';
 
-export const StartScene = {
-    key: 'StartScene',
+export const EndScene = {
+    key: 'EndScene',
     preload,
     create
 };
 
-let retroStyle;
-let soundSettings;
+let userParams;
 
 function preload() {
-    this.load.setBaseURL(`${config.baseFolder}number-repeating/`);
+    this.load.setBaseURL(common.getBaseFolder('number-repeating'));
     this.load.image('background', 'background.jpg');
-    this.load.audio('click', ['click.wav'])
 }
 
 function create() {
-    retroStyle = this.registry.get('retrostyle');
-    soundSettings = this.registry.get('soundSettings');
-
     this.add.image(400, 300, 'background').setScale(1.7);
-    this.add.text(400, 180, 'Egy számokból álló sorozatot fogsz hallani.', retroStyle).setOrigin(0.5);
-    this.add.text(400, 240, 'Probáld meg a legjobb emlékezeted szerint beírni!', retroStyle).setOrigin(0.5);
-    this.add.text(400, 300, 'Készen állsz?', retroStyle).setOrigin(0.5);
 
-    // Create a "Start" button
-    createStartButton(this, 400, 400, 'Start');
+    // Check result
+    const gameResult = this.registry.get('gameResult');
+    const resultText = gameResult ? "Gratulálok! Sikerült!" : "Sajnálom, próbáld újra!";
+    this.add.text(400, 200, resultText, common.retroStyle).setFontSize('32px').setOrigin(0.5);
+
+    // Create a "Restart" button
+    createRestartButton(this, 400, 400, 'Újra');
+
+    const resultJson = {
+        gameResult: gameResult,
+        timestamp: Date.now(),
+        // ... any other data you want to send
+    };
+    userParams = this.registry.get('userParams');
+    common.postResult(resultJson, userParams.game_id, userParams.username, userParams.access_token);
 }
 
-function createStartButton(scene, x, y, text) {
+function createRestartButton(scene, x, y, text) {
     let buttonRect = scene.add.rectangle(x, y, 150, 60, 0x111111)
         .setOrigin(0.5)
         .setStrokeStyle(2, 0xA8FF98)
         .setInteractive();
 
     let buttonStyle = {
-        ...retroStyle,
+        ...common.retroStyle,
         fontSize: '32px'
     };
 
@@ -63,7 +68,7 @@ function createStartButton(scene, x, y, text) {
     });
 
     buttonRect.on('pointerdown', () => {
-        scene.sound.play('click', soundSettings);
-        scene.scene.start('MainScene');
+        scene.sound.play('click', common.soundSettings);
+        scene.scene.start('StartScene');
     });
 }

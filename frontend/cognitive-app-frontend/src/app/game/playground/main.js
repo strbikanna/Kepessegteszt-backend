@@ -13,7 +13,8 @@ export function initializeGame(params) {
 
 function mockFetchParams() {
 	return {
-		gameName: 'number-repeating', 
+		gameName: 'number-repeating',
+		//cosmic-control
 		//cosmic-sequence
 		//balloon-pop
 		//number-repeating
@@ -21,14 +22,18 @@ function mockFetchParams() {
 		//Aszteroida sorrend 
 		//Lufi pukkasztó
 		//Számismétlés
-		level: 5,
-        gamePlayId: 1,
+		level: 1,
+        game_id: 1,
+		username: "testuser",
+		access_token: "testtoken"
 	};
 }
 
 // Fetch or mock parameters
 const params = mockFetchParams(); // or real fetch from backend
 
+// Initialize a specific game
+//initializeGame(params);
 
 function setFullScreenButton(){
 	document.getElementById('fullscreen-btn').addEventListener('click', () => {

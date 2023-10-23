@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
-import {GameplayModel} from "../model/gameplay.model";
+import {GameplayModel} from "../../model/gameplay.model";
 import {LoginResponse, OidcSecurityService} from "angular-auth-oidc-client";
-import {GameInfo} from "../utils/GameInfo";
-import {UserInfo} from "../utils/userInfo";
+import {GameInfo} from "../../utils/GameInfo";
+import {UserInfo} from "../../utils/userInfo";
 
 @Injectable({
     providedIn: 'root'
