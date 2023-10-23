@@ -104,3 +104,25 @@ Tehát a jelenlegi státusz: kezdetlegesen működik az auth server és a kliens
 
 ### Egyéb:
 - a játékok integrálásához A) változat: a beépített játékok beágyazódnak az Angular kliensbe, B) változat: külső játék esetén url-címre redirect + access token?
+
+# 10.23.
+## Ezen a héten a következőket valósítottam meg:
+### Auth server:
+- hozzáadtam néhány funkciót a usermanagement-hez (admin feature), refaktoráltam a service-eket, illetve teszteltem
+- a kontakt-kezelést javítottam, hogy frissítés esetén mindkét félnél frissüljön, ezt teszteltem
+
+### Frontend
+- az admin oldalt valósítottam meg, azon belül a user-managment részt
+- az admin megtekintheti az összes felhasználót, a hozzájuk tartozó szerepköröket, illetve igényelt szerepköröket, ezeket módosíthatja
+- a felhasználók minden adata módosítható, a kapcsolatok frissíthetők
+- csináltam hozzá autocomplete keresőmezőt is :)
+- megoldottam, hogy az oldalakra navigáló gombok csak akkor jelenjenek meg, ha a felhasználó be van jelentkezva, ill. van megfelelő jogosultsága
+- az admin feature külön modulban van, az útvonalát guard védi
+
++sikerült félig meddig összehangolni a 3 komponenst, addig jutottam el, hogy a game kapott tokent, fel is használta a resource szerverhez küldött post-ban
+ezen még kell bőven dolgoznom, mert az autentikáció (2 token kezelés) még nem teljesen gördülékeny
+
+### Kérdésem:
+Most felmerült bennem az a probléma, hogy a játékoknak adott token mennyi ideig legyen érvényes. Ez elég sarkallatos kérdés, mert túl hosszú lejárat nyilván nem biztonságos, túl rövid ellenben megszakítaná a játékmenetet, plusz a játéknak le kell kezelnie, ha egy idő után a POST-ra forbidden-t kap. Jelenleg csak a frontend tudja újból igényelni a tokent a user token felhasználásával (nincs értelme kiadni a user tokent külső appnak, ez a specifikációban is így van), szóval a játék nem tud új tokent igényelni, csak visszanavigáni a frontendre.
+A külső játék tulajdonképp semmiképp nem fog tudni új tokent igényelni, hacsak fel nem szólítja a user-t, hogy jelentkezzen be ott is.
+Javaslataim: A) legyen fix ideig érvényes a token (pl. 30 perc) és erre felhívjuk a felhasználó figyelmét, hogy ennyi ideig játszhat egyszerre egy játékkal, utána visszakerül a játékválasztó oldalra. B) Refresh tokent biztosítunk a game-tokenhez, ennek biztonságos tárolását azonban a külső játékoknak felelőssége megoldani. (Ugyanígy a frontend-nek is...)
