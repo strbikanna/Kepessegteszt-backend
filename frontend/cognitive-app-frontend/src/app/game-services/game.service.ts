@@ -35,6 +35,7 @@ export class GameService {
                 description: "Try not to die from the bombs.",
                 thumbnail: "../../assets/balloon_game.jpg",
                 config: {
+                    game_id: 1,
                     gameName: "balloon-pop",
                     gameTitle: "Pop The Balloon",
                     level: 1
@@ -46,6 +47,7 @@ export class GameService {
                 description: "Push the correct buttons of the secret radio.",
                 thumbnail: "../../assets/number_game.jpg",
                 config: {
+                    game_id: 2,
                     gameName: "number-repeating",
                     gameTitle: "Rock The Radio",
                     level: 2
@@ -57,6 +59,7 @@ export class GameService {
                 description: "Enjoy space life.",
                 thumbnail: "../../assets/cosmic.jpg",
                 config: {
+                    game_id: 3,
                     gameName: "cosmic-sequence",
                     gameTitle: "Are you a space cadet?",
                     level: 2
