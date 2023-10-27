@@ -25,7 +25,7 @@ function create() {
     createRestartButton(this, 400, 400, 'Újra');
 
     const resultJson = {
-        gameResult: gameResult,
+        gameResult: {result: gameResult},
         timestamp: Date.now(),
         // ... any other data you want to send
     };
