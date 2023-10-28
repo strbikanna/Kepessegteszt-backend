@@ -37,6 +37,7 @@ class TokenCustomizer(
             context.claims.claims { claims ->
                 claims["roles"] = listOf(Role.GAME)
                 claims["game_id"] = getGameId(context)
+                claims["sub"] = userInfo.claims["sub"]
             }
         }else{
             context.claims
