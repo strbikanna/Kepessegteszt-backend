@@ -44,7 +44,7 @@ class GameplayControllerTest(
     fun shouldReturnForbiddenWithoutCorrectAuthentication(){
         testService.saveAuthUserWithRights(RoleName.STUDENT)
         val game = testService.createAndSaveGame()
-        val gameplayData = GameplayDto(gameResult= mapOf(), username = testService.authUsername, gameId = game.id!! )
+        val gameplayData = GameplayResultDto(gameResult= mapOf(), username = testService.authUsername, gameId = game.id!! )
         given(requestSpec)
             .header(testService.authHeaderName, testService.authUsername)
             .body(gameplayData)
@@ -57,7 +57,7 @@ class GameplayControllerTest(
         testService.saveAuthUserWithRights(RoleName.STUDENT)
         testService.saveAuthGame()
         val result = mapOf(Pair("success", true))
-        val gameplayData = GameplayDto(gameResult= result, username = testService.authUsername, gameId = testService.authGameId)
+        val gameplayData = GameplayResultDto(gameResult= result, username = testService.authUsername, gameId = testService.authGameId)
         given(requestSpec)
             .header(testService.authHeaderName, testService.authUsername)
             .header(testService.gameAuthHeaderName, testService.authGameId)

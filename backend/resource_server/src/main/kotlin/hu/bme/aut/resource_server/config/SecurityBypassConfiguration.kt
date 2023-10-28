@@ -27,6 +27,7 @@ class SecurityBypassConfiguration {
             .sessionManagement { SessionCreationPolicy.STATELESS }
             .authorizeHttpRequests {
                 it.requestMatchers("/error").permitAll()
+                it.requestMatchers("/game_images/**").permitAll()
                 it.anyRequest().authenticated()
             }
             .addFilterAfter(bypassFilter, ConcurrentSessionFilter::class.java)

@@ -32,6 +32,7 @@ class SecurityConfiguration {
             .authorizeHttpRequests{
                 it.requestMatchers(HttpMethod.OPTIONS).permitAll()
                 it.requestMatchers("/error").permitAll()
+                it.requestMatchers("/game_images/**").permitAll()
                 it.anyRequest().authenticated()
             }
             .oauth2ResourceServer { it.jwt(withDefaults()) }

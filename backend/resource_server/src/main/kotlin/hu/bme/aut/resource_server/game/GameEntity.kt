@@ -27,6 +27,6 @@ data class GameEntity(
     val url: String,
 
     @Type(JsonType::class)
-    val configDescription: Map<String, Any>
+    val configDescription: MutableMap<String, Any>
 
 )

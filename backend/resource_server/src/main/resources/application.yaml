@@ -11,6 +11,12 @@ spring:
     rest:
       default-media-type: application/json
 
+  web:
+    resources:
+      static-locations: file:/local-place-for-files
+  mvc:
+    static-path-pattern: /game_images/**
+
   security:
     oauth2:
       resourceserver:

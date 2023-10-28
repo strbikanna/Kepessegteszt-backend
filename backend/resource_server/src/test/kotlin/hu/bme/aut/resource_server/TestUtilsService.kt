@@ -79,17 +79,6 @@ class TestUtilsService(
         )
         userRepository.save(user)
     }
-    fun saveAuthUserWithRights(vararg roles: RoleName){
-        val user = UserEntity(
-            username = authUsername,
-            firstName = "Test",
-            lastName = "User",
-            profileFloat = mutableSetOf(),
-            profileEnum = mutableSetOf(),
-            roles = roles.map { Role(it) }.toMutableSet()
-        )
-        userRepository.save(user)
-    }
 
     fun saveAuthGame(){
         val game = GameEntity(

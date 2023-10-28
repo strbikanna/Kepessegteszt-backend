@@ -1,15 +1,17 @@
 package hu.bme.aut.resource_server.gameplay
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
-
 data class GameplayDto(
 
-    val gameResult: Map<String, Any?>,
+    var id: Int? = null,
 
-    val username: String,
+    val name: String,
 
-    @JsonProperty("game_id")
-    val gameId: Int
+    val description: String,
+
+    val thumbnail: String,
+
+    val url: String,
+
+    val config: Map<String, Any>
 ) {
 }

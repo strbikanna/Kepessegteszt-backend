@@ -13,7 +13,7 @@ class GameplayService(
     @Autowired private var userRepository: UserRepository
 
 ) {
-    fun save(data: GameplayDto){
+    fun save(data: GameplayResultDto){
         val game = gameRepository.findById(data.gameId).orElseThrow()
         val user = userRepository.findByUsername(data.username).orElseThrow()
         val gameplay = GameplayEntity(
@@ -28,7 +28,7 @@ class GameplayService(
         val user = userRepository.findByUsername(username).orElseThrow()
         return gameplayRepository.findAllByUser(user)
     }
-    fun checkGameAccessAndThrow(authentication: Authentication, gameplay: GameplayDto){
+    fun checkGameAccessAndThrow(authentication: Authentication, gameplay: GameplayResultDto){
         val user = authentication.authorities.find{it.authority == gameplay.username}
         val game = gameRepository.findById(gameplay.gameId)
         if(game.isEmpty || user == null || Integer.parseInt(authentication.name) != game.get().id){

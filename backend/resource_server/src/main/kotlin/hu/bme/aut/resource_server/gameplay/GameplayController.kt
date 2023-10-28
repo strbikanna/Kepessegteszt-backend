@@ -12,11 +12,16 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
+/**
+ * Controller for saving gameplay results
+ * querying previous game results
+ */
 @RestController
 @RequestMapping("/gameplay")
 class GameplayController(
     @Autowired private var gameplayService: GameplayService,
-    @Autowired private var profileSnapshotService: ProfileSnapshotService
+    @Autowired private var profileSnapshotService: ProfileSnapshotService,
+    @Autowired private var gameplayRecommenderService: GamePlayRecommenderService,
 ) {
 
     /**
@@ -28,7 +33,7 @@ class GameplayController(
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('GAME')")
-    fun saveGameplay(@RequestBody gameplayData: GameplayDto, authentication: Authentication){
+    fun saveGameplay(@RequestBody gameplayData: GameplayResultDto, authentication: Authentication){
         gameplayService.checkGameAccessAndThrow(authentication, gameplayData)
         val username = gameplayData.username
         if(!profileSnapshotService.existsSnapshotToday(username)){
@@ -37,12 +42,18 @@ class GameplayController(
         gameplayService.save(gameplayData)
     }
 
-    @GetMapping
+    @GetMapping("/results")
     @ResponseStatus(HttpStatus.OK)
-    fun getByUser(authentication: Authentication): List<GameplayEntity>{
+    fun getResultsByUser(authentication: Authentication): List<GameplayEntity>{
         val username = authentication.name
         return gameplayService.getAllByUser(username)
     }
 
+    @GetMapping("/all/system_recommended")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('STUDENT')")
+    fun getAllSystemRecommended(authentication: Authentication): List<GameplayDto>{
+        return gameplayRecommenderService.getAllRecommendationToUser(authentication.name)
+    }
 
 }
