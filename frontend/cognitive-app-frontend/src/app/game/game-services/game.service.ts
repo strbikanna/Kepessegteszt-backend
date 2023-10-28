@@ -3,6 +3,9 @@ import {HttpClient} from "@angular/common/http";
 import {Observable, of} from "rxjs";
 import {GameplayModel} from "../../model/gameplay.model";
 
+/**
+ * Service that calls backend for game data.
+ */
 @Injectable({
     providedIn: 'root'
 })
@@ -50,7 +53,7 @@ export class GameService {
                     game_id: 2,
                     gameName: "number-repeating",
                     gameTitle: "Rock The Radio",
-                    level: 2
+                    level: 1
                 }
             },
             {

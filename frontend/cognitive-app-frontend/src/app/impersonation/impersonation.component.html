@@ -1,5 +1,5 @@
 <div class="welcome-container">
-  <h2 *ngIf="user">Hi {{user?.lastName}}!</h2>
+  <h2 *ngIf="user">Hi {{user.lastName}}!</h2>
   <div *ngIf="canImpersonate">
     <p>You can sign in in the name of the following people or stay signed in in your name.</p>
     <div *ngFor="let user of contacts | async" class="welcome-container">

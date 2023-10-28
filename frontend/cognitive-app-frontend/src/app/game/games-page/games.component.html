@@ -1,4 +1,4 @@
-<mat-tab-group>
+<mat-tab-group *ngIf="!loading">
     <mat-tab label="{{text.menu.teacher_recommendation}}">
         Content 1
     </mat-tab>
@@ -18,7 +18,7 @@
                     </mat-card-content>
                     <mat-divider></mat-divider>
                     <mat-card-actions align="end">
-                        <button mat-button color="primary" routerLink="/playground" (click)="onGameChosen(game)">
+                        <button mat-button color="primary" (click)="onGameChosen(game)">
                             {{text.game_card.play.toUpperCase()}}
                         </button>
                     </mat-card-actions>
@@ -31,3 +31,4 @@
         Content 3
     </mat-tab>
 </mat-tab-group>
+<app-game-token-redirect *ngIf="loading"></app-game-token-redirect>

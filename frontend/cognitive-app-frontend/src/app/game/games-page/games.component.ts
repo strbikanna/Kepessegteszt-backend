@@ -1,9 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {TEXTS} from "../../utils/app.text_messages";
-import {Observable, of, Subject} from "rxjs";
+import {Observable} from "rxjs";
 import {GameplayModel} from "../../model/gameplay.model";
-import {GameDataService} from "../game-services/game-data.service";
 import {GameService} from "../game-services/game.service";
+import {GameAuthService} from "../game-services/game-auth.service";
+import {GameInfo} from "../../auth/gameInfo";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-games',
@@ -12,23 +14,67 @@ import {GameService} from "../game-services/game.service";
 })
 export class GamesComponent implements OnInit {
 
-    public text = TEXTS.games;
-    public gamesForYou : Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
-    public teacherRecommendedGames : Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
-    public scientistRecommendedGames : Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
-    public allGames : Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
+    text = TEXTS.games;
+    gamesForYou : Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
+    teacherRecommendedGames : Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
+    scientistRecommendedGames : Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
+    allGames : Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
 
-    constructor(private dataService: GameDataService, private gameService: GameService) {}
+    loading = false;
+
+    private storageKey = 'chosenGame'
+
+    constructor(private gameService: GameService, private authService: GameAuthService, private router: Router) {}
 
     ngOnInit(): void {
         this.gamesForYou = this.gameService.getGamesForCurrentUser()
         this.teacherRecommendedGames = this.gameService.getTeacherRecommendedGames()
         this.scientistRecommendedGames = this.gameService.getScientistRecommendedGames()
         this.allGames = this.gameService.getAllGames()
+        this.initGameAuthentication()
+    }
+    initGameAuthentication(){
+        const chosenGameString = sessionStorage.getItem(this.storageKey)
+        if (!chosenGameString) {
+            return
+        }
+        const chosenGame: GameplayModel = JSON.parse(chosenGameString)
+        if (this.validChosenGame(chosenGame)) {
+            this.loading = true;
+            GameInfo.authStatus.subscribe(isAuthenticated => {
+                if (isAuthenticated) {
+                    this.loadPlayground(chosenGame);
+                } else {
+                    this.loading = false;
+                    console.log('Not authenticated')
+                    //TODO handle failure
+                }
+            })
+            this.authService.initAuthentication()
+        } else {
+            alert('No game id')
+            //TODO handle failure
+        }
+    }
+
+    private loadPlayground(chosenGame: GameplayModel) {
+        GameInfo.currentGameId = chosenGame.config.game_id
+        this.authService.publishChosenGame(chosenGame)
+        this.loading = false;
+        sessionStorage.removeItem(this.storageKey)
+        this.router.navigate(['/playground'],)
     }
 
     onGameChosen(game: GameplayModel){
-        this.dataService.publishChosenGame(game)
+        if(this.validChosenGame(game)){
+            this.loading = true;
+            sessionStorage.setItem(this.storageKey, JSON.stringify(game))
+            this.authService.getGameToken(game.config.game_id)
+            this.initGameAuthentication()
+        }
+    }
+    private validChosenGame(chosenGame: GameplayModel): boolean{
+        return chosenGame.config.game_id !== undefined && chosenGame.config.game_id !== null
     }
 
 }

@@ -1,97 +1,125 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {LoginResponse, OidcSecurityService} from "angular-auth-oidc-client";
 import {User} from "../model/user.model";
 import {BehaviorSubject, Observable} from "rxjs";
-import {UserInfo} from "../utils/userInfo";
+import {UserInfo} from "../auth/userInfo";
 import {HttpClient} from "@angular/common/http";
 import {AppConstants, Role} from "../utils/constants";
-import {GameInfo} from "../utils/GameInfo";
 
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class LoginService {
 
-  public userInfo: User | undefined = undefined
-  public loginStatus: BehaviorSubject<boolean> = new BehaviorSubject(false)
+    public userInfo: User | undefined = undefined
+    public loginStatus: BehaviorSubject<boolean> = new BehaviorSubject(false)
 
-  constructor(private oidcSecurityService: OidcSecurityService, private http: HttpClient) { }
+    private readonly BASE_CONFIG_ID = 'baseConfig'
 
-  initAuthentication(){
-    this.oidcSecurityService
-      .checkAuth()
-      .subscribe((loginResponse: LoginResponse) => {
-        const {isAuthenticated, userData, accessToken, idToken, configId} = loginResponse;
-        if(isAuthenticated){
-          console.log('User authentication happened')
-          this.userInfo = this.convertUserData(userData)
-          UserInfo.currentUser = this.userInfo
-          UserInfo.accessToken = accessToken
-        }
-        this.loginStatus.next(isAuthenticated)
-        UserInfo.loginStatus.next(isAuthenticated)
-      });
-    this.oidcSecurityService.checkAuth(undefined, 'gameTokenConfig').subscribe((loginResponse: LoginResponse) => {
-        console.log('Game authentication happened: ' + loginResponse.isAuthenticated)
-        GameInfo.authStatus.next(loginResponse.isAuthenticated)
-        GameInfo.accessToken = loginResponse.accessToken
-        return
+
+    constructor(private oidcSecurityService: OidcSecurityService, private http: HttpClient) {
     }
-    );
-  }
-  login() {
-    this.oidcSecurityService.authorize('baseConfig');
-  }
-  loginAs(username: string){
-    console.log(username)
-    this.oidcSecurityService.authorize('baseConfig', {customParams: { 'act_as': username } })
-  }
 
-  getGameToken(id: number) {
-    this.oidcSecurityService.authorize('gameTokenConfig', {customParams: { 'game_id': id } })
-  }
+    initAuthentication() {
+        this.handleAuthCallback(this.BASE_CONFIG_ID)
+        this.oidcSecurityService.isAuthenticated(this.BASE_CONFIG_ID).subscribe(authenticated => {
+            if(authenticated){
+                this.fillUserInfo()
+            }
+        })
+    }
 
-  logout() {
-    this.oidcSecurityService
-      .logoff()
-      .subscribe((result) => {
-        UserInfo.loginStatus.next(false)
-        console.log(result)
-      });
-  }
-  getContacts(): Observable<User[]> {
-    return this.http.get<User[]>(`${AppConstants.authServerUrl}/user/impersonation_contacts`)
-  }
-  hasImpersonationRole(roles: string[]): boolean {
-    const impersonationRoles = roles.filter(role =>
-        role.toUpperCase() === Role.TEACHER ||
-        role.toUpperCase() === Role.ADMIN ||
-        role.toUpperCase() === Role.SCIENTIST ||
-        role.toUpperCase() === Role.PARENT)
-    return impersonationRoles.length > 0
-  }
-  private convertUserData(userInfoResponse: any): User{
-    const user : User = {
-      username: userInfoResponse.sub,
-      firstName: userInfoResponse.family_name,
-      lastName: userInfoResponse.given_name,
-      email: userInfoResponse.email,
-      roles: userInfoResponse.roles,
-    };
+    private handleAuthCallback(configId: string) {
+        this.oidcSecurityService
+            .checkAuth(undefined, configId)
+            .subscribe((loginResponse: LoginResponse) => {
+                console.log('Handled baseconfig auth callback.')
+                const {isAuthenticated, userData, accessToken, idToken, configId} = loginResponse;
+                if (isAuthenticated) {
+                    console.log('User authentication successful')
+                    this.userInfo = this.convertUserData(userData)
+                    UserInfo.currentUser = this.userInfo
+                    UserInfo.accessToken = accessToken
+                }
+                this.loginStatus.next(isAuthenticated)
+                UserInfo.loginStatus.next(isAuthenticated)
+            });
+    }
 
-    user.roles = user.roles.map(role => {
-      let roleName = role
-      switch (role) {
-        case Role.SCIENTIST_REQUEST: roleName = "requested scientist"
-          break
-        case Role.TEACHER_REQUEST : roleName = "requested teacher"
-          break
-        case Role.PARENT_REQUEST : roleName = "requested parent"
-          break
-      }
-      return roleName.toLowerCase()
-    })
-    return user;
-  }
+    login() {
+        this.oidcSecurityService.authorize(this.BASE_CONFIG_ID);
+    }
+
+    loginAs(username: string) {
+        this.oidcSecurityService.authorize(this.BASE_CONFIG_ID, {customParams: {'act_as': username}})
+    }
+
+    logout() {
+        this.oidcSecurityService
+            .logoff()
+            .subscribe((result) => {
+                UserInfo.loginStatus.next(false)
+                console.log(result)
+            });
+    }
+
+    getContacts(): Observable<User[]> {
+        return this.http.get<User[]>(`${AppConstants.authServerUrl}/user/impersonation_contacts`)
+    }
+
+    hasImpersonationRole(roles: string[]): boolean {
+        const impersonationRoles = roles.filter(role =>
+            role.toUpperCase() === Role.TEACHER ||
+            role.toUpperCase() === Role.ADMIN ||
+            role.toUpperCase() === Role.SCIENTIST ||
+            role.toUpperCase() === Role.PARENT)
+        return impersonationRoles.length > 0
+    }
+
+    private convertUserData(userInfoResponse: any): User {
+        console.log('Parsing userinfo: ')
+        console.log(userInfoResponse)
+
+        const user: User = {
+            username: userInfoResponse.sub,
+            firstName: userInfoResponse.family_name,
+            lastName: userInfoResponse.given_name,
+            email: userInfoResponse.email,
+            roles: userInfoResponse.roles,
+        };
+
+        user.roles = user.roles.map(role => {
+            let roleName = role
+            switch (role) {
+                case Role.SCIENTIST_REQUEST:
+                    roleName = "requested scientist"
+                    break
+                case Role.TEACHER_REQUEST :
+                    roleName = "requested teacher"
+                    break
+                case Role.PARENT_REQUEST :
+                    roleName = "requested parent"
+                    break
+            }
+            return roleName.toLowerCase()
+        })
+        return user;
+    }
+
+    private fillUserInfo() {
+        this.oidcSecurityService.userData$.subscribe(userData => {
+            let userInfo = userData.allUserData.find(data => data !== undefined && data !== null)
+            if (userInfo && userInfo.userData) {
+                this.userInfo = this.convertUserData(userInfo?.userData)
+                UserInfo.currentUser = this.userInfo
+                this.loginStatus.next(true)
+                UserInfo.loginStatus.next(true)
+            }
+        });
+        this.oidcSecurityService.getAccessToken(this.BASE_CONFIG_ID).subscribe(token => {
+            UserInfo.accessToken = token;
+            UserInfo.loginStatus.next(true)
+        });
+    }
 }

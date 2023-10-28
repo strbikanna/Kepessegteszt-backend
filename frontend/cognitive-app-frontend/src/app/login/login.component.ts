@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from "../model/user.model";
 import {LoginService} from "./login.service";
-import {UserInfo} from "../utils/userInfo";
 
 @Component({
   selector: 'app-login',
@@ -24,14 +23,11 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    // UserInfo.loginStatus.next(true)
-    // this.isLoggedIn = true
-    // this.user = UserInfo.currentUser
     this.loginService.login()
   }
 
   gameToken(){
-    this.loginService.getGameToken(11)
+    //this.loginService.getGameToken(11)
   }
 
   logout() {

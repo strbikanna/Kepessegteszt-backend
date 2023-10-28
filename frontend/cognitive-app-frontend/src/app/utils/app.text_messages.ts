@@ -14,6 +14,9 @@ export const TEXTS = {
         },
         game_card:{
             play: 'Játék indítása',
+        },
+        progress:{
+            loading_game: 'Játék betöltése...',
         }
     },
     user_info: {

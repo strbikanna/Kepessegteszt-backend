@@ -30,9 +30,10 @@ import {MatInputModule} from "@angular/material/input";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {NgOptimizedImage} from "@angular/common";
 import {AdminModule} from "./admin/admin.module";
 import { HeaderComponent } from './header/header.component';
+import { GameTokenRedirectComponent } from './game/game-token-redirect/game-token-redirect.component';
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { HeaderComponent } from './header/header.component';
     GamesComponent,
     PlaygroundComponent,
     HeaderComponent,
-    ImpersonationComponent
+    ImpersonationComponent,
+    GameTokenRedirectComponent
   ],
   imports: [
     BrowserModule,
@@ -66,7 +68,7 @@ import { HeaderComponent } from './header/header.component';
         {
           configId: 'gameTokenConfig',
           authority: 'http://localhost:9000',
-          redirectUrl: 'http://localhost:4200',
+          redirectUrl: 'http://localhost:4200/games',
           postLogoutRedirectUri: 'http://localhost:4200',
           clientId: 'frontend-client-002233',
           scope: 'openid game',
@@ -77,9 +79,9 @@ import { HeaderComponent } from './header/header.component';
         },
       ],
     }),
-        AdminModule,
-        MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule, MatTabsModule, MatDialogModule, MatPaginatorModule, MatChipsModule, ReactiveFormsModule, MatInputModule, MatExpansionModule, MatCheckboxModule, MatAutocompleteModule,
-    ],
+    AdminModule,
+    MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule, MatTabsModule, MatDialogModule, MatPaginatorModule, MatChipsModule, ReactiveFormsModule, MatInputModule, MatExpansionModule, MatCheckboxModule, MatAutocompleteModule, MatProgressBarModule,
+  ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })

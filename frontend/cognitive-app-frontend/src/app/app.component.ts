@@ -1,7 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {UserInfo} from "./utils/userInfo";
-import {Role} from "./utils/constants";
-import {Observable, of} from "rxjs";
 
 @Component({
   selector: 'app-root',
