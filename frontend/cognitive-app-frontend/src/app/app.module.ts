@@ -73,8 +73,6 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
           clientId: 'frontend-client-002233',
           scope: 'openid game',
           responseType: 'code',
-          autoUserInfo: false,
-          disableIdTokenValidation: true,
           silentRenew: true,
           useRefreshToken: true,
           logLevel: LogLevel.Debug,

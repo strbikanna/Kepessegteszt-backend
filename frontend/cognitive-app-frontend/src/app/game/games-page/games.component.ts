@@ -15,46 +15,45 @@ import {Router} from "@angular/router";
 export class GamesComponent implements OnInit {
 
     text = TEXTS.games;
-    gamesForYou : Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
-    teacherRecommendedGames : Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
-    scientistRecommendedGames : Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
-    allGames : Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
+    gamesForYou: Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
+    teacherRecommendedGames: Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
+    scientistRecommendedGames: Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
+    allGames: Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
 
     loading = false;
 
     private storageKey = 'chosenGame'
 
-    constructor(private gameService: GameService, private authService: GameAuthService, private router: Router) {}
+    private chosenGame: GameplayModel | undefined = undefined
+
+    constructor(private gameService: GameService, private authService: GameAuthService, private router: Router) {
+    }
 
     ngOnInit(): void {
         this.gamesForYou = this.gameService.getGamesForCurrentUser()
         this.teacherRecommendedGames = this.gameService.getTeacherRecommendedGames()
         this.scientistRecommendedGames = this.gameService.getScientistRecommendedGames()
         this.allGames = this.gameService.getAllGames()
+        this.getChosenGame()
         this.initGameAuthentication()
     }
-    initGameAuthentication(){
-        const chosenGameString = sessionStorage.getItem(this.storageKey)
-        if (!chosenGameString) {
-            return
-        }
-        const chosenGame: GameplayModel = JSON.parse(chosenGameString)
-        if (this.validChosenGame(chosenGame)) {
+
+    private initGameAuthentication() {
+        this.getChosenGame()
+        this.authService.initAuthentication()
+        if(this.validChosenGame(this.chosenGame)){
             this.loading = true;
-            GameInfo.authStatus.subscribe(isAuthenticated => {
-                if (isAuthenticated) {
-                    this.loadPlayground(chosenGame);
-                } else {
-                    this.loading = false;
-                    console.log('Not authenticated')
-                    //TODO handle failure
-                }
-            })
-            this.authService.initAuthentication()
-        } else {
-            alert('No game id')
-            //TODO handle failure
         }
+        GameInfo.authStatus.subscribe(isAuthenticated => {
+            if (isAuthenticated && this.validChosenGame(this.chosenGame)) {
+                this.loadPlayground(this.chosenGame!);
+            } else {
+                this.loading = false;
+                console.log('Not authenticated')
+                //TODO handle failure
+            }
+        })
+
     }
 
     private loadPlayground(chosenGame: GameplayModel) {
@@ -62,19 +61,27 @@ export class GamesComponent implements OnInit {
         this.authService.publishChosenGame(chosenGame)
         this.loading = false;
         sessionStorage.removeItem(this.storageKey)
+        this.chosenGame = undefined
         this.router.navigate(['/playground'],)
     }
 
-    onGameChosen(game: GameplayModel){
-        if(this.validChosenGame(game)){
+    onGameChosen(game: GameplayModel) {
+        if (this.validChosenGame(game)) {
             this.loading = true;
             sessionStorage.setItem(this.storageKey, JSON.stringify(game))
             this.authService.getGameToken(game.config.game_id)
-            this.initGameAuthentication()
         }
     }
-    private validChosenGame(chosenGame: GameplayModel): boolean{
-        return chosenGame.config.game_id !== undefined && chosenGame.config.game_id !== null
+
+    private validChosenGame(chosenGame: GameplayModel | undefined): boolean {
+        return chosenGame !== undefined && chosenGame.config.game_id !== undefined && chosenGame.config.game_id !== null
     }
 
+    private getChosenGame() {
+        const chosenGameString = sessionStorage.getItem(this.storageKey)
+        if (!chosenGameString) {
+            return
+        }
+        this.chosenGame = JSON.parse(chosenGameString)
+    }
 }

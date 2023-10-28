@@ -31,6 +31,9 @@ export class LoginService {
     }
 
     private handleAuthCallback(configId: string) {
+        if(window.location.href.includes('game')){
+            return
+        }
         this.oidcSecurityService
             .checkAuth(undefined, configId)
             .subscribe((loginResponse: LoginResponse) => {
@@ -52,11 +55,13 @@ export class LoginService {
     }
 
     loginAs(username: string) {
+        sessionStorage.setItem(AppConstants.impersonationKey, 'true')
         this.oidcSecurityService.logoffLocal(this.BASE_CONFIG_ID)
         this.oidcSecurityService.authorize(this.BASE_CONFIG_ID, {customParams: {'act_as': username}})
     }
 
     logout() {
+        sessionStorage.removeItem(AppConstants.impersonationKey)
         this.oidcSecurityService
             .logoff()
             .subscribe((result) => {

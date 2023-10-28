@@ -1,6 +1,7 @@
 export const AppConstants = {
     authServerUrl : 'http://localhost:9000',
     resourceServerUrl : 'http://localhost:8090',
+    impersonationKey: 'impersonation',
 }
 export const enum Role {
     STUDENT = 'STUDENT',
