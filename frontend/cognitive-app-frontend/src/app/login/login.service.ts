@@ -52,6 +52,7 @@ export class LoginService {
     }
 
     loginAs(username: string) {
+        this.oidcSecurityService.logoffLocal(this.BASE_CONFIG_ID)
         this.oidcSecurityService.authorize(this.BASE_CONFIG_ID, {customParams: {'act_as': username}})
     }
 

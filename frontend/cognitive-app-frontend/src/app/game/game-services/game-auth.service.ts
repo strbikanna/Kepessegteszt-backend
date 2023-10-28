@@ -36,6 +36,7 @@ export class GameAuthService {
         GameInfo.currentGameId = id
         const popupOptions = { width: 500, height: 500, left: 50, top: 50 };
         this.oidcSecurityService.authorizeWithPopUp( {customParams: {'game_id': id}}, popupOptions, this.GAME_CONFIG_ID)
+        this.initAuthentication()
     }
 
     publishChosenGame(game: GameplayModel) {
