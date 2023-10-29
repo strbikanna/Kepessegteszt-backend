@@ -88,7 +88,7 @@ class TestUtilsService(
             description = "Auth test game description",
             active = true,
             url = "testUrl",
-            configDescription = mapOf()
+            configDescription = mutableMapOf()
         )
         val entity = gameRepository.save(game)
         authGameId = entity.id!!
@@ -124,8 +124,7 @@ class TestUtilsService(
     }
 
     fun createAndSaveGame(): GameEntity{
-        val json = JSONObject()
-        json.put("ability", "Gf")
+        val json = mutableMapOf<String, Any>("ability" to "Gf")
         val game = GameEntity(
             name = "Test game",
             icon= "test",
@@ -133,7 +132,7 @@ class TestUtilsService(
             description = "Test game description",
             active = true,
             url = "testUrl",
-            configDescription = json.toMap()
+            configDescription = json
         )
         return gameRepository.save(game)
     }

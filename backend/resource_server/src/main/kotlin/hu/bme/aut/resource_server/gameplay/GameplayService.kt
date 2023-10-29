@@ -4,6 +4,7 @@ import hu.bme.aut.resource_server.game.GameRepository
 import hu.bme.aut.resource_server.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
+import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.stereotype.Service
 
 @Service
@@ -29,9 +30,11 @@ class GameplayService(
         return gameplayRepository.findAllByUser(user)
     }
     fun checkGameAccessAndThrow(authentication: Authentication, gameplay: GameplayResultDto){
-        val user = authentication.authorities.find{it.authority == gameplay.username}
+        val username = authentication.name
         val game = gameRepository.findById(gameplay.gameId)
-        if(game.isEmpty || user == null || Integer.parseInt(authentication.name) != game.get().id){
+        val jwt = authentication.principal as Jwt
+        val tokenGameId = jwt.claims["game_id"] as String?
+        if(game.isEmpty || username == null || Integer.parseInt(tokenGameId) != game.get().id){
             throw IllegalAccessException("This game is not authorized to save gameplay for this user.")
         }
     }

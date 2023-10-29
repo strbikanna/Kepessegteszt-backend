@@ -10,7 +10,7 @@ data class GameplayDto(
 
     val thumbnail: String,
 
-    val url: String,
+    val url: String?,
 
     val config: Map<String, Any>
 ) {

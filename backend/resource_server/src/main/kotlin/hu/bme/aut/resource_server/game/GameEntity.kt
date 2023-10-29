@@ -24,7 +24,7 @@ data class GameEntity(
     @Column(name ="_active")
     val active: Boolean,
 
-    val url: String,
+    val url: String?,
 
     @Type(JsonType::class)
     val configDescription: MutableMap<String, Any>

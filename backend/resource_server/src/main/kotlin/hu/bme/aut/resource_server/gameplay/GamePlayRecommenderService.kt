@@ -16,11 +16,11 @@ class GamePlayRecommenderService(
     fun getAllRecommendationToUser(username: String): List<GameplayDto>{
         val user = userRepository.findByUsername(username).orElseThrow()
         val games = gameRepository.findAll().filter { it.active }
-        //TODO custom logic for recommendation
+        // TODO custom logic for recommendation
         return games.map { game -> convertToDto(game, user)}
     }
     private fun convertToDto(gameEntity: GameEntity, userEntity: UserEntity): GameplayDto {
-        gameEntity.configDescription["game_id"] = gameEntity.id!!
+        gameEntity.configDescription["game_id"] = gameEntity.id!!.toString()
         gameEntity.configDescription["username"] = userEntity.username
         return GameplayDto(
             id = gameEntity.id,
