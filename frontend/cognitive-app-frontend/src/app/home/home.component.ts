@@ -1,10 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {TEXTS} from "../utils/app.text_messages";
 import {UserInfo} from "../auth/userInfo";
 import {Role} from "../utils/constants";
-import {LoginService} from "../login/login.service";
-import {MatDialog} from "@angular/material/dialog";
-import {ImpersonationComponent} from "../impersonation/impersonation.component";
 
 @Component({
   selector: 'app-home',
