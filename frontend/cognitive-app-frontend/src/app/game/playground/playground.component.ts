@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {initializeGame} from './main.js'
 import {GameAuthService} from "../game-services/game-auth.service";
 import {TEXTS} from "../../utils/app.text_messages";
+import {GameplayModel} from "../../model/gameplay.model";
 
 @Component({
     selector: 'app-playground',
@@ -14,7 +15,6 @@ export class PlaygroundComponent implements OnInit {
     gameChosen: boolean = true
     text = TEXTS.playground
 
-
     ngOnInit(): void {
         this.dataService.chosenGame.subscribe(game => {
             if(game !== undefined){
@@ -22,6 +22,7 @@ export class PlaygroundComponent implements OnInit {
                 initializeGame(game.config)
             }else{
                 this.gameChosen = false
+                this.dataService.tryLoadChosenGame()
             }
         });
     }

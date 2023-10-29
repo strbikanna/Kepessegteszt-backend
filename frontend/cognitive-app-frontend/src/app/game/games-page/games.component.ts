@@ -21,7 +21,7 @@ export class GamesComponent implements OnInit {
 
     loading = false;
 
-    private storageKey = 'chosenGame'
+    private storageKey = 'games_chosenGame'
 
     private chosenGame: GameplayModel | undefined = undefined
 

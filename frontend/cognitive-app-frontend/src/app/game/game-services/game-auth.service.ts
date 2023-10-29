@@ -19,6 +19,8 @@ export class GameAuthService {
     public chosenGame = new BehaviorSubject<GameplayModel | undefined>(undefined);
 
     private GAME_CONFIG_ID = 'gameTokenConfig'
+    private readonly sessionStoreKey = 'playground_chosengame'
+
 
     constructor(private oidcSecurityService: OidcSecurityService, private http: HttpClient, private router: Router) {
     }
@@ -59,9 +61,21 @@ export class GameAuthService {
             return
         }else{
             this.chosenGame.next(game)
+            this.saveChosenGame(game)
             this.router.navigate(['/playground'],)
         }
     }
+
+    tryLoadChosenGame(){
+        const chosenGame = sessionStorage.getItem(this.sessionStoreKey)
+        if(chosenGame !== null){
+            this.chosenGame.next(JSON.parse(chosenGame))
+        }
+    }
+    private saveChosenGame(game: GameplayModel){
+        sessionStorage.setItem(this.sessionStoreKey, JSON.stringify(game))
+    }
+
     private openGameUrl(game: GameplayModel) {
         this.http.post(game.url!, game.config)
     }
