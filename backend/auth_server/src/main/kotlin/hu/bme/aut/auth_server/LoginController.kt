@@ -37,7 +37,7 @@ class LoginController(
         val userEntity = userService.saveUserOrThrowException(user)
         sendVerificationMail(userEntity)
         badRegistrationCache.remove(user)
-        return "register-success"
+        return "email-verification-sent"
     }
 
     private fun sendVerificationMail(userEntity: UserEntity) {

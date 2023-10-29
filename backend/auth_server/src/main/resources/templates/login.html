@@ -7,7 +7,8 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h1 class="text-center">Lépj be!</h1>
+    <h1 class="text-center">Bejelentkezés</h1>
+    <br>
     <div class="alert alert-danger" role="alert" th:if="${param.error}">
         Helytelen felhasználónév vagy jelszó!
     </div>
@@ -18,14 +19,14 @@
         <div class="col-md-6">
             <form th:action="@{/login}" method="post">
                 <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
+                    <label for="username" class="form-label">Felhasználónév</label>
                     <input type="text" class="form-control" id="username" name="username"
-                           placeholder="Felhasználónév">
+                           placeholder="Írd be a felhasználóneved">
                 </div>
                 <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
+                    <label for="password" class="form-label">Jelszó</label>
                     <input type="password" class="form-control" id="password" name="password"
-                           placeholder="Jelszó">
+                           placeholder="Add meg a jelszavad">
                 </div>
                 <div class="d-grid">
                     <button type="submit" class="btn btn-dark">Bejelentkezés</button>

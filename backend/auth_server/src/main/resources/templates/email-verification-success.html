@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sikeres email-cím megerősítés</title>
+    <title>Email-cím megerősítés</title>
 </head>
 <body>
-
+<div class="alert alert-danger" role="alert" th:if="${param.error}">
+    Az email-cím megerősítése sikertelen volt.
+</div>
 </body>
 </html>
