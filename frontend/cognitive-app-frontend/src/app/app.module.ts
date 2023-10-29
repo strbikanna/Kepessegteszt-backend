@@ -32,7 +32,6 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {AdminModule} from "./admin/admin.module";
 import { HeaderComponent } from './header/header.component';
-import { GameTokenRedirectComponent } from './game/game-token-redirect/game-token-redirect.component';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 @NgModule({
@@ -46,7 +45,6 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
     PlaygroundComponent,
     HeaderComponent,
     ImpersonationComponent,
-    GameTokenRedirectComponent
   ],
   imports: [
     BrowserModule,
