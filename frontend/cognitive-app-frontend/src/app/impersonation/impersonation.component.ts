@@ -3,6 +3,7 @@ import {LoginService} from "../login/login.service";
 import {UserInfo} from "../auth/userInfo";
 import {User} from "../model/user.model";
 import {Observable} from "rxjs";
+import {TEXTS} from "../utils/app.text_messages";
 
 @Component({
   selector: 'app-impersonation',
@@ -14,6 +15,7 @@ export class ImpersonationComponent implements OnInit {
   public contacts: Observable<User[]> = new Observable<User[]>()
   public canImpersonate = false
   public user: User | undefined = undefined
+  text= TEXTS.impersonation
   constructor(private impersonationService: LoginService) {}
   ngOnInit(): void {
     UserInfo.loginStatus.subscribe(loginSuccess => {

@@ -1,5 +1,5 @@
   <button mat-flat-button color="primary" *ngIf= "!isLoggedIn" (click) ="login()" type="submit">
-    Login
+    {{text.login}}
   </button>
   <div *ngIf= "isLoggedIn" class="user-container" >
     <p class="user-name">{{user?.firstName}} {{user?.lastName}}</p>
@@ -9,15 +9,11 @@
     <mat-menu #menu="matMenu">
       <button mat-menu-item routerLink="/profile">
         <mat-icon>manage_accounts</mat-icon>
-        <span>View Profile</span>
+        <span>{{text.profile}}</span>
       </button>
       <button mat-menu-item (click) ="logout()">
         <mat-icon>logout</mat-icon>
-        <span>Log out</span>
-      </button>
-      <button mat-menu-item (click) ="gameToken()" disabled>
-        <mat-icon>sports_esports</mat-icon>
-        <span>Get Game Token</span>
+        <span>{{text.logout}}</span>
       </button>
     </mat-menu>
     <br/>

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from "../model/user.model";
 import {LoginService} from "./login.service";
+import {TEXTS} from "../utils/app.text_messages";
 
 @Component({
   selector: 'app-login',
@@ -10,6 +11,7 @@ import {LoginService} from "./login.service";
 export class LoginComponent implements OnInit {
   public isLoggedIn = false
   public user: User | undefined = undefined
+  text = TEXTS.menu
   constructor(private loginService: LoginService) {}
 
   ngOnInit() {

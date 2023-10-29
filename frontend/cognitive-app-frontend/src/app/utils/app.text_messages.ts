@@ -4,6 +4,19 @@ export const TEXTS = {
         logout: 'Kijelentkezés',
         home: 'Cognitive App',
         games: 'Játékok',
+        profile: 'Profil',
+    },
+    home:{
+        welcome: 'Örülünk, hogy itt vagy a Cognitive Appban!',
+        features_student: 'Játssz a kedvenc játékaiddal és kövesd nyomon a profilod fejlődését!',
+        features_parent: 'Kövesd nyomon gyermeked fejlődését és segíts neki a játékok kiválasztásában!',
+        features_teacher: 'Kövesd nyomon diákjaid fejlődését és ajánlj nekik játékokat!',
+        features_scientist: 'Tölts fel játékokat, ajánld őket diákoknak és kövesd nyomon a fejlődésüket!',
+        login: 'Jelentkezz be a játékok eléréséhez!',
+    },
+    impersonation:{
+        message: 'Bejelentkezhetsz a következő felhasználók nevében, vagy maradhatsz a saját fiókodban.',
+        cancel: 'Maradok a saját fiókomban',
     },
     games: {
         menu: {
@@ -20,9 +33,10 @@ export const TEXTS = {
         }
     },
     user_info: {
+        description: 'Felhasználói profil információk',
         first_name: 'Keresztnév',
         last_name: 'Vezetéknév',
-        email: 'E-mail',
+        email: 'Email-cím',
         username: 'Felhasználónév',
         roles: 'Szerepkörök',
     },

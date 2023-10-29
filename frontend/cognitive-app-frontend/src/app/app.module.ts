@@ -11,7 +11,6 @@ import {appRoutes} from "./utils/app.routes";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from "@angular/material/icon";
-import { UserInfoComponent } from './user-info/user-info.component';
 import { ProfileComponent } from './profile/profile.component';
 import {MatMenuModule} from "@angular/material/menu";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
@@ -41,7 +40,6 @@ import {GlobalErrorhandlerService} from "./utils/global-errorhandler.service";
     AppComponent,
     LoginComponent,
     HomeComponent,
-    UserInfoComponent,
     ProfileComponent,
     GamesComponent,
     PlaygroundComponent,

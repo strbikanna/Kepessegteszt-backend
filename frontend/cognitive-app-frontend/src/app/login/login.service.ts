@@ -92,7 +92,7 @@ export class LoginService {
             firstName: userInfoResponse.family_name,
             lastName: userInfoResponse.given_name,
             email: userInfoResponse.email,
-            roles: userInfoResponse.roles,
+            roles: userInfoResponse.roles.map((role: string) => role.toUpperCase()),
         };
 
         user.roles = user.roles.map(role => {
@@ -108,7 +108,7 @@ export class LoginService {
                     roleName = "requested parent"
                     break
             }
-            return roleName.toLowerCase()
+            return roleName.toUpperCase()
         })
         return user;
     }

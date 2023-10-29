@@ -1,4 +1,10 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {TEXTS} from "../utils/app.text_messages";
+import {UserInfo} from "../auth/userInfo";
+import {Role} from "../utils/constants";
+import {LoginService} from "../login/login.service";
+import {MatDialog} from "@angular/material/dialog";
+import {ImpersonationComponent} from "../impersonation/impersonation.component";
 
 @Component({
   selector: 'app-home',
@@ -7,7 +13,27 @@ import { Component } from '@angular/core';
 })
 export class HomeComponent {
 
-  raiseError(){
-    throw new Error('Error raised from HomeComponent');
+  texts = TEXTS.home
+  user = UserInfo.currentUser
+
+
+    getFeatureMessageForUser(){
+    if(this.user === undefined){
+        return this.texts.login
+    }
+    if(this.user.roles.includes(Role.SCIENTIST)){
+        return this.texts.features_scientist
+    }
+    if(this.user.roles.includes(Role.TEACHER )){
+        return this.texts.features_teacher
+    }
+    if(this.user.roles.includes(Role.PARENT)){
+        return this.texts.features_parent
+    }
+    if(this.user.roles.includes(Role.STUDENT)){
+        return this.texts.features_student
+    }
+    else return ''
   }
+
 }
