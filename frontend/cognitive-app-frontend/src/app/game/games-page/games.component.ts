@@ -5,7 +5,6 @@ import {GameplayModel} from "../../model/gameplay.model";
 import {GameService} from "../game-services/game.service";
 import {GameAuthService} from "../game-services/game-auth.service";
 import {GameInfo} from "../../auth/gameInfo";
-import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-games',
@@ -26,7 +25,7 @@ export class GamesComponent implements OnInit {
 
     private chosenGame: GameplayModel | undefined = undefined
 
-    constructor(private gameService: GameService, private authService: GameAuthService, private router: Router) {
+    constructor(private gameService: GameService, private authService: GameAuthService, ) {
     }
 
     ngOnInit(): void {
@@ -57,13 +56,17 @@ export class GamesComponent implements OnInit {
     }
 
     private loadPlayground(chosenGame: GameplayModel) {
+        this.resetStateToIdle();
         GameInfo.currentGameId = chosenGame.config.game_id
         this.authService.publishChosenGame(chosenGame)
+    }
+
+    private resetStateToIdle() {
         this.loading = false;
         sessionStorage.removeItem(this.storageKey)
         this.chosenGame = undefined
-        this.router.navigate(['/playground'],)
     }
+
 
     onGameChosen(game: GameplayModel) {
         if (this.validChosenGame(game)) {

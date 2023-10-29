@@ -5,6 +5,8 @@ import {AuthOptions, LoginResponse, OidcSecurityService} from "angular-auth-oidc
 import {GameInfo} from "../../auth/gameInfo";
 import {UserInfo} from "../../auth/userInfo";
 import {AppConstants} from "../../utils/constants";
+import {HttpClient} from "@angular/common/http";
+import {Router} from "@angular/router";
 
 /**
  * Service that retrieves game access token for the chosen game
@@ -18,7 +20,7 @@ export class GameAuthService {
 
     private GAME_CONFIG_ID = 'gameTokenConfig'
 
-    constructor(private oidcSecurityService: OidcSecurityService) {
+    constructor(private oidcSecurityService: OidcSecurityService, private http: HttpClient, private router: Router) {
     }
 
     initAuthentication() {
@@ -50,9 +52,18 @@ export class GameAuthService {
 
     publishChosenGame(game: GameplayModel) {
         game.config.username = UserInfo.currentUser?.username ?? 'unknown'
-        console.log('User for game: ' + game.config.username)
         game.config.access_token = GameInfo.accessToken
-        this.chosenGame.next(game)
+
+        if(game.url !== undefined && game.url !== null && game.url !== '') {
+            this.openGameUrl(game)
+            return
+        }else{
+            this.chosenGame.next(game)
+            this.router.navigate(['/playground'],)
+        }
+    }
+    private openGameUrl(game: GameplayModel) {
+        this.http.post(game.url!, game.config)
     }
 
 }
