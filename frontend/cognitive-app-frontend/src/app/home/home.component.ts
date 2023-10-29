@@ -7,4 +7,7 @@ import { Component } from '@angular/core';
 })
 export class HomeComponent {
 
+  raiseError(){
+    throw new Error('Error raised from HomeComponent');
+  }
 }

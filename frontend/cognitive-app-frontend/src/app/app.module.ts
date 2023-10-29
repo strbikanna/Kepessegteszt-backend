@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {ErrorHandler, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -22,7 +22,7 @@ import {AuthInterceptor} from "./auth/auth.interceptor";
 import { GamesComponent } from './game/games-page/games.component';
 import {MatTabsModule} from "@angular/material/tabs";
 import { PlaygroundComponent } from './game/playground/playground.component';
-import {MatDialogModule} from "@angular/material/dialog";
+import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from "@angular/material/dialog";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatChipsModule} from "@angular/material/chips";
 import {ReactiveFormsModule} from "@angular/forms";
@@ -33,6 +33,8 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {AdminModule} from "./admin/admin.module";
 import { HeaderComponent } from './header/header.component';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
+import {GlobalErrorhandlerService} from "./utils/global-errorhandler.service";
 
 @NgModule({
   declarations: [
@@ -45,6 +47,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
     PlaygroundComponent,
     HeaderComponent,
     ImpersonationComponent,
+    AlertDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -80,7 +83,20 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
     AdminModule,
     MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule, MatTabsModule, MatDialogModule, MatPaginatorModule, MatChipsModule, ReactiveFormsModule, MatInputModule, MatExpansionModule, MatCheckboxModule, MatAutocompleteModule, MatProgressBarModule,
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
+  providers: [
+      {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    {
+      provide: MAT_DIALOG_DEFAULT_OPTIONS,
+      useValue: {
+        disableClose: false,
+        hasBackdrop: true
+      }
+    },
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorhandlerService,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

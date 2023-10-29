@@ -57,5 +57,17 @@ export const TEXTS = {
             add: 'Hozzáadás',
             role_request: 'Igényelt szerpkörök',
         }
-    }
+    },
+    error:{
+        default_error_message: 'Ismeretlen hiba történt',
+        default_error_title: 'Hiba történt',
+        http_error: 'Hiba történt a szerverrel való kommunikáció során',
+        http_error_details: 'A szerver válasza: ',
+    },
+    actions: {
+        cancel: 'Mégse',
+        save: 'Mentés',
+        ok: 'OK',
+    },
+
 }
