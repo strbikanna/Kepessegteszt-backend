@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service
 class GrantedAuthoritiesConverter(
         @Autowired private var userRepository: UserRepository,
 ) : Converter<Jwt, Collection<GrantedAuthority>> {
+
     override fun convert(source: Jwt): Collection<GrantedAuthority> {
         val roles = getRolesFromJwt(source)
         saveUser(source, roles)

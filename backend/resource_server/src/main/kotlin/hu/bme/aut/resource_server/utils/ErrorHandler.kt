@@ -16,12 +16,12 @@ class ErrorHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException::class)
-    fun handleIllegalArgumentError(exception: NoSuchElementException): ResponseEntity<String>{
+    fun handleIllegalArgumentError(exception: IllegalArgumentException): ResponseEntity<String>{
         val message = exception.message ?: "Wrong request specification."
         return ResponseEntity(message, HttpStatus.BAD_REQUEST)
     }
     @ExceptionHandler(IllegalAccessException::class)
-    fun handleIllegalAccessError(exception: NoSuchElementException): ResponseEntity<String>{
+    fun handleIllegalAccessError(exception: IllegalAccessException): ResponseEntity<String>{
         val message = exception.message ?: "No rights for this request."
         return ResponseEntity(message, HttpStatus.FORBIDDEN)
     }

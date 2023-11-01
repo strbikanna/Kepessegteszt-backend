@@ -8,7 +8,7 @@ open class GameDto(
 
     val icon: String,
 
-    val url: String,
+    val url: String?,
 
     val configDescription: Map<String, Any>
 
@@ -16,7 +16,7 @@ open class GameDto(
     constructor(game: GameEntity) : this(
         game.name,
         game.description,
-        game.getImage(),
+        game.thumbnailPath,
         game.url,
         game.configDescription
     )

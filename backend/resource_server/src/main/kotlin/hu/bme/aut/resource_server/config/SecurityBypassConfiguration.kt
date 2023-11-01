@@ -16,8 +16,8 @@ import org.springframework.security.web.session.ConcurrentSessionFilter
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@Profile( "test", "dev" )
-@ConditionalOnProperty(name = ["cognitive-app.resource-server.security.bypass"], havingValue = "true", matchIfMissing = true)
+@Profile( "test")
+@ConditionalOnProperty(name = ["cognitive-app.resource-server.security.bypass"], havingValue = "true", matchIfMissing = false)
 class SecurityBypassConfiguration {
     @Bean
     fun filterChain(http: HttpSecurity, bypassFilter: BypassFilter): SecurityFilterChain {
@@ -27,6 +27,7 @@ class SecurityBypassConfiguration {
             .sessionManagement { SessionCreationPolicy.STATELESS }
             .authorizeHttpRequests {
                 it.requestMatchers("/error").permitAll()
+                it.requestMatchers("/game_images/**").permitAll()
                 it.anyRequest().authenticated()
             }
             .addFilterAfter(bypassFilter, ConcurrentSessionFilter::class.java)

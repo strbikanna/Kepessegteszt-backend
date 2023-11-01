@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from "../model/user.model";
 import {LoginService} from "./login.service";
-import {UserInfo} from "../utils/userInfo";
+import {TEXTS} from "../utils/app.text_messages";
 
 @Component({
   selector: 'app-login',
@@ -11,6 +11,7 @@ import {UserInfo} from "../utils/userInfo";
 export class LoginComponent implements OnInit {
   public isLoggedIn = false
   public user: User | undefined = undefined
+  text = TEXTS.menu
   constructor(private loginService: LoginService) {}
 
   ngOnInit() {
@@ -24,14 +25,11 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    // UserInfo.loginStatus.next(true)
-    // this.isLoggedIn = true
-    // this.user = UserInfo.currentUser
     this.loginService.login()
   }
 
   gameToken(){
-    this.loginService.getGameToken(11)
+    //this.loginService.getGameToken(11)
   }
 
   logout() {

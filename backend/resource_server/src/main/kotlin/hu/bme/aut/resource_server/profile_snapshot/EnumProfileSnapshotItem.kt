@@ -32,7 +32,7 @@ class EnumProfileSnapshotItem  (
 
         ) : ProfileSnapshotItem() {
         constructor(profile: EnumProfileItem, user: UserEntity): this(
-            abilityEntity = profile.abilityEntity,
+            abilityEntity = profile.ability,
             user = user,
             abilityValue = profile.abilityValue
         )

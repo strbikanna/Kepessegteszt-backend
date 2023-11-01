@@ -6,7 +6,7 @@ CREATE TABLE GAME
     icon               varchar(200),
     thumbnail_path     varchar(400)     NOT NULL,
     _active            boolean          DEFAULT TRUE,
-    url                varchar(1000)    NOT NULL,
+    url                varchar(1000)    ,
     config_description json             NOT NULL
 );
 

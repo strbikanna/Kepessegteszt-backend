@@ -5,7 +5,10 @@ spring:
     password:
     driver-class-name: org.h2.Driver
 
-cognititve-app:
-  resource-server:
-    secutity:
-      bypass: true
+logging:
+  level:
+    org:
+      springframework:
+        security: trace
+        data:
+          repository: info

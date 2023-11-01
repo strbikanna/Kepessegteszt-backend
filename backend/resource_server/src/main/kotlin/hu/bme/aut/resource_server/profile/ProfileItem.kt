@@ -5,7 +5,7 @@ import hu.bme.aut.resource_server.ability.AbilityEntity
 sealed class ProfileItem {
     abstract var id: Long?
 
-    abstract val abilityEntity: AbilityEntity
+    abstract val ability: AbilityEntity
 
     abstract val abilityValue: Any
 }

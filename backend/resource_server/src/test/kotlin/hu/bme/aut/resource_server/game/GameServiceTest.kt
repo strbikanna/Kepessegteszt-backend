@@ -24,7 +24,7 @@ class GameServiceTest(
     @Transactional
     @Test
     fun shouldSaveGameThenReturnDto() {
-        val config = mapOf<String, Any>("Level" to 0)
+        val config = mutableMapOf<String, Any>("Level" to 0)
         val game = GameEntity(
                 name = "TestGame", description = "test_game_description", icon="test", thumbnailPath = Paths.get("src", "test", "kotlin/hu/bme/aut/resource_server", "game", "resources", "test_game_icon.png").toString(),
                 active = true, url = "test_game_url", configDescription = config)
@@ -36,8 +36,8 @@ class GameServiceTest(
     @Transactional
     @Test
     fun shouldSaveMultipleGamesThenReturnDtos() {
-        val config1 = mapOf<String, Any>("Level" to 0)
-        val config2 = mapOf<String, Any>("Level" to 3, "Ability" to "Gf")
+        val config1 = mutableMapOf<String, Any>("Level" to 0)
+        val config2 = mutableMapOf<String, Any>("Level" to 3, "Ability" to "Gf")
         val game1 = GameEntity(
             name = "TestGame1", description = "test_game_description1", icon="test1", thumbnailPath = Paths.get("src", "test", "kotlin/hu/bme/aut/resource_server", "game", "resources", "test_game_icon.png").toString(),
             active = true, url = "test_game_url1", configDescription = config1)
@@ -56,8 +56,8 @@ class GameServiceTest(
     @Transactional
     @Test
     fun testFindGameDtoById() {
-        val config1 = mapOf<String, Any>("Level" to 0)
-        val config2 = mapOf<String, Any>("Level" to 3, "Ability" to "Gf")
+        val config1 = mutableMapOf<String, Any>("Level" to 0)
+        val config2 = mutableMapOf<String, Any>("Level" to 3, "Ability" to "Gf")
         val game1 = GameEntity(
             name = "TestGame1", description = "test_game_description1", icon="test1", thumbnailPath = Paths.get("src", "test", "kotlin/hu/bme/aut/resource_server", "game", "resources", "test_game_icon.png").toString(),
             active = true, url = "test_game_url1", configDescription = config1)

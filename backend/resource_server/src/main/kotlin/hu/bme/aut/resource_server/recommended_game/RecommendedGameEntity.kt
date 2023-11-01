@@ -19,14 +19,17 @@ data class RecommendedGameEntity(
         @Column(name = "_timestamp")
         val timestamp: LocalDateTime? = null,
 
+        @Column(name = "_level")
+        val level: Int = 0,
+
         @Type(JsonType::class)
         val config: Map<String, Any>,
 
-        val completed: Boolean = false,
+        var completed: Boolean = false,
 
         @JoinColumn(name = "recommender_id")
         @ManyToOne(fetch = FetchType.EAGER)
-        val recommender: UserEntity,
+        val recommender: UserEntity? = null,
 
         @ManyToOne
         @JoinColumn(name = "recommendee_id")

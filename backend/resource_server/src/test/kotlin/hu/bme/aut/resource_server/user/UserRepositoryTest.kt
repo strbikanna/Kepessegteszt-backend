@@ -31,11 +31,11 @@ class UserRepositoryTest(
     fun shouldSaveUser() {
         val profile = mutableSetOf(
             FloatProfileItem(
-                abilityEntity = testService.abilityGv,
+                ability = testService.abilityGv,
                 abilityValue = 10.0
             ),
             FloatProfileItem(
-                abilityEntity = testService.abilityGsm,
+                ability = testService.abilityGsm,
                 abilityValue = 4.0
             ),
         )
@@ -70,27 +70,27 @@ class UserRepositoryTest(
         assertEquals(2, savedUser1.profileFloat.size)
         assertEquals(1, savedUser1.profileEnum.size)
         assertEquals(1, savedUser2.profileFloat.size)
-        assertTrue(savedUser1.profileFloat.any { it.abilityEntity.code == "Gv" })
-        assertTrue(savedUser1.profileEnum.any { it.abilityEntity.code == "Gv" })
-        assertTrue(savedUser1.profileFloat.any { it.abilityEntity.code == "Gsm" })
-        assertTrue(savedUser2.profileFloat.any { it.abilityEntity.code == "Gsm" })
+        assertTrue(savedUser1.profileFloat.any { it.ability.code == "Gv" })
+        assertTrue(savedUser1.profileEnum.any { it.ability.code == "Gv" })
+        assertTrue(savedUser1.profileFloat.any { it.ability.code == "Gsm" })
+        assertTrue(savedUser2.profileFloat.any { it.ability.code == "Gsm" })
     }
 
     @Transactional
     fun saveAndTestUser1(): UserEntity {
         val profileFloat = mutableSetOf(
             FloatProfileItem(
-                abilityEntity = testService.abilityGv,
+                ability = testService.abilityGv,
                 abilityValue = 10.0
             ),
             FloatProfileItem(
-                abilityEntity = testService.abilityGsm,
+                ability = testService.abilityGsm,
                 abilityValue = 4.0
             ),
         )
         val profileEnum = mutableSetOf(
             EnumProfileItem(
-                abilityEntity = testService.abilityGv,
+                ability = testService.abilityGv,
                 abilityValue = EnumAbilityValue.YES
             ),
         )
@@ -111,7 +111,7 @@ class UserRepositoryTest(
     fun saveAndTestUser2(): UserEntity {
         val profile2 = mutableSetOf(
             FloatProfileItem(
-                abilityEntity = testService.abilityGsm,
+                ability = testService.abilityGsm,
                 abilityValue = 4.0
             ),
         )

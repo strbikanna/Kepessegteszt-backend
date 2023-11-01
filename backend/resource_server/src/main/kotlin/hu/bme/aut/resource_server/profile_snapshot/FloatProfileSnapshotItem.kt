@@ -30,7 +30,7 @@ data class FloatProfileSnapshotItem (
 ) : ProfileSnapshotItem() {
 
     constructor(profile: FloatProfileItem, user: UserEntity): this(
-        abilityEntity = profile.abilityEntity,
+        abilityEntity = profile.ability,
         user = user,
         abilityValue = profile.abilityValue
     )

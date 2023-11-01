@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
-@Profile( "test", "dev" )
-@ConditionalOnProperty(name = ["cognitive-app.resource-server.security.bypass"], havingValue = "true", matchIfMissing = true)
+@Profile( "test" )
+@ConditionalOnProperty(name = ["cognitive-app.resource-server.security.bypass"], havingValue = "true", matchIfMissing = false)
 class BypassFilter(
     @Autowired private var userRepository: UserRepository,
     @Autowired private var gameRepository: GameRepository
@@ -51,9 +51,10 @@ class BypassFilter(
         val game = gameOptional.get()
         val jwt = Jwt.withTokenValue("devgame")
             .header("alg", "none")
-            .subject(requestedGameId)
+            .subject(requestedUsername)
+            .claims { it["game_id"] = game.id }
             .build()
-        SecurityContextHolder.getContext().authentication = JwtAuthenticationToken(jwt, listOf(SimpleGrantedAuthority("ROLE_GAME"), SimpleGrantedAuthority(requestedUsername)))
+        SecurityContextHolder.getContext().authentication = JwtAuthenticationToken(jwt, listOf(SimpleGrantedAuthority("ROLE_GAME")))
     }
 
     private fun authenticateUser(requestedUsername: String) {

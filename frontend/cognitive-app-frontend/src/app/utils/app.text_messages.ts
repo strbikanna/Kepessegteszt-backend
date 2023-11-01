@@ -4,6 +4,19 @@ export const TEXTS = {
         logout: 'Kijelentkezés',
         home: 'Cognitive App',
         games: 'Játékok',
+        profile: 'Profil',
+    },
+    home:{
+        welcome: 'Örülünk, hogy itt vagy a Cognitive Appban!',
+        features_student: 'Játssz a kedvenc játékaiddal és kövesd nyomon a profilod fejlődését!',
+        features_parent: 'Kövesd nyomon gyermeked fejlődését és segíts neki a játékok kiválasztásában!',
+        features_teacher: 'Kövesd nyomon diákjaid fejlődését és ajánlj nekik játékokat!',
+        features_scientist: 'Tölts fel játékokat, ajánld őket diákoknak és kövesd nyomon a fejlődésüket!',
+        login: 'Jelentkezz be a játékok eléréséhez!',
+    },
+    impersonation:{
+        message: 'Bejelentkezhetsz a következő felhasználók nevében, vagy maradhatsz a saját fiókodban.',
+        cancel: 'Maradok a saját fiókomban',
     },
     games: {
         menu: {
@@ -14,12 +27,16 @@ export const TEXTS = {
         },
         game_card:{
             play: 'Játék indítása',
+        },
+        progress:{
+            loading_game: 'Játék betöltése...',
         }
     },
     user_info: {
+        description: 'Felhasználói profil információk',
         first_name: 'Keresztnév',
         last_name: 'Vezetéknév',
-        email: 'E-mail',
+        email: 'Email-cím',
         username: 'Felhasználónév',
         roles: 'Szerepkörök',
     },
@@ -54,5 +71,17 @@ export const TEXTS = {
             add: 'Hozzáadás',
             role_request: 'Igényelt szerpkörök',
         }
-    }
+    },
+    error:{
+        default_error_message: 'Ismeretlen hiba történt',
+        default_error_title: 'Hiba történt',
+        http_error: 'Hiba történt a szerverrel való kommunikáció során',
+        http_error_details: 'A szerver válasza: ',
+    },
+    actions: {
+        cancel: 'Mégse',
+        save: 'Mentés',
+        ok: 'OK',
+    },
+
 }

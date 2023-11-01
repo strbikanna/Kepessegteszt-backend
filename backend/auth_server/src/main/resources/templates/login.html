@@ -3,13 +3,14 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>Please Log In</title>
+    <title>Bejelentkezés</title>
 </head>
 <body>
 <div class="container mt-5">
-    <h1 class="text-center">Please Sign In</h1>
+    <h1 class="text-center">Bejelentkezés</h1>
+    <br>
     <div class="alert alert-danger" role="alert" th:if="${param.error}">
-        Invalid username or password.
+        Helytelen felhasználónév vagy jelszó!
     </div>
 </div>
 
@@ -18,20 +19,20 @@
         <div class="col-md-6">
             <form th:action="@{/login}" method="post">
                 <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
+                    <label for="username" class="form-label">Felhasználónév</label>
                     <input type="text" class="form-control" id="username" name="username"
-                           placeholder="Enter your username">
+                           placeholder="Írd be a felhasználóneved">
                 </div>
                 <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
+                    <label for="password" class="form-label">Jelszó</label>
                     <input type="password" class="form-control" id="password" name="password"
-                           placeholder="Enter your password">
+                           placeholder="Add meg a jelszavad">
                 </div>
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-dark">Login</button>
+                    <button type="submit" class="btn btn-dark">Bejelentkezés</button>
                 </div>
                 <a type="button" class="btn btn-link" th:href="@{/register}">
-                    Register
+                    Regisztráció
                 </a>
             </form>
 

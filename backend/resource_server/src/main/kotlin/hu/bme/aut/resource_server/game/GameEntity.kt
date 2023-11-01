@@ -3,9 +3,6 @@ package hu.bme.aut.resource_server.game
 import jakarta.persistence.*
 import org.hibernate.annotations.Type
 import io.hypersistence.utils.hibernate.type.json.JsonType
-import java.nio.file.Files
-import java.util.*
-import kotlin.io.path.Path
 
 @Entity
 @Table(name = "GAME")
@@ -27,13 +24,9 @@ data class GameEntity(
     @Column(name ="_active")
     val active: Boolean,
 
-    val url: String,
+    val url: String?,
 
     @Type(JsonType::class)
-    val configDescription: Map<String, Any>
-) {
-    fun getImage(): String {
-        val fileContent: ByteArray = Files.readAllBytes(Path(thumbnailPath))
-        return Base64.getEncoder().encodeToString(fileContent)
-    }
-}
+    val configDescription: MutableMap<String, Any>
+
+)

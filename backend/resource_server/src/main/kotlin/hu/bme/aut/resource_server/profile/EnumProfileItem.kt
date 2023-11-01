@@ -14,7 +14,7 @@ data class EnumProfileItem(
 
     @ManyToOne(cascade=[CascadeType.REFRESH], fetch= FetchType.EAGER)
     @JoinColumn(name="ability_id", referencedColumnName = "code")
-    override val abilityEntity: AbilityEntity,
+    override val ability: AbilityEntity,
 
     @Column
     override var abilityValue: EnumAbilityValue

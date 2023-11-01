@@ -1,7 +1,12 @@
 -- games
+-- comment out for tests
+-- INSERT INTO GAME(id, _name, _description, thumbnail_path, _active, url, config_description)
+-- VALUES (1, 'balloon-pop', 'This is a very epic game. Try not to die from the bombs.',
+      -- 'http://localhost:8090/game_images/balloon_game.jpg', true, null, '{"level": 1, "gameName": "balloon-pop", "gameTitle": "Pop The Balloon"}');
 
 -- INSERT INTO GAME(id, _name, _description, thumbnail_path, _active, url, config_description)
--- VALUES (1, 'game1', 'this is a very epic game with the best game mechanics', 'path/to/test/thumbnail1', true, 'game1url.com', '{"parameters": [{"max_point": "","min_point": "","level": ""}]}');
+-- VALUES (2, 'Radio buttons', 'Push the correct buttons of the secret radio.',
+     --  'http://localhost:8090/game_images/number_game.jpg', true, null, '{"level": "1", "gameName": "number-repeating", "gameTitle": "Rock The Radio"}');
 
 -- INSERT INTO GAME(id, _name, _description, thumbnail_path, _active, url, config_description)
 -- VALUES (2, 'game2', 'this is a very epic game with the best graphics ever', 'path/to/test/thumbnail1', true, 'game2url.com', '{"parameters": [{"max_point": "","min_point": "","level": ""}]}');

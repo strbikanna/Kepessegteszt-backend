@@ -45,9 +45,9 @@ class ProfileSnapshotServiceTest(
         assertEquals(2, snapShotsFound.size)
 
         userEntity.profileEnum.add(
-            EnumProfileItem(abilityEntity=testUtilsService.abilityColorsense, abilityValue= EnumAbilityValue.INCLINED)
+            EnumProfileItem(ability=testUtilsService.abilityColorsense, abilityValue= EnumAbilityValue.INCLINED)
         )
-        userEntity.profileFloat.find { it.abilityEntity.code == "Gf" }!!.abilityValue = 5.2
+        userEntity.profileFloat.find { it.ability.code == "Gf" }!!.abilityValue = 5.2
         testUtilsService.saveUser(userEntity)
         snapshotService.saveSnapshotOfUser(userEntity)
 

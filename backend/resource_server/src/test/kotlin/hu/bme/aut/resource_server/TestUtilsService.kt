@@ -4,20 +4,20 @@ import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.ability.AbilityRepository
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.GameRepository
-import hu.bme.aut.resource_server.gameplay.GameplayEntity
-import hu.bme.aut.resource_server.gameplay.GameplayRepository
+import hu.bme.aut.resource_server.gameplayresult.GameplayResultEntity
+import hu.bme.aut.resource_server.gameplayresult.GameplayResultRepository
 import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.profile_snapshot.EnumProfileSnapshotRepository
 import hu.bme.aut.resource_server.profile_snapshot.FloatProfileSnapshotRepository
+import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
+import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import hu.bme.aut.resource_server.role.Role
 import hu.bme.aut.resource_server.utils.AbilityType
 import hu.bme.aut.resource_server.utils.RoleName
-import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.nio.file.Paths
 
 @Service
 class TestUtilsService(
@@ -26,7 +26,8 @@ class TestUtilsService(
     @Autowired  var floatProfileSnapshotRepository: FloatProfileSnapshotRepository,
     @Autowired  var enumProfileSnapshotRepository: EnumProfileSnapshotRepository,
     @Autowired  var gameRepository: GameRepository,
-    @Autowired  var gameplayRepository: GameplayRepository,
+    @Autowired  var gameplayResultRepository: GameplayResultRepository,
+    @Autowired  var recommendedGameRepository: RecommendedGameRepository,
 ) {
     val authHeaderName = "authUser"
     val gameAuthHeaderName = "authGame"
@@ -40,7 +41,8 @@ class TestUtilsService(
     fun emptyRepositories(){
         floatProfileSnapshotRepository.deleteAll()
         enumProfileSnapshotRepository.deleteAll()
-        gameplayRepository.deleteAll()
+        gameplayResultRepository.deleteAll()
+        recommendedGameRepository.deleteAll()
         userRepository.deleteAll()
         gameRepository.deleteAll()
     }
@@ -52,11 +54,11 @@ class TestUtilsService(
     fun createUnsavedTestUser(): UserEntity{
         val profile  = mutableSetOf(
                 FloatProfileItem(
-                        abilityEntity = abilityGf,
+                        ability = abilityGf,
                         abilityValue = 10.0
                 ),
                 FloatProfileItem(
-                        abilityEntity = abilityGq,
+                        ability = abilityGq,
                         abilityValue = 4.0
                 ),
         )
@@ -69,19 +71,19 @@ class TestUtilsService(
                 roles = mutableSetOf(Role(RoleName.STUDENT))
         )
     }
-    fun saveAuthUserWithRights(vararg roles: RoleName){
+    fun saveAuthUserWithRights(vararg roles: RoleName): UserEntity{
         val user = UserEntity(
-            username = authUsername,
-            firstName = "Test",
-            lastName = "User",
-            profileFloat = mutableSetOf(),
-            profileEnum = mutableSetOf(),
-            roles = roles.map { Role(it) }.toMutableSet()
+                username = authUsername,
+                firstName = "Test",
+                lastName = "User",
+                profileFloat = mutableSetOf(),
+                profileEnum = mutableSetOf(),
+                roles = roles.map { Role(it) }.toMutableSet()
         )
-        userRepository.save(user)
+        return userRepository.save(user)
     }
 
-    fun saveAuthGame(){
+    fun saveAuthGame(): GameEntity{
         val game = GameEntity(
             name = "Auth game",
             icon = "auth icon",
@@ -89,10 +91,11 @@ class TestUtilsService(
             description = "Auth test game description",
             active = true,
             url = "testUrl",
-            configDescription = mapOf()
+            configDescription = mutableMapOf()
         )
         val entity = gameRepository.save(game)
         authGameId = entity.id!!
+        return entity
     }
     fun saveUser(user: UserEntity): UserEntity{
         return userRepository.save(user)
@@ -105,11 +108,11 @@ class TestUtilsService(
         userRepository.save(user1)
         val profile  = mutableSetOf(
                 FloatProfileItem(
-                        abilityEntity = abilityGsm,
+                        ability = abilityGsm,
                         abilityValue = 2.0
                 ),
                 FloatProfileItem(
-                        abilityEntity = abilityGq,
+                        ability = abilityGq,
                         abilityValue = 7.0
                 ),
         )
@@ -125,20 +128,30 @@ class TestUtilsService(
     }
 
     fun createAndSaveGame(): GameEntity{
-        val json = JSONObject()
-        json.put("ability", "Gf")
+        val json = mutableMapOf<String, Any>("ability" to "Gf")
         val game = GameEntity(
             name = "Test game",
             icon= "test",
-            thumbnailPath = Paths.get("src", "test", "kotlin/hu/bme/aut/resource_server", "game", "resources", "test_game_icon.png").toString(),
+            thumbnailPath = "test/files/assets",
             description = "Test game description",
             active = true,
             url = "testUrl",
-            configDescription = json.toMap()
+            configDescription = json.toMutableMap()
         )
         return gameRepository.save(game)
     }
-    fun createGamePlay(): GameplayEntity{
+
+    fun createAndSaveRecommendedGame(user: UserEntity): RecommendedGameEntity{
+        val game = createAndSaveGame()
+        val recommendedGameEntity = RecommendedGameEntity(
+            game = game,
+            recommendedTo = user,
+            config = mapOf(),
+        )
+        return recommendedGameRepository.save(recommendedGameEntity)
+    }
+
+    fun createGamePlayResult(): GameplayResultEntity{
         val json = mutableMapOf<String, Any?>()
         json["time"] = 100
         json["correct"] = 10
@@ -146,10 +159,11 @@ class TestUtilsService(
         json["level"] = 2
         val user = createUnsavedTestUser()
         userRepository.save(user)
-        return GameplayEntity(
+        return GameplayResultEntity(
             result = json.toMap(),
+            config = mutableMapOf<String, Any>(),
             user = user,
-            game = createAndSaveGame()
+            recommendedGame = createAndSaveRecommendedGame(user)
         )
     }
 }

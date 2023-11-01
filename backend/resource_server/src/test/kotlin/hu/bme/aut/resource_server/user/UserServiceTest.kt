@@ -69,7 +69,7 @@ class UserServiceTest(
         testService.fillUserRepository()
         val testUser1 = userService.getUserEntityWithProfileByUsername("test_user1")
         assertEquals(2, testUser1.profileFloat.size)
-        testUser1.profileFloat.add(FloatProfileItem(abilityEntity = testService.abilityGsm, abilityValue = 5.0))
+        testUser1.profileFloat.add(FloatProfileItem(ability = testService.abilityGsm, abilityValue = 5.0))
         val updatedUser = userService.updateUserProfile(testUser1)
         assertEquals(3, updatedUser.profile.size)
     }
@@ -80,14 +80,14 @@ class UserServiceTest(
         val testUser1 = userService.getUserEntityWithProfileByUsername("test_user1")
         assertEquals(2, testUser1.profileFloat.size)
         testUser1.profileFloat.forEach {
-            if (it.abilityEntity.code == testService.abilityGq.code) {
+            if (it.ability.code == testService.abilityGq.code) {
                 it.abilityValue = 6.0
                 return@forEach
             }
         }
         val updatedUser = userService.updateUserProfile(testUser1)
         assertEquals(2, updatedUser.profile.size)
-        val updatedProfileItem = updatedUser.profile.find { it.abilityEntity.code == testService.abilityGq.code }!!
+        val updatedProfileItem = updatedUser.profile.find { it.ability.code == testService.abilityGq.code }!!
         assertEquals(6.0, updatedProfileItem.abilityValue)
     }
 
@@ -95,10 +95,10 @@ class UserServiceTest(
     fun shouldDeleteProfileItem() {
         testService.fillUserRepository()
         val testUser1 = userService.getUserEntityWithProfileByUsername("test_user1")
-        testUser1.profileFloat.removeIf { it.abilityEntity.code == testService.abilityGq.code }
+        testUser1.profileFloat.removeIf { it.ability.code == testService.abilityGq.code }
         val updatedUser = userService.updateUserProfile(testUser1)
         assertEquals(1, updatedUser.profile.size)
-        assertEquals(testService.abilityGf, updatedUser.profile.first().abilityEntity)
+        assertEquals(testService.abilityGf, updatedUser.profile.first().ability)
     }
 
     @Test
@@ -106,10 +106,10 @@ class UserServiceTest(
         testService.fillUserRepository()
         val testUser1 = userService.getUserEntityWithProfileByUsername("test_user1")
         assertEquals(2, testUser1.profileFloat.size)
-        testUser1.profileFloat.add(FloatProfileItem(abilityEntity = testService.abilityGsm, abilityValue = 5.0))
+        testUser1.profileFloat.add(FloatProfileItem(ability = testService.abilityGsm, abilityValue = 5.0))
         testUser1.profileEnum.add(
             EnumProfileItem(
-                abilityEntity = testService.abilityColorsense,
+                ability = testService.abilityColorsense,
                 abilityValue = EnumAbilityValue.POSSIBLE
             )
         )

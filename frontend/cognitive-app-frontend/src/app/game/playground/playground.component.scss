@@ -1,0 +1,59 @@
+/* Update the background properties for the host component */
+:host {
+  background-image: url('../../../assets/game-background.jpg');
+  background-size: auto;  /* Resetting this to auto */
+  background-repeat: repeat;  /* Make the background image repeat */
+  background-attachment: fixed;
+  width:100%;
+}
+
+/* Center the header text */
+header h1 {
+  text-align: center;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+}
+
+/* Style the game container */
+#game-container {
+  position: relative;
+  overflow: hidden;
+  width: 800px;
+  height: 600px;
+  margin: 20px auto;
+  border: 3px solid #555;
+  border-radius: 10px;
+  box-shadow: 0px 0px 20px #000;
+  background-color: black;
+}
+
+#fullscreen-btn {
+  position: absolute;
+  z-index: 1000;
+  top: 10px;
+  right: 10px;
+  padding: 8px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 24px; /* Adjust to your preferred icon size */
+  outline: none;
+}
+
+#fullscreen-btn:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+mat-card{
+  margin-top: 5em;
+  background-color: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  z-index: 1;
+  mat-card-title, mat-card-subtitle{
+    color: white;
+    text-align: center;
+  }
+}
