@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {TEXTS} from "../../utils/app.text_messages";
 import {Observable} from "rxjs";
-import {GameplayModel} from "../../model/gameplay.model";
+import {GameModel} from "../../model/game.model";
 import {GameService} from "../game-services/game.service";
 import {GameAuthService} from "../game-services/game-auth.service";
 import {GameInfo} from "../../auth/gameInfo";
@@ -14,16 +14,16 @@ import {GameInfo} from "../../auth/gameInfo";
 export class GamesComponent implements OnInit {
 
     text = TEXTS.games;
-    gamesForYou: Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
-    teacherRecommendedGames: Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
-    scientistRecommendedGames: Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
-    allGames: Observable<GameplayModel[]> = new Observable<GameplayModel[]>()
+    gamesForYou: Observable<GameModel[]> = new Observable<GameModel[]>()
+    teacherRecommendedGames: Observable<GameModel[]> = new Observable<GameModel[]>()
+    scientistRecommendedGames: Observable<GameModel[]> = new Observable<GameModel[]>()
+    allGames: Observable<GameModel[]> = new Observable<GameModel[]>()
 
     loading = false;
 
     private storageKey = 'games_chosenGame'
 
-    private chosenGame: GameplayModel | undefined = undefined
+    private chosenGame: GameModel | undefined = undefined
 
     constructor(private gameService: GameService, private authService: GameAuthService, ) {
     }
@@ -55,7 +55,7 @@ export class GamesComponent implements OnInit {
 
     }
 
-    private loadPlayground(chosenGame: GameplayModel) {
+    private loadPlayground(chosenGame: GameModel) {
         this.resetStateToIdle();
         GameInfo.currentGameId = chosenGame.config.game_id
         this.authService.publishChosenGame(chosenGame)
@@ -68,7 +68,7 @@ export class GamesComponent implements OnInit {
     }
 
 
-    onGameChosen(game: GameplayModel) {
+    onGameChosen(game: GameModel) {
         if (this.validChosenGame(game)) {
             this.loading = true;
             sessionStorage.setItem(this.storageKey, JSON.stringify(game))
@@ -76,7 +76,7 @@ export class GamesComponent implements OnInit {
         }
     }
 
-    private validChosenGame(chosenGame: GameplayModel | undefined): boolean {
+    private validChosenGame(chosenGame: GameModel | undefined): boolean {
         return chosenGame !== undefined && chosenGame.config.game_id !== undefined && chosenGame.config.game_id !== null
     }
 

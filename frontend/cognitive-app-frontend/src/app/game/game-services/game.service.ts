@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {filter, map, Observable, of} from "rxjs";
-import {GameplayModel} from "../../model/gameplay.model";
+import {GameModel} from "../../model/game.model";
 import {AppConstants} from "../../utils/constants";
 
 /**
@@ -15,12 +15,12 @@ export class GameService {
 
     constructor(private http: HttpClient) {}
 
-    getTeacherRecommendedGames(): Observable<GameplayModel[]> {
+    getTeacherRecommendedGames(): Observable<GameModel[]> {
         return this.mockData
     }
 
-    getGamesForCurrentUser(): Observable<GameplayModel[]> {
-        return this.http.get<GameplayModel[]>(this.url).pipe(
+    getGamesForCurrentUser(): Observable<GameModel[]> {
+        return this.http.get<GameModel[]>(this.url).pipe(
             map(games => {
                 console.log(games)
                 return games
@@ -28,15 +28,15 @@ export class GameService {
         )
     }
 
-    getScientistRecommendedGames(): Observable<GameplayModel[]> {
+    getScientistRecommendedGames(): Observable<GameModel[]> {
         return this.mockData
     }
 
-    getAllGames(): Observable<GameplayModel[]> {
+    getAllGames(): Observable<GameModel[]> {
         return this.mockData
     }
 
-    private mockData: Observable<GameplayModel[]> = of(
+    private mockData: Observable<GameModel[]> = of(
         [
             {
                 id: "balloon001-223-554",
