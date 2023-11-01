@@ -13,7 +13,7 @@ spring:
 
   web:
     resources:
-      static-locations: file:/local-place-for-files
+      static-locations: file:/Users/annav/Documents/Bme/Szakdoli/Kepessegteszt-backend/game_images
   mvc:
     static-path-pattern: /game_images/**
 
