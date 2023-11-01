@@ -70,7 +70,10 @@ export const TEXTS = {
             add_contact: 'Kapcsolat hozzáadása',
             add: 'Hozzáadás',
             role_request: 'Igényelt szerpkörök',
-        }
+            ok: 'OK',
+        },
+        update_success_message: 'A felhasználó adatai sikeresen frissítve lettek',
+        update_error_message: 'A felhasználó adatainak frissítése sikertelen volt',
     },
     error:{
         default_error_message: 'Ismeretlen hiba történt',
