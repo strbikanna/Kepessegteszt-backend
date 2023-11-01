@@ -3,7 +3,7 @@ CREATE TABLE RECOMMENDED_GAME (
                                   _timestamp         datetime,
                                   _level             smallint,
                                   config             json,
-                                  recommender_id     int             NOT NULL,
+                                  recommender_id     int             ,
                                   recommendee_id     int             NOT NULL,
                                   game_id            int             NOT NULL,
                                   completed          boolean         DEFAULT false,

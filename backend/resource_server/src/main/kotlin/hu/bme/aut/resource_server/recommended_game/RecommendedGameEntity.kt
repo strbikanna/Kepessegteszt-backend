@@ -11,31 +11,31 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "RECOMMENDED_GAME")
 data class RecommendedGameEntity(
-        @Id
+    @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long? = null,
 
-        @CreationTimestamp
+    @CreationTimestamp
         @Column(name = "_timestamp")
         val timestamp: LocalDateTime? = null,
 
-        @Column(name = "_level")
+    @Column(name = "_level")
         val level: Int = 0,
 
-        @Type(JsonType::class)
+    @Type(JsonType::class)
         val config: Map<String, Any>,
 
-        val completed: Boolean = false,
+    var completed: Boolean = false,
 
-        @JoinColumn(name = "recommender_id")
+    @JoinColumn(name = "recommender_id")
         @ManyToOne(fetch = FetchType.EAGER)
-        val recommender: UserEntity,
+        val recommender: UserEntity? = null,
 
-        @ManyToOne
+    @ManyToOne
         @JoinColumn(name = "recommendee_id")
         val recommendedTo: UserEntity,
 
-        @ManyToOne
+    @ManyToOne
         @JoinColumn(name = "game_id")
         val game: GameEntity
 )
