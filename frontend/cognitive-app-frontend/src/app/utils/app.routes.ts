@@ -6,6 +6,7 @@ import {ProfileComponent} from "../profile/profile.component";
 import {GamesComponent} from "../game/games-page/games.component";
 import {PlaygroundComponent} from "../game/playground/playground.component";
 import {gameGuard} from "../auth/game.guard";
+import {NotFoundComponent} from "../not-found/not-found.component";
 
 
 export const appRoutes: Routes = [
@@ -13,4 +14,5 @@ export const appRoutes: Routes = [
   { path: 'profile', component: ProfileComponent },
   { path: 'games', component: GamesComponent },
   { path: 'playground', component: PlaygroundComponent, canActivate: [gameGuard] },
+  { path: '**', component: NotFoundComponent}
 ];

@@ -86,5 +86,9 @@ export const TEXTS = {
         save: 'Mentés',
         ok: 'OK',
     },
+    wildcard:{
+        title: 'Hupsz, ez az oldal nem található!',
+        description: 'A keresett oldal nem található. Ellenőrizd a címet és próbáld újra.',
+    }
 
 }
