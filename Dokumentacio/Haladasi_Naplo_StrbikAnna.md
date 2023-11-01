@@ -126,3 +126,32 @@ ezen még kell bőven dolgoznom, mert az autentikáció (2 token kezelés) még 
 Most felmerült bennem az a probléma, hogy a játékoknak adott token mennyi ideig legyen érvényes. Ez elég sarkallatos kérdés, mert túl hosszú lejárat nyilván nem biztonságos, túl rövid ellenben megszakítaná a játékmenetet, plusz a játéknak le kell kezelnie, ha egy idő után a POST-ra forbidden-t kap. Jelenleg csak a frontend tudja újból igényelni a tokent a user token felhasználásával (nincs értelme kiadni a user tokent külső appnak, ez a specifikációban is így van), szóval a játék nem tud új tokent igényelni, csak visszanavigáni a frontendre.
 A külső játék tulajdonképp semmiképp nem fog tudni új tokent igényelni, hacsak fel nem szólítja a user-t, hogy jelentkezzen be ott is.
 Javaslataim: A) legyen fix ideig érvényes a token (pl. 30 perc) és erre felhívjuk a felhasználó figyelmét, hogy ennyi ideig játszhat egyszerre egy játékkal, utána visszakerül a játékválasztó oldalra. B) Refresh tokent biztosítunk a game-tokenhez, ennek biztonságos tárolását azonban a külső játékoknak felelőssége megoldani. (Ugyanígy a frontend-nek is...)
+
+# 10.29.
+## Ezen a héten a következőket valósítottam meg:
+### Auth server:
+- volt egy-két hiba a tokenek személyre szabásánál: a megszemélyesítés után a game token továbbra is az eredeti felhasználó nevére szólt, illetve az id token nem lett módosítva, ezeket javítottam
+- átírtam a html oldalakat magyar szövegűre, illetve teszteltem az email-verifikációt, jól működik :)
+
+### Resource server:
+- megoldottam néhány autentikációs problémát: cors konfiguráció, illetve a game-tokeneknél rossz volt az ellenőrzés, nem konzisztens az auth-serverrel, de most már rendben van
+- létrehoztam olyan dto osztályokat, amikben lehet rendszer által ajánlott játékokat küldeni, illetve ami megfelel a játékok által eredményként küldött válasznak
+- ezek feldolgozására, konvertálására szerviz osztályt is készítettem
+- felkonfiguráltam, hogy ki tudja szolgálni a játékok thumbnail képeit
+
+### Frontend:
+- sokat kínlódtam a tokenek helyes kezelésével (sajnos sok idő elment azzal, hogy egy redirect után a többi ne vesszen el, és a userinfo is megmaradjon)
+- a jelenlegi megoldás úgy tűnik, hogy szépen működik, elviseli az oldalfrissítést, a felhasználóváltást és a game-token megszerzését is
+- a frontend számon tartja, amennyiben megszemélyesítés történt, és ennek megfelelően kéri a játék tokeneket, minde egyes játékindításkor újat
+- sok mindent refaktoráltam, hogy áttekinthetőbb legyen
+- sikerült elérni, hogy valódi backend által db-ből szedett játékok jelenjenek meg, amiket el lehet indítani, érkezik számukra token és a játék választ is küld, a választ pedig a backend fogadja, validálja és menti!!!:D
+- csináltam glopbális error-kezelést, ami egy dialógusablakban megjeleníti, ha hiba történt
+- végül még pár szépítésre tellett, pl. tettem egy lebegő asztronautát a home-page-re, és minden szöveget kiszerveztem, átírtam magyarra
+
+### Megjegyzések:
+- a játéknak vissza kéne küldenie az eredménnyel együtt a config-ját is, hogy ezt is el lehessen menteni
+
+### Kérdés:
+- a külső játék indítása milyen módon legyen? megfelelő, ha POST-ban átküldi a frontend a config-ot és ebben a tokent? jelenleg ezt a funkciót adtam hozzá
+- nyilván lehetne window.open metódussal megnyitni az url-t, de ott legfeljebb a token-t és egy game-id-t tudunk átküldeni extra adatként és az id alapján utána lekérdezheti a backend-től a részleteket
+
