@@ -63,7 +63,7 @@ class GameplayResultControllerTest(
     @Test
     fun shouldSaveWithCorrectAuthentication(){
         val user = testService.saveAuthUserWithRights(RoleName.STUDENT)
-        val game =testService.saveAuthGame()
+        val game = testService.saveAuthGame()
         val recommendedGame = createAndSaveRecommendedGameForAuth(user, game)
         val result = mapOf(Pair("success", true))
         val gameplayData = GameplayResultDto(gameResult= result, username = testService.authUsername, gameplayId = recommendedGame.id!!, config = mapOf() )

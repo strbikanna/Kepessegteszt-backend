@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.game
 
+import hu.bme.aut.resource_server.ability.AbilityEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.Type
 import io.hypersistence.utils.hibernate.type.json.JsonType
@@ -17,8 +18,6 @@ data class GameEntity(
     @Column(name ="_description")
     val description: String,
 
-    val icon: String,
-
     val thumbnailPath: String,
 
     @Column(name ="_active")
@@ -27,6 +26,9 @@ data class GameEntity(
     val url: String?,
 
     @Type(JsonType::class)
-    val configDescription: MutableMap<String, Any>
+    val configDescription: MutableMap<String, Any>,
 
+    @Type(JsonType::class)
+    @Column(name = "affected_abilities")
+    val affectedAbilites: MutableSet<AbilityEntity>
 )

@@ -1,6 +1,7 @@
 package hu.bme.aut.resource_server.game
 
 
+import hu.bme.aut.resource_server.TestUtilsService
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -13,7 +14,8 @@ import java.util.*
 @ActiveProfiles("test")
 @SpringBootTest
 class GameRepositoryTest(
-    @Autowired private var gameRepository: GameRepository
+    @Autowired private var gameRepository: GameRepository,
+    @Autowired private var testUtilsService: TestUtilsService
 ) {
     @BeforeEach
     fun emptyRepo() {
@@ -24,9 +26,10 @@ class GameRepositoryTest(
     @Test
     fun shouldSaveGame() {
         val config = mutableMapOf<String, Any>("Level" to 0)
+        val abilities = mutableSetOf(testUtilsService.abilityColorsense)
         val game = GameEntity(
-            name = "TestGame", description = "test_game_description", icon="test", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game",
-                active = true, url = "test_game_url", configDescription = config)
+            name = "TestGame", description = "test_game_description", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game",
+                active = true, url = "test_game_url", configDescription = config, affectedAbilites = abilities)
         gameRepository.save(game)
         assertNotNull(game.id)
     }
@@ -35,9 +38,11 @@ class GameRepositoryTest(
     @Test
     fun testFindByName() {
         val config = mutableMapOf<String, Any>("Level" to 0)
+        val abilities = mutableSetOf(testUtilsService.abilityColorsense)
         val game = GameEntity(
-                name = "TestGame", description = "test_game_description", icon="test", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game",
-                active = true, url = "test_game_url", configDescription = config)
+                name = "TestGame", description = "test_game_description", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game",
+                active = true, url = "test_game_url", configDescription = config, affectedAbilites = abilities)
+        println(game.affectedAbilites.toString())
         gameRepository.save(game)
         assertNotNull(game.id)
         assertTrue(gameRepository.existsByName("TestGame"))
@@ -48,13 +53,16 @@ class GameRepositoryTest(
     @Test
     fun shouldSaveMultipleGames() {
         val config1 = mutableMapOf<String, Any>("Level" to 0)
-        val config2 = mutableMapOf<String, Any>("Level" to 3, "Ability" to "Gf")
+        val abilities1 = mutableSetOf(testUtilsService.abilityColorsense)
+        val config2 = mutableMapOf<String, Any>("Level" to 3)
+        val abilities2 = mutableSetOf(testUtilsService.abilityGf, testUtilsService.abilityGq)
+
         val game1 = GameEntity(
-                name = "TestGame1", description = "test_game_description1", icon="test1", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game1",
-                active = true, url = "test_game_url1", configDescription = config1)
+                name = "TestGame1", description = "test_game_description1", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game1",
+                active = true, url = "test_game_url1", configDescription = config1, affectedAbilites = abilities1)
         val game2 = GameEntity(
-                name = "TestGame2", description = "test_game_description2", icon="test2", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game2",
-                active = true, url = "test_game_url2", configDescription = config2)
+                name = "TestGame2", description = "test_game_description2", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game2",
+                active = true, url = "test_game_url2", configDescription = config2, affectedAbilites = abilities2)
         val savedGame1 = gameRepository.save(game1)
         val savedGame2 = gameRepository.save(game2)
         assertNotEquals(game1.id, game2.id)
@@ -68,9 +76,10 @@ class GameRepositoryTest(
     @Test
     fun shouldSaveThenDeleteGame() {
         val config = mutableMapOf<String, Any>("Level" to 0)
+        val abilities = mutableSetOf(testUtilsService.abilityColorsense)
         val game = GameEntity(
-                name = "TestGame", description = "test_game_description", icon="test", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game",
-                active = true, url = "test_game_url", configDescription = config)
+                name = "TestGame", description = "test_game_description", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game",
+                active = true, url = "test_game_url", configDescription = config, affectedAbilites = abilities)
         gameRepository.save(game)
         assertNotNull(game.id)
         assertEquals(gameRepository.findAll().toList().size, 1)

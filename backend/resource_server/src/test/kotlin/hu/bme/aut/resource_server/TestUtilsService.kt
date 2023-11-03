@@ -84,14 +84,16 @@ class TestUtilsService(
     }
 
     fun saveAuthGame(): GameEntity{
+        fillAbilityRepository()
+        val abilities = mutableSetOf(abilityGf, abilityGq)
         val game = GameEntity(
             name = "Auth game",
-            icon = "auth icon",
             thumbnailPath = "test/files/assets",
             description = "Auth test game description",
             active = true,
             url = "testUrl",
-            configDescription = mutableMapOf()
+            configDescription = mutableMapOf(),
+            affectedAbilites = abilities
         )
         val entity = gameRepository.save(game)
         authGameId = entity.id!!
@@ -128,15 +130,14 @@ class TestUtilsService(
     }
 
     fun createAndSaveGame(): GameEntity{
-        val json = mutableMapOf<String, Any>("ability" to "Gf")
         val game = GameEntity(
             name = "Test game",
-            icon= "test",
             thumbnailPath = "test/files/assets",
             description = "Test game description",
             active = true,
             url = "testUrl",
-            configDescription = json.toMutableMap()
+            configDescription = mutableMapOf("Level" to 0),
+            affectedAbilites = mutableSetOf(abilityGf)
         )
         return gameRepository.save(game)
     }
@@ -161,7 +162,7 @@ class TestUtilsService(
         userRepository.save(user)
         return GameplayResultEntity(
             result = json.toMap(),
-            config = mutableMapOf<String, Any>(),
+            config = mutableMapOf(),
             user = user,
             recommendedGame = createAndSaveRecommendedGame(user)
         )
