@@ -24,7 +24,8 @@
       "dom",
       "ScriptHost"
     ],
-    "allowJs": true
+    "allowJs": true,
+    "resolveJsonModule": true,
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
-import {GameModel} from "../../model/game.model";
+import {Game} from "../../model/game.model";
 import {AuthOptions, LoginResponse, OidcSecurityService} from "angular-auth-oidc-client";
 import {GameInfo} from "../../auth/gameInfo";
 import {UserInfo} from "../../auth/userInfo";
@@ -16,7 +16,7 @@ import {Router} from "@angular/router";
     providedIn: 'root'
 })
 export class GameAuthService {
-    public chosenGame = new BehaviorSubject<GameModel | undefined>(undefined);
+    public chosenGame = new BehaviorSubject<Game | undefined>(undefined);
 
     private GAME_CONFIG_ID = 'gameTokenConfig'
     private readonly sessionStoreKey = 'playground_chosengame'
@@ -52,7 +52,7 @@ export class GameAuthService {
 
     }
 
-    publishChosenGame(game: GameModel) {
+    publishChosenGame(game: Game) {
         game.config.username = UserInfo.currentUser?.username ?? 'unknown'
         game.config.access_token = GameInfo.accessToken
 
@@ -72,11 +72,11 @@ export class GameAuthService {
             this.chosenGame.next(JSON.parse(chosenGame))
         }
     }
-    private saveChosenGame(game: GameModel){
+    private saveChosenGame(game: Game){
         sessionStorage.setItem(this.sessionStoreKey, JSON.stringify(game))
     }
 
-    private openGameUrl(game: GameModel) {
+    private openGameUrl(game: Game) {
         this.http.post(game.url!, game.config)
     }
 

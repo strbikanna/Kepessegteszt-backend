@@ -1,0 +1,7 @@
+<div  *ngIf="hasHistory" class="container" >
+    <div echarts [options]="chartOptions" [loading]="loading" class="chart"></div>
+    <div>
+        <mat-chip-option *ngFor="let ability of allAbilities()" selected (selectionChange)="onAbilityFilterChange(ability)">{{ability.name}}</mat-chip-option>
+    </div>
+</div>
+

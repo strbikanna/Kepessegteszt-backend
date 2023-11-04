@@ -5,6 +5,8 @@ export const TEXTS = {
         home: 'Cognitive App',
         games: 'Játékok',
         profile: 'Profil',
+        cognitive_profile: 'Kognitív profil',
+        admin: 'Admin',
     },
     home:{
         welcome: 'Örülünk, hogy itt vagy a Cognitive Appban!',
@@ -77,11 +79,28 @@ export const TEXTS = {
         default_error_title: 'Hiba történt',
         http_error: 'Hiba történt a szerverrel való kommunikáció során',
         http_error_details: 'A szerver válasza: ',
+        invalide_start_date: 'Érvénytelen kezdődátum',
+        invalide_end_date: 'Érvénytelen végdátum',
     },
     actions: {
         cancel: 'Mégse',
         save: 'Mentés',
         ok: 'OK',
     },
+    cognitive_profile:{
+        chart_title: 'Kognitív profilod az elmúlt időszakban',
+        no_profile_data_message: 'Még nincs elég adat rólad, ezért most még nem lehet megjeleníteni a kognitív profilodat.',
+        no_profile_data_action: 'Játssz több játékkal, hogy megjeleníthessük a kognitív profilodat.',
+        show_profile_history: 'Kognitív profil előzmények megtekintése',
+        current_profile: 'Legfrisebb kognitív profil',
+        current_profile_description: 'A kognitív profilodban szereplő képességek, és értékük ebben az időpontban: ',
+        abilities: 'Kognitív képességek',
+        values: 'Becsült értékek',
+        time_interval: 'Időintervallum',
+        see_history: 'Megtekintés korábbi időpontban',
+        see_history_description: 'Válassz egy kezdő és egy végdátumot, hogy megtekinthesd a kognitív profilodat az adott időpontban.',
+        see_history_action: 'Kognitív profil megtekintése',
+        back_to_current_action: 'Vissza az aktuális kognitív profilhoz',
+    }
 
 }

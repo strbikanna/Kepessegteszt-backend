@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserInfo} from "../auth/userInfo";
 import {Role} from "../utils/constants";
+import {TEXTS} from "../utils/app.text_messages";
 
 @Component({
   selector: 'app-header',
@@ -10,6 +11,7 @@ import {Role} from "../utils/constants";
 export class HeaderComponent implements OnInit{
   loginStatus = false;
   isAdmin = false;
+  text = TEXTS.menu;
 
 
   ngOnInit(): void {
