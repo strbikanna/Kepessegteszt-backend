@@ -47,7 +47,7 @@ export class CognitiveProfileComponent implements OnInit {
 
     @HostListener('window:scroll', ['$event'])
     onScroll($event: Event) {
-        const chartPosition = document.getElementById('chart')?.offsetTop! - document.getElementById('chart')!.offsetHeight * 0.9
+        const chartPosition = document.getElementById('chart')?.offsetTop! - document.getElementById('chart')!.offsetHeight * 0.5
         if (chartPosition < window.scrollY) {
             this.isExpandMoreButtonVisible = false
         } else {
