@@ -28,7 +28,7 @@ class GameServiceTest(
     fun shouldSaveGameThenReturnDto() {
         val config = mutableMapOf<String, Any>("Level" to 0)
         val game = GameEntity(
-                name = "TestGame", description = "test_game_description", thumbnailPath = Paths.get("src", "test", "kotlin/hu/bme/aut/resource_server", "game", "resources", "test_game_icon.png").toString(),
+            version = 1, name = "TestGame", description = "test_game_description", thumbnailPath = Paths.get("src", "test", "kotlin/hu/bme/aut/resource_server", "game", "resources", "test_game_icon.png").toString(),
                 active = true, url = "test_game_url", configDescription = config, affectedAbilites = mutableSetOf(testUtilsService.abilityColorsense))
         gameRepository.save(game)
         assertNotNull(game.id)
@@ -41,10 +41,10 @@ class GameServiceTest(
         val config1 = mutableMapOf<String, Any>("Level" to 0)
         val config2 = mutableMapOf<String, Any>("Level" to 3, "Ability" to "Gf")
         val game1 = GameEntity(
-            name = "TestGame1", description = "test_game_description1", thumbnailPath = Paths.get("src", "test", "kotlin/hu/bme/aut/resource_server", "game", "resources", "test_game_icon.png").toString(),
+            version = 1, name = "TestGame1", description = "test_game_description1", thumbnailPath = Paths.get("src", "test", "kotlin/hu/bme/aut/resource_server", "game", "resources", "test_game_icon.png").toString(),
             active = true, url = "test_game_url1", configDescription = config1, affectedAbilites = mutableSetOf(testUtilsService.abilityColorsense))
         val game2 = GameEntity(
-            name = "TestGame2", description = "test_game_description2", thumbnailPath = Paths.get("src", "test", "kotlin/hu/bme/aut/resource_server", "game", "resources", "test_game_icon.png").toString(),
+            version = 1, name = "TestGame2", description = "test_game_description2", thumbnailPath = Paths.get("src", "test", "kotlin/hu/bme/aut/resource_server", "game", "resources", "test_game_icon.png").toString(),
             active = true, url = "test_game_url2", configDescription = config2, affectedAbilites = mutableSetOf(testUtilsService.abilityGf, testUtilsService.abilityGq))
         gameRepository.save(game1)
         gameRepository.save(game2)
@@ -60,10 +60,10 @@ class GameServiceTest(
         val config1 = mutableMapOf<String, Any>("Level" to 0)
         val config2 = mutableMapOf<String, Any>("Level" to 3, "Ability" to "Gf")
         val game1 = GameEntity(
-            name = "TestGame1", description = "test_game_description1", thumbnailPath = Paths.get("src", "test", "kotlin/hu/bme/aut/resource_server", "game", "resources", "test_game_icon.png").toString(),
+            version = 1, name = "TestGame1", description = "test_game_description1", thumbnailPath = Paths.get("src", "test", "kotlin/hu/bme/aut/resource_server", "game", "resources", "test_game_icon.png").toString(),
             active = true, url = "test_game_url1", configDescription = config1, affectedAbilites = mutableSetOf(testUtilsService.abilityColorsense))
         val game2 = GameEntity(
-            name = "TestGame2", description = "test_game_description2", thumbnailPath = Paths.get("src", "test", "kotlin/hu/bme/aut/resource_server", "game", "resources", "test_game_icon.png").toString(),
+            version = 1, name = "TestGame2", description = "test_game_description2", thumbnailPath = Paths.get("src", "test", "kotlin/hu/bme/aut/resource_server", "game", "resources", "test_game_icon.png").toString(),
             active = true, url = "test_game_url2", configDescription = config2, affectedAbilites = mutableSetOf(testUtilsService.abilityGf, testUtilsService.abilityGq))
         gameRepository.save(game1)
         gameRepository.save(game2)

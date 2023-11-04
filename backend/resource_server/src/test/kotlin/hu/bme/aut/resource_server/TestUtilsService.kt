@@ -87,6 +87,7 @@ class TestUtilsService(
         fillAbilityRepository()
         val abilities = mutableSetOf(abilityGf, abilityGq)
         val game = GameEntity(
+            version = 1,
             name = "Auth game",
             thumbnailPath = "test/files/assets",
             description = "Auth test game description",
@@ -131,6 +132,7 @@ class TestUtilsService(
 
     fun createAndSaveGame(): GameEntity{
         val game = GameEntity(
+            version = 1,
             name = "Test game",
             thumbnailPath = "test/files/assets",
             description = "Test game description",
