@@ -6,7 +6,7 @@ open class GameDto(
 
     var description: String,
 
-    val icon: String,
+    val thumbnailPath: String,
 
     val url: String?,
 
