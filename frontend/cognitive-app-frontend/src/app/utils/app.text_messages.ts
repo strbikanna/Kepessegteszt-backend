@@ -70,7 +70,10 @@ export const TEXTS = {
             add_contact: 'Kapcsolat hozzáadása',
             add: 'Hozzáadás',
             role_request: 'Igényelt szerpkörök',
-        }
+            ok: 'OK',
+        },
+        update_success_message: 'A felhasználó adatai sikeresen frissítve lettek',
+        update_error_message: 'A felhasználó adatainak frissítése sikertelen volt',
     },
     error:{
         default_error_message: 'Ismeretlen hiba történt',
@@ -83,5 +86,9 @@ export const TEXTS = {
         save: 'Mentés',
         ok: 'OK',
     },
+    wildcard:{
+        title: 'Hupsz, ez az oldal nem található!',
+        description: 'A keresett oldal nem található. Ellenőrizd a címet és próbáld újra.',
+    }
 
 }

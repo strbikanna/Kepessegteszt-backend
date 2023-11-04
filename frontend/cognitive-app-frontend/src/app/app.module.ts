@@ -34,6 +34,8 @@ import { HeaderComponent } from './header/header.component';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
 import {GlobalErrorhandlerService} from "./utils/global-errorhandler.service";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,7 @@ import {GlobalErrorhandlerService} from "./utils/global-errorhandler.service";
     HeaderComponent,
     ImpersonationComponent,
     AlertDialogComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
@@ -79,7 +82,7 @@ import {GlobalErrorhandlerService} from "./utils/global-errorhandler.service";
       ],
     }),
     AdminModule,
-    MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule, MatTabsModule, MatDialogModule, MatPaginatorModule, MatChipsModule, ReactiveFormsModule, MatInputModule, MatExpansionModule, MatCheckboxModule, MatAutocompleteModule, MatProgressBarModule,
+    MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule, MatTabsModule, MatDialogModule, MatPaginatorModule, MatChipsModule, ReactiveFormsModule, MatInputModule, MatExpansionModule, MatCheckboxModule, MatAutocompleteModule, MatProgressBarModule, MatSnackBarModule,
   ],
   providers: [
       {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
