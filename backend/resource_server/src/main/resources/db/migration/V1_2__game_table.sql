@@ -7,8 +7,7 @@ CREATE TABLE GAME
     thumbnail_path     varchar(400)     NOT NULL,
     _active            boolean          DEFAULT TRUE,
     url                varchar(1000)    ,
-    config_description json             NOT NULL,
-    affected_abilities int
+    config_description json             NOT NULL
 );
 
 CREATE TABLE GAME_ABILITIES
