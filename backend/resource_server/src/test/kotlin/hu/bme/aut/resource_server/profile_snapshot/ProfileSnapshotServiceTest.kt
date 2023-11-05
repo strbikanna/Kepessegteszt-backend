@@ -32,7 +32,7 @@ class ProfileSnapshotServiceTest(
         assertEquals(2, savedSnapshots.size)
         assertEquals(userEntity.id, savedSnapshots[0].user.id)
         assertEquals(userEntity.id, savedSnapshots[1].user.id)
-        assertTrue(savedSnapshots.any { it.abilityEntity.code == "Gf" && it.abilityValue == 10.0})
+        assertTrue(savedSnapshots.any { it.ability.code == "Gf" && it.abilityValue == 10.0})
     }
 
 
@@ -53,8 +53,8 @@ class ProfileSnapshotServiceTest(
 
         snapShotsFound = snapshotService.getSnapshotsOfUser(PlainUserDto(userEntity))
         assertEquals(5, snapShotsFound.size)
-        assertTrue(snapShotsFound.any { it.abilityEntity.code == "Gf" && it.abilityValue == 10.0})
-        assertTrue(snapShotsFound.any { it.abilityEntity.code == "Gf" && it.abilityValue == 5.2})
+        assertTrue(snapShotsFound.any { it.ability.code == "Gf" && it.abilityValue == 10.0})
+        assertTrue(snapShotsFound.any { it.ability.code == "Gf" && it.abilityValue == 5.2})
         assertTrue(snapShotsFound.any { it.abilityValue == EnumAbilityValue.INCLINED})
     }
 

@@ -43,7 +43,7 @@ class ProfileSnapshotRepositoryTest(
         testUtilsService.saveUser(user)
         val profileSnapshotItem = FloatProfileSnapshotItem(
             user = user,
-            abilityEntity = testUtilsService.abilityGv,
+            ability = testUtilsService.abilityGv,
             abilityValue = 4.0
 
         )
@@ -53,7 +53,7 @@ class ProfileSnapshotRepositoryTest(
         assertNotNull(profileSnapshotItem.timestamp)
         val savedSnapshot = floatProfileSnapshotRepository.findById(profileSnapshotItem.id!!).get()
         assertNotNull(savedSnapshot.id)
-        assertEquals("Gv", savedSnapshot.abilityEntity.code)
+        assertEquals("Gv", savedSnapshot.ability.code)
         assertEquals(user.id, savedSnapshot.user.id)
     }
 
@@ -63,12 +63,12 @@ class ProfileSnapshotRepositoryTest(
         testUtilsService.saveUser(user)
         val floatSnapshotItem = FloatProfileSnapshotItem(
             user = user,
-            abilityEntity = testUtilsService.abilityGv,
+            ability = testUtilsService.abilityGv,
             abilityValue = 4.0
         )
         val enumSnapshotItem = EnumProfileSnapshotItem(
             user = user,
-            abilityEntity = testUtilsService.abilityColorsense,
+            ability = testUtilsService.abilityColorsense,
             abilityValue = EnumAbilityValue.NO
         )
         floatProfileSnapshotRepository.save(floatSnapshotItem)

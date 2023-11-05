@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 sealed class ProfileSnapshotItem {
     abstract var id: Long?
 
-    abstract val abilityEntity: AbilityEntity
+    abstract val ability: AbilityEntity
 
     abstract val timestamp: LocalDateTime?
 
