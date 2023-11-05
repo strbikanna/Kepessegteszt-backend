@@ -33,7 +33,7 @@ class UserInfoService(
     fun hasImpersonationRole(username: String): Boolean {
         val user = userRepository.findByUsername(username)
         if (user.isEmpty) throw UsernameNotFoundException("No user with username: $username")
-        return user.get().roles.any { it.isMimicRole() }
+        return user.get().roles.any { it.isImpersonationRole() }
 
     }
 

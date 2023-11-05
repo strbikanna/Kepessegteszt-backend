@@ -17,5 +17,5 @@ data class RoleEntity(
     @Enumerated(EnumType.STRING)
     val roleName: Role
 ) {
-    fun isMimicRole(): Boolean = roleName == Role.PARENT || roleName == Role.TEACHER || roleName == Role.SCIENTIST
+    fun isImpersonationRole(): Boolean = roleName == Role.PARENT || roleName == Role.TEACHER || roleName == Role.SCIENTIST || roleName == Role.ADMIN
 }

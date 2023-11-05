@@ -4,6 +4,7 @@ import {UserInfo} from "../auth/userInfo";
 import {User} from "../model/user.model";
 import {Observable} from "rxjs";
 import {TEXTS} from "../utils/app.text_messages";
+import {AppConstants} from "../utils/constants";
 
 @Component({
   selector: 'app-impersonation',
@@ -16,10 +17,11 @@ export class ImpersonationComponent implements OnInit {
   public canImpersonate = false
   public user: User | undefined = undefined
   text= TEXTS.impersonation
+  private storageKey = AppConstants.impersonationDisabledKey
   constructor(private impersonationService: LoginService) {}
   ngOnInit(): void {
     UserInfo.loginStatus.subscribe(loginSuccess => {
-      if (loginSuccess && this.impersonationService.hasImpersonationRole(UserInfo.currentUser.roles)) {
+      if (loginSuccess && this.impersonationService.hasImpersonationRole(UserInfo.currentUser.roles) && !this.isImpersonationDisabled()) {
         this.canImpersonate = true
         this.user = UserInfo.currentUser
         this.contacts = this.impersonationService.getContacts()
@@ -32,5 +34,11 @@ export class ImpersonationComponent implements OnInit {
     this.canImpersonate = false
   }
 
-
+  isImpersonationDisabled(){
+    return sessionStorage.getItem(this.storageKey) === 'true'
+  }
+  disableImpersonation(){
+    sessionStorage.setItem(this.storageKey, 'true')
+    this.canImpersonate = false
+  }
 }

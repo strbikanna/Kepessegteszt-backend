@@ -72,7 +72,10 @@ export const TEXTS = {
             add_contact: 'Kapcsolat hozzáadása',
             add: 'Hozzáadás',
             role_request: 'Igényelt szerpkörök',
-        }
+            ok: 'OK',
+        },
+        update_success_message: 'A felhasználó adatai sikeresen frissítve lettek',
+        update_error_message: 'A felhasználó adatainak frissítése sikertelen volt',
     },
     error:{
         default_error_message: 'Ismeretlen hiba történt',
@@ -87,6 +90,7 @@ export const TEXTS = {
         save: 'Mentés',
         ok: 'OK',
     },
+
     cognitive_profile:{
         chart_title: 'Kognitív profilod az elmúlt időszakban',
         no_profile_data_message: 'Még nincs elég adat rólad, ezért most még nem lehet megjeleníteni a kognitív profilodat.',
@@ -103,6 +107,11 @@ export const TEXTS = {
         back_to_current_action: 'Vissza az aktuális kognitív profilhoz',
         select: 'Megtekintés',
         choose_contact: 'Válaszd ki, kinek a kognitív profilját szeretnéd megtekinteni',
+
+    wildcard:{
+        title: 'Hupsz, ez az oldal nem található!',
+        description: 'A keresett oldal nem található. Ellenőrizd a címet és próbáld újra.',
+
     }
 
 }
