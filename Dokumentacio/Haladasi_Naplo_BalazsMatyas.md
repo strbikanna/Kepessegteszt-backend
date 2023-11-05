@@ -51,3 +51,14 @@ azt is meg kellett csinálnom). A Game-hez csináltam meg a CRUD műveletekhez s
 A Recommended_game-hez az Entityt kiegészítettem azzal, ami az adatmodell alapján hiányzott belőle
 (ezt szintén megtettem az sql leíró fájljában is), valamint a 2 endpointot amit Annával megbeszéltünk.
 Ezeken felül írtam a GameRepositoryhoz és a RecommendedGameRepositoryhoz is néhány tesztet
+
+## 10.30.
+
+Az elmúlt 2 hétben főleg a Game és a Recommended Game kapcsán foglalkoztam a backenddel, miután felmerültek
+változtatási igények/ötletek. Ezen kívül a játékok ajánlásához használandó oldalt kezdtem el megcsinálni.
+
+## 11.06.
+
+Ezen a héten játékajánló oldallal foglalkoztam tovább, mock adatokkal már működik. Ezen kívül még a Game kapcsán
+merült fel újabb változtatási ötlet, amit megcsináltam, valamint a rendszer általi játékajánlás logikáján kezdtem
+el dolgozni.
