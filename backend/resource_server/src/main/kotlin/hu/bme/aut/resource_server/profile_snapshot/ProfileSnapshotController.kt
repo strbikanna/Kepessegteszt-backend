@@ -42,8 +42,8 @@ class ProfileSnapshotController(
         @RequestParam(required = true) username: String,
         @RequestParam(required=false) pageIndex: Int?,
         @RequestParam(required = false) pageSize: Int?,
-        @RequestParam(required = false) startTime: LocalDateTime?,
-        @RequestParam(required = false) endTime: LocalDateTime?,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) startTime: LocalDateTime?,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) endTime: LocalDateTime?,
     ): List<ProfileSnapshotItem>{
         authService.checkContactAndThrow(authentication, username)
         val user = authService.getContactByUsername(username)
