@@ -1,4 +1,14 @@
-<div class="profile-container">
+<div *ngIf="isInspectorUser">
+    <mat-form-field>
+        <mat-select [formControl]="userContactForm" required>
+            <mat-option *ngFor="let contact of contacts | async" [value]="contact">
+                {{contact.firstName}} {{contact.lastName}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <button mat-flat-button (click)="onUserChosen()" >{{text.select}}</button>
+</div>
+<div class="profile-container" *ngIf="!isInspectorUser || userContactForm.value">
     <app-profile-card *ngIf="!loading" [profileData]="currentProfileData" id="card"></app-profile-card>
     <mat-progress-bar *ngIf="loading"></mat-progress-bar>
     <div class="date-picker-container">
@@ -29,6 +39,9 @@
 </button>
 <mat-divider></mat-divider>
 <div id="chart">
-    <app-profile-chart *ngIf="!loading" [profileDataObservable]="profileDataHistory"></app-profile-chart>
-    <mat-progress-bar *ngIf="loading"></mat-progress-bar>
+    <div *ngIf="!isInspectorUser || userContactForm.value">
+        <app-profile-chart *ngIf="!loading" [profileDataObservable]="profileDataHistory"></app-profile-chart>
+        <mat-progress-bar *ngIf="loading"></mat-progress-bar>
+    </div>
+
 </div>

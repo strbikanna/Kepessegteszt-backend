@@ -41,6 +41,7 @@ import { ProfileChartComponent } from './cognitive-profile/profile-chart/profile
 import { ProfileCardComponent } from './cognitive-profile/profile-card/profile-card.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -93,7 +94,7 @@ import {MatNativeDateModule} from "@angular/material/core";
         NgxEchartsModule.forRoot({
             echarts
         }),
-        MatDatepickerModule, MatNativeDateModule
+        MatDatepickerModule, MatNativeDateModule, MatSelectModule
     ],
   providers: [
       {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},

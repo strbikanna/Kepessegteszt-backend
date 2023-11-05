@@ -25,7 +25,7 @@ class AuthService(
     @Value("\${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private lateinit var AUTH_SERVER_URI: String;
 
-    lateinit var webclient : WebClient
+    var webclient : WebClient? = null
 
     private fun initWebClient(){
         webclient = WebClient.create(AUTH_SERVER_URI)
@@ -60,7 +60,7 @@ class AuthService(
         }
         val jwt = authentication.principal as Jwt
         val accessTokenOfUser = jwt.tokenValue
-        val requestSpec = webclient
+        val requestSpec = webclient!!
             .get()
             .uri("/user/impersonation_contacts")
             .header("Authorization", "Bearer $accessTokenOfUser")

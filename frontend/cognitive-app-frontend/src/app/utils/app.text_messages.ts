@@ -101,6 +101,8 @@ export const TEXTS = {
         see_history_description: 'Válassz egy kezdő és egy végdátumot, hogy megtekinthesd a kognitív profilodat az adott időpontban.',
         see_history_action: 'Kognitív profil megtekintése',
         back_to_current_action: 'Vissza az aktuális kognitív profilhoz',
+        select: 'Megtekintés',
+        choose_contact: 'Válaszd ki, kinek a kognitív profilját szeretnéd megtekinteni',
     }
 
 }
