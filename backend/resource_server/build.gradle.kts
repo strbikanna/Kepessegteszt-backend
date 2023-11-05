@@ -38,6 +38,7 @@ dependencies {
     implementation("org.json:json:20230227")
     runtimeOnly("com.h2database:h2")
     runtimeOnly("com.mysql:mysql-connector-j")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation ("org.flywaydb:flyway-core")
     implementation ("org.flywaydb:flyway-mysql")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
