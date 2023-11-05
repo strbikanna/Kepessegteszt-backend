@@ -13,15 +13,21 @@ export class ProfileCardComponent implements OnInit {
     text = TEXTS.cognitive_profile
     hasData = false
     ngOnInit(): void {
-            if(this.profileData && this.profileData.profileItems.size > 0) {
+            if(this.profileData && this.profileData.profileItems && this.profileData.profileItems.size > 0) {
                 this.hasData = true
             }
     }
     currentDisplayDate(): string{
-        return this.profileData.timestamp.toLocaleDateString(('hu-HU'), {year: 'numeric', month: 'short', day: 'numeric'})
+        if(this.profileData && this.profileData.timestamp){
+            return this.profileData.timestamp.toLocaleDateString(('hu-HU'), {year: 'numeric', month: 'short', day: 'numeric'})
+        }
+        return ''
     }
     profileDataEntries(){
-        return Array.from(this.profileData.profileItems.entries())
+        if(this.profileData && this.profileData.profileItems) {
+            return Array.from(this.profileData.profileItems.entries())
+        }
+        return []
     }
 
 }

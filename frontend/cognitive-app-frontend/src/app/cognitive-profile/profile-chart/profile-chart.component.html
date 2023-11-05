@@ -4,4 +4,5 @@
         <mat-chip-option *ngFor="let ability of allAbilities()" selected (selectionChange)="onAbilityFilterChange(ability)">{{ability.name}}</mat-chip-option>
     </div>
 </div>
+<div *ngIf="!hasHistory"></div>
 

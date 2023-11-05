@@ -48,18 +48,14 @@ export class CognitiveProfileComponent implements OnInit {
     @HostListener('window:scroll', ['$event'])
     onScroll($event: Event) {
         const chartPosition = document.getElementById('chart')?.offsetTop! - document.getElementById('chart')!.offsetHeight * 0.5
-        if (chartPosition < window.scrollY) {
-            this.isExpandMoreButtonVisible = false
-        } else {
-            this.isExpandMoreButtonVisible = true
-        }
+        this.isExpandMoreButtonVisible = chartPosition >= window.scrollY;
     }
 
     onDateChosen() {
-        if (this.dateForm.value.start == null || this.dateForm.value.end == null) {
+        if (this.dateForm.controls.start.value == null || this.dateForm.controls.end.value == null) {
             return
         }
-        const profilesBetween = this.service.getProfilesBetween(this.dateForm.value.start, this.dateForm.value.end)
+        const profilesBetween = this.service.getProfilesBetween(this.dateForm.controls.start.value, this.dateForm.controls.end.value)
         profilesBetween.subscribe(profiles => {
                 this.profileDataHistory.next(profiles)
                 this.currentProfileData = profiles[profiles.length - 1]

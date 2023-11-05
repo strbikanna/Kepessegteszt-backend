@@ -28,9 +28,11 @@ export class ProfileChartComponent implements OnInit {
                 this.profileData = profileData.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
                 this.hasHistory = true;
                 this.initChartOptions(this.profileData);
+                this.abilitiesForFiltering = this.abilityList(this.profileData);
+            }else{
+                this.hasHistory = false;
             }
             this.loading = false;
-            this.abilitiesForFiltering = this.abilityList(this.profileData);
         })
 
     }

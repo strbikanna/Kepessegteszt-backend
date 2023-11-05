@@ -1,5 +1,5 @@
 <div class="profile-container">
-    <app-profile-card *ngIf="!loading" [profileData]="currentProfileData" ></app-profile-card>
+    <app-profile-card *ngIf="!loading" [profileData]="currentProfileData" id="card"></app-profile-card>
     <mat-progress-bar *ngIf="loading"></mat-progress-bar>
     <div class="date-picker-container">
         <h4>{{text.see_history}}</h4>
