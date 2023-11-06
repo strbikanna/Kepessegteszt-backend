@@ -2,11 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {AdminService} from "../service/admin.service";
 import {map, Observable, of} from "rxjs";
 import {UserForAdmin} from "../model/user-contacts.model";
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {PageEvent} from "@angular/material/paginator";
 import {Role} from "../../utils/constants";
 import {MatCheckboxChange} from "@angular/material/checkbox";
 import {TEXTS} from "../../utils/app.text_messages";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
     selector: 'app-admin-page',
@@ -27,10 +28,10 @@ export class AdminPageComponent implements OnInit {
     userToEdit: UserForAdmin | undefined = undefined;
 
     userDataForm = new FormGroup({
-        firstName: new FormControl<string>( ''),
-        lastName: new FormControl<string>(''),
-        username: new FormControl<string>(''),
-        email: new FormControl<string>(''),
+        firstName: new FormControl<string>( '', Validators.required ),
+        lastName: new FormControl<string>('', Validators.required),
+        username: new FormControl<string>({value: '', disabled: true}),
+        email: new FormControl<string>('', [Validators.required, Validators.email]),
         contactAutocompleteForm : new FormControl<UserForAdmin | string>(''),
     });
 
@@ -38,8 +39,7 @@ export class AdminPageComponent implements OnInit {
     contactOptions: UserForAdmin[] = [];
     filteredContactOptions: UserForAdmin[] = [];
 
-    constructor(private service: AdminService) {
-    }
+    constructor(private service: AdminService, private _snackbar: MatSnackBar) {}
 
     ngOnInit(): void {
         this.users = this.service.getAllUsers(0, 10);
@@ -123,6 +123,7 @@ export class AdminPageComponent implements OnInit {
         this.userToEdit.username = this.userDataForm.controls.username.value!!
         this.userToEdit.email = this.userDataForm.controls.email.value!!
         this.service.updateUserData(this.userToEdit).subscribe(updatedUser => {
+            this.showSuccessSnackbar()
             this.users.pipe(
                 map(users => users.map(user => {
                     if(user.id === updatedUser.id) return updatedUser;
@@ -153,6 +154,9 @@ export class AdminPageComponent implements OnInit {
     }
     onContactDeleted(contact: UserForAdmin){
         this.userToEdit?.contacts?.splice(this.userToEdit?.contacts?.indexOf(contact), 1);
+    }
+    private showSuccessSnackbar() {
+        this._snackbar.open(this.text.update_success_message, this.text.actions.ok,{duration: 5 * 1000} )
     }
 
 }

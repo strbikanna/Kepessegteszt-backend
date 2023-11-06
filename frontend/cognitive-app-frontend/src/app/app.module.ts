@@ -42,6 +42,9 @@ import { ProfileCardComponent } from './cognitive-profile/profile-card/profile-c
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import { NotFoundComponent } from './not-found/not-found.component';
+
 
 @NgModule({
   declarations: [
@@ -57,6 +60,7 @@ import {MatSelectModule} from "@angular/material/select";
     CognitiveProfileComponent,
     ProfileChartComponent,
     ProfileCardComponent,
+    NotFoundComponent,
   ],
     imports: [
         BrowserModule,

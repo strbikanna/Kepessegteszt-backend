@@ -62,6 +62,7 @@ export class LoginService {
 
     logout() {
         sessionStorage.removeItem(AppConstants.impersonationKey)
+        sessionStorage.removeItem(AppConstants.impersonationDisabledKey)
         this.oidcSecurityService
             .logoff()
             .subscribe((result) => {

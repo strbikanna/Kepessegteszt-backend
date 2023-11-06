@@ -1,16 +1,16 @@
-<div class="welcome-container">
-  <h2 *ngIf="canImpersonate">Üdv {{user?.lastName}}!</h2>
-  <div *ngIf="canImpersonate">
-    <p>{{text.message}}</p>
-    <div *ngFor="let user of contacts | async" class="welcome-container">
+<div *ngIf="canImpersonate" class="welcome-container">
+  <h2>Üdv {{user?.lastName}}!</h2>
+  <p>{{text.message}}</p>
+  <div class="contact-container">
+    <div *ngFor="let user of contacts | async" >
       <button mat-stroked-button color="primary" (click)="signInAs(user.username)" class="imperson-button">
         {{user.firstName}} {{user.lastName}}
       </button>
-      <button mat-flat-button color="primary" class="remain-button" (click)="canImpersonate=false">
-        {{text.cancel}}
-      </button>
     </div>
   </div>
+  <button mat-flat-button color="primary" class="remain-button" (click)="disableImpersonation()">
+    {{text.cancel}}
+  </button>
 </div>
 
 

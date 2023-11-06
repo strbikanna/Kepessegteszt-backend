@@ -26,19 +26,19 @@
             <div class="user-data-form">
                 <mat-form-field>
                     <mat-label>{{text.user_data.first_name}}</mat-label>
-                    <input matInput formControlName="firstName" required>
+                    <input matInput formControlName="firstName">
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>{{text.user_data.last_name}}</mat-label>
-                    <input matInput formControlName="lastName" required>
+                    <input matInput formControlName="lastName" >
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>{{text.user_data.username}}</mat-label>
-                    <input matInput formControlName="username" required>
+                    <input matInput formControlName="username" >
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>{{text.user_data.email}}</mat-label>
-                    <input matInput formControlName="email" required>
+                    <input matInput formControlName="email" >
                 </mat-form-field>
             </div>
 
@@ -98,7 +98,7 @@
             </mat-expansion-panel>
             <div class="end-button-container">
                 <button mat-button (click)="userToEdit = undefined" color="primary">{{text.actions.cancel}}</button>
-                <button mat-flat-button color="primary" type="submit">{{text.actions.save}}</button>
+                <button mat-flat-button color="primary" type="submit" [disabled]="!userDataForm.valid">{{text.actions.save}}</button>
             </div>
 
         </form>
