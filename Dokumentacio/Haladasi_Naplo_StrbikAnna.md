@@ -155,3 +155,25 @@ Javaslataim: A) legyen fix ideig érvényes a token (pl. 30 perc) és erre felh�
 - a külső játék indítása milyen módon legyen? megfelelő, ha POST-ban átküldi a frontend a config-ot és ebben a tokent? jelenleg ezt a funkciót adtam hozzá
 - nyilván lehetne window.open metódussal megnyitni az url-t, de ott legfeljebb a token-t és egy game-id-t tudunk átküldeni extra adatként és az id alapján utána lekérdezheti a backend-től a részleteket
 
+# 11.06.
+## Ezen a héten a következőket valósítottam meg:
+- elkezdtem írni a szakdolgozatot, mostantól kezdve ez is a heti teendőim része lesz
+  
+### Frontend:
+- refaktoráltam az admin oldalt, kiegészítettem néhány validátorral a formokat
+- megoldottam az állandó NG100-as hibaüzenetet, ami a loginstatus változása miatt volt
+- felvettem új guard-okat az útvonalakra
+- létrehoztam egy wildcard path-t, ami egy not-found oldalra visz
+ #### elkészítettem egy oldalt a kognitív profil megtekintésére:
+- itt látható a felhasználó aktuális profilja képességnév-képességérték párokban
+- van egy dátumválasztó, ahol meg lehet adni, mely idő-intervallumból származó legfrisebb profil jelenjen meg
+- van egy diagram is, ami ábrázolja a kiválasztott időintervalumban lévő képesség-adatok változását
+- tanár/kutató/szülő számára van egy "kontaktválasztó", ahol megadhatja, kinek a profilját szeretné megtekinteni, az adatok ez alapján jelennek meg
+
+### Backend:
+- a frontend kiszolgálására létrehoztam új kontrollert a képességadatoknak
+- ehhez szerviz is készült, ami képes időpontok alapján visszaadni a profilelemek listáját, illetve paging is lehetséges
+- feltöltöttem az adatbázist néhány minta profiladattal
+- bevezettem külön auth-service-t, melynek feladata 1. a játékok hozzáférésellenőrzése, 2. a felhasználók kontaktellenőrzése (ha pl. egy másik felhasználó profiljáról kér le adatot)
+
+
