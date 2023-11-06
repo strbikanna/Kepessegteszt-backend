@@ -8,7 +8,7 @@ import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Type
 import java.time.LocalDateTime
 
-@Entity
+@Entity(name = "result_for_calculation")
 data class ResultForCalculationEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -18,22 +18,22 @@ object ScoreCalculator {
      */
 
     fun calculateNormalizedScores(results: List<ResultForCalculationEntity>): List<ResultForCalculationEntity> {
-        var L: Double?
-        var P: Double?
-        var maxP: Double?
-        var E: Double?
-        var maxE: Double?
-        val normalizedResults = results.map { result ->
-            L = result.result[levelFieldName] as Double?
-            P = result.result[pointsFieldName] as Double?
-            maxP = result.result[maxPointsFieldName] as Double?
-            E = result.result[extraPointsFieldName] as Double?
-            maxE = result.result[maxExtraPointsFieldName] as Double?
-            if (L == null || P == null || maxP == null || E == null || maxE == null) {
-                throw IllegalArgumentException("Result or config JSON does not contain all the necessary fields for calculating normalized result.")
+        var L: Int?
+        var P: Int?
+        var maxP: Int?
+        var E: Int?
+        var maxE: Int?
+        val normalizedResults = mutableListOf<ResultForCalculationEntity>()
+        results.forEach { result ->
+            L = result.result[levelFieldName] as Int?
+            P = result.result[pointsFieldName] as Int?
+            maxP = result.result[maxPointsFieldName] as Int?
+            E = result.result[extraPointsFieldName] as Int?
+            maxE = result.result[maxExtraPointsFieldName] as Int?
+            if (L != null && P != null && maxP != null && E != null && maxE != null) {
+                result.normalizedResult = L!!.toDouble() * 10 + P!!.toDouble() / maxP!!.toDouble() * 10 + E!!.toDouble() / maxE!!.toDouble() * 10
+                normalizedResults.add(result)
             }
-            result.normalizedResult = L!! * 10 + P!! / maxP!! * 10 + E!! / maxE!! * 10
-            result
         }
         return normalizedResults
     }

@@ -100,9 +100,6 @@ class TestUtilsService(
         authGameId = entity.id!!
         return entity
     }
-    fun saveUser(user: UserEntity): UserEntity{
-        return userRepository.save(user)
-    }
 
     fun fillUserRepository(){
         userRepository.deleteAll()
@@ -168,5 +165,18 @@ class TestUtilsService(
             user = user,
             recommendedGame = createAndSaveRecommendedGame(user)
         )
+    }
+
+    fun saveGame(game: GameEntity): GameEntity{
+        return gameRepository.save(game)
+    }
+    fun saveUser(user: UserEntity): UserEntity{
+        return userRepository.save(user)
+    }
+    fun saveUsers(users: List<UserEntity>){
+        userRepository.saveAll(users)
+    }
+    fun saveAbility(ability: AbilityEntity): AbilityEntity{
+        return abilityRepository.save(ability)
     }
 }
