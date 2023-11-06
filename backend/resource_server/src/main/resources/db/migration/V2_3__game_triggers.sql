@@ -8,3 +8,5 @@ begin
         set NEW.version = OLD.version + 1;
     end if;
 end
+
+-- set global log_bin_trust_function_creators =ON; mysql command might be necessary to execute this
