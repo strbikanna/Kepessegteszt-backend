@@ -11,6 +11,7 @@ class GameResultProcessingService(
     @Autowired private var repository: ResultForCalculationRepository
 ) {
     private val defaultPageSize = 1000
+    var calculator = ScoreCalculator
 
     fun processGameResults(game: GameEntity): MeanAndDeviation{
         val normalizationTimeStamp = LocalDateTime.now()
@@ -55,7 +56,7 @@ class GameResultProcessingService(
         var normalizedResults: List<ResultForCalculationEntity>
         for(i in 0 .. maxPages){
             results = repository.findAllByGameAndNormalizedResultNull(game, PageRequest.of(i, defaultPageSize))
-            normalizedResults = ScoreCalculator.calculateNormalizedScores(results)
+            normalizedResults = calculator.calculateNormalizedScores(results)
             repository.deleteAll(results)
             repository.saveAll(
                 selectRelevantNormalizedResultsForUpdate(normalizedResults, timestamp)
