@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {EChartsOption} from "echarts";
 import {CognitiveProfile} from "../../model/cognitive_profile.model";
 import * as themeColors from "../../../assets/chart_theme/chart_colors";
-import {Ability} from "../../model/ability.model";
+import {Ability, AbilityType} from "../../model/ability.model";
 import {TEXTS} from "../../utils/app.text_messages";
 import {Observable} from "rxjs";
 
@@ -20,29 +20,32 @@ export class ProfileChartComponent implements OnInit {
     private filteredData: CognitiveProfile[] = [];
     private abilitiesForFiltering: Ability[] = [];
     hasHistory = false;
-    text = TEXTS.cognitive_profile;
+    text = TEXTS.cognitive_profile.chart;
 
     ngOnInit(): void {
         this.profileDataObservable.subscribe(profileData => {
-            if(profileData.length > 1) {
-                this.profileData = profileData.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+            if (profileData.length > 0) {
+                this.profileData = this.filterAndSortProfileData(profileData)
                 this.hasHistory = true;
                 this.initChartOptions(this.profileData);
                 this.abilitiesForFiltering = this.abilityList(this.profileData);
-            }else{
+            } else {
                 this.hasHistory = false;
             }
             this.loading = false;
         })
-
     }
-    filterDataByAbilities(abilities: Ability[]){
+
+    filterDataByAbilities(abilities: Ability[]) {
         this.filteredData = [];
-        this.profileData.forEach(profile =>{
+        this.profileData.forEach(profile => {
             let profileEntries = Array.from(profile.profileItems.entries())
-            const constructedProfileData : CognitiveProfile = {timestamp: profile.timestamp, profileItems: new Map<Ability, number>()}
+            const constructedProfileData: CognitiveProfile = {
+                timestamp: profile.timestamp,
+                profileItems: new Map<Ability, number>()
+            }
             profileEntries.forEach(([ability, value]) => {
-                if(abilities.find(_ability => _ability.code === ability.code)){
+                if (abilities.find(_ability => _ability.code === ability.code)) {
                     constructedProfileData.profileItems.set(ability, value)
                 }
             })
@@ -50,14 +53,14 @@ export class ProfileChartComponent implements OnInit {
         })
     }
 
-    allAbilities(){
+    allAbilities() {
         return this.abilityList(this.profileData)
     }
 
-    onAbilityFilterChange(ability: Ability){
-        if(this.abilitiesForFiltering.find(_ability => _ability.code === ability.code)) {
+    onAbilityFilterChange(ability: Ability) {
+        if (this.abilitiesForFiltering.find(_ability => _ability.code === ability.code)) {
             this.abilitiesForFiltering = this.abilitiesForFiltering.filter(_ability => _ability.code !== ability.code)
-        }else{
+        } else {
             this.abilitiesForFiltering.push(ability)
         }
         this.filterDataByAbilities(this.abilitiesForFiltering)
@@ -66,7 +69,7 @@ export class ProfileChartComponent implements OnInit {
 
     private initChartOptions(data: CognitiveProfile[]) {
         this.chartOptions = {
-            title:{
+            title: {
                 text: this.text.chart_title,
                 left: 'center',
             },
@@ -77,11 +80,15 @@ export class ProfileChartComponent implements OnInit {
             xAxis: {
                 data: data
                     //.sort((a,b) => a.timestamp.getMilliseconds() - b.timestamp.getMilliseconds())
-                    .map(profile => profile.timestamp.toLocaleString('hu-HU', {year: 'numeric', month: 'short', day: 'numeric'})),
+                    .map(profile => profile.timestamp.toLocaleString('hu-HU', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    })),
             },
             yAxis: {},
             series: this.abilityList(data).map(ability => {
-                return{
+                return {
                     type: 'line',
                     name: ability.name,
                     data: this.valuesOfAbility(ability),
@@ -92,7 +99,7 @@ export class ProfileChartComponent implements OnInit {
     }
 
     private valuesOfAbility(ability: Ability) {
-        return this.profileData.map(profile =>{
+        return this.profileData.map(profile => {
             const entry = Array.from(profile.profileItems.entries())
                 .find(([_ability, value]) => _ability.code === ability.code)
             return entry ? entry[1] : null
@@ -109,6 +116,20 @@ export class ProfileChartComponent implements OnInit {
             })
         })
         return allAbilities
+    }
+
+    private filterAndSortProfileData(profileData: CognitiveProfile[]): CognitiveProfile[]{
+        return profileData
+            .map(profile => {
+                let abilities = Array.from(profile.profileItems.keys())
+                abilities.forEach(ability => {
+                    if (ability.type === AbilityType.ENUM) {
+                        profile.profileItems.delete(ability)
+                    }
+                })
+                return profile
+            })
+            .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
     }
 
 }

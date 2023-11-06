@@ -10,7 +10,7 @@ import {Observable, tap} from "rxjs";
 })
 export class ProfileCardComponent implements OnInit {
     @Input({required: true}) profileData!: CognitiveProfile;
-    text = TEXTS.cognitive_profile
+    text = TEXTS.cognitive_profile.card
     hasData = false
     ngOnInit(): void {
             if(this.profileData && this.profileData.profileItems && this.profileData.profileItems.size > 0) {

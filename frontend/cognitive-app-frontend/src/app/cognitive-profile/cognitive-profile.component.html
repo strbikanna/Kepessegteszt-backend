@@ -1,4 +1,6 @@
-<div *ngIf="isInspectorUser">
+<div *ngIf="isInspectorUser" id="user-picker-container">
+    <h4>{{text.user_picker.choose_contact}}</h4>
+    <p>{{text.user_picker.choose_contact_description}}</p>
     <mat-form-field>
         <mat-select [formControl]="userContactForm" required>
             <mat-option *ngFor="let contact of contacts | async" [value]="contact">
@@ -6,16 +8,17 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
-    <button mat-flat-button (click)="onUserChosen()" >{{text.select}}</button>
+    <button mat-flat-button (click)="onUserChosen()" id="user-chooser" >{{text.user_picker.select}}</button>
 </div>
+<mat-divider></mat-divider>
 <div class="profile-container" *ngIf="!isInspectorUser || userContactForm.value">
     <app-profile-card *ngIf="!loading" [profileData]="currentProfileData" id="card"></app-profile-card>
-    <mat-progress-bar *ngIf="loading"></mat-progress-bar>
-    <div class="date-picker-container">
-        <h4>{{text.see_history}}</h4>
-        <p>{{text.see_history_description}}</p>
+    <mat-progress-bar *ngIf="loading" mode="buffer"></mat-progress-bar>
+    <div class="date-picker-container" *ngIf="!loading">
+        <h4>{{text.date_picker.see_history}}</h4>
+        <p>{{text.date_picker.see_history_description}}</p>
         <mat-form-field>
-            <mat-label>{{text.time_interval}}</mat-label>
+            <mat-label>{{text.date_picker.time_interval}}</mat-label>
             <mat-date-range-input [formGroup]="dateForm" [rangePicker]="picker">
                 <input matStartDate formControlName="start">
                 <input matEndDate formControlName="end">
@@ -27,21 +30,21 @@
             <mat-error *ngIf="dateForm.controls.start.hasError('matStartDateInvalid')">{{errorText.invalide_start_date}}</mat-error>
             <mat-error *ngIf="dateForm.controls.end.hasError('matEndDateInvalid')">{{errorText.invalide_end_date}}</mat-error>
         </mat-form-field>
-        <button mat-flat-button (click)="onDateChosen()" >{{text.see_history_action}}</button>
+        <button mat-flat-button (click)="onDateChosen()" >{{text.date_picker.see_history_action}}</button>
     </div>
-
 </div>
+<mat-divider></mat-divider>
+
 <button *ngIf="isExpandMoreButtonVisible" mat-icon-button class="expand-button" (click)="onDownClicked()">
     <mat-icon>expand_more</mat-icon>
 </button>
 <button *ngIf="!isExpandMoreButtonVisible" mat-icon-button class="expand-button" (click)="onTopClicked()">
     <mat-icon>expand_less</mat-icon>
 </button>
-<mat-divider></mat-divider>
 <div id="chart">
     <div *ngIf="!isInspectorUser || userContactForm.value">
         <app-profile-chart *ngIf="!loading" [profileDataObservable]="profileDataHistory"></app-profile-chart>
-        <mat-progress-bar *ngIf="loading"></mat-progress-bar>
+        <mat-progress-bar *ngIf="loading" mode="buffer"></mat-progress-bar>
     </div>
 
 </div>
