@@ -18,20 +18,20 @@ object ScoreCalculator {
      */
 
     fun calculateNormalizedScores(results: List<ResultForCalculationEntity>): List<ResultForCalculationEntity> {
-        var L: Int?
-        var P: Int?
-        var maxP: Int?
-        var E: Int?
-        var maxE: Int?
+        var L: Double?
+        var P: Double?
+        var maxP: Double?
+        var E: Double?
+        var maxE: Double?
         val normalizedResults = mutableListOf<ResultForCalculationEntity>()
         results.forEach { result ->
-            L = result.result[levelFieldName] as Int?
-            P = result.result[pointsFieldName] as Int?
-            maxP = result.result[maxPointsFieldName] as Int?
-            E = result.result[extraPointsFieldName] as Int?
-            maxE = result.result[maxExtraPointsFieldName] as Int?
+            L = (result.result[levelFieldName]?.toString())?.toDouble()
+            P = (result.result[pointsFieldName]?.toString())?.toDouble()
+            maxP = (result.result[maxPointsFieldName]?.toString())?.toDouble()
+            E = (result.result[extraPointsFieldName]?.toString())?.toDouble()
+            maxE = (result.result[maxExtraPointsFieldName]?.toString())?.toDouble()
             if (L != null && P != null && maxP != null && E != null && maxE != null) {
-                result.normalizedResult = L!!.toDouble() * 10 + P!!.toDouble() / maxP!!.toDouble() * 10 + E!!.toDouble() / maxE!!.toDouble() * 10
+                result.normalizedResult = L!! * 10 + P!! / maxP!! * 10 + E!! / maxE!! * 10
                 normalizedResults.add(result)
             }
         }
