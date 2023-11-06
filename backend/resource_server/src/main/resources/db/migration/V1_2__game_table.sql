@@ -1,7 +1,7 @@
 CREATE TABLE GAME
 (
     id                 int              PRIMARY KEY AUTO_INCREMENT,
-    version            int              NOT NULL,
+    version            int              NOT NULL DEFAULT 1,
     _name              varchar(100)     NOT NULL,
     _description       varchar(3000),
     thumbnail_path     varchar(400)     NOT NULL,
