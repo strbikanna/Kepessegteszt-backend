@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.gameplayresult
 
+import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
 import hu.bme.aut.resource_server.recommended_game.RecommenderService
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController
 class GameplayResultController(
     @Autowired private var gameplayResultService: GameplayResultService,
     @Autowired private var profileSnapshotService: ProfileSnapshotService,
+    @Autowired private var authService: AuthService,
 ) {
 
     /**
@@ -35,7 +37,7 @@ class GameplayResultController(
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('GAME')")
     fun saveResult(@RequestBody gameplayData: GameplayResultDto, authentication: Authentication){
-        gameplayResultService.checkGameAccessAndThrow(authentication, gameplayData)
+        authService.checkGameAccessAndThrow(authentication, gameplayData)
         val username = gameplayData.username
         if(!profileSnapshotService.existsSnapshotToday(username)){
             profileSnapshotService.saveSnapshotOfUser(username)

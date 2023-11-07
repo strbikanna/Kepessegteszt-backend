@@ -1,0 +1,37 @@
+<mat-card *ngIf="hasData">
+    <mat-card-header>
+        <mat-card-title>{{text.current_profile}}</mat-card-title>
+        <mat-card-subtitle>{{text.current_profile_description}} {{currentDisplayDate()}}</mat-card-subtitle>
+    </mat-card-header>
+    <br>
+    <mat-card-content class="profile-data-container">
+        <div class="left-side">
+            <mat-list role="list" >
+                <div *ngFor="let item of profileDataEntries()" >
+                    <mat-list-item role="listitem" >
+                        <div class="data-holder">
+                            <p>{{item[0].name}}</p>
+                            <mat-chip>{{item[1]}}</mat-chip>
+                        </div>
+                    </mat-list-item>
+                    <div>
+                        <p id="ability-description">{{item[0].description}}</p>
+                    </div>
+                    <mat-divider></mat-divider>
+                </div>
+            </mat-list>
+        </div>
+    </mat-card-content>
+</mat-card>
+<div *ngIf="!hasData">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{text.no_profile_data_message}}</mat-card-title>
+            <mat-card-subtitle>{{text.no_profile_data_action}}</mat-card-subtitle>
+        </mat-card-header>
+<!--        <div class="mission-image">-->
+<!--            <img src="../../../assets/logos/mission.png">-->
+<!--        </div>-->
+    </mat-card>
+
+</div>

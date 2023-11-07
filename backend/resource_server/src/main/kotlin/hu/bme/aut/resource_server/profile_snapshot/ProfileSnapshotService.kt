@@ -5,6 +5,7 @@ import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
 import hu.bme.aut.resource_server.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -46,19 +47,21 @@ class ProfileSnapshotService(
 
     fun getSnapshotsOfUser(user: PlainUserDto): List<ProfileSnapshotItem>{
         val entity = userRepository.findByUsername(user.username).orElseThrow()
+        return getSnapshotsOfUser(entity)
+    }
+    fun getSnapshotsOfUser(user: UserEntity, pageIndex: Int = 0, pageSize: Int = 10): List<ProfileSnapshotItem>{
         val snapShots = mutableListOf<ProfileSnapshotItem>()
-        val floatSnapshots = floatProfileSnapshotRepository.findAllByUser(entity)
-        val enumSnapshots = enumProfileSnapshotRepository.findAllByUser(entity)
+        val floatSnapshots = floatProfileSnapshotRepository.findAllPagedByUser(user, PageRequest.of(pageIndex, pageSize))
+        val enumSnapshots = enumProfileSnapshotRepository.findAllPagedByUser(user, PageRequest.of(pageIndex, pageSize))
         snapShots.addAll(floatSnapshots)
         snapShots.addAll(enumSnapshots)
         return snapShots
     }
 
-    fun getSnapshotsOfUserBetween(user: PlainUserDto, begin: LocalDateTime, end: LocalDateTime): List<ProfileSnapshotItem>{
-        val entity = userRepository.findByUsername(user.username).orElseThrow()
+    fun getSnapshotsOfUserBetween(user: UserEntity, begin: LocalDateTime, end: LocalDateTime): List<ProfileSnapshotItem>{
         val snapShots = mutableListOf<ProfileSnapshotItem>()
-        val floatSnapshots = floatProfileSnapshotRepository.findAllByUserAndTimestampBetween(entity, begin, end)
-        val enumSnapshots = enumProfileSnapshotRepository.findAllByUserAndTimestampBetween(entity, begin, end)
+        val floatSnapshots = floatProfileSnapshotRepository.findAllByUserAndTimestampBetween(user, begin, end)
+        val enumSnapshots = enumProfileSnapshotRepository.findAllByUserAndTimestampBetween(user, begin, end)
         snapShots.addAll(floatSnapshots)
         snapShots.addAll(enumSnapshots)
         return snapShots

@@ -5,6 +5,8 @@ export const TEXTS = {
         home: 'Cognitive App',
         games: 'Játékok',
         profile: 'Profil',
+        cognitive_profile: 'Kognitív profil',
+        admin: 'Admin',
     },
     home:{
         welcome: 'Örülünk, hogy itt vagy a Cognitive Appban!',
@@ -80,15 +82,40 @@ export const TEXTS = {
         default_error_title: 'Hiba történt',
         http_error: 'Hiba történt a szerverrel való kommunikáció során',
         http_error_details: 'A szerver válasza: ',
+        invalide_start_date: 'Érvénytelen kezdődátum',
+        invalide_end_date: 'Érvénytelen végdátum',
     },
     actions: {
         cancel: 'Mégse',
         save: 'Mentés',
         ok: 'OK',
     },
-    wildcard:{
-        title: 'Hupsz, ez az oldal nem található!',
-        description: 'A keresett oldal nem található. Ellenőrizd a címet és próbáld újra.',
+    cognitive_profile:{
+        chart:{
+            chart_title: 'Kognitív profil az elmúlt időszakban',
+        },
+        card:{
+            current_profile: 'Legfrisebb kognitív profil',
+            current_profile_description: 'A kognitív profilban szereplő képességek, és értékük ebben az időpontban ',
+            no_profile_data_message: 'Nincs elég adat, ezért nem lehet megjeleníteni a kognitív profilt.',
+            no_profile_data_action: 'Több játék játszása esetén összeáll a kognitív profil.',
+            abilities: 'Kognitív képességek',
+            values: 'Becsült értékek',
+        },
+        date_picker: {
+            show_profile_history: 'Kognitív profil előzmények megtekintése',
+            time_interval: 'Időintervallum',
+            see_history: 'Megtekintés korábbi időpontban',
+            see_history_description: 'Válassz egy kezdő és egy végdátumot, hogy megtekinthesd a kognitív profilodat az adott időpontban.',
+            see_history_action: 'Kognitív profil megtekintése',
+            back_to_current_action: 'Vissza az aktuális kognitív profilhoz',
+        },
+        user_picker:{
+            choose_contact: 'Kognitív profil megtekintése',
+            choose_contact_description: 'Válaszd ki, kinek a kognitív profilját szeretnéd megtekinteni',
+            select: 'Megtekintés',
+        },
+
     }
 
 }

@@ -34,8 +34,17 @@ import { HeaderComponent } from './header/header.component';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
 import {GlobalErrorhandlerService} from "./utils/global-errorhandler.service";
+import { CognitiveProfileComponent } from './cognitive-profile/cognitive-profile.component';
+import * as echarts from 'echarts';
+import { NgxEchartsModule } from 'ngx-echarts';
+import { ProfileChartComponent } from './cognitive-profile/profile-chart/profile-chart.component';
+import { ProfileCardComponent } from './cognitive-profile/profile-card/profile-card.component';
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
+import {MatSelectModule} from "@angular/material/select";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import { NotFoundComponent } from './not-found/not-found.component';
+
 
 @NgModule({
   declarations: [
@@ -48,42 +57,49 @@ import { NotFoundComponent } from './not-found/not-found.component';
     HeaderComponent,
     ImpersonationComponent,
     AlertDialogComponent,
+    CognitiveProfileComponent,
+    ProfileChartComponent,
+    ProfileCardComponent,
     NotFoundComponent,
   ],
-  imports: [
-    BrowserModule,
-    RouterModule.forRoot(appRoutes),
-    HttpClientModule,
-    AuthModule.forRoot({
-      config: [{
-        configId: 'baseConfig',
-        authority: 'http://localhost:9000',
-        redirectUrl: 'http://localhost:4200',
-        postLogoutRedirectUri: 'http://localhost:4200',
-        clientId: 'frontend-client-002233',
-        scope: 'openid',
-        responseType: 'code',
-        silentRenew: true,
-        useRefreshToken: true,
-        logLevel: LogLevel.Debug,
-      },
-        {
-          configId: 'gameTokenConfig',
-          authority: 'http://localhost:9000',
-          redirectUrl: 'http://localhost:4200/games',
-          postLogoutRedirectUri: 'http://localhost:4200',
-          clientId: 'frontend-client-002233',
-          scope: 'openid game',
-          responseType: 'code',
-          silentRenew: true,
-          useRefreshToken: true,
-          logLevel: LogLevel.Debug,
-        },
-      ],
-    }),
-    AdminModule,
-    MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule, MatTabsModule, MatDialogModule, MatPaginatorModule, MatChipsModule, ReactiveFormsModule, MatInputModule, MatExpansionModule, MatCheckboxModule, MatAutocompleteModule, MatProgressBarModule, MatSnackBarModule,
-  ],
+    imports: [
+        BrowserModule,
+        RouterModule.forRoot(appRoutes),
+        HttpClientModule,
+        AuthModule.forRoot({
+            config: [{
+                configId: 'baseConfig',
+                authority: 'http://localhost:9000',
+                redirectUrl: 'http://localhost:4200',
+                postLogoutRedirectUri: 'http://localhost:4200',
+                clientId: 'frontend-client-002233',
+                scope: 'openid',
+                responseType: 'code',
+                silentRenew: true,
+                useRefreshToken: true,
+                logLevel: LogLevel.Debug,
+            },
+                {
+                    configId: 'gameTokenConfig',
+                    authority: 'http://localhost:9000',
+                    redirectUrl: 'http://localhost:4200/games',
+                    postLogoutRedirectUri: 'http://localhost:4200',
+                    clientId: 'frontend-client-002233',
+                    scope: 'openid game',
+                    responseType: 'code',
+                    silentRenew: true,
+                    useRefreshToken: true,
+                    logLevel: LogLevel.Debug,
+                },
+            ],
+        }),
+        AdminModule,
+        MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule, MatTabsModule, MatDialogModule, MatPaginatorModule, MatChipsModule, ReactiveFormsModule, MatInputModule, MatExpansionModule, MatCheckboxModule, MatAutocompleteModule, MatProgressBarModule,
+        NgxEchartsModule.forRoot({
+            echarts
+        }),
+        MatDatepickerModule, MatNativeDateModule, MatSelectModule
+    ],
   providers: [
       {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
     {
