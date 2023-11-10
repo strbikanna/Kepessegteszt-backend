@@ -6,7 +6,6 @@ import hu.bme.aut.resource_server.profile_calculation.data.MeanAndDeviation
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationRepository
 import hu.bme.aut.resource_server.game.GameEntity
-import hu.bme.aut.resource_server.utils.AbilityType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -19,8 +18,11 @@ class GameResultProcessingService(
     private val defaultPageSize = 1000
     var calculator = ScoreCalculator
 
+    /**
+     * Calculates the mean and deviation of the normalized results of the given game.
+     * Can be used by both multi- and single ability games.
+     */
     fun processGameResults(game: GameEntity): MeanAndDeviation {
-        checkGame(game)
         val normalizationTimeStamp = LocalDateTime.now()
         normalizeNewResults(game, normalizationTimeStamp)
         val newNormalizedResults = deleteOlderNormalizedResults(game)
@@ -85,11 +87,5 @@ class GameResultProcessingService(
             }
         }
         return userIdToResult.values.toList()
-    }
-
-    private fun checkGame(game: GameEntity){
-        if(game.affectedAbilites.size != 1 || game.affectedAbilites.first().type != AbilityType.FLOATING){
-            throw IllegalArgumentException("Game is not processable. It must have exactly one floating type ability.")
-        }
     }
 }

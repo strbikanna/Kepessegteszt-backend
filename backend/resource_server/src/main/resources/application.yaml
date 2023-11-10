@@ -22,3 +22,8 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:9000
+
+app:
+  python:
+    source-location: C:/Users/strbi/Python_projects/HelloWorld
+    models-location: C:/Users/strbi/Python_projects/HelloWorld
