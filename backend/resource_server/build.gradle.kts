@@ -36,6 +36,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations")
     implementation("io.hypersistence:hypersistence-utils-hibernate-62:3.5.0")
     implementation("org.json:json:20230227")
+    implementation("black.ninia:jep:4.1.1")
     runtimeOnly("com.h2database:h2")
     runtimeOnly("com.mysql:mysql-connector-j")
     implementation ("org.flywaydb:flyway-core")

@@ -54,5 +54,11 @@ class UserProfileUpdaterService(
         user.profileFloat.add(newProfileItem)
     }
 
+    private fun updateUserProfilesMultiAbility(game: GameEntity, normalizationValue: MeanAndDeviation){
+        val abilities = game.affectedAbilites
+        val normalizedResults = repository.findAllByGameAndNormalizedResultNotNull(game)
+
+    }
+
 
 }
