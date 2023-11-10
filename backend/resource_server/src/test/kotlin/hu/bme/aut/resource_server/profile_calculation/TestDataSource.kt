@@ -1,6 +1,7 @@
-package hu.bme.aut.resource_server.calculation
+package hu.bme.aut.resource_server.profile_calculation
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
+import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.user.UserEntity
 
@@ -56,7 +57,8 @@ object TestDataSource {
                 config = mutableMapOf(),
                 user = users[i-1],
                 game = game,
-            ))
+            )
+            )
         }
         for(i in users.size/6..users.size){
             results.add(
@@ -71,7 +73,8 @@ object TestDataSource {
                 config = mutableMapOf(),
                 user = users[i-1],
                 game = game,
-            ))
+            )
+            )
         }
         for(i in 5*users.size/6..users.size){
             results.add(
@@ -86,7 +89,8 @@ object TestDataSource {
                 config = mutableMapOf(),
                 user = users[i-1],
                 game = game,
-            ))
+            )
+            )
         }
         return results
     }

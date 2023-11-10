@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.calculation
+package hu.bme.aut.resource_server.profile_calculation.data
 
 import hu.bme.aut.resource_server.game.GameEntity
 import org.springframework.data.domain.Pageable
@@ -7,6 +7,7 @@ import org.springframework.data.repository.PagingAndSortingRepository
 
 interface ResultForCalculationRepository : PagingAndSortingRepository<ResultForCalculationEntity, Long>, CrudRepository<ResultForCalculationEntity, Long>
 {
+    override fun findAll(): List<ResultForCalculationEntity>
     fun findAllByGameAndNormalizedResultNotNull(game: GameEntity, page: Pageable): List<ResultForCalculationEntity>
     fun findAllByGameAndNormalizedResultNotNull(game: GameEntity): List<ResultForCalculationEntity>
     fun findAllByGameAndNormalizedResultNull(game: GameEntity, page: Pageable): List<ResultForCalculationEntity>

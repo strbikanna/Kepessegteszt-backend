@@ -1,5 +1,6 @@
-package hu.bme.aut.resource_server.calculation
+package hu.bme.aut.resource_server.profile_calculation.calculator
 
+import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
 import hu.bme.aut.resource_server.game.GameEntity
 
 object ScoreCalculator {
