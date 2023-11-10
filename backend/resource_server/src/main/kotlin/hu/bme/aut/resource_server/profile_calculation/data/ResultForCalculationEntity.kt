@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.calculation
+package hu.bme.aut.resource_server.profile_calculation.data
 
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.user.UserEntity

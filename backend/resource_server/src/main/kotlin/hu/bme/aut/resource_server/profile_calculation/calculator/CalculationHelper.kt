@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.calculation
+package hu.bme.aut.resource_server.profile_calculation.calculator
 
 import kotlin.math.pow
 import kotlin.math.sqrt
