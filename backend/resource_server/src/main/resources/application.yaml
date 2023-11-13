@@ -26,4 +26,4 @@ spring:
 app:
   python:
     source-location: C:/Users/strbi/Python_projects/HelloWorld
-    models-location: C:/Users/strbi/Python_projects/HelloWorld
+    models-location: C:/Users/strbi/Python_projects/
