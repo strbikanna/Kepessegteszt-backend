@@ -42,8 +42,14 @@ class AbilityRateCalculatorService(
         }
     }
 
+    /**
+     * Generates input for Python script
+     * n*k size 2d array with n users and k abilities containing user abilities
+     * and n size array with normalized results.
+     * The two arrays contain the values for the users in same order.
+     */
     @Transactional
-    fun getAbilitiesForResults(results: List<ResultForCalculationEntity>, abilities: List<AbilityEntity>){
+    fun getAbilityValuesAndValuesFromResultsStructured(results: List<ResultForCalculationEntity>, abilities: List<AbilityEntity>): Pair<List<List<Double?>>, List<Double>>{
         val abilityValues = mutableListOf<List<Double?>>()
         val resultValues = mutableListOf<Double>()
         var user: UserEntity
@@ -59,5 +65,6 @@ class AbilityRateCalculatorService(
                 resultValues.add(result.normalizedResult!!)
             }
         }
+        return Pair(abilityValues, resultValues)
     }
 }
