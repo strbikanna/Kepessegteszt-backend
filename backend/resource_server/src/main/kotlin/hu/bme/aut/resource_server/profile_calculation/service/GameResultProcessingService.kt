@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.profile_calculation
+package hu.bme.aut.resource_server.profile_calculation.service
 
 import hu.bme.aut.resource_server.profile_calculation.calculator.CalculationHelper
 import hu.bme.aut.resource_server.profile_calculation.calculator.ScoreCalculator

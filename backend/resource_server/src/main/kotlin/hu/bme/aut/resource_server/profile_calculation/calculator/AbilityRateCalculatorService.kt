@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import java.lang.RuntimeException
 
 @Service
 class AbilityRateCalculatorService(
@@ -21,8 +22,7 @@ class AbilityRateCalculatorService(
     @Value("\${app.python.source-location}")
     private lateinit var filePath: String
     private val logger = LoggerFactory.getLogger(AbilityRateCalculatorService::class.java)
-    fun calculateRates( abilityValues: List<List<Double>>, resultValues: List<Double> ){
-
+    fun calculateRates( abilityValues: List<List<Double?>>, resultValues: List<Double> ): List<Double>{
         logger.info("Executing python...")
 
         try{
@@ -36,9 +36,13 @@ class AbilityRateCalculatorService(
                 interpreter.exec("ratios = calcRatio(matrix, numbers)")
                 val answerWithRatios = interpreter.getValue("ratios")
                 logger.info("Answer is: ${answerWithRatios}")
+                // TODO test cast !!
+                return answerWithRatios as List<Double>
             }
         }catch(ex: JepException){
             throw CalculationException("Exception in calculating ability contribution in game result: ${ex.message}")
+        }catch(ex: RuntimeException){
+            throw CalculationException("Exception occurred in processing calculation result: ${ex.message}")
         }
     }
 

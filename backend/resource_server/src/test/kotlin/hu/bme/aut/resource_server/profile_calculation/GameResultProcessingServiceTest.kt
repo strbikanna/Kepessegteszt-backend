@@ -2,6 +2,7 @@ package hu.bme.aut.resource_server.profile_calculation
 
 import hu.bme.aut.resource_server.TestUtilsService
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationRepository
+import hu.bme.aut.resource_server.profile_calculation.service.GameResultProcessingService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
