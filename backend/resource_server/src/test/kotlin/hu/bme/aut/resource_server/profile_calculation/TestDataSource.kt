@@ -3,6 +3,7 @@ package hu.bme.aut.resource_server.profile_calculation
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
 import hu.bme.aut.resource_server.game.GameEntity
+import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.user.UserEntity
 
 object TestDataSource {
@@ -28,7 +29,7 @@ object TestDataSource {
                 affectedAbilites = mutableSetOf(affectedAbility)
             )
     }
-    fun createUsersForTest(count: Int): List<UserEntity> {
+    fun createUsersForTestWithEmptyProfile(count: Int): List<UserEntity> {
         val userList = mutableListOf<UserEntity>()
         for(i in 1..count){
             userList.add(UserEntity(
@@ -41,6 +42,36 @@ object TestDataSource {
             ))
         }
         return userList
+    }
+
+    fun createNthUserWithAbilities(nth: Int, abilities: List<AbilityEntity>, abilityValues: List<Double>): UserEntity{
+        val user = UserEntity(
+            firstName = "user$nth",
+            lastName = "user$nth",
+            username = "user$nth",
+            profileFloat = mutableSetOf(),
+            profileEnum = mutableSetOf(),
+            roles = mutableSetOf(),
+        )
+        abilities.forEachIndexed { index, ability ->
+            user.profileFloat.add(
+                FloatProfileItem(
+                    ability = ability,
+                    abilityValue = abilityValues[index],
+                )
+            )
+        }
+        return user
+    }
+    fun createNormalizedResultForUser(user: UserEntity, resultValue: Double, game: GameEntity): ResultForCalculationEntity{
+        return ResultForCalculationEntity(
+            result = mutableMapOf(),
+            normalizedResult = resultValue,
+            config = mutableMapOf(),
+            user = user,
+            game = game,
+        )
+
     }
     fun createResultsForCalculation_ThreePartition(users: List<UserEntity>, game: GameEntity): List<ResultForCalculationEntity>{
         val results = mutableListOf<ResultForCalculationEntity>()

@@ -7,6 +7,8 @@ import hu.bme.aut.resource_server.game.GameRepository
 import hu.bme.aut.resource_server.gameplayresult.GameplayResultEntity
 import hu.bme.aut.resource_server.gameplayresult.GameplayResultRepository
 import hu.bme.aut.resource_server.profile.FloatProfileItem
+import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
+import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationRepository
 import hu.bme.aut.resource_server.profile_snapshot.EnumProfileSnapshotRepository
 import hu.bme.aut.resource_server.profile_snapshot.FloatProfileSnapshotRepository
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
@@ -28,6 +30,7 @@ class TestUtilsService(
     @Autowired  var gameRepository: GameRepository,
     @Autowired  var gameplayResultRepository: GameplayResultRepository,
     @Autowired  var recommendedGameRepository: RecommendedGameRepository,
+    @Autowired var resultForCalcRepository: ResultForCalculationRepository
 ) {
     val authHeaderName = "authUser"
     val gameAuthHeaderName = "authGame"
@@ -45,6 +48,7 @@ class TestUtilsService(
         recommendedGameRepository.deleteAll()
         userRepository.deleteAll()
         gameRepository.deleteAll()
+        resultForCalcRepository.deleteAll()
     }
 
     fun fillAbilityRepository(){
@@ -178,5 +182,8 @@ class TestUtilsService(
     }
     fun saveAbility(ability: AbilityEntity): AbilityEntity{
         return abilityRepository.save(ability)
+    }
+    fun saveResults(results: List<ResultForCalculationEntity>){
+        resultForCalcRepository.saveAll(results)
     }
 }
