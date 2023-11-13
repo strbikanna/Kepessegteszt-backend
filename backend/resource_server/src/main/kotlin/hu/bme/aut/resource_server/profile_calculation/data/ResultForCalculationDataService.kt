@@ -10,8 +10,12 @@ class ResultForCalculationDataService(
     @Autowired private var gameRepository: GameRepository
 ) {
     fun getCountForNewCalculation(gameId: Int): Long {
-        val game = gameRepository.findById(gameId).get()
+        val game = getGame(gameId)
         return resultForCalculationRepository.countByGameAndNormalizedResultNull(game)
+    }
+    fun getCountOfRecentCalculation(gameId: Int): Long {
+        val game = getGame(gameId)
+        return resultForCalculationRepository.countByGameAndNormalizedResultNotNull(game)
     }
     fun getGame(gameId: Int) = gameRepository.findById(gameId).orElseThrow()
 }
