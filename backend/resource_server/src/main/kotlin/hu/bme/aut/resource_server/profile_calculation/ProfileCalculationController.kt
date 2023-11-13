@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.profile_calculation
 
+import hu.bme.aut.resource_server.profile_calculation.data.CalculationInfoDto
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -26,9 +27,11 @@ class ProfileCalculationController (
 
     @PostMapping("/process_results")
     @ResponseStatus(HttpStatus.CREATED)
-    fun processResults(@RequestBody gameId: Int,){
+    fun processResults(@RequestBody gameId: Int,): CalculationInfoDto {
         val game = dataService.getGame(gameId)
         val meanAndDeviation = resultProcessingService.processGameResults(game)
+        val countOfUpdatedProfiles = dataService.getCountOfRecentCalculation(gameId)
         profileUpdaterService.updateUserProfileByResultsOfGame(game, meanAndDeviation)
+        return CalculationInfoDto(meanAndDeviation, countOfUpdatedProfiles)
     }
 }
