@@ -2,6 +2,8 @@ package hu.bme.aut.resource_server.profile_calculation
 
 import hu.bme.aut.resource_server.profile_calculation.data.CalculationInfoDto
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
+import hu.bme.aut.resource_server.profile_calculation.service.GameResultProcessingService
+import hu.bme.aut.resource_server.profile_calculation.service.UserProfileUpdaterService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize

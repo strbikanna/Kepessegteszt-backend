@@ -1,10 +1,11 @@
-package hu.bme.aut.resource_server.profile_calculation
+package hu.bme.aut.resource_server.profile_calculation.service
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.profile_calculation.data.MeanAndDeviation
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationRepository
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.profile.FloatProfileItem
+import hu.bme.aut.resource_server.profile_calculation.calculator.AbilityRateCalculatorService
 import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
 import hu.bme.aut.resource_server.user.UserEntity
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,12 +14,15 @@ import org.springframework.stereotype.Service
 @Service
 class UserProfileUpdaterService(
     @Autowired private var repository: ResultForCalculationRepository,
-    @Autowired private var snapshotService: ProfileSnapshotService
+    @Autowired private var snapshotService: ProfileSnapshotService,
+    @Autowired private var abilityRateCalculatorService: AbilityRateCalculatorService,
 ) {
     private final val deviationDiffMultiplicator = 0.15
     fun updateUserProfileByResultsOfGame(game: GameEntity, normalizationValue: MeanAndDeviation){
         if(game.affectedAbilites.size == 1){
             updateUserProfilesOneAbility(game, normalizationValue)
+        }else{
+            updateUserProfilesMultiAbility(game, normalizationValue)
         }
     }
 
@@ -40,23 +44,37 @@ class UserProfileUpdaterService(
     /**
      * Updates the user profile with the given ability and value.
      * If previous value exists, snapshot will be taken of user profile and the new value is calculated by the following formula:
-     * newAbilityValue = (2 * newValue + oldValue) / 3
+     * newAbilityValue = valueRelevancy * newValue + (1 - valueRelevancy) * oldValue.
+     * Value relevancy is a number between 0 and 1 that expresses how much the new value should change the profile.
      */
 
-    private fun saveNewAbilityValueOfUser(user: UserEntity, ability: AbilityEntity, value: Double){
+    private fun saveNewAbilityValueOfUser(user: UserEntity, ability: AbilityEntity, value: Double, valueRelevancy: Double = 1.0){
         val oldProfileItem = user.profileFloat.find { it.ability.code == ability.code }
         val newProfileItem = FloatProfileItem(ability = ability, abilityValue = value)
         if(oldProfileItem != null){
             snapshotService.saveSnapshotOfUserAbilities(user, listOf(ability))
             user.profileFloat.remove(oldProfileItem)
-            newProfileItem.abilityValue = (value * 2 + oldProfileItem.abilityValue) /3
+            newProfileItem.abilityValue = value * valueRelevancy + oldProfileItem.abilityValue * (1.0 - valueRelevancy)
         }
         user.profileFloat.add(newProfileItem)
     }
 
+    /**
+     * Updates the user profiles by multiple affected abilities of the game.
+     * Calls neural network to calculate the ability contributions.
+     */
     private fun updateUserProfilesMultiAbility(game: GameEntity, normalizationValue: MeanAndDeviation){
         val abilities = game.affectedAbilites
         val normalizedResults = repository.findAllByGameAndNormalizedResultNotNull(game)
+        val inputForCalculation = abilityRateCalculatorService.getAbilityValuesAndValuesFromResultsStructured(normalizedResults, abilities.toList())
+        val abilityContributions = abilityRateCalculatorService.calculateRates(inputForCalculation.first, inputForCalculation.second)
+        normalizedResults.forEach { result ->
+            val difference = result.normalizedResult!! - normalizationValue.mean
+            val abilityValue = 1 + difference/normalizationValue.deviation * deviationDiffMultiplicator
+            abilities.forEachIndexed { index, ability ->
+                saveNewAbilityValueOfUser(result.user, ability, abilityValue, abilityContributions[index])
+            }
+        }
 
     }
 
