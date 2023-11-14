@@ -1,0 +1,29 @@
+:host{
+  width: 100%;
+  margin: 0.6em;
+}
+mat-card-content:first-child {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+img{
+  margin-right: 1em;
+  width: 10em;
+  height: 10em;
+  object-fit: cover;
+}
+.text-content{
+  padding-right: 1em;
+}
+button{
+  margin-inline: 0.5em;
+}
+.description{
+  max-width: 25em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

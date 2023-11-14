@@ -1,0 +1,12 @@
+<mat-paginator [length]="dataLength"
+               [pageSize]="defaultPageSize"
+               [pageSizeOptions]="pageSizeOptions"
+               aria-label="Select page"
+               (page)="handlePageEvent($event)">
+</mat-paginator>
+<div class="game-list-container">
+    <div *ngFor="let game of games | async">
+        <app-game-card [game]="game" [buttonText]="actionText.edit" (buttonClick)="navigateToEdit(game)"></app-game-card>
+    </div>
+
+</div>
