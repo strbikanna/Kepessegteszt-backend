@@ -3,10 +3,10 @@
         <img src="{{game.thumbnail}}">
         <div class="text-content">
             <mat-card-title>{{game.name}}</mat-card-title>
-            <p class="description">{{game.description}}</p>
+            <p >{{game.description}}</p>
             <p class="mat-caption">Verzió: {{game.version}}</p>
             <p class="mat-caption">{{game.active ? 'Aktív' : 'Nem aktív' }}</p>
-            <p class="mat-caption">Érintett kognitív képességek: {{game.active ? 'Aktív' : 'Nem aktív' }}</p>
+            <p class="mat-caption">Érintett kognitív képességek: {{transformAffectedAbilities(game.affectedAbilities)}}</p>
         </div>
     </mat-card-content>
     <mat-divider></mat-divider>

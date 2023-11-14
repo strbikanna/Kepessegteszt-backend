@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Observable, of} from "rxjs";
-import {Game} from "../model/game.model";
-import {CalculationFeedback} from "../model/calculation-feedback.model";
+import {delay, Observable, of} from "rxjs";
+import {Game} from "../../model/game.model";
+import {CalculationFeedback} from "../../model/calculation-feedback.model";
 
 @Injectable({
   providedIn: 'root'
@@ -15,17 +15,42 @@ export class GameManagementService {
     return this.mockData;
   }
 
+  getGameById(id: number): Observable<Game> {
+    return of(
+        {
+          id: 2,
+          name: "Pop the balloons",
+          description: "Try not to die from the bombs.",
+          thumbnail: "../../assets/balloon_game.jpg",
+          url: undefined,
+          config: {
+            maxLevel: 5,
+            maxPoints: 50,
+            maxExtraPoints: 10,
+            maxTime: 60,
+            extraPointsName: "Health points",
+            pointsName: "Score",
+          },
+          active: true,
+          version: 1,
+          affectedAbilities: [],
+        }
+    )
+  }
+
   getResultCountOfGame(game: Game): Observable<number> {
     return of(200);
   }
 
   startResultProcessing(game: Game): Observable<CalculationFeedback> {
+    delay(1000)
     return of({
       mean: 0.7,
       deviation: 0.1,
       updatedProfilesCount: 100,
-    })
+    }).pipe(delay(5000))
   }
+
 
   private mockData: Observable<Game[]> = of([
     {

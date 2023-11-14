@@ -10,19 +10,24 @@ mat-card-content:first-child {
   align-items: center;
 }
 img{
-  margin-right: 1em;
-  width: 10em;
-  height: 10em;
+  @media only screen and (max-width: 600px) {
+    display: none;
+  }
+  width: 11em;
+  height: 11em;
   object-fit: cover;
+  align-self: flex-start;
 }
 .text-content{
-  padding-right: 1em;
+  padding-top: 1em;
+  padding-inline: 2em;
+  width: 100%;
 }
 button{
   margin-inline: 0.5em;
 }
-.description{
-  max-width: 25em;
+.text{
+  max-width: 90%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

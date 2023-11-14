@@ -6,7 +6,12 @@
 </mat-paginator>
 <div class="game-list-container">
     <div *ngFor="let game of games | async">
-        <app-game-card [game]="game" [buttonText]="actionText.edit" (buttonClick)="navigateToEdit(game)"></app-game-card>
+        <app-game-card [game]="game"
+                       [buttonText]="actionText.edit"
+                       (buttonClick)="navigateToEdit(game)"
+                       [extraButtonText]="actionText.calculation"
+                       (extraButtonClick)="startResultProcessing(game)"
+        ></app-game-card>
     </div>
 
 </div>
