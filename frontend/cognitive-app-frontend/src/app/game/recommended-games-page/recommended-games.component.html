@@ -10,10 +10,10 @@
             <div>
                 <mat-card *ngFor="let game of gamesForYou | async">
                     <mat-card-content>
-                        <img src="{{game.thumbnail}}">
+                        <img src="{{game.game.thumbnail}}">
                         <div>
-                            <mat-card-title>{{game.name}}</mat-card-title>
-                            <p>{{game.description}}</p>
+                            <mat-card-title>{{game.game.name}}</mat-card-title>
+                            <p>{{game.game.description}}</p>
                         </div>
                     </mat-card-content>
                     <mat-divider></mat-divider>

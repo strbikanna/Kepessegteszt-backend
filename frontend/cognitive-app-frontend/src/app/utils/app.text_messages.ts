@@ -89,12 +89,14 @@ export const TEXTS = {
         cancel: 'Mégse',
         save: 'Mentés',
         ok: 'OK',
+        edit: 'Szerkesztés',
+        calculation: 'Kiértékelés'
     },
-    cognitive_profile:{
-        chart:{
+    cognitive_profile: {
+        chart: {
             chart_title: 'Kognitív profil az elmúlt időszakban',
         },
-        card:{
+        card: {
             current_profile: 'Legfrisebb kognitív profil',
             current_profile_description: 'A kognitív profilban szereplő képességek, és értékük ebben az időpontban ',
             no_profile_data_message: 'Nincs elég adat, ezért nem lehet megjeleníteni a kognitív profilt.',
@@ -110,12 +112,32 @@ export const TEXTS = {
             see_history_action: 'Kognitív profil megtekintése',
             back_to_current_action: 'Vissza az aktuális kognitív profilhoz',
         },
-        user_picker:{
+        user_picker: {
             choose_contact: 'Kognitív profil megtekintése',
             choose_contact_description: 'Válaszd ki, kinek a kognitív profilját szeretnéd megtekinteni',
             select: 'Megtekintés',
         },
+    },
 
+    wildcard:{
+        title: 'Hupsz, ez az oldal nem található!',
+        description: 'A keresett oldal nem található. Ellenőrizd a címet és próbáld újra.',
+    },
+    game_management:{
+        title: 'Játékok kezelése',
+        calculation_dialog:{
+            title: 'Játékeredmények kiértékelése',
+            description: 'A játékeredmények kiértékelése magában foglalja az összes eddig összegyűlt játékeredmény feldolgozását. ' +
+                'A játékok pontszámai normalizálva lesznek, és az eredmények alapján a felhasználók képességértékei frissítve lesznek. A kiértékelést nem lehet visszavonni.',
+            message: 'Biztosan szeretnéd elindítani a játékeredmények kiértékelését?',
+            result_count: 'A játékhoz érkezett feldolgozatlan eredmények száma: ',
+            affected_abilities: 'A játék ezeket a kognitív képességeket vizsgálja: ',
+            feedback_message: 'A kiértékelés elkezdődött, a folyamat néhány percig eltarthat.',
+            success_feedback: 'A kiértékelés sikeresen befejeződött.',
+            result_mean: 'A normalizálás során kapott átlag: ',
+            result_deviation: 'A normalizálás során kapott szórás: ',
+            result_profile_count: 'A normalizálás után frissített felhasználói profilok száma: ',
+        },
     }
 
 }

@@ -6,7 +6,7 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import { AuthModule, LogLevel } from 'angular-auth-oidc-client';
-import {RouterModule} from "@angular/router";
+import {provideRouter, RouterModule, withComponentInputBinding} from "@angular/router";
 import {appRoutes} from "./utils/app.routes";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatButtonModule} from '@angular/material/button';
@@ -18,7 +18,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatListModule} from "@angular/material/list";
 import { ImpersonationComponent } from './impersonation/impersonation.component';
 import {AuthInterceptor} from "./auth/auth.interceptor";
-import { GamesComponent } from './game/games-page/games.component';
+import { RecommendedGamesComponent } from './game/recommended-games-page/recommended-games.component';
 import {MatTabsModule} from "@angular/material/tabs";
 import { PlaygroundComponent } from './game/playground/playground.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from "@angular/material/dialog";
@@ -32,7 +32,7 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {AdminModule} from "./admin/admin.module";
 import { HeaderComponent } from './header/header.component';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
-import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
+import { AlertDialogComponent } from './common/alert-dialog/alert-dialog.component';
 import {GlobalErrorhandlerService} from "./utils/global-errorhandler.service";
 import { CognitiveProfileComponent } from './cognitive-profile/cognitive-profile.component';
 import * as echarts from 'echarts';
@@ -44,6 +44,11 @@ import {MatNativeDateModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import { NotFoundComponent } from './not-found/not-found.component';
+import { GameManagementComponent } from './game-management/game-management.component';
+import { FileUploadComponent } from './common/file-upload/file-upload.component';
+import { EditGameFormComponent } from './game-management/edit-game-form/edit-game-form.component';
+import { GameCardComponent } from './common/game-card/game-card.component';
+import { CalculationDialogComponent } from './game-management/calculation-dialog/calculation-dialog.component';
 
 
 @NgModule({
@@ -52,7 +57,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
     LoginComponent,
     HomeComponent,
     ProfileComponent,
-    GamesComponent,
+    RecommendedGamesComponent,
     PlaygroundComponent,
     HeaderComponent,
     ImpersonationComponent,
@@ -61,6 +66,11 @@ import { NotFoundComponent } from './not-found/not-found.component';
     ProfileChartComponent,
     ProfileCardComponent,
     NotFoundComponent,
+    GameManagementComponent,
+    FileUploadComponent,
+    EditGameFormComponent,
+    GameCardComponent,
+    CalculationDialogComponent,
   ],
     imports: [
         BrowserModule,
@@ -101,7 +111,11 @@ import { NotFoundComponent } from './not-found/not-found.component';
         MatDatepickerModule, MatNativeDateModule, MatSelectModule
     ],
   providers: [
-      {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+      {
+        provide: HTTP_INTERCEPTORS,
+        useClass: AuthInterceptor,
+        multi: true
+      },
     {
       provide: MAT_DIALOG_DEFAULT_OPTIONS,
       useValue: {
@@ -112,7 +126,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
     {
       provide: ErrorHandler,
       useClass: GlobalErrorhandlerService,
-    }
+    },
+    provideRouter(appRoutes, withComponentInputBinding()),
   ],
   bootstrap: [AppComponent]
 })

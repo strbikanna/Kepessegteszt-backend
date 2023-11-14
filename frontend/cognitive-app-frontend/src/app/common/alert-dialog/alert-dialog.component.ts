@@ -1,6 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
-import {TEXTS} from "../utils/app.text_messages";
+import {TEXTS} from "../../utils/app.text_messages";
 
 @Component({
   selector: 'app-alert-dialog',
@@ -16,10 +16,12 @@ export class AlertDialogComponent {
   constructor(
       @Inject(MAT_DIALOG_DATA)
       private data: {
+        title: string;
         message: string;
         detail: string;
       },
   ) {
+    if (data?.title) this.title = data.title;
     if (data?.message) this.message = data.message;
     if (data?.detail) this.detail = data.detail;
   }

@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {initializeGame} from './main.js'
 import {GameAuthService} from "../game-services/game-auth.service";
 import {TEXTS} from "../../utils/app.text_messages";
-import {Game} from "../../model/game.model";
 
 @Component({
     selector: 'app-playground',

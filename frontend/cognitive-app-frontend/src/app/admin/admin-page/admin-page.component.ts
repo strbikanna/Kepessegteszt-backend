@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AdminService} from "../service/admin.service";
-import {map, Observable, of} from "rxjs";
+import {map, Observable} from "rxjs";
 import {UserForAdmin} from "../model/user-contacts.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {PageEvent} from "@angular/material/paginator";
