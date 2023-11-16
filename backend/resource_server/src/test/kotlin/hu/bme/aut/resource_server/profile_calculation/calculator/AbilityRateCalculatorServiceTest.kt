@@ -25,9 +25,9 @@ class AbilityRateCalculatorServiceTest(
 
     @Test
     fun shouldConstructArraysCorrectly(){
-        val ability1 = testService.abilityGq
-        val ability2 = testService.abilityGsm
-        val ability3 = testService.abilityGf
+        val ability2 = testService.abilityGq
+        val ability3 = testService.abilityGsm
+        val ability1 = testService.abilityGf
         val user1 = TestDataSource.createNthUserWithAbilities(1, listOf(ability1, ability2, ability3), listOf(1.0, 0.9, 0.7))
         val user2 = TestDataSource.createNthUserWithAbilities(2, listOf(ability1, ability2, ability3), listOf(0.7, 0.8, 0.9))
         val user3 = TestDataSource.createNthUserWithAbilities(3, listOf(ability1, ability2, ability3), listOf(0.9, 0.8, 0.7))

@@ -6,6 +6,10 @@ import hu.bme.aut.resource_server.profile_calculation.data.MeanAndDeviation
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationRepository
 import hu.bme.aut.resource_server.game.GameEntity
+import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -13,7 +17,7 @@ import java.time.LocalDateTime
 
 @Service
 class GameResultProcessingService(
-    @Autowired private var repository: ResultForCalculationRepository
+    @Autowired private var dataService: ResultForCalculationDataService
 ) {
     private val defaultPageSize = 1000
     var calculator = ScoreCalculator
@@ -22,31 +26,35 @@ class GameResultProcessingService(
      * Calculates the mean and deviation of the normalized results of the given game.
      * Can be used by both multi- and single ability games.
      */
-    fun processGameResults(game: GameEntity): MeanAndDeviation {
-        val normalizationTimeStamp = LocalDateTime.now()
-        normalizeNewResults(game, normalizationTimeStamp)
-        val newNormalizedResults = deleteOlderNormalizedResults(game)
-        val mean = CalculationHelper.calculateMean(newNormalizedResults.map { it.normalizedResult!! })
-        val deviation = CalculationHelper.calculateStdDeviation(newNormalizedResults.map { it.normalizedResult!! }, mean)
-        return MeanAndDeviation(mean, deviation)
-    }
+    suspend fun processGameResults(gameId: Int): MeanAndDeviation =
+        withContext(Dispatchers.IO){
+            val game = dataService.getGame(gameId)
+            val normalizationTimeStamp = LocalDateTime.now()
+            normalizeNewResults(game, normalizationTimeStamp)
+            val newNormalizedResults = deleteOlderNormalizedResults(game)
+            val mean = CalculationHelper.calculateMean(newNormalizedResults.map { it.normalizedResult!! })
+            val deviation = CalculationHelper.calculateStdDeviation(newNormalizedResults.map { it.normalizedResult!! }, mean)
+            return@withContext MeanAndDeviation(mean, deviation)
+        }
+
+
 
     /**
      * For every user only 1 normalized result will remain which is the latest. All older ones are deleted.
      * @returns the list of the latest normalized results which contains 1 result per user
      */
     fun deleteOlderNormalizedResults(game: GameEntity): List<ResultForCalculationEntity>{
-        val allNormalizedResults = repository.findAllByGameAndNormalizedResultNotNull(game)
+        val allNormalizedResults = dataService.getAllNormalizedResultsOfGame(game)
         val userIdToResult = mutableMapOf<Int, ResultForCalculationEntity>()
         allNormalizedResults.forEach{result ->
             val resultInMap = userIdToResult[result.user.id]
             if(resultInMap == null){
                 userIdToResult[result.user.id!!] = result
             }else  if(resultInMap.timestamp!!.isBefore(result.timestamp!!)){
-                repository.delete(resultInMap)
+                dataService.delete(resultInMap)
                 userIdToResult[result.user.id!!] = result
             }else{
-                repository.delete(result)
+                dataService.delete(result)
             }
         }
         return userIdToResult.values.toList()
@@ -59,15 +67,15 @@ class GameResultProcessingService(
      * As a result new relevant normalized values will be in database, having @param timestamp creation timestamp (default to now).
      */
     private fun normalizeNewResults(game: GameEntity, timestamp: LocalDateTime = LocalDateTime.now()){
-        val resultCount = repository.countByGameAndNormalizedResultNull(game)
+        val resultCount = dataService.getCountForNewCalculation(game)
         val maxPages: Int = (resultCount/defaultPageSize).toInt()
         var results: List<ResultForCalculationEntity>
         var normalizedResults: List<ResultForCalculationEntity>
         for(i in 0 .. maxPages){
-            results = repository.findAllByGameAndNormalizedResultNull(game, PageRequest.of(i, defaultPageSize))
+            results = dataService.getAllNonNormalizedResultsOfGame(game, PageRequest.of(i, defaultPageSize))
             normalizedResults = calculator.calculateNormalizedScores(results)
-            repository.deleteAll(results)
-            repository.saveAll(
+            dataService.deleteAll(results)
+            dataService.saveAll(
                 selectRelevantNormalizedResultsForUpdate(normalizedResults, timestamp)
             )
         }

@@ -42,13 +42,13 @@ class TestUtilsService(
     val abilityGv = AbilityEntity("Gv", "Visual processing", "?", )
     val abilityColorsense = AbilityEntity("Cls", "Color sense", "If the brain/eye is capable to differentiate colors", AbilityType.ENUMERATED)
     fun emptyRepositories(){
+        resultForCalcRepository.deleteAll()
         floatProfileSnapshotRepository.deleteAll()
         enumProfileSnapshotRepository.deleteAll()
         gameplayResultRepository.deleteAll()
         recommendedGameRepository.deleteAll()
         userRepository.deleteAll()
         gameRepository.deleteAll()
-        resultForCalcRepository.deleteAll()
     }
 
     fun fillAbilityRepository(){

@@ -3,6 +3,9 @@ package hu.bme.aut.resource_server.recommendation
 import hu.bme.aut.resource_server.profile_calculation.error.CalculationException
 import jep.JepException
 import jep.SharedInterpreter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.springframework.beans.factory.annotation.Value
 import java.io.File
 
@@ -21,7 +24,7 @@ object ModelManager {
         TODO()
     }
 
-    fun createNewModel(gameId: Int, abilityValues: List<List<Double?>>, resultValues: List<Double>){
+    suspend fun createNewModel(gameId: Int, abilityValues: List<List<Double?>>, resultValues: List<Double>) = CoroutineScope(Dispatchers.IO).launch{
         try{
             val interpreter = SharedInterpreter()
             interpreter.use {
@@ -37,6 +40,9 @@ object ModelManager {
         }catch(ex: JepException){
             throw CalculationException("Exception in creating model of game: ${ex.message}")
         }
+    }
+    fun existsModel(gameId: Int): Boolean{
+        return File("$modelDir$gameId.json").exists()
     }
     private fun loadModel(gameId: Int): String{
         val file = File("$modelDir$gameId.json")

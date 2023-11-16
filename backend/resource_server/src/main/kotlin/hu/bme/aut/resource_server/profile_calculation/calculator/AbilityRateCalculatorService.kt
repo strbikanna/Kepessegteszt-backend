@@ -59,12 +59,11 @@ class AbilityRateCalculatorService(
         var user: UserEntity
         results.forEach { result ->
             if(result.normalizedResult != null) {
-                user = userRepo.findById(result.user.id!!).orElseThrow()
-                val relevantProfileValues = mutableListOf<Double?>()
-                abilities.forEach { ability ->
-                    val profileAbilityValue = user.profileFloat.find { it.ability.code == ability.code }?.abilityValue
-                    relevantProfileValues.add(profileAbilityValue)
-                }
+                user = userRepo.findByIdWithProfile(result.user.id!!).orElseThrow()
+                val relevantProfileValues = user.profileFloat
+                    .filter { abilities.contains(it.ability) }
+                    .sortedBy { it.ability.code }
+                    .map { it.abilityValue }
                 abilityValues.add(relevantProfileValues)
                 resultValues.add(result.normalizedResult!!)
             }

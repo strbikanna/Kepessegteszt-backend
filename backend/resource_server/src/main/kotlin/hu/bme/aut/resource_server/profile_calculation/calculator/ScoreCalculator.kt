@@ -11,6 +11,9 @@ object ScoreCalculator {
     var extraPointsFieldName = "healthPoints"
     var maxExtraPointsFieldName = "maxHealthPoints"
 
+    val maxNormalizedNonLevelPoints = 20.0
+    val levelMultiplicator = 10.0
+
     /**
      * calculates the normalized result value based on this equation:
      * NR = L*10 + P/maxP * 10 + E/maxE * 10,
