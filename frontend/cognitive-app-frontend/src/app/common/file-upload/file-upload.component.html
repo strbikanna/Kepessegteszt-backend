@@ -3,18 +3,11 @@
 
 <div class="file-upload">
 
-    {{fileName || "No file uploaded yet."}}
+    {{fileName ?? text}}
 
-    <button mat-mini-fab color="primary" class="upload-btn"
+    <button mat-mini-fab color="primary" class="upload-btn" type="button"
             (click)="fileUpload.click()">
         <mat-icon>attach_file</mat-icon>
     </button>
 </div>
 
-<div class="progress">
-
-    <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" *ngIf="uploadProgress"> </mat-progress-bar>
-
-    <mat-icon class="cancel-upload" (click)="cancelUpload()" *ngIf="uploadProgress">delete_forever</mat-icon>
-
-</div>

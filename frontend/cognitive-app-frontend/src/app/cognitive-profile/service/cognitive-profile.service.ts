@@ -5,17 +5,15 @@ import {CognitiveProfile} from "../../model/cognitive_profile.model";
 import {Ability} from "../../model/ability.model";
 import {AppConstants} from "../../utils/constants";
 import {User} from "../../model/user.model";
+import {SimpleHttpService} from "../../utils/simple-http.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class CognitiveProfileService {
-    private baseUrl = AppConstants.resourceServerUrl
+export class CognitiveProfileService extends SimpleHttpService{
     snapshotEndpoint = '/profile_snapshot'
     profileEndpoint = '/user/profile'
     inspectPath = '/inspect'
-
-  constructor(private http: HttpClient) { }
 
     /**
      * returns the last three profile snapshot

@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {delay, first, Observable, of} from "rxjs";
+import {delay, Observable, of} from "rxjs";
 import {Game} from "../../model/game.model";
 import {CalculationFeedback} from "../../model/calculation-feedback.model";
+import {SimpleHttpService} from "../../utils/simple-http.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class GameManagementService {
+export class GameManagementService extends SimpleHttpService{
 
-  constructor(http: HttpClient) { }
 
   getExistingGamesPaged(pageIndex: number, pageSize: number): Observable<Game[]> {
     return this.mockData;
@@ -38,7 +37,7 @@ export class GameManagementService {
     )
   }
 
-  editGame(game: FormData): Observable<Game> {
+  editGame(game: Game): Observable<Game> {
     return of(
         {
           id: 3,
@@ -59,6 +58,9 @@ export class GameManagementService {
         },
     ).pipe(delay(1000));
   }
+  sendGameThumbnail(thumbnail: FormData, gameId: number){
+    return of(200);
+  }
 
   getResultCountOfGame(game: Game): Observable<number> {
     return of(200);
@@ -72,6 +74,7 @@ export class GameManagementService {
       updatedProfilesCount: 100,
     }).pipe(delay(5000))
   }
+
 
 
   private mockData: Observable<Game[]> = of([

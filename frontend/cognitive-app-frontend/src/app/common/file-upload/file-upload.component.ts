@@ -1,43 +1,52 @@
-import {Component, Input} from '@angular/core';
-import {HttpClient, HttpEventType} from "@angular/common/http";
-import {Observable, Subscription} from "rxjs";
+import {Component, ElementRef, HostListener, Input} from '@angular/core';
+import {NG_VALUE_ACCESSOR} from "@angular/forms";
+import {TEXTS} from "../../utils/app.text_messages";
 
 @Component({
   selector: 'app-file-upload',
   templateUrl: './file-upload.component.html',
-  styleUrls: ['./file-upload.component.scss']
+  styleUrls: ['./file-upload.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: FileUploadComponent,
+      multi: true
+    }
+  ]
 })
 export class FileUploadComponent {
-  @Input({required: true}) onUpload!: (data: FormData) => Observable<any>;
   @Input() fileType: string = 'image/*';
-  fileName = '';
-  uploadProgress: number | null = null;
-  uploadSub: Subscription | null = null;
+  onChange!: Function;
+  private file: File | null = null;
+  fileName : string | undefined;
+  text = TEXTS.file_upload.no_content
+
+  @HostListener('change', ['$event.target.files']) emitFiles( event: FileList ) {
+    const file = event && event.item(0);
+    this.onChange(file);
+    this.file = file;
+  }
+
+  constructor( private host: ElementRef<HTMLInputElement> ) {
+  }
 
   onFileSelected(event: any) {
-
     const file: File = event.target.files[0];
-
     if (file) {
       this.fileName = file.name;
-      const formData = new FormData();
-      formData.append("thumbnail", file);
-
-      this. uploadSub = this.onUpload(formData).subscribe(event => {
-        if (event.type !== undefined && event.type == HttpEventType.UploadProgress) {
-          this.uploadProgress = Math.round(100 * (event.loaded / event.total));
-        }
-      })
     }
   }
-
-  cancelUpload() {
-    this.uploadSub?.unsubscribe();
-    this.reset();
+  writeValue( value: null ) {
+    this.host.nativeElement.value = '';
+    this.file = null;
+    this.fileName = undefined;
   }
 
-  reset() {
-    this.uploadProgress = null;
-    this.uploadSub = null;
+  registerOnChange( fn: Function ) {
+    this.onChange = fn;
   }
+
+  registerOnTouched( fn: Function ) {
+  }
+
 }

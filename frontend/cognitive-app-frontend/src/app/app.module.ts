@@ -49,6 +49,7 @@ import { FileUploadComponent } from './common/file-upload/file-upload.component'
 import { EditGameFormComponent } from './game-management/edit-game-form/edit-game-form.component';
 import { GameCardComponent } from './common/game-card/game-card.component';
 import { CalculationDialogComponent } from './game-management/calculation-dialog/calculation-dialog.component';
+import { AbilityComponent } from './ability/ability.component';
 
 
 @NgModule({
@@ -71,6 +72,7 @@ import { CalculationDialogComponent } from './game-management/calculation-dialog
     EditGameFormComponent,
     GameCardComponent,
     CalculationDialogComponent,
+    AbilityComponent,
   ],
     imports: [
         BrowserModule,

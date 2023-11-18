@@ -142,14 +142,20 @@ export const TEXTS = {
         },
         edit_form: {
             title: 'Játék adatainak szerkesztése',
+            data_section_title: 'Játék adatai',
             name: 'Név',
             description: 'Leírás',
             thumbnail: 'Borítókép',
             url: 'URL',
             active: 'Aktív',
+            version: 'Verzió',
             config_description: 'Játékkonfiguráció leírása',
             affected_abilities: 'Mért kognitív képességek',
+            value: 'Érték',
         }
+    },
+    file_upload: {
+        no_content: 'Nincs kiválasztott fájl',
     }
 
 }
