@@ -90,7 +90,9 @@ export const TEXTS = {
         save: 'Mentés',
         ok: 'OK',
         edit: 'Szerkesztés',
-        calculation: 'Kiértékelés'
+        calculation: 'Kiértékelés',
+        delete: 'Törlés',
+        upload: 'Feltöltés',
     },
     cognitive_profile: {
         chart: {
@@ -138,6 +140,16 @@ export const TEXTS = {
             result_deviation: 'A normalizálás során kapott szórás: ',
             result_profile_count: 'A normalizálás után frissített felhasználói profilok száma: ',
         },
+        edit_form: {
+            title: 'Játék adatainak szerkesztése',
+            name: 'Név',
+            description: 'Leírás',
+            thumbnail: 'Borítókép',
+            url: 'URL',
+            active: 'Aktív',
+            config_description: 'Játékkonfiguráció leírása',
+            affected_abilities: 'Mért kognitív képességek',
+        }
     }
 
 }

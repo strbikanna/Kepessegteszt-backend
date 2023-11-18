@@ -12,16 +12,12 @@ import {EditGameFormComponent} from "../game-management/edit-game-form/edit-game
 
 
 export const appRoutes: Routes = [
-    {
-        path: 'game-management', component: GameManagementComponent,
-        children: [
-            {path: 'edit-game:id', component: EditGameFormComponent},
-        ]
-    },
-  { path: '', component: HomeComponent },
-  { path: 'profile', component: ProfileComponent, canActivate: [loggedInGuard] },
-  { path: 'games', component: RecommendedGamesComponent, canActivate: [loggedInGuard] },
-  { path: 'cognitive-profile', component: CognitiveProfileComponent, canActivate: [loggedInGuard] },
-  { path: 'playground', component: PlaygroundComponent, canActivate: [gameGuard] },
-  { path: '**', component: NotFoundComponent}
+    {path: 'game-management', component: GameManagementComponent,},
+    {path: 'edit-game/:id', component: EditGameFormComponent},
+    {path: '', component: HomeComponent},
+    {path: 'profile', component: ProfileComponent, canActivate: [loggedInGuard]},
+    {path: 'games', component: RecommendedGamesComponent, canActivate: [loggedInGuard]},
+    {path: 'cognitive-profile', component: CognitiveProfileComponent, canActivate: [loggedInGuard]},
+    {path: 'playground', component: PlaygroundComponent, canActivate: [gameGuard]},
+    {path: '**', component: NotFoundComponent}
 ];

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {delay, Observable, of} from "rxjs";
+import {delay, first, Observable, of} from "rxjs";
 import {Game} from "../../model/game.model";
 import {CalculationFeedback} from "../../model/calculation-feedback.model";
 
@@ -36,6 +36,28 @@ export class GameManagementService {
           affectedAbilities: [],
         }
     )
+  }
+
+  editGame(game: FormData): Observable<Game> {
+    return of(
+        {
+          id: 3,
+          name: "Radio buttons",
+          description: "Push the correct buttons of the secret radio.",
+          thumbnail: "../../assets/number_game.jpg",
+          url: undefined,
+          config: {
+            maxLevel: 5,
+            maxPoints: 100,
+            maxTime: 60,
+            extraPointsName: "Extra points",
+            pointsName: "Points",
+          },
+          active: false,
+          version: 2,
+          affectedAbilities: [],
+        },
+    ).pipe(delay(1000));
   }
 
   getResultCountOfGame(game: Game): Observable<number> {

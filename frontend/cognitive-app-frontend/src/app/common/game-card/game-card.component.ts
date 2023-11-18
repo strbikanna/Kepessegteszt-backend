@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {TEXTS} from "../../utils/app.text_messages";
 import {Game} from "../../model/game.model";
-import {Ability} from "../../model/ability.model";
 
 @Component({
   selector: 'app-game-card',
@@ -14,6 +13,7 @@ export class GameCardComponent {
   @Input() buttonText: string | undefined;
   @Input() extraButtonText: string | undefined;
   @Input({required: true}) game!: Game
+  @Input() otherTexts: string[] | undefined;
   @Output() buttonClick: EventEmitter<Game> = new EventEmitter<Game>();
   @Output() extraButtonClick: EventEmitter<Game> = new EventEmitter<Game>();
 
@@ -23,8 +23,5 @@ export class GameCardComponent {
   raiseExtraClickEvent(game: Game){
     this.extraButtonClick.emit(game);
   }
-  transformAffectedAbilities(abilities: Ability[]): string{
-    let abilitiesNames: string[] = abilities.map(ability => ability.name)
-    return abilitiesNames.join(', ');
-  }
+
 }

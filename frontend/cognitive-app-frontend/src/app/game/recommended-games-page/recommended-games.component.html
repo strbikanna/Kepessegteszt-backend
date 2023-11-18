@@ -7,22 +7,12 @@
     </mat-tab>
     <mat-tab label="{{text.menu.games_for_you}}">
         <div class="games-container">
-            <div>
-                <mat-card *ngFor="let game of gamesForYou | async">
-                    <mat-card-content>
-                        <img src="{{game.game.thumbnail}}">
-                        <div>
-                            <mat-card-title>{{game.game.name}}</mat-card-title>
-                            <p>{{game.game.description}}</p>
-                        </div>
-                    </mat-card-content>
-                    <mat-divider></mat-divider>
-                    <mat-card-actions align="end">
-                        <button mat-button color="primary" (click)="onGameChosen(game)">
-                            {{text.game_card.play.toUpperCase()}}
-                        </button>
-                    </mat-card-actions>
-                </mat-card>
+            <div *ngFor="let recommendedGame of gamesForYou | async">
+                <app-game-card
+                        [game]="recommendedGame.game"
+                        [buttonText]="text.game_card.play.toUpperCase()"
+                        (buttonClick)="onGameChosen(recommendedGame)">
+                </app-game-card>
                 <br>
             </div>
         </div>

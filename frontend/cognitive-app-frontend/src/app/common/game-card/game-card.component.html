@@ -3,15 +3,14 @@
         <img src="{{game.thumbnail}}">
         <div class="text-content">
             <mat-card-title>{{game.name}}</mat-card-title>
-            <p >{{game.description}}</p>
-            <p class="mat-caption">Verzió: {{game.version}}</p>
-            <p class="mat-caption">{{game.active ? 'Aktív' : 'Nem aktív' }}</p>
-            <p class="mat-caption">Érintett kognitív képességek: {{transformAffectedAbilities(game.affectedAbilities)}}</p>
+            <p>{{game.description}}</p>
+            <p *ngFor="let text of otherTexts">{{text}}</p>
         </div>
     </mat-card-content>
     <mat-divider></mat-divider>
     <mat-card-actions *ngIf="buttonText" align="end">
-        <button *ngIf="extraButtonText" mat-button color="warn" (click)="raiseExtraClickEvent(game)" [disabled]="!game.active">
+        <button *ngIf="extraButtonText" mat-button color="warn" (click)="raiseExtraClickEvent(game)"
+                [disabled]="!game.active">
             {{extraButtonText}}
         </button>
         <button mat-button color="primary" (click)="raiseClickEvent(game)" [disabled]="!game.active">

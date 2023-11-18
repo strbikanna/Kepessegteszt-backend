@@ -7,6 +7,7 @@
 <div class="game-list-container">
     <div *ngFor="let game of games | async">
         <app-game-card [game]="game"
+                       [otherTexts]="getCardTexts(game)"
                        [buttonText]="actionText.edit"
                        (buttonClick)="navigateToEdit(game)"
                        [extraButtonText]="actionText.calculation"
