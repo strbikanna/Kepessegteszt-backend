@@ -1,9 +1,10 @@
-:host{
+:host {
   width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
 form {
   display: flex;
   flex-direction: column;
@@ -11,38 +12,52 @@ form {
   min-width: 60%;
 
 }
-#active{
-    margin-bottom: 1em;
+
+#active {
+  margin-bottom: 1em;
 }
-#file-upload{
+
+#file-upload {
   margin-bottom: 2em;
 }
 
-#config{
+#config {
   margin-block: 1em;
   display: flex;
   flex-direction: column;
-  div{
+
+  div {
     display: flex;
     flex-direction: row;
     align-items: center;
     margin-bottom: 1em;
-    #config-value{
+
+    #config-value {
       flex-grow: 2;
     }
-    #config-key{
+
+    #config-key {
       flex-grow: 1;
       margin-right: 1em;
     }
   }
 }
-.add-button{
+
+.add-button {
   align-self: center;
 }
-.submit-button{
-  align-self: center;
-  min-width: 40%;
-  margin-top: 1em;
+
+#actions {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-top: 2em;
   margin-bottom: 5em;
+}
+
+.submit-button {
+  min-width: 20%;
+  margin-inline: 2em;
 }
 

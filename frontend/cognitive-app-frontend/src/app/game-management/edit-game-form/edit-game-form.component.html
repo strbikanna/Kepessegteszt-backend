@@ -61,6 +61,10 @@
         <app-file-upload formControlName="thumbnail"></app-file-upload>
     </div>
 
+    <div id="actions">
+        <button mat-button color="primary" type="button"
+                (click)="onBack()">{{actionText.cancel}}</button>
+        <button mat-raised-button color="primary" type="submit" class="submit-button">{{actionText.save}}</button>
+    </div>
 
-    <button mat-raised-button color="primary" type="submit" class="submit-button">{{actionText.save}}</button>
 </form>

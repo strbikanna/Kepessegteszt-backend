@@ -9,15 +9,16 @@ import {loggedInGuard} from "../auth/logged-in.guard";
 import {NotFoundComponent} from "../not-found/not-found.component";
 import {GameManagementComponent} from "../game-management/game-management.component";
 import {EditGameFormComponent} from "../game-management/edit-game-form/edit-game-form.component";
+import {editorGuard} from "../auth/editor.guard";
 
 
 export const appRoutes: Routes = [
-    {path: 'game-management', component: GameManagementComponent,},
-    {path: 'edit-game/:id', component: EditGameFormComponent},
-    {path: '', component: HomeComponent},
-    {path: 'profile', component: ProfileComponent, canActivate: [loggedInGuard]},
-    {path: 'games', component: RecommendedGamesComponent, canActivate: [loggedInGuard]},
-    {path: 'cognitive-profile', component: CognitiveProfileComponent, canActivate: [loggedInGuard]},
-    {path: 'playground', component: PlaygroundComponent, canActivate: [gameGuard]},
+    {path: 'game-management', component: GameManagementComponent, canActivate: [editorGuard], title: 'Játékok kezelése'},
+    {path: 'edit-game/:id', component: EditGameFormComponent, canActivate: [editorGuard], title: 'Játék szerkesztése'},
+    {path: '', component: HomeComponent, title: 'Cognitive App'},
+    {path: 'profile', component: ProfileComponent, canActivate: [loggedInGuard], title: 'Profil'},
+    {path: 'games', component: RecommendedGamesComponent, canActivate: [loggedInGuard], title: 'Játékok'},
+    {path: 'cognitive-profile', component: CognitiveProfileComponent, canActivate: [loggedInGuard], title: 'Kognitív profil'},
+    {path: 'playground', component: PlaygroundComponent, canActivate: [gameGuard], title: 'Játékterület'},
     {path: '**', component: NotFoundComponent}
 ];

@@ -65,13 +65,16 @@ export class EditGameFormComponent implements OnInit {
             configDescription: this.getFormConfig()
         }
         this.service.editGame(game).subscribe(game => {
-            this.router.navigate(['/game-management'])
+            this.onBack()
         })
         if(this.gameForm.controls.thumbnail.value){
             const formData = new FormData()
             formData.set('file', this.gameForm.controls.thumbnail.value)
             this.service.sendGameThumbnail(formData, game.id).subscribe()
         }
+    }
+    onBack(){
+        this.router.navigate(['/game-management'])
     }
     getFormAffectedAbilities() {
         return this.abilitiesForm.controls

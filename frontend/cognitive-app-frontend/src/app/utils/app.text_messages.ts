@@ -6,7 +6,8 @@ export const TEXTS = {
         games: 'Játékok',
         profile: 'Profil',
         cognitive_profile: 'Kognitív profil',
-        admin: 'Admin',
+        admin: 'Felhasználók kezelése',
+        game_management: 'Játékok kezelése',
     },
     home:{
         welcome: 'Örülünk, hogy itt vagy!',

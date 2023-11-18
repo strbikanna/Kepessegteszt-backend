@@ -2,7 +2,7 @@ import {Component, Inject, OnInit,} from '@angular/core';
 import {TEXTS} from "../../utils/app.text_messages";
 import {GameManagementService} from "../service/game-management.service";
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
-import {Observable, of} from "rxjs";
+import {Observable} from "rxjs";
 import {Game} from "../../model/game.model";
 import {CalculationFeedback} from "../../model/calculation-feedback.model";
 import {Ability} from "../../model/ability.model";
