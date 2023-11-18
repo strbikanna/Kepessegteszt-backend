@@ -2,7 +2,7 @@ import {Component, Inject, OnInit,} from '@angular/core';
 import {TEXTS} from "../../utils/app.text_messages";
 import {GameManagementService} from "../service/game-management.service";
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {Game} from "../../model/game.model";
 import {CalculationFeedback} from "../../model/calculation-feedback.model";
 import {Ability} from "../../model/ability.model";
@@ -20,6 +20,7 @@ export class CalculationDialogComponent implements OnInit {
     game: Game | undefined
     inProgress = false;
     feedback: CalculationFeedback | undefined;
+    resultCount: number = -1;
 
     constructor(
         private service: GameManagementService,
@@ -31,25 +32,30 @@ export class CalculationDialogComponent implements OnInit {
         this.service.getGameById(this.gameId).subscribe(game =>
             this.game = game
         )
+        this.getResultCount(this.gameId).subscribe(
+            resultCount => this.resultCount = resultCount
+        );
+
     }
 
     onStartCalculation(game: Game) {
         this.inProgress = true;
-        this.service.startResultProcessing(game).subscribe(result => {
+        this.service.startResultProcessing(game.id).subscribe(result => {
             this.inProgress = false;
             this.feedback = result;
         })
     }
 
     canStartCalculation(){
-        return this.game !== undefined && !this.inProgress && this.feedback === undefined;
+        return this.game !== undefined && !this.inProgress && this.feedback === undefined && this.resultCount && this.resultCount > 0;
     }
 
-    resultCount(game: Game): Observable<number> {
-        return this.service.getResultCountOfGame(game);
+    getResultCount(gameId: number): Observable<number> {
+        return this.service.getResultCountOfGame(gameId);
     }
 
     transformAffectedAbilities(abilities: Ability[]): string {
+        if(!abilities) return TEXTS.game_management.calculation_dialog.no_abilities;
         let abilitiesNames: string[] = abilities.map(ability => ability.name)
         return abilitiesNames.join(', ');
     }

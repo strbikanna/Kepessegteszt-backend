@@ -9,7 +9,7 @@ export const TEXTS = {
         admin: 'Admin',
     },
     home:{
-        welcome: 'Örülünk, hogy itt vagy a Cognitive Appban!',
+        welcome: 'Örülünk, hogy itt vagy!',
         features_student: 'Játssz a kedvenc játékaiddal és kövesd nyomon a profilod fejlődését!',
         features_parent: 'Kövesd nyomon gyermeked fejlődését és segíts neki a játékok kiválasztásában!',
         features_teacher: 'Kövesd nyomon diákjaid fejlődését és ajánlj nekik játékokat!',
@@ -134,6 +134,7 @@ export const TEXTS = {
             message: 'Biztosan szeretnéd elindítani a játékeredmények kiértékelését?',
             result_count: 'A játékhoz érkezett feldolgozatlan eredmények száma: ',
             affected_abilities: 'A játék ezeket a kognitív képességeket vizsgálja: ',
+            no_abilities: 'A játék nem vizsgál kognitív képességeket.',
             feedback_message: 'A kiértékelés elkezdődött, a folyamat néhány percig eltarthat.',
             success_feedback: 'A kiértékelés sikeresen befejeződött.',
             result_mean: 'A normalizálás során kapott átlag: ',
@@ -147,11 +148,13 @@ export const TEXTS = {
             description: 'Leírás',
             thumbnail: 'Borítókép',
             url: 'URL',
-            active: 'Aktív',
-            version: 'Verzió',
+            active: 'Aktív ',
+            non_active: 'Nem Aktív ',
+            version: 'Verzió ',
             config_description: 'Játékkonfiguráció leírása',
             affected_abilities: 'Mért kognitív képességek',
             value: 'Érték',
+            config_error_message: 'Ezek a karakterek használhatók: "a-z", "A-Z", "0-9", "-", "_"',
         }
     },
     file_upload: {

@@ -98,7 +98,7 @@ class TestUtilsService(
             active = true,
             url = "testUrl",
             configDescription = mutableMapOf(),
-            affectedAbilites = abilities
+            affectedAbilities = abilities
         )
         val entity = gameRepository.save(game)
         authGameId = entity.id!!
@@ -140,7 +140,7 @@ class TestUtilsService(
             active = true,
             url = "testUrl",
             configDescription = mutableMapOf("Level" to 0),
-            affectedAbilites = mutableSetOf(abilityGf)
+            affectedAbilities = mutableSetOf(abilityGf)
         )
         return gameRepository.save(game)
     }

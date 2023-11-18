@@ -30,11 +30,11 @@ class ProfileCalculationController(
 
     @GetMapping("/result_count")
     @ResponseStatus(HttpStatus.OK)
-    fun getResultCountOfGame(@RequestParam("game_id") gameId: Int): Long = dataService.getCountForNewCalculation(gameId)
+    fun getResultCountOfGame(@RequestParam gameId: Int): Long = dataService.getCountForNewCalculation(gameId)
 
     @PostMapping("/process_results")
     @ResponseStatus(HttpStatus.CREATED)
-    fun processResults(@RequestBody gameId: Int): Deferred<CalculationInfoDto> =
+    fun processResults(@RequestParam gameId: Int): Deferred<CalculationInfoDto> =
         CoroutineScope(Dispatchers.Default).async {
             val meanAndDeviation = resultProcessingService.processGameResults(gameId)
             val countOfUpdatedProfiles = dataService.getCountOfRecentCalculation(gameId)

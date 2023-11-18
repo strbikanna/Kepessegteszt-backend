@@ -18,7 +18,7 @@ class AutoRecommendationService(
     suspend fun createRecommendationModel(gameId: Int){
         val game = dataService.getGameWithAbilities(gameId)
         val normalizedResults = dataService.getAllNormalizedResultsOfGame(game)
-        val abilities = game.affectedAbilites
+        val abilities = game.affectedAbilities
         val modelInput = calculatorService.getAbilityValuesAndValuesFromResultsStructured(normalizedResults, abilities.toList())
         ModelManager.createNewModel(gameId, modelInput.first, modelInput.second)
     }
@@ -29,7 +29,7 @@ class AutoRecommendationService(
         }else{
              ModelManager.getEstimationForResult(game.id!!,
                 user.profileFloat
-                    .filter { game.affectedAbilites.contains(it.ability) }
+                    .filter { game.affectedAbilities.contains(it.ability) }
                     .sortedBy { it.ability.code }
                     .map { it.abilityValue }
             )

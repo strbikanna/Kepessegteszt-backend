@@ -26,7 +26,7 @@ object TestDataSource {
                 active = true,
                 url = null,
                 configDescription = config,
-                affectedAbilites = mutableSetOf(affectedAbility)
+                affectedAbilities = mutableSetOf(affectedAbility)
             )
     }
     fun createUsersForTestWithEmptyProfile(count: Int): List<UserEntity> {

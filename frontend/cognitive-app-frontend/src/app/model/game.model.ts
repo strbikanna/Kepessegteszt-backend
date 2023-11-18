@@ -8,6 +8,6 @@ export interface Game {
     url: string | undefined;
     active: boolean;
     version: number;
-    config: any;
+    configDescription: any;
     affectedAbilities: Ability[];
 }

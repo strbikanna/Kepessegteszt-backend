@@ -3,16 +3,18 @@ import {AdminService} from "../service/admin.service";
 import {map, Observable} from "rxjs";
 import {UserForAdmin} from "../model/user-contacts.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {PageEvent} from "@angular/material/paginator";
+import {MatPaginatorIntl, PageEvent} from "@angular/material/paginator";
 import {Role} from "../../utils/constants";
 import {MatCheckboxChange} from "@angular/material/checkbox";
 import {TEXTS} from "../../utils/app.text_messages";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {PaginatorTranslator} from "../../common/paginator/paginator-translator";
 
 @Component({
     selector: 'app-admin-page',
     templateUrl: './admin-page.component.html',
-    styleUrls: ['./admin-page.component.scss']
+    styleUrls: ['./admin-page.component.scss'],
+    providers: [{provide: MatPaginatorIntl, useClass: PaginatorTranslator}],
 })
 export class AdminPageComponent implements OnInit {
 
@@ -22,6 +24,7 @@ export class AdminPageComponent implements OnInit {
     lastPageEvent: PageEvent | undefined = undefined;
 
     text = TEXTS.admin_page;
+    pageText = TEXTS.paging;
 
     users: Observable<UserForAdmin[]> = new Observable<UserForAdmin[]>();
 

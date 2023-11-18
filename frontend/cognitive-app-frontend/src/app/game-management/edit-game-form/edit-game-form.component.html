@@ -40,6 +40,7 @@
                     <mat-form-field id="config-key">
                         <mat-label>{{text.name}}</mat-label>
                         <input matInput formControlName="key">
+                        <mat-error>{{text.config_error_message}}</mat-error>
                     </mat-form-field>
                     <mat-form-field id="config-value">
                         <mat-label>{{text.value}}</mat-label>

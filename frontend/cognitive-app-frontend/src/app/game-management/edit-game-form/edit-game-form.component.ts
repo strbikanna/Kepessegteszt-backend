@@ -4,7 +4,7 @@ import {Ability} from "../../model/ability.model";
 import {GameManagementService} from "../service/game-management.service";
 import {TEXTS} from "../../utils/app.text_messages";
 import {AbilityService} from "../../ability/ability.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Game} from "../../model/game.model";
 
 @Component({
@@ -34,7 +34,8 @@ export class EditGameFormComponent implements OnInit {
     constructor(private service: GameManagementService,
                 private abilityService: AbilityService,
                 private route: ActivatedRoute,
-                private fb: FormBuilder
+                private fb: FormBuilder,
+                private router: Router
     ) {
     }
 
@@ -61,16 +62,14 @@ export class EditGameFormComponent implements OnInit {
             active: this.gameForm.controls.active.value ?? this.game!!.active,
             url: this.gameForm.controls.url.value==='' ? this.game!!.url : this.gameForm.controls.url.value ?? undefined,
             affectedAbilities: this.getFormAffectedAbilities(),
-            config: this.getFormConfig()
+            configDescription: this.getFormConfig()
         }
         this.service.editGame(game).subscribe(game => {
-            this.loading = false;
+            this.router.navigate(['/game-management'])
         })
-        console.log(game)
         if(this.gameForm.controls.thumbnail.value){
             const formData = new FormData()
-            formData.set('thumbnail', this.gameForm.controls.thumbnail.value)
-            console.log(formData)
+            formData.set('file', this.gameForm.controls.thumbnail.value)
             this.service.sendGameThumbnail(formData, game.id).subscribe()
         }
     }
@@ -106,8 +105,8 @@ export class EditGameFormComponent implements OnInit {
 
     addConfigDescription(key: string = '', value: string = '') {
         const configDescriptionForm = this.fb.group({
-            key: [key, Validators.required],
-            value: [value, Validators.required]
+            key: [key, Validators.compose([Validators.required, Validators.pattern('^[a-zA-Z0-9_-]*$')])],
+            value: [value, Validators.compose([Validators.required, Validators.pattern('^[a-zA-Z0-9_-]*$')])]
         })
         this.configDescriptionForm.push(configDescriptionForm)
     }
@@ -125,7 +124,7 @@ export class EditGameFormComponent implements OnInit {
             formControls.version.setValue(game.version)
             formControls.url.setValue(game.url ?? '')
             this.thumbnail = game.thumbnail
-            Object.entries(game.config).forEach(([key, value]) => {
+            Object.entries(game.configDescription).forEach(([key, value]) => {
                 this.addConfigDescription(key, value as string)
             })
             this.loading = false;
@@ -136,7 +135,9 @@ export class EditGameFormComponent implements OnInit {
     }
 
     includesAbility(ability: Ability) {
-        return this.game!!.affectedAbilities.some(gameAbility => gameAbility.code === ability.code)
+        if(this.game && this.game.affectedAbilities)
+            return this.game!!.affectedAbilities.some(gameAbility => gameAbility.code === ability.code)
+        else return false
     }
 
     private setFormAbilities(abilities: Ability[]) {

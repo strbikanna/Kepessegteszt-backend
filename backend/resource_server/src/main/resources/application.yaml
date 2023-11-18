@@ -27,3 +27,5 @@ app:
   python:
     source-location: C:/Users/strbi/Python_projects/HelloWorld
     models-location: C:/Users/strbi/Python_projects/
+  thumbnail-location: C:/Users/annav/Documents/Bme/Szakdoli/Kepessegteszt-backend/game_images/
+  image-path: http://localhost:8090/game_images

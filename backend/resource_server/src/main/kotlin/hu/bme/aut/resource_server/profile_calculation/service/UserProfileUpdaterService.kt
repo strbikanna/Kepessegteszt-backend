@@ -26,10 +26,10 @@ class UserProfileUpdaterService(
 
     suspend fun updateUserProfileByResultsOfGame(gameId: Int, normalizationValue: MeanAndDeviation) = withContext(Dispatchers.IO){
         val game = resultDataService.getGameWithAbilities(gameId)
-        if(game.affectedAbilites.isEmpty()){
+        if(game.affectedAbilities.isEmpty()){
             throw ProfileUpdateException("Game has no affected abilities.")
         }
-        if(game.affectedAbilites.size == 1){
+        if(game.affectedAbilities.size == 1){
            updateUserProfilesOneAbility(game, normalizationValue)
         }else{
            updateUserProfilesMultiAbility(game, normalizationValue)
@@ -42,7 +42,7 @@ class UserProfileUpdaterService(
      * newAbilityValue = 1 + (normalizedResult - mean) / deviation * 0.15
      */
     private fun updateUserProfilesOneAbility(game: GameEntity, normalizationValue: MeanAndDeviation){
-        val affectedAbility = game.affectedAbilites.first()
+        val affectedAbility = game.affectedAbilities.first()
         val normalizedResults = resultDataService.getAllNormalizedResultsOfGame(game)
         normalizedResults.forEach { result ->
             val difference = result.normalizedResult!! - normalizationValue.mean
@@ -75,7 +75,7 @@ class UserProfileUpdaterService(
      * Calls neural network to calculate the ability contributions.
      */
     private fun updateUserProfilesMultiAbility(game: GameEntity, normalizationValue: MeanAndDeviation){
-        val abilities = game.affectedAbilites
+        val abilities = game.affectedAbilities
         val normalizedResults = resultDataService.getAllNormalizedResultsOfGame(game)
         val inputForCalculation = abilityRateCalculatorService.getAbilityValuesAndValuesFromResultsStructured(normalizedResults, abilities.toList())
         val abilityContributions = abilityRateCalculatorService.calculateRates(inputForCalculation.first, inputForCalculation.second)

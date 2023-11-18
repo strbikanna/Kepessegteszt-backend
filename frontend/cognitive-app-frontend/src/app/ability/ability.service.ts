@@ -1,29 +1,15 @@
 import {Injectable} from '@angular/core';
 import {SimpleHttpService} from "../utils/simple-http.service";
-import {Observable, of} from "rxjs";
-import {Ability, AbilityType} from "../model/ability.model";
+import {Observable} from "rxjs";
+import {Ability} from "../model/ability.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AbilityService extends SimpleHttpService{
 
+  private path = "/ability";
   getAllAbilities() : Observable<Ability[]>{
-    return this.mockData;
+    return this.http.get<Ability[]>(`${this.baseUrl}${this.path}/all`);
   }
-
-  private mockData: Observable<Ability[]> = of([
-    {
-      code: "Gf",
-        name: "Geschicklichkeit",
-        description: "Geschicklichkeit1",
-      type: AbilityType.ENUM,
-    },
-    {
-      code: "Gf",
-        name: "Geschicklichkeit2",
-        description: "Geschicklichkeit",
-      type: AbilityType.ENUM,
-    },
-    ])
 }

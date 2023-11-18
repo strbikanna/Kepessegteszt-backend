@@ -1,20 +1,20 @@
 import {Component, OnInit} from '@angular/core';
-import {PageEvent} from "@angular/material/paginator";
+import {MatPaginatorIntl, PageEvent} from "@angular/material/paginator";
 import {GameManagementService} from "./service/game-management.service";
 import {Observable} from "rxjs";
 import {Game} from "../model/game.model";
 import {TEXTS} from "../utils/app.text_messages";
-import {ActivatedRoute, Router} from "@angular/router";
-import {CalculationFeedback} from "../model/calculation-feedback.model";
-import {AlertDialogComponent} from "../common/alert-dialog/alert-dialog.component";
+import {Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {CalculationDialogComponent} from "./calculation-dialog/calculation-dialog.component";
 import {Ability} from "../model/ability.model";
+import {PaginatorTranslator} from "../common/paginator/paginator-translator";
 
 @Component({
     selector: 'app-game-management',
     templateUrl: './game-management.component.html',
-    styleUrls: ['./game-management.component.scss']
+    styleUrls: ['./game-management.component.scss'],
+    providers: [{provide: MatPaginatorIntl, useClass: PaginatorTranslator}],
 })
 export class GameManagementComponent implements OnInit {
     actionText = TEXTS.actions
@@ -34,6 +34,7 @@ export class GameManagementComponent implements OnInit {
 
     ngOnInit(): void {
         this.games = this.service.getExistingGamesPaged(0, this.defaultPageSize);
+        this.service.getGamesCount().subscribe( count => this.dataLength = count)
     }
 
     handlePageEvent(event: PageEvent): void {
@@ -47,22 +48,26 @@ export class GameManagementComponent implements OnInit {
     }
 
     getCardTexts(game: Game): string[] {
+        let appTexts = TEXTS.game_management.edit_form
         let texts: string[] = [];
-        texts.push('Verzió: ' + game.version);
-        game.active ? texts.push('Aktív') : texts.push('Nem aktív');
-        texts.push(`Érintett kognitív képességek: ${this.transformAffectedAbilities(game.affectedAbilities)}`);
+        texts.push(appTexts.version + game.version);
+        game.active ? texts.push(appTexts.active) : texts.push(appTexts.non_active);
+        texts.push(`${appTexts.affected_abilities}: ${this.transformAffectedAbilities(game.affectedAbilities)}`);
         return texts;
     }
     private transformAffectedAbilities(abilities: Ability[]): string{
-        let abilitiesNames: string[] = abilities.map(ability => ability.name)
-        return abilitiesNames.join(', ');
+        if(abilities) {
+            let abilitiesNames: string[] = abilities.map(ability => ability.name)
+            return abilitiesNames.join(', ');
+        }
+        else return '';
     }
 
     startResultProcessing(game: Game) {
         this.dialog.open(
             CalculationDialogComponent,
             {
-                data: {gameId: game.id},
+                data: game.id,
                 disableClose: true,
             }
         )

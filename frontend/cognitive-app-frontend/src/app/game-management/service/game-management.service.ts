@@ -3,76 +3,45 @@ import {delay, Observable, of} from "rxjs";
 import {Game} from "../../model/game.model";
 import {CalculationFeedback} from "../../model/calculation-feedback.model";
 import {SimpleHttpService} from "../../utils/simple-http.service";
+import {HttpParams} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameManagementService extends SimpleHttpService{
-
-
+  private path = "/game";
+  private calcPath = "/profile-calculation";
   getExistingGamesPaged(pageIndex: number, pageSize: number): Observable<Game[]> {
-    return this.mockData;
+    let params = new HttpParams()
+        .set('page', pageIndex.toString())
+        .set('size', pageSize.toString());
+    return this.http.get<Game[]>(`${this.baseUrl}${this.path}/all`, {params: params})
+  }
+  getGamesCount(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}${this.path}/all/count`)
   }
 
   getGameById(id: number): Observable<Game> {
-    return of(
-        {
-          id: 2,
-          name: "Pop the balloons",
-          description: "Try not to die from the bombs.",
-          thumbnail: "../../assets/balloon_game.jpg",
-          url: undefined,
-          config: {
-            maxLevel: 5,
-            maxPoints: 50,
-            maxExtraPoints: 10,
-            maxTime: 60,
-            extraPointsName: "Health points",
-            pointsName: "Score",
-          },
-          active: true,
-          version: 1,
-          affectedAbilities: [],
-        }
-    )
+    return this.http.get<Game>(`${this.baseUrl}${this.path}/${id}`)
   }
 
   editGame(game: Game): Observable<Game> {
-    return of(
-        {
-          id: 3,
-          name: "Radio buttons",
-          description: "Push the correct buttons of the secret radio.",
-          thumbnail: "../../assets/number_game.jpg",
-          url: undefined,
-          config: {
-            maxLevel: 5,
-            maxPoints: 100,
-            maxTime: 60,
-            extraPointsName: "Extra points",
-            pointsName: "Points",
-          },
-          active: false,
-          version: 2,
-          affectedAbilities: [],
-        },
-    ).pipe(delay(1000));
+    return this.http.put<Game>(`${this.baseUrl}${this.path}/${game.id}`, game)
   }
-  sendGameThumbnail(thumbnail: FormData, gameId: number){
-    return of(200);
+  sendGameThumbnail(thumbnail: FormData, gameId: number): Observable<Game>{
+    return this.http.post<Game>(`${this.baseUrl}${this.path}/image/${gameId}`, thumbnail)
   }
 
-  getResultCountOfGame(game: Game): Observable<number> {
-    return of(200);
+  getResultCountOfGame(gameId: number): Observable<number> {
+    let params = new HttpParams()
+        .set('gameId', gameId.toString());
+    return this.http.get<number>(`${this.baseUrl}${this.calcPath}/result_count`, {params: params})
   }
 
-  startResultProcessing(game: Game): Observable<CalculationFeedback> {
-    delay(1000)
-    return of({
-      mean: 0.7,
-      deviation: 0.1,
-      updatedProfilesCount: 100,
-    }).pipe(delay(5000))
+  startResultProcessing(gameId: number): Observable<CalculationFeedback> {
+    let params = new HttpParams()
+        .set('gameId', gameId.toString());
+    return this.http.post<CalculationFeedback>(`${this.baseUrl}${this.calcPath}/process_results`, {},{params: params})
   }
 
 
@@ -84,7 +53,7 @@ export class GameManagementService extends SimpleHttpService{
       description: "Try not to die from the bombs.",
       thumbnail: "../../assets/balloon_game.jpg",
       url: undefined,
-      config: {
+      configDescription: {
         maxLevel: 5,
         maxPoints: 50,
         maxExtraPoints: 10,
@@ -102,7 +71,7 @@ export class GameManagementService extends SimpleHttpService{
       description: "Push the correct buttons of the secret radio.",
       thumbnail: "../../assets/number_game.jpg",
       url: undefined,
-      config: {
+      configDescription: {
         maxLevel: 5,
         maxPoints: 100,
         maxTime: 60,
@@ -119,7 +88,7 @@ export class GameManagementService extends SimpleHttpService{
       description: "Will you push the correct buttons of the secret radio?",
       thumbnail: "../../assets/number_game.jpg",
       url: undefined,
-      config: {
+      configDescription: {
         maxLevel: 6,
         maxPoints: 100,
         maxTime: 60,
@@ -136,7 +105,7 @@ export class GameManagementService extends SimpleHttpService{
       description: "Push the correct buttons of the secret radio! And here comes the very and mostest extra long text to test the wrapping. ",
       thumbnail: "../../assets/number_game.jpg",
       url: undefined,
-      config: {
+      configDescription: {
         maxLevel: 8,
         maxPoints: 100,
         maxTime: 60,
