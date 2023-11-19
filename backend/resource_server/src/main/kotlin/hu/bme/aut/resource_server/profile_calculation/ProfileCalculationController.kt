@@ -4,7 +4,6 @@ import hu.bme.aut.resource_server.profile_calculation.data.CalculationInfoDto
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
 import hu.bme.aut.resource_server.profile_calculation.service.GameResultProcessingService
 import hu.bme.aut.resource_server.profile_calculation.service.UserProfileUpdaterService
-import hu.bme.aut.resource_server.recommendation.ModelManager
 import kotlinx.coroutines.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus

@@ -2,7 +2,6 @@ package hu.bme.aut.resource_server.gameplayresult
 
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
-import hu.bme.aut.resource_server.recommended_game.RecommenderService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
