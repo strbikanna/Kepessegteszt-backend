@@ -1,11 +1,8 @@
 package hu.bme.aut.resource_server.gameplayresult
 
-import hu.bme.aut.resource_server.game.GameRepository
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.Authentication
-import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -13,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional
 class GameplayResultService(
     @Autowired private var gameplayResultRepository: GameplayResultRepository,
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
-    @Autowired private var gameRepository: GameRepository,
     @Autowired private var userRepository: UserRepository
 
 ) {

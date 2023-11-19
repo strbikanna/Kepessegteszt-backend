@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 /**
- * Controller for saving gameplay results
+ * Controller for saving gameplay results and
  * querying previous game results
  */
 @RestController
