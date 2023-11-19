@@ -176,4 +176,27 @@ Javaslataim: A) legyen fix ideig érvényes a token (pl. 30 perc) és erre felh�
 - feltöltöttem az adatbázist néhány minta profiladattal
 - bevezettem külön auth-service-t, melynek feladata 1. a játékok hozzáférésellenőrzése, 2. a felhasználók kontaktellenőrzése (ha pl. egy másik felhasználó profiljáról kér le adatot)
 
+# 11. 19.
+## Ezen a héten a következőket valósítottam meg:
+
+### Backend:
+- implementáltam az eredmények feldolgozását végző logikát, ami egy képességet vizsgáló és több képességet mérő játék eredményeit normalizálja
+- megvalósult a kognitív profilok karbantartását végző szerviz
+- létrehoztam egy ModelManager osztályt a neurális háló modelljeinek kezelésére
+- megoldottam, hogy a potenciálisan hosszú műveletek (pl. Python hívása) Kotlin Coroutin-ban fussanak (ez okozott némi fejtörést, mert felmerült bennem a Webflux migráció is)
+- teszteltem néhány kalkulációt
+- megvalósítottam a játékok adatainak frissítését végző logikát, beleértve képek fogadását, mentését
+- jó pár dolgot refaktoráltam
+
+### Frontend:
+- elkészítettem a játék-menedzsment oldalt, ahol elérhetők a játékok adatai
+- ehhez kiegészítésként egy szerkesztő oldalt, ahol a játékok adatai szerkeszthetők, fájlfeltöltés is lehetséges, hogy a thumbnail is módosítható legyen
+- megvalósítottam a "triggert" a játékeredmények kiértékelésére: minden játék esetében külön gomb, melynek hatására felugrik egy dialógusablak: ha több mint 0 eredmény van, el lehet indítani az adatfeldolgozást
+- újra összekapcsoltam az ajánlott játékokat a frontenddel, ahol most már a rendszer általi ajánlások jelennek meg, kipróbáltam és a játék továbbra is elindítható :)
+
+### Amire még várok:
+- konkrét Python program
+- játékok speciálisabb eredményei, leírói
+- plusz szükségesek lennének minta adatok, de valószínűleg azt majd SQL-ből generálok, az jó?
+
 
