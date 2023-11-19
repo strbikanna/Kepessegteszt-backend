@@ -2,7 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {map, Observable, of} from "rxjs";
 import {AppConstants} from "../../utils/constants";
-import {RecommendedGame} from "../../model/recommendedGame";
+import {RecommendedGame} from "../../model/recommended_game.model";
+import {SimpleHttpService} from "../../utils/simple-http.service";
 
 /**
  * Service that calls backend for recommended game data.
@@ -10,21 +11,22 @@ import {RecommendedGame} from "../../model/recommendedGame";
 @Injectable({
     providedIn: 'root'
 })
-export class RecommendedGameService {
-    private readonly url = `${AppConstants.resourceServerUrl}/gameplay/all/system_recommended`
-
-    constructor(private http: HttpClient) {}
+export class RecommendedGameService extends SimpleHttpService{
+    private readonly path = '/recommended_game'
+    private readonly systemRecommendedPath = '/system_recommended'
 
     getTeacherRecommendedGames(): Observable<RecommendedGame[]> {
         return this.mockData
     }
 
     getGamesForCurrentUser(): Observable<RecommendedGame[]> {
-        return this.http.get<RecommendedGame[]>(this.url).pipe(
-            map(games => {
-                console.log(games)
-                return games
-            })
+        return this.http.get<RecommendedGame[]>(`${this.baseUrl}${this.path}${this.systemRecommendedPath}`).pipe(
+            map(recommendedGames =>
+                recommendedGames.map(rg =>{
+                    rg.config.game_id = rg.id
+                    return rg
+                })
+            )
         )
     }
 
@@ -41,7 +43,7 @@ export class RecommendedGameService {
             {
                 id: "balloon-001-123-504",
                 recommender: null,
-                recommendee: null,
+                recommendedTo: null,
                 completed: false,
                 recommendationDate: new Date(),
                 game: {
@@ -66,7 +68,7 @@ export class RecommendedGameService {
             {
                 id: "radio-001-123-504",
                 recommender: null,
-                recommendee: null,
+                recommendedTo: null,
                 completed: false,
                 recommendationDate: new Date(),
                 game: {
@@ -90,7 +92,7 @@ export class RecommendedGameService {
             {
                 id: "cosmic-sec-001-123-504",
                 recommender: null,
-                recommendee: null,
+                recommendedTo: null,
                 completed: false,
                 recommendationDate: new Date(),
                 game: {

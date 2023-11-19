@@ -5,7 +5,7 @@ export interface RecommendedGame {
     id: string;
     game: Game;
     recommender: User | null;
-    recommendee: User | null;
+    recommendedTo: User | null;
     recommendationDate: Date;
     completed: boolean;
     config: any;

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
-import {RecommendedGame} from "../../model/recommendedGame";
+import {RecommendedGame} from "../../model/recommended_game.model";
 import {AuthOptions, LoginResponse, OidcSecurityService} from "angular-auth-oidc-client";
 import {GameInfo} from "../../auth/gameInfo";
 import {UserInfo} from "../../auth/userInfo";

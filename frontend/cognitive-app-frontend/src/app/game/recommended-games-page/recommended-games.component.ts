@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {TEXTS} from "../../utils/app.text_messages";
 import {Observable} from "rxjs";
-import {RecommendedGame} from "../../model/recommendedGame";
+import {RecommendedGame} from "../../model/recommended_game.model";
 import {RecommendedGameService} from "../game-services/recommended-game.service";
 import {GameAuthService} from "../game-services/game-auth.service";
 import {GameInfo} from "../../auth/gameInfo";
@@ -68,11 +68,12 @@ export class RecommendedGamesComponent implements OnInit {
     }
 
 
-    onGameChosen(game: RecommendedGame) {
-        if (this.validChosenGame(game)) {
+    onGameChosen(rGame: RecommendedGame) {
+        console.log('Game chosen: ', rGame)
+        if (this.validChosenGame(rGame)) {
             this.loading = true;
-            sessionStorage.setItem(this.storageKey, JSON.stringify(game))
-            this.authService.getGameToken(game.config.game_id)
+            sessionStorage.setItem(this.storageKey, JSON.stringify(rGame))
+            this.authService.getGameToken(rGame.game.id)
         }
     }
 
