@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.game
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.Type
@@ -20,10 +21,11 @@ data class GameEntity(
     @Column(name ="_description")
     val description: String,
 
+    @JsonProperty("thumbnail")
     val thumbnailPath: String,
 
     @Column(name ="_active")
-    val active: Boolean,
+    var active: Boolean,
 
     val url: String?,
 
@@ -36,5 +38,5 @@ data class GameEntity(
         joinColumns = arrayOf(JoinColumn(name = "game_id")),
         inverseJoinColumns = arrayOf(JoinColumn(name = "ability_code"))
     )
-    val affectedAbilites: MutableSet<AbilityEntity>
+    val affectedAbilities: MutableSet<AbilityEntity>
 )

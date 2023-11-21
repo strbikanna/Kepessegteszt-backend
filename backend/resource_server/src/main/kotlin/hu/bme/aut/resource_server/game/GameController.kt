@@ -2,46 +2,44 @@ package hu.bme.aut.resource_server.game
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
 
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/game")
 class GameController(
     @Autowired private var gameRepository: GameRepository,
-    @Autowired private var gameService: GameService) {
+    @Autowired private var gameService: GameService
+) {
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    fun getAllGames(): List<GameDto> {
-        return gameService.getAllGames()
+    fun getAllGames(
+        @RequestParam(required = false, defaultValue = "0") page: Int,
+        @RequestParam(required = false, defaultValue = "10") size: Int
+    ): List<GameEntity> {
+        return gameService.getAllGames(page, size)
+    }
+
+    @GetMapping("/all/count")
+    @ResponseStatus(HttpStatus.OK)
+    fun getAllGamesCount(): Long {
+        return gameRepository.count()
     }
 
     @GetMapping("/{game_id}")
     @ResponseStatus(HttpStatus.OK)
-    fun getGameById(@PathVariable game_id: Int): GameDto {
+    fun getGameById(@PathVariable game_id: Int): GameEntity {
         return gameService.getGameById(game_id).orElseThrow()
-    }
-
-    @GetMapping("/all/admin")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN')")
-    fun getAllGamesAdmin(): List<GameEntity> {
-        return gameRepository.findAll().toList()
-    }
-
-    @GetMapping("/{game_id}/admin")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN')")
-    fun getGameByIdAdmin(@PathVariable game_id: Int): GameEntity {
-        return gameRepository.findById(game_id).orElseThrow()
     }
 
 
     @PutMapping("/{game_id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST')")
     fun updateGame(@RequestBody gameEntity: GameEntity, @PathVariable game_id: Int): GameEntity {
         if(game_id == gameEntity.id) {
             return gameRepository.save(gameEntity)
@@ -57,6 +55,13 @@ class GameController(
         return gameRepository.save(gameEntity)
     }
 
+    @PostMapping("/image/{gameId}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
+    fun uploadThumbnail(@PathVariable gameId: Int, @RequestParam file: MultipartFile): GameEntity{
+        return this.gameService.saveThumbnailForGame(gameId, file)
+    }
+
     @DeleteMapping("/{game_id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
@@ -64,7 +69,7 @@ class GameController(
         if(game_id == gameEntity.id) {
             gameRepository.deleteById(game_id)
         } else{
-            throw IllegalArgumentException("Game with given ID does not exist.")
+            throw IllegalArgumentException("Game ids do not match.")
         }
     }
 }

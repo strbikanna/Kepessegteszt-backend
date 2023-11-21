@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-import { AdminRoutingModule } from './admin-routing.module';
+import {AdminRoutingModule} from './admin-routing.module';
 import {AdminPageComponent} from "./admin-page/admin-page.component";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatCheckboxModule} from "@angular/material/checkbox";
@@ -14,26 +14,29 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatButtonModule} from "@angular/material/button";
 import {MatDividerModule} from "@angular/material/divider";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 @NgModule({
-  imports: [
-    CommonModule,
-    AdminRoutingModule,
-    MatExpansionModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatChipsModule,
-    MatPaginatorModule,
-    MatIconModule,
-    MatAutocompleteModule,
-    MatButtonModule,
-    MatDividerModule
-  ],
-  declarations: [
-    AdminPageComponent,
-  ]
+    imports: [
+        CommonModule,
+        AdminRoutingModule,
+        MatExpansionModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatChipsModule,
+        MatPaginatorModule,
+        MatIconModule,
+        MatAutocompleteModule,
+        MatButtonModule,
+        MatDividerModule,
+        MatSnackBarModule
+    ],
+    declarations: [
+        AdminPageComponent,
+    ]
 })
-export class AdminModule { }
+export class AdminModule {
+}

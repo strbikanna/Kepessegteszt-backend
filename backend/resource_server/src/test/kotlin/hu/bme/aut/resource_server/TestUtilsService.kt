@@ -7,6 +7,8 @@ import hu.bme.aut.resource_server.game.GameRepository
 import hu.bme.aut.resource_server.gameplayresult.GameplayResultEntity
 import hu.bme.aut.resource_server.gameplayresult.GameplayResultRepository
 import hu.bme.aut.resource_server.profile.FloatProfileItem
+import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
+import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationRepository
 import hu.bme.aut.resource_server.profile_snapshot.EnumProfileSnapshotRepository
 import hu.bme.aut.resource_server.profile_snapshot.FloatProfileSnapshotRepository
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
@@ -28,6 +30,7 @@ class TestUtilsService(
     @Autowired  var gameRepository: GameRepository,
     @Autowired  var gameplayResultRepository: GameplayResultRepository,
     @Autowired  var recommendedGameRepository: RecommendedGameRepository,
+    @Autowired var resultForCalcRepository: ResultForCalculationRepository
 ) {
     val authHeaderName = "authUser"
     val gameAuthHeaderName = "authGame"
@@ -39,6 +42,7 @@ class TestUtilsService(
     val abilityGv = AbilityEntity("Gv", "Visual processing", "?", )
     val abilityColorsense = AbilityEntity("Cls", "Color sense", "If the brain/eye is capable to differentiate colors", AbilityType.ENUMERATED)
     fun emptyRepositories(){
+        resultForCalcRepository.deleteAll()
         floatProfileSnapshotRepository.deleteAll()
         enumProfileSnapshotRepository.deleteAll()
         gameplayResultRepository.deleteAll()
@@ -94,14 +98,11 @@ class TestUtilsService(
             active = true,
             url = "testUrl",
             configDescription = mutableMapOf(),
-            affectedAbilites = abilities
+            affectedAbilities = abilities
         )
         val entity = gameRepository.save(game)
         authGameId = entity.id!!
         return entity
-    }
-    fun saveUser(user: UserEntity): UserEntity{
-        return userRepository.save(user)
     }
 
     fun fillUserRepository(){
@@ -139,7 +140,7 @@ class TestUtilsService(
             active = true,
             url = "testUrl",
             configDescription = mutableMapOf("Level" to 0),
-            affectedAbilites = mutableSetOf(abilityGf)
+            affectedAbilities = mutableSetOf(abilityGf)
         )
         return gameRepository.save(game)
     }
@@ -168,5 +169,21 @@ class TestUtilsService(
             user = user,
             recommendedGame = createAndSaveRecommendedGame(user)
         )
+    }
+
+    fun saveGame(game: GameEntity): GameEntity{
+        return gameRepository.save(game)
+    }
+    fun saveUser(user: UserEntity): UserEntity{
+        return userRepository.save(user)
+    }
+    fun saveUsers(users: List<UserEntity>){
+        userRepository.saveAll(users)
+    }
+    fun saveAbility(ability: AbilityEntity): AbilityEntity{
+        return abilityRepository.save(ability)
+    }
+    fun saveResults(results: List<ResultForCalculationEntity>){
+        resultForCalcRepository.saveAll(results)
     }
 }

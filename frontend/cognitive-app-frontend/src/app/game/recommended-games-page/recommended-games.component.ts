@@ -1,31 +1,31 @@
 import {Component, OnInit} from '@angular/core';
 import {TEXTS} from "../../utils/app.text_messages";
 import {Observable} from "rxjs";
-import {Game} from "../../model/game.model";
-import {GameService} from "../game-services/game.service";
+import {RecommendedGame} from "../../model/recommended_game.model";
+import {RecommendedGameService} from "../game-services/recommended-game.service";
 import {GameAuthService} from "../game-services/game-auth.service";
 import {GameInfo} from "../../auth/gameInfo";
 
 @Component({
     selector: 'app-games',
-    templateUrl: './games.component.html',
-    styleUrls: ['./games.component.scss']
+    templateUrl: './recommended-games.component.html',
+    styleUrls: ['./recommended-games.component.scss']
 })
-export class GamesComponent implements OnInit {
+export class RecommendedGamesComponent implements OnInit {
 
     text = TEXTS.games;
-    gamesForYou: Observable<Game[]> = new Observable<Game[]>()
-    teacherRecommendedGames: Observable<Game[]> = new Observable<Game[]>()
-    scientistRecommendedGames: Observable<Game[]> = new Observable<Game[]>()
-    allGames: Observable<Game[]> = new Observable<Game[]>()
+    gamesForYou: Observable<RecommendedGame[]> = new Observable<RecommendedGame[]>()
+    teacherRecommendedGames: Observable<RecommendedGame[]> = new Observable<RecommendedGame[]>()
+    scientistRecommendedGames: Observable<RecommendedGame[]> = new Observable<RecommendedGame[]>()
+    allGames: Observable<RecommendedGame[]> = new Observable<RecommendedGame[]>()
 
     loading = false;
 
     private storageKey = 'games_chosenGame'
 
-    private chosenGame: Game | undefined = undefined
+    private chosenGame: RecommendedGame | undefined = undefined
 
-    constructor(private gameService: GameService, private authService: GameAuthService, ) {
+    constructor(private gameService: RecommendedGameService, private authService: GameAuthService, ) {
     }
 
     ngOnInit(): void {
@@ -55,7 +55,7 @@ export class GamesComponent implements OnInit {
 
     }
 
-    private loadPlayground(chosenGame: Game) {
+    private loadPlayground(chosenGame: RecommendedGame) {
         this.resetStateToIdle();
         GameInfo.currentGameId = chosenGame.config.game_id
         this.authService.publishChosenGame(chosenGame)
@@ -68,15 +68,16 @@ export class GamesComponent implements OnInit {
     }
 
 
-    onGameChosen(game: Game) {
-        if (this.validChosenGame(game)) {
+    onGameChosen(rGame: RecommendedGame) {
+        console.log('Game chosen: ', rGame)
+        if (this.validChosenGame(rGame)) {
             this.loading = true;
-            sessionStorage.setItem(this.storageKey, JSON.stringify(game))
-            this.authService.getGameToken(game.config.game_id)
+            sessionStorage.setItem(this.storageKey, JSON.stringify(rGame))
+            this.authService.getGameToken(rGame.game.id)
         }
     }
 
-    private validChosenGame(chosenGame: Game | undefined): boolean {
+    private validChosenGame(chosenGame: RecommendedGame | undefined): boolean {
         return chosenGame !== undefined && chosenGame.config.game_id !== undefined && chosenGame.config.game_id !== null
     }
 

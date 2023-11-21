@@ -6,10 +6,11 @@ export const TEXTS = {
         games: 'Játékok',
         profile: 'Profil',
         cognitive_profile: 'Kognitív profil',
-        admin: 'Admin',
+        admin: 'Felhasználók kezelése',
+        game_management: 'Játékok kezelése',
     },
     home:{
-        welcome: 'Örülünk, hogy itt vagy a Cognitive Appban!',
+        welcome: 'Örülünk, hogy itt vagy!',
         features_student: 'Játssz a kedvenc játékaiddal és kövesd nyomon a profilod fejlődését!',
         features_parent: 'Kövesd nyomon gyermeked fejlődését és segíts neki a játékok kiválasztásában!',
         features_teacher: 'Kövesd nyomon diákjaid fejlődését és ajánlj nekik játékokat!',
@@ -89,12 +90,16 @@ export const TEXTS = {
         cancel: 'Mégse',
         save: 'Mentés',
         ok: 'OK',
+        edit: 'Szerkesztés',
+        calculation: 'Kiértékelés',
+        delete: 'Törlés',
+        upload: 'Feltöltés',
     },
-    cognitive_profile:{
-        chart:{
+    cognitive_profile: {
+        chart: {
             chart_title: 'Kognitív profil az elmúlt időszakban',
         },
-        card:{
+        card: {
             current_profile: 'Legfrisebb kognitív profil',
             current_profile_description: 'A kognitív profilban szereplő képességek, és értékük ebben az időpontban ',
             no_profile_data_message: 'Nincs elég adat, ezért nem lehet megjeleníteni a kognitív profilt.',
@@ -110,12 +115,51 @@ export const TEXTS = {
             see_history_action: 'Kognitív profil megtekintése',
             back_to_current_action: 'Vissza az aktuális kognitív profilhoz',
         },
-        user_picker:{
+        user_picker: {
             choose_contact: 'Kognitív profil megtekintése',
             choose_contact_description: 'Válaszd ki, kinek a kognitív profilját szeretnéd megtekinteni',
             select: 'Megtekintés',
         },
+    },
 
+    wildcard:{
+        title: 'Hupsz, ez az oldal nem található!',
+        description: 'A keresett oldal nem található. Ellenőrizd a címet és próbáld újra.',
+    },
+    game_management:{
+        title: 'Játékok kezelése',
+        calculation_dialog:{
+            title: 'Játékeredmények kiértékelése',
+            description: 'A játékeredmények kiértékelése magában foglalja az összes eddig összegyűlt játékeredmény feldolgozását. ' +
+                'A játékok pontszámai normalizálva lesznek, és az eredmények alapján a felhasználók képességértékei frissítve lesznek. A kiértékelést nem lehet visszavonni.',
+            message: 'Biztosan szeretnéd elindítani a játékeredmények kiértékelését?',
+            result_count: 'A játékhoz érkezett feldolgozatlan eredmények száma: ',
+            affected_abilities: 'A játék ezeket a kognitív képességeket vizsgálja: ',
+            no_abilities: 'A játék nem vizsgál kognitív képességeket.',
+            feedback_message: 'A kiértékelés elkezdődött, a folyamat néhány percig eltarthat.',
+            success_feedback: 'A kiértékelés sikeresen befejeződött.',
+            result_mean: 'A normalizálás során kapott átlag: ',
+            result_deviation: 'A normalizálás során kapott szórás: ',
+            result_profile_count: 'A normalizálás után frissített felhasználói profilok száma: ',
+        },
+        edit_form: {
+            title: 'Játék adatainak szerkesztése',
+            data_section_title: 'Játék adatai',
+            name: 'Név',
+            description: 'Leírás',
+            thumbnail: 'Borítókép',
+            url: 'URL',
+            active: 'Aktív ',
+            non_active: 'Nem Aktív ',
+            version: 'Verzió ',
+            config_description: 'Játékkonfiguráció leírása',
+            affected_abilities: 'Mért kognitív képességek',
+            value: 'Érték',
+            config_error_message: 'Ezek a karakterek használhatók: "a-z", "A-Z", "0-9", "-", "_"',
+        }
+    },
+    file_upload: {
+        no_content: 'Nincs kiválasztott fájl',
     }
 
 }

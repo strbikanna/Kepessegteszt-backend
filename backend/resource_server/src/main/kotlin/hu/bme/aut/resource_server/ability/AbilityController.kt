@@ -18,6 +18,13 @@ class AbilityController(
         return ResponseEntity(abilities, HttpStatus.OK)
     }
 
+    @GetMapping("/{code}")
+    @ResponseStatus(HttpStatus.OK)
+    fun getAbilityByCode(@PathVariable code: String): AbilityEntity {
+        return abilityRepository.findById(code).orElseThrow()
+
+    }
+
     @PutMapping("/{code}")
     @ResponseStatus(HttpStatus.OK)
     fun updateAbility(@RequestBody abilityEntity: AbilityEntity, @PathVariable code: String): AbilityEntity {

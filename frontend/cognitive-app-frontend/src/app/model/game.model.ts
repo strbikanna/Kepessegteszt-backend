@@ -1,8 +1,13 @@
+import {Ability} from "./ability.model";
+
 export interface Game {
-    id: string;
+    id: number;
     name: string;
     description: string;
     thumbnail: string;
     url: string | undefined;
-    config: any;
+    active: boolean;
+    version: number;
+    configDescription: any;
+    affectedAbilities: Ability[];
 }

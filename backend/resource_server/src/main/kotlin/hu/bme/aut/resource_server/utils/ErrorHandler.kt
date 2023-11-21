@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.utils
 
+import hu.bme.aut.resource_server.profile_calculation.error.CalculationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -24,5 +25,11 @@ class ErrorHandler {
     fun handleIllegalAccessError(exception: IllegalAccessException): ResponseEntity<String>{
         val message = exception.message ?: "No rights for this request."
         return ResponseEntity(message, HttpStatus.FORBIDDEN)
+    }
+
+    @ExceptionHandler(CalculationException::class)
+    fun handleCalculationException(exception: CalculationException): ResponseEntity<String>{
+        val message = exception.message ?: "Error in calculation."
+        return ResponseEntity(message, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }

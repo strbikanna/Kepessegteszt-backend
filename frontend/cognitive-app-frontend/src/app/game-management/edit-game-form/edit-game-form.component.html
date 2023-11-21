@@ -1,0 +1,70 @@
+<h2>{{text.title}}: {{game?.name}}</h2>
+<form [formGroup]="gameForm" (ngSubmit)="onSubmit()">
+    <h4>{{text.data_section_title}}</h4>
+    <mat-form-field>
+        <mat-label>{{text.name}}</mat-label>
+        <input matInput formControlName="name">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>{{text.description}}</mat-label>
+        <textarea matInput formControlName="description"> </textarea>
+    </mat-form-field>
+    <div id="active">
+        <mat-checkbox formControlName="active">{{text.active}}</mat-checkbox>
+
+    </div>
+
+    <mat-form-field>
+        <mat-label>{{text.url}}</mat-label>
+        <input matInput formControlName="url">
+    </mat-form-field>
+    <div id="abilities">
+        <h4>{{text.affected_abilities}}</h4>
+        <ng-container formArrayName="abilities">
+            <ng-container *ngFor="let abilityForm of abilitiesForm.controls">
+                <div [formGroup]="toFromGroup(abilityForm)">
+                    <mat-checkbox formControlName="included">
+                        {{abilityName(abilityForm)}}
+                    </mat-checkbox>
+                </div>
+
+            </ng-container>
+        </ng-container>
+
+    </div>
+    <div id="config">
+        <h4>{{text.config_description}}</h4>
+        <ng-container formArrayName="configDescription">
+            <ng-container *ngFor="let configForm of configDescriptionForm.controls; let i = index">
+                <div [formGroup]="toFromGroup(configForm)">
+                    <mat-form-field id="config-key">
+                        <mat-label>{{text.name}}</mat-label>
+                        <input matInput formControlName="key">
+                        <mat-error>{{text.config_error_message}}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field id="config-value">
+                        <mat-label>{{text.value}}</mat-label>
+                        <input matInput formControlName="value">
+                    </mat-form-field>
+                    <button mat-icon-button color="accent" type="button" (click)="removeConfigDescription(i)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </ng-container>
+        </ng-container>
+        <button mat-mini-fab color="primary" type="button" (click)="addConfigDescription()" class="add-button">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    <div id="file-upload">
+        <h4>{{text.thumbnail}}</h4>
+        <app-file-upload formControlName="thumbnail"></app-file-upload>
+    </div>
+
+    <div id="actions">
+        <button mat-button color="primary" type="button"
+                (click)="onBack()">{{actionText.cancel}}</button>
+        <button mat-raised-button color="primary" type="submit" class="submit-button">{{actionText.save}}</button>
+    </div>
+
+</form>

@@ -30,7 +30,7 @@ function create() {
         // ... any other data you want to send
     };
     userParams = this.registry.get('userParams');
-    common.postResult(resultJson, userParams.game_id, userParams.username, userParams.access_token);
+    common.postResult(resultJson, userParams.game_id, userParams.username, userParams.access_token, userParams.config);
 }
 
 function createRestartButton(scene, x, y, text) {

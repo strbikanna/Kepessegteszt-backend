@@ -19,6 +19,7 @@ class GameRepositoryTest(
 ) {
     @BeforeEach
     fun emptyRepo() {
+        testUtilsService.fillAbilityRepository()
         gameRepository.deleteAll()
     }
 
@@ -29,7 +30,7 @@ class GameRepositoryTest(
         val abilities = mutableSetOf(testUtilsService.abilityColorsense)
         val game = GameEntity(
             version = 1, name = "TestGame", description = "test_game_description", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game",
-                active = true, url = "test_game_url", configDescription = config, affectedAbilites = abilities)
+                active = true, url = "test_game_url", configDescription = config, affectedAbilities = abilities)
         gameRepository.save(game)
         assertNotNull(game.id)
     }
@@ -41,8 +42,8 @@ class GameRepositoryTest(
         val abilities = mutableSetOf(testUtilsService.abilityColorsense)
         val game = GameEntity(
             version = 1, name = "TestGame", description = "test_game_description", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game",
-                active = true, url = "test_game_url", configDescription = config, affectedAbilites = abilities)
-        println(game.affectedAbilites.toString())
+                active = true, url = "test_game_url", configDescription = config, affectedAbilities = abilities)
+        println(game.affectedAbilities.toString())
         gameRepository.save(game)
         assertNotNull(game.id)
         assertTrue(gameRepository.existsByName("TestGame"))
@@ -59,10 +60,10 @@ class GameRepositoryTest(
 
         val game1 = GameEntity(
             version = 1, name = "TestGame1", description = "test_game_description1", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game1",
-                active = true, url = "test_game_url1", configDescription = config1, affectedAbilites = abilities1)
+                active = true, url = "test_game_url1", configDescription = config1, affectedAbilities = abilities1)
         val game2 = GameEntity(
             version = 1, name = "TestGame2", description = "test_game_description2", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game2",
-                active = true, url = "test_game_url2", configDescription = config2, affectedAbilites = abilities2)
+                active = true, url = "test_game_url2", configDescription = config2, affectedAbilities = abilities2)
         val savedGame1 = gameRepository.save(game1)
         val savedGame2 = gameRepository.save(game2)
         assertNotEquals(game1.id, game2.id)
@@ -79,7 +80,7 @@ class GameRepositoryTest(
         val abilities = mutableSetOf(testUtilsService.abilityColorsense)
         val game = GameEntity(
             version = 1, name = "TestGame", description = "test_game_description", thumbnailPath = "backend/resource_server/resource_server/src/test/kotlin/hu/bme/aut/resource_server/game_icons/test_game",
-                active = true, url = "test_game_url", configDescription = config, affectedAbilites = abilities)
+                active = true, url = "test_game_url", configDescription = config, affectedAbilities = abilities)
         gameRepository.save(game)
         assertNotNull(game.id)
         assertEquals(gameRepository.findAll().toList().size, 1)

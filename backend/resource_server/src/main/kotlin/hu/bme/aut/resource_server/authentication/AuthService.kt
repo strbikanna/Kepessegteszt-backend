@@ -41,8 +41,8 @@ class AuthService(
         val username = authentication.name
         val gamePlay = recommendedGameRepository.findById(gameplay.gameplayId)
         val jwt = authentication.principal as Jwt
-        val tokenGameId = jwt.claims["game_id"] as Int?
-            ?: throw IllegalAccessException("This gameplay is not authorized to save result for this user.")
+        val tokenGameId = Integer.parseInt(jwt.claims["game_id"] as String?
+            ?: throw IllegalAccessException("This gameplay is not authorized to save result for this user."))
         val game = gameRepository.findById(tokenGameId)
         if(gamePlay.isEmpty || username == null ||game.isEmpty || tokenGameId != gamePlay.get().game.id){
             throw IllegalAccessException("This gameplay is not authorized to save result for this user.")

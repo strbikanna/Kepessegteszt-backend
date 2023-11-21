@@ -6,9 +6,10 @@
         <button mat-button routerLink="/">Cognitive App</button>
     </div>
     <div class="menubar">
-        <a *ngIf="loginStatus" mat-button color="primary" routerLink="/games">{{text.games}}</a>
-        <a *ngIf="loginStatus" mat-button color="primary" routerLink="/cognitive-profile">{{text.cognitive_profile}}</a>
+        <a *ngIf="loginStatus && !isAdmin" mat-button color="primary" routerLink="/games" > {{text.games}}</a>
+        <a *ngIf="loginStatus && !isAdmin" mat-button color="primary" routerLink="/cognitive-profile">{{text.cognitive_profile}}</a>
         <a *ngIf="isAdmin" mat-button color="primary" routerLink="/admin">{{text.admin}}</a>
+        <a *ngIf="isAdminOrScientist" mat-button color="primary" routerLink="/game-management">{{text.game_management}}</a>
         <app-login></app-login>
     </div>
 </mat-toolbar>

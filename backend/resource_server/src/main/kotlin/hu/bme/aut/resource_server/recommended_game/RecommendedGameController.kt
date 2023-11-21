@@ -12,13 +12,13 @@ import org.springframework.security.core.Authentication
 
 
 @RestController
-@RequestMapping("/game")
+@RequestMapping("/recommended_game")
 class RecommendedGameController(
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
     @Autowired private var gameplayRecommenderService: RecommenderService
 ) {
 
-    @GetMapping("/recommended_games")
+    @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     fun getRecommendedGamesToUser(
         @RequestParam recommendedTo: UserEntity,
@@ -43,10 +43,23 @@ class RecommendedGameController(
         return recommendedGameRepository.save(recommendedGame)
     }
 
-    @GetMapping("/all/system_recommended")
+    @GetMapping("/system_recommended")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('STUDENT')")
     fun getAllSystemRecommended(authentication: Authentication): List<RecommendedGameEntity> {
-        return gameplayRecommenderService.getAllRecommendationToUser(authentication.name)
+        val systemRecommendedGames = gameplayRecommenderService.getAllRecommendationToUser(authentication.name).toMutableList()
+        if(systemRecommendedGames.size < 2){
+            systemRecommendedGames.addAll(gameplayRecommenderService.createNewRecommendations(authentication.name))
+        }
+        return systemRecommendedGames
+    }
+
+    @PostMapping("/system_recommended")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('STUDENT')")
+    fun generateNewRecommendations(authentication: Authentication): List<RecommendedGameEntity> {
+        val currentActiveRecommendations = gameplayRecommenderService.getAllRecommendationToUser(authentication.name)
+        gameplayRecommenderService.deleteRecommendations(currentActiveRecommendations)
+        return gameplayRecommenderService.createNewRecommendations(authentication.name)
     }
 }

@@ -1,5 +1,7 @@
 package hu.bme.aut.resource_server.recommended_game
 
+import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonProperty
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.user.UserEntity
 import io.hypersistence.utils.hibernate.type.json.JsonType
@@ -17,10 +19,9 @@ data class RecommendedGameEntity(
 
         @CreationTimestamp
         @Column(name = "_timestamp")
+        @JsonProperty("recommendationDate")
+        @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
         val timestamp: LocalDateTime? = null,
-
-        @Column(name = "_level")
-        val level: Int = 0,
 
         @Type(JsonType::class)
         val config: Map<String, Any>,

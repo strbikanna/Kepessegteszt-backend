@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
-import {Game} from "../../model/game.model";
+import {RecommendedGame} from "../../model/recommended_game.model";
 import {AuthOptions, LoginResponse, OidcSecurityService} from "angular-auth-oidc-client";
 import {GameInfo} from "../../auth/gameInfo";
 import {UserInfo} from "../../auth/userInfo";
@@ -16,7 +16,7 @@ import {Router} from "@angular/router";
     providedIn: 'root'
 })
 export class GameAuthService {
-    public chosenGame = new BehaviorSubject<Game | undefined>(undefined);
+    public chosenGame = new BehaviorSubject<RecommendedGame | undefined>(undefined);
 
     private GAME_CONFIG_ID = 'gameTokenConfig'
     private readonly sessionStoreKey = 'playground_chosengame'
@@ -52,16 +52,16 @@ export class GameAuthService {
 
     }
 
-    publishChosenGame(game: Game) {
-        game.config.username = UserInfo.currentUser?.username ?? 'unknown'
-        game.config.access_token = GameInfo.accessToken
+    publishChosenGame(recommendation: RecommendedGame) {
+        recommendation.config.username = UserInfo.currentUser?.username ?? 'unknown'
+        recommendation.config.access_token = GameInfo.accessToken
 
-        if(game.url !== undefined && game.url !== null && game.url !== '') {
-            this.openGameUrl(game)
+        if(recommendation.game.url !== undefined && recommendation.game.url !== null && recommendation.game.url !== '') {
+            this.openGameUrl(recommendation)
             return
         }else{
-            this.chosenGame.next(game)
-            this.saveChosenGame(game)
+            this.chosenGame.next(recommendation)
+            this.saveChosenGame(recommendation)
             this.router.navigate(['/playground'],)
         }
     }
@@ -72,12 +72,12 @@ export class GameAuthService {
             this.chosenGame.next(JSON.parse(chosenGame))
         }
     }
-    private saveChosenGame(game: Game){
+    private saveChosenGame(game: RecommendedGame){
         sessionStorage.setItem(this.sessionStoreKey, JSON.stringify(game))
     }
 
-    private openGameUrl(game: Game) {
-        this.http.post(game.url!, game.config)
+    private openGameUrl(recommendedGame: RecommendedGame) {
+        this.http.post(recommendedGame.game.url!, recommendedGame.config)
     }
 
 }

@@ -24,6 +24,7 @@ export const createUserParams = (params) => {
         game_id: params.game_id,
         username: params.username,
         access_token: params.access_token,
+        config: params
     };
 };
 
@@ -42,13 +43,14 @@ export const determineGameParams = (params, configFunc) => {
  * @param {number|string} game_id - The game's ID.
  * @param {string} username - The username of the player.
  */
-export function postResult(resultJson, game_id, username, access_token) {
+export function postResult(resultJson, game_id, username, access_token, config) {
     const endpointUrl = `${baseConfig.baseURL}/gameplay`;
 
     const requestBody = {
         ...resultJson,
         game_id: game_id,
-        username: username
+        username: username,
+        config: config
     };
 
     const requestHeaders = {

@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.profile_snapshot
 
+import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
@@ -18,6 +19,19 @@ class ProfileSnapshotService(
     fun saveSnapshotOfUser(user: UserEntity){
         saveFloatProfile(user)
         saveEnumProfile(user)
+    }
+
+    fun saveSnapshotOfUserAbilities(user: UserEntity, abilities: List<AbilityEntity>){
+        val floatProfile = user.profileFloat
+        val floatProfileSnapshotItems = floatProfile
+            .filter { abilities.contains(it.ability) }
+            .map { FloatProfileSnapshotItem(it, user) }
+        floatProfileSnapshotRepository.saveAll(floatProfileSnapshotItems)
+        val enumProfile = user.profileEnum
+        val enumProfileSnapshotItems = enumProfile
+            .filter { abilities.contains(it.ability) }
+            .map { EnumProfileSnapshotItem(it, user) }
+        enumProfileSnapshotRepository.saveAll(enumProfileSnapshotItems)
     }
 
     private fun saveEnumProfile(user: UserEntity) {
