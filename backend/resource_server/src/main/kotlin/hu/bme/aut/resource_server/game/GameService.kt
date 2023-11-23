@@ -27,6 +27,23 @@ class GameService (
         return gameRepository.findById(id)
     }
 
+    fun updateGame(updatedGame: GameEntity): GameEntity {
+        val oldGame = gameRepository.findById(updatedGame.id!!).orElseThrow()
+        if(oldGame.url != updatedGame.url || !sameConfigDescription(oldGame, updatedGame)) {
+            oldGame.active = false
+            gameRepository.save(oldGame)
+
+            val newVersionedGame = copyGame(updatedGame).copy(
+                id = null,
+                version = oldGame.version + 1
+            )
+            return gameRepository.save(newVersionedGame)
+        } else {
+            updatedGame.version = oldGame.version + 1
+            return gameRepository.save(updatedGame)
+        }
+    }
+
     fun saveThumbnailForGame(id: Int, thumbnail: MultipartFile): GameEntity{
         val game = gameRepository.findById(id).orElseThrow()
         var fileName = "${game.id}"
@@ -43,8 +60,6 @@ class GameService (
             thumbnailPath = "$gameImageLocation/${fileName}.png",
             version = game.version + 1
         )
-        game.active = false
-        gameRepository.save(game)
         return gameRepository.save(updatedGame)
     }
 
@@ -52,6 +67,7 @@ class GameService (
         val affectedAbilities = mutableSetOf<AbilityEntity>()
         affectedAbilities.addAll(game.affectedAbilities)
         return GameEntity(
+            id = game.id,
             name = game.name,
             description = game.description,
             affectedAbilities = affectedAbilities,
@@ -61,6 +77,14 @@ class GameService (
             thumbnailPath = game.thumbnailPath,
             version = game.version
         )
+    }
+    private fun sameConfigDescription(game1: GameEntity, game2: GameEntity): Boolean{
+        game1.configDescription.entries.forEach { (key, value) ->
+            if(game2.configDescription[key] != value){
+                return false
+            }
+        }
+        return true
     }
 
 }

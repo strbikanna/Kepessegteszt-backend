@@ -42,9 +42,9 @@ class GameController(
     @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST')")
     fun updateGame(@RequestBody gameEntity: GameEntity, @PathVariable game_id: Int): GameEntity {
         if(game_id == gameEntity.id) {
-            return gameRepository.save(gameEntity)
+            return gameService.updateGame(gameEntity)
         } else{
-            throw IllegalArgumentException("Game with given ID does not exist.")
+            throw IllegalArgumentException("Game IDs don't match.")
         }
     }
 
