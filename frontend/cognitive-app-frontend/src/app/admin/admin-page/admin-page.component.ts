@@ -24,7 +24,6 @@ export class AdminPageComponent implements OnInit {
     lastPageEvent: PageEvent | undefined = undefined;
 
     text = TEXTS.admin_page;
-    pageText = TEXTS.paging;
 
     users: Observable<UserForAdmin[]> = new Observable<UserForAdmin[]>();
 

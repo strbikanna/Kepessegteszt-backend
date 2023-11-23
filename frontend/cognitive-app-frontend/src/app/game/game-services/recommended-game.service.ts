@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {map, Observable, of} from "rxjs";
-import {AppConstants} from "../../utils/constants";
 import {RecommendedGame} from "../../model/recommended_game.model";
 import {SimpleHttpService} from "../../utils/simple-http.service";
 

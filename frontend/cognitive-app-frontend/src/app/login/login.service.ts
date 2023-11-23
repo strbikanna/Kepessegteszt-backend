@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {LoginResponse, OidcSecurityService} from "angular-auth-oidc-client";
 import {User} from "../model/user.model";
-import {BehaviorSubject, Observable} from "rxjs";
+import { Observable} from "rxjs";
 import {UserInfo} from "../auth/userInfo";
 import {HttpClient} from "@angular/common/http";
 import {AppConstants, Role} from "../utils/constants";

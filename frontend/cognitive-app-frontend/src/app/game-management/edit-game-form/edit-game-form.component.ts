@@ -47,7 +47,7 @@ export class EditGameFormComponent implements OnInit {
 
     }
 
-    toFromGroup(formControl: AbstractControl<any>) {
+    toFromGroup(formControl: AbstractControl) {
         return formControl as FormGroup
     }
 

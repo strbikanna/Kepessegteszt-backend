@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {catchError, delay, Observable, of, retry} from "rxjs";
+import {catchError, Observable, retry} from "rxjs";
 import {Game} from "../../model/game.model";
 import {CalculationFeedback} from "../../model/calculation-feedback.model";
 import {SimpleHttpService} from "../../utils/simple-http.service";

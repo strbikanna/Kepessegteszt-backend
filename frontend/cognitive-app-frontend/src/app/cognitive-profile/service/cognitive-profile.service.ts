@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {catchError, map, Observable, retry, tap, throwError,} from "rxjs";
+import {catchError, map, Observable, retry,} from "rxjs";
 import {CognitiveProfile} from "../../model/cognitive_profile.model";
 import {Ability} from "../../model/ability.model";
 import {AppConstants} from "../../utils/constants";
@@ -26,6 +26,8 @@ export class CognitiveProfileService {
         params = params.set('pageIndex', 0)
         params = params.set('pageSize', 3)
         return this.http.get<CognitiveProfile[]>(`${this.helper.baseUrl}${this.snapshotEndpoint}`, {params: params}).pipe(
+            retry(3),
+            catchError(this.helper.handleHttpError),
             map((res: any[]) => this.convertToCognitiveProfile(res) )
         )
 
@@ -36,6 +38,8 @@ export class CognitiveProfileService {
         params = params.set('pageSize', 3)
         params = params.set('username', username)
         return this.http.get<CognitiveProfile[]>(`${this.helper.baseUrl}${this.snapshotEndpoint}${this.inspectPath}`, {params: params}).pipe(
+            retry(3),
+            catchError(this.helper.handleHttpError),
             map((res: any[]) => this.convertToCognitiveProfile(res) )
         )
     }
