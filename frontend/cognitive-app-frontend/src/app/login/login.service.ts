@@ -12,14 +12,9 @@ import {AppConstants, Role} from "../utils/constants";
 })
 export class LoginService {
 
-    public userInfo: User | undefined = undefined
-    public loginStatus: BehaviorSubject<boolean> = new BehaviorSubject(false)
-
     private readonly BASE_CONFIG_ID = 'baseConfig'
 
-
-    constructor(private oidcSecurityService: OidcSecurityService, private http: HttpClient) {
-    }
+    constructor(private oidcSecurityService: OidcSecurityService, private http: HttpClient) {}
 
     initAuthentication() {
         this.handleAuthCallback(this.BASE_CONFIG_ID)
@@ -41,11 +36,9 @@ export class LoginService {
                 const {isAuthenticated, userData, accessToken, idToken, configId} = loginResponse;
                 if (isAuthenticated) {
                     console.log('User authentication successful')
-                    this.userInfo = this.convertUserData(userData)
-                    UserInfo.currentUser = this.userInfo
+                    UserInfo.currentUser = this.convertUserData(userData)
                     UserInfo.accessToken = accessToken
                 }
-                this.loginStatus.next(isAuthenticated)
                 UserInfo.loginStatus.next(isAuthenticated)
             });
     }
@@ -115,12 +108,9 @@ export class LoginService {
     }
 
     private fillUserInfo() {
-        this.oidcSecurityService.userData$.subscribe(userData => {
-            let userInfo = userData.allUserData.find(data => data !== undefined && data !== null)
-            if (userInfo && userInfo.userData) {
-                this.userInfo = this.convertUserData(userInfo?.userData)
-                UserInfo.currentUser = this.userInfo
-                this.loginStatus.next(true)
+        this.oidcSecurityService.getUserData(this.BASE_CONFIG_ID).subscribe(userData => {
+            if (userData) {
+                UserInfo.currentUser = this.convertUserData(userData)
                 UserInfo.loginStatus.next(true)
             }
         });

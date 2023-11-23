@@ -2,7 +2,6 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {UserInfo} from "../auth/userInfo";
 import {Role} from "../utils/constants";
 import {TEXTS} from "../utils/app.text_messages";
-import {ActivatedRoute} from "@angular/router";
 
 
 @Component({

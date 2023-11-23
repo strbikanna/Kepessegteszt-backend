@@ -26,6 +26,7 @@ export class GlobalErrorhandlerService implements ErrorHandler {
     private readonly httpErrorDetails = TEXTS.error.http_error_details;
     private currentUrl = ''
     private previousUrl = ''
+    private previousError : any = undefined
 
     handleError(error: any) {
         let message : string | undefined = undefined
@@ -39,6 +40,11 @@ export class GlobalErrorhandlerService implements ErrorHandler {
             if(error.status === 403){
                 this.router.navigate([this.previousUrl])
             }
+        }else{
+            if(error && this.previousError && typeof error === typeof this.previousError && error.message === this.previousError.message){
+                console.log('Same error multiple times')
+                return
+            }
         }
         this.zone.run(() =>
             this.dialog.open(
@@ -48,7 +54,7 @@ export class GlobalErrorhandlerService implements ErrorHandler {
                 }
             )
         );
-
+        this.previousError = error ?? this.previousError
         console.error('Error from global error handler', error);
     }
 }
