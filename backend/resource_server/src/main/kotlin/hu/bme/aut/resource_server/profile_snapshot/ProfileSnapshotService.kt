@@ -81,6 +81,7 @@ class ProfileSnapshotService(
         return snapShots
     }
 
+    //TODO TEST
     fun existsSnapshotToday(username: String):Boolean{
         val user = userRepository.findByUsername(username).orElseThrow()
         val todayStart = getTodayStart()

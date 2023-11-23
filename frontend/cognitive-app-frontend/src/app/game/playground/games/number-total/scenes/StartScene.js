@@ -1,36 +1,28 @@
 import * as common from '../../../common/common.js';
 
-export const EndScene = {
-    key: 'EndScene',
+export const StartScene = {
+    key: 'StartScene',
     preload,
     create
 };
 
-let userParams;
-let gameResults;
-let gameParams;
-
 function preload() {
     this.load.setBaseURL(common.getBaseFolder('number-repeating'));
     this.load.image('background', 'background.jpg');
+    this.load.audio('click', ['click.wav'])
 }
 
 function create() {
-    gameParams = this.registry.get('gameParams');
-    gameResults = this.registry.get('gameResults');
-
     this.add.image(400, 300, 'background').setScale(1.7);
-    const resultText = gameResults.gameWon ? "Gratulálok! Sikerült!" : "Sajnálom, próbáld újra!";
-    this.add.text(400, 200, resultText, common.retroStyle).setFontSize('32px').setOrigin(0.5);
+    this.add.text(400, 180, 'Number total', common.retroStyle).setOrigin(0.5);
+    this.add.text(400, 240, '', common.retroStyle).setOrigin(0.5);
+    this.add.text(400, 300, 'Készen állsz?', common.retroStyle).setOrigin(0.5);
 
-    // Create a "Restart" button
-    createRestartButton(this, 400, 400, 'Újra');
-
-    userParams = this.registry.get('userParams');
-    common.postResult(gameResults, gameParams, userParams.game_id, userParams.username, userParams.access_token);
+    // Create a "Start" button
+    createStartButton(this, 400, 400, 'Start');
 }
 
-function createRestartButton(scene, x, y, text) {
+function createStartButton(scene, x, y, text) {
     let buttonRect = scene.add.rectangle(x, y, 150, 60, 0x111111)
         .setOrigin(0.5)
         .setStrokeStyle(2, 0xA8FF98)
@@ -66,6 +58,6 @@ function createRestartButton(scene, x, y, text) {
 
     buttonRect.on('pointerdown', () => {
         scene.sound.play('click', common.soundSettings);
-        scene.scene.start('StartScene');
+        scene.scene.start('MainScene');
     });
 }

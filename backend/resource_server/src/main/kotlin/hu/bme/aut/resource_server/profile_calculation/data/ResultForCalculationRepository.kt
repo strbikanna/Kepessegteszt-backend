@@ -19,4 +19,5 @@ interface ResultForCalculationRepository : PagingAndSortingRepository<ResultForC
     fun countByGameAndNormalizedResultNotNull(game: GameEntity): Long
 
     fun findTopByGameAndUserOrderByNormalizedResultDesc(game: GameEntity, user: UserEntity): ResultForCalculationEntity?
+    fun findTopByGameAndUserOrderByTimestampDesc(game: GameEntity, user: UserEntity): ResultForCalculationEntity?
 }

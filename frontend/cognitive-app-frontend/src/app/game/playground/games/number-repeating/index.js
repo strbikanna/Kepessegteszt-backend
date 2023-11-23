@@ -6,24 +6,30 @@ import { MainScene } from './scenes/MainScene.js';
 export function initialize(params) {
 
     const defaultValuesFromLevel = (level) => {
-        const progression = Math.floor(level / 5);
         return {
             level,
-            timeBetweenNumbers: 1500 - progression * 200,
-            maxRound: 3 + progression,
-            minNumberCount: 3 + progression,
-            maxNumberCount: 3 + progression + progression
+            timeBetweenNumbers: 1500 - (level - 1) * 100,
+            maxRound: 3 + Math.floor((level - 1) / 3),
+            minNumberCount: 3 + Math.floor((level - 1) / 3),
+            maxNumberCount: 3 + Math.floor((level - 1) / 2),
         };
     };
 
-    // If the level is 0, use the given parameters, otherwise calculate default values based on the level
-    const gameParams = common.determineGameParams(params, defaultValuesFromLevel);
-    const gameConfig = common.getBaseGameConfig([StartScene, MainScene, EndScene]);
-    const userParams = common.createUserParams(params);
+    /*
+    | Level | timeBetweenNumbers | maxRound | minNumberCount | maxNumberCount |
+    |-------|--------------------|----------|----------------|----------------|
+    |   1   |       1500ms       |    3     |       3        |       3        |
+    |   2   |       1400ms       |    3     |       3        |       4        |
+    |   3   |       1300ms       |    3     |       3        |       4        |
+    |   4   |       1200ms       |    4     |       4        |       5        |
+    |   5   |       1100ms       |    4     |       4        |       5        |
+    |   6   |       1000ms       |    4     |       4        |       6        |
+    |   7   |        900ms       |    5     |       5        |       6        |
+    |   8   |        800ms       |    5     |       5        |       7        |
+    |   9   |        700ms       |    5     |       5        |       7        |
+    |  10   |        600ms       |    6     |       6        |       7        |
+    */
 
-    // Create the Phaser game instance
-    let game = new Phaser.Game(gameConfig);
-    game.registry.set('gameParams', gameParams);
-    game.registry.set('userParams', userParams);
-    game.scene.start('StartScene');
+    const gameScenes = [StartScene, MainScene, EndScene];
+    common.initialize(params, defaultValuesFromLevel, gameScenes);
 }

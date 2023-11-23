@@ -4,6 +4,11 @@ import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationE
 import hu.bme.aut.resource_server.game.GameEntity
 
 object ScoreCalculator {
+    private val _levelFieldName = "level"
+    private val _pointsFieldName = "round"
+    private val _maxPointsFieldName = "maxRound"
+    private val _extraPointsFieldName = "healthPoints"
+    private val _maxExtraPointsFieldName = "maxHealthPoints"
 
     var levelFieldName = "level"
     var pointsFieldName = "round"
@@ -50,4 +55,20 @@ object ScoreCalculator {
         extraPointsFieldName = config["extraPointsFieldName"] as String? ?: extraPointsFieldName
         maxExtraPointsFieldName = config["maxExtraPointsFieldName"] as String? ?: maxExtraPointsFieldName
     }
+    fun resetFieldNames(){
+        levelFieldName = _levelFieldName
+        pointsFieldName = _pointsFieldName
+        maxPointsFieldName = _maxPointsFieldName
+        extraPointsFieldName = _extraPointsFieldName
+        maxExtraPointsFieldName = _maxExtraPointsFieldName
+    }
+    fun getMaxScoreOfLevel(result: ResultForCalculationEntity): Double{
+        return (result.result[maxPointsFieldName]?.toString()?.toDouble() ?: 0.0) +
+        (result.result[maxExtraPointsFieldName]?.toString()?.toDouble() ?: 0.0)
+    }
+    fun getActualScoreOfLevel(result: ResultForCalculationEntity): Double{
+        return (result.result[pointsFieldName]?.toString()?.toDouble() ?: 0.0) +
+                (result.result[extraPointsFieldName]?.toString()?.toDouble() ?: 0.0)
+    }
+
 }

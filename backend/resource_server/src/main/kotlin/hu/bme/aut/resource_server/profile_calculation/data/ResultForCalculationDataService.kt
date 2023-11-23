@@ -34,4 +34,5 @@ class ResultForCalculationDataService(
     fun saveAll(results: List<ResultForCalculationEntity>) = resultForCalculationRepository.saveAll(results)
 
     fun getBestResultOfUser(game: GameEntity, user: UserEntity) = resultForCalculationRepository.findTopByGameAndUserOrderByNormalizedResultDesc(game, user)
+    fun getLatestResultOfUser(game: GameEntity, user: UserEntity) = resultForCalculationRepository.findTopByGameAndUserOrderByTimestampDesc(game, user)
 }

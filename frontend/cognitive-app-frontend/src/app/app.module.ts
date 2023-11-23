@@ -42,14 +42,13 @@ import { ProfileCardComponent } from './cognitive-profile/profile-card/profile-c
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
-import {MatSnackBarModule} from "@angular/material/snack-bar";
 import { NotFoundComponent } from './not-found/not-found.component';
 import { GameManagementComponent } from './game-management/game-management.component';
 import { FileUploadComponent } from './common/file-upload/file-upload.component';
 import { EditGameFormComponent } from './game-management/edit-game-form/edit-game-form.component';
 import { GameCardComponent } from './common/game-card/game-card.component';
 import { CalculationDialogComponent } from './game-management/calculation-dialog/calculation-dialog.component';
-import { AbilityComponent } from './ability/ability.component';
+import {MatDividerModule} from "@angular/material/divider";
 
 
 @NgModule({
@@ -72,7 +71,6 @@ import { AbilityComponent } from './ability/ability.component';
     EditGameFormComponent,
     GameCardComponent,
     CalculationDialogComponent,
-    AbilityComponent,
   ],
     imports: [
         BrowserModule,
@@ -110,7 +108,7 @@ import { AbilityComponent } from './ability/ability.component';
         NgxEchartsModule.forRoot({
             echarts
         }),
-        MatDatepickerModule, MatNativeDateModule, MatSelectModule
+        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule
     ],
   providers: [
       {

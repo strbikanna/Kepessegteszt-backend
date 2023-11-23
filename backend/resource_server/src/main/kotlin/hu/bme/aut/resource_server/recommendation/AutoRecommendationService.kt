@@ -16,34 +16,61 @@ class AutoRecommendationService(
     @Autowired private var modelManager: ModelManager
 ) {
     val motivationRate = 0.7
-    suspend fun createRecommendationModel(gameId: Int){
+    suspend fun createRecommendationModel(gameId: Int) {
         val game = dataService.getGameWithAbilities(gameId)
         val normalizedResults = dataService.getAllNormalizedResultsOfGame(game)
         val abilities = game.affectedAbilities
-        val modelInput = calculatorService.getAbilityValuesAndValuesFromResultsStructured(normalizedResults, abilities.toList())
+        val modelInput =
+            calculatorService.getAbilityValuesAndValuesFromResultsStructured(normalizedResults, abilities.toList())
         modelManager.createNewModel(gameId, modelInput.first, modelInput.second)
     }
-    fun generateRecommendationForUser(user: UserEntity, game: GameEntity): RecommendedGameEntity{
-        val expectedResult =
-        if(!modelManager.existsModel(game.id!!)) {
-             dataService.getBestResultOfUser(game, user)?.normalizedResult ?: 0.0
-        }else{
-             modelManager.getEstimationForResult(game.id!!,
-                user.profileFloat
-                    .filter { game.affectedAbilities.contains(it.ability) }
-                    .sortedBy { it.ability.code }
-                    .map { it.abilityValue }
-            )
+
+    fun generateRecommendationForUser(user: UserEntity, game: GameEntity): RecommendedGameEntity {
+        val expectedResult: Double?
+        if (!modelManager.existsModel(game.id!!)) {
+            expectedResult = dataService.getBestResultOfUser(game, user)?.normalizedResult
+        } else {
+            val profileItems = user.profileFloat
+                .filter { game.affectedAbilities.contains(it.ability) }
+                .sortedBy { it.ability.code }
+                .map { it.abilityValue }
+            expectedResult = if (profileItems.size != game.affectedAbilities.size) null
+            else modelManager.getEstimationForResult(game.id!!, profileItems)
         }
+        if (expectedResult == null) return generateRecommendationByNotNormalizedResult(user, game)
 
         val levelPoints = ScoreCalculator.maxNormalizedNonLevelPoints * motivationRate - expectedResult
-        var recommendedLevel = if(levelPoints > ScoreCalculator.levelMultiplicator)  levelPoints /ScoreCalculator.levelMultiplicator  else 1.0
-        if(levelPoints.mod(ScoreCalculator.levelMultiplicator) > motivationRate * ScoreCalculator.levelMultiplicator) recommendedLevel++
+        var recommendedLevel =
+            if (levelPoints > ScoreCalculator.levelMultiplicator) levelPoints / ScoreCalculator.levelMultiplicator else 1.0
+        if (levelPoints.mod(ScoreCalculator.levelMultiplicator) > motivationRate * ScoreCalculator.levelMultiplicator) recommendedLevel++
 
         return RecommendedGameEntity(
             recommendedTo = user,
             game = game,
             config = mapOf("level" to recommendedLevel.toInt())
         )
+    }
+
+    fun generateRecommendationByNotNormalizedResult(user: UserEntity, game: GameEntity): RecommendedGameEntity {
+        val latestResult = dataService.getLatestResultOfUser(game, user)
+        var recommendation = RecommendedGameEntity(
+            recommendedTo = user,
+            game = game,
+            config = mapOf("level" to 1)
+        )
+        if (latestResult != null) {
+            val maxPossiblePoints = ScoreCalculator.getMaxScoreOfLevel(latestResult)
+            val points = ScoreCalculator.getActualScoreOfLevel(latestResult)
+            val successRatio = if (maxPossiblePoints != 0.0) points / maxPossiblePoints else 0.0
+            val latestLevel = latestResult.config["level"]?.toString()?.toInt() ?: 1
+            recommendation = if (successRatio > 0.69)
+                recommendation.copy(
+                    config = mapOf("level" to (latestLevel + 1))
+                ) else
+                recommendation.copy(
+                    config = mapOf("level" to (latestLevel))
+                )
+        }
+        return recommendation
     }
 }

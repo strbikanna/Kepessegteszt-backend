@@ -22,10 +22,10 @@ class AbilityRateCalculatorService(
     @Value("\${app.python.source-location}")
     private lateinit var filePath: String
     private val logger = LoggerFactory.getLogger(AbilityRateCalculatorService::class.java)
-    fun calculateRates( abilityValues: List<List<Double?>>, resultValues: List<Double> ): List<Double>{
+    fun calculateRates(abilityValues: List<List<Double?>>, resultValues: List<Double>): List<Double> {
         logger.info("Executing python...")
 
-        try{
+        try {
             val interpreter = SharedInterpreter()
             interpreter.use {
                 interpreter.exec("import sys")
@@ -39,9 +39,9 @@ class AbilityRateCalculatorService(
                 // TODO test cast !!
                 return answerWithRatios as List<Double>
             }
-        }catch(ex: JepException){
+        } catch (ex: JepException) {
             throw CalculationException("Exception in calculating ability contribution in game result: ${ex.message}")
-        }catch(ex: RuntimeException){
+        } catch (ex: RuntimeException) {
             throw CalculationException("Exception occurred in processing calculation result: ${ex.message}")
         }
     }
@@ -53,17 +53,20 @@ class AbilityRateCalculatorService(
      * The two arrays contain the values for the users in same order.
      */
     @Transactional
-    fun getAbilityValuesAndValuesFromResultsStructured(results: List<ResultForCalculationEntity>, abilities: List<AbilityEntity>): Pair<List<List<Double?>>, List<Double>>{
+    fun getAbilityValuesAndValuesFromResultsStructured(
+        results: List<ResultForCalculationEntity>,
+        abilities: List<AbilityEntity>
+    ): Pair<List<List<Double?>>, List<Double>> {
         val abilityValues = mutableListOf<List<Double?>>()
         val resultValues = mutableListOf<Double>()
         var user: UserEntity
         results.forEach { result ->
-            if(result.normalizedResult != null) {
+            if (result.normalizedResult != null) {
                 user = userRepo.findByIdWithProfile(result.user.id!!).orElseThrow()
-                val relevantProfileValues = user.profileFloat
-                    .filter { abilities.contains(it.ability) }
-                    .sortedBy { it.ability.code }
-                    .map { it.abilityValue }
+                val relevantProfileValues = abilities
+                    .sortedBy { it.code }
+                    .map { ability -> user.profileFloat.find { it.ability == ability }?.abilityValue }
+
                 abilityValues.add(relevantProfileValues)
                 resultValues.add(result.normalizedResult!!)
             }

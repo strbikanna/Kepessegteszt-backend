@@ -7,8 +7,8 @@ export const EndScene = {
 };
 
 let userParams;
-let gameResults;
 let gameParams;
+let gameResults;
 
 function preload() {
     this.load.setBaseURL(common.getBaseFolder('number-repeating'));
@@ -17,9 +17,11 @@ function preload() {
 
 function create() {
     gameParams = this.registry.get('gameParams');
-    gameResults = this.registry.get('gameResults');
 
     this.add.image(400, 300, 'background').setScale(1.7);
+
+    // Check result
+    gameResults = this.registry.get('gameResults');
     const resultText = gameResults.gameWon ? "Gratulálok! Sikerült!" : "Sajnálom, próbáld újra!";
     this.add.text(400, 200, resultText, common.retroStyle).setFontSize('32px').setOrigin(0.5);
 

@@ -9,10 +9,13 @@ export const MainScene = {
 
 // Game variables
 let gameParams;
-let currentRound;
+
 let inputEnabled;
-let numberSequence;
 let inputSequence;
+let operationsSequence;
+
+let currentTotal;
+let currentRound;
 let currentIndex;
 
 // Game objects
@@ -22,28 +25,22 @@ let instructionText;
 
 function preload() {
     this.load.setBaseURL(common.getBaseFolder('number-repeating'));
-    
-    for (let i = 1; i <= 9; i++) {
-        this.load.audio(`${i}`, [`${i}.mp3`]);
-    }
+    this.load.image('background', 'background.jpg');
     this.load.audio('click', ['click.wav'])
     this.load.audio('game_over', ['game_over.wav'])
     this.load.audio('win', ['win.wav'])
-
-    this.load.image('background', 'background.jpg');
 }
 
 function create() {
     gameParams = this.game.registry.get('gameParams');
     currentRound = 1;
-    inputEnabled = false;
 
     this.add.image(400, 300, 'background').setScale(1.7);
-    instructionText = this.add.text(400, 50, 'Hallgasd a számokat!', common.retroStyle).setFontSize('32px').setOrigin(0.5);
+    instructionText = this.add.text(400, 50, 'Tartsd fejben az eredményt!', common.retroStyle).setFontSize('32px').setOrigin(0.5);
     roundText = this.add.text(30, 30, `${currentRound}/${gameParams.maxRound}`, common.retroStyle).setFontSize('32px');
-
+    
     // Digital-style input display
-    inputDisplay = this.add.text(400, 100, '', common.retroStyle).setFontSize('32px').setOrigin(0.5);
+    inputDisplay = this.add.text(400, 150, '0', common.retroStyle).setFontSize('32px').setOrigin(0.5);
 
     // Adding on-screen number buttons 1-9
     for (let i = 1; i <= 9; i++) {
@@ -63,31 +60,86 @@ function create() {
 
 function startGame() {
     // Clear previous sequences
-    numberSequence = [];
-    inputSequence = [];
-    currentIndex = 0;
+    currentTotal = 0;
     inputEnabled = false;
+    inputSequence = [];
+    operationsSequence = [];
+    currentIndex = 0;
 
-    let numberCount = Phaser.Math.Between(gameParams.minNumberCount, gameParams.maxNumberCount);
+    generateOperationsSequence();
 
-    // Generate a sequence based on the current round
-    for (let i = 0; i < numberCount; i++) {
-        numberSequence.push(Phaser.Math.Between(1, 9));
-    }
+    // Start the operation sequence playback
+    this.time.addEvent({
+        delay: gameParams.timeBetweenNumbers,
+        callback: showNextOperation,
+        callbackScope: this,
+        repeat: operationsSequence.length - 1
+    });
 
     // After the sequence playback, enable input
-    this.time.delayedCall((gameParams.timeBetweenNumbers * numberSequence.length + 1) + 1000, () => {
+    this.time.delayedCall(gameParams.timeBetweenNumbers * operationsSequence.length, () => {
         inputEnabled = true;
         updateDisplay();
     });
+}
 
-    // Initialize the timer
-    const timer = this.time.addEvent({
-        delay: gameParams.timeBetweenNumbers,
-        callback: playNextNumber,
-        callbackScope: this,
-        repeat: numberSequence.length - 1
-    });
+function generateOperationsSequence() {
+    let numberCount = Phaser.Math.Between(gameParams.minNumberCount, gameParams.maxNumberCount);
+    for (let i = 0; i < numberCount; i++) {
+        let operation = gameParams.operations[Phaser.Math.Between(0, gameParams.operations.length - 1)];
+        const number = Phaser.Math.Between(gameParams.minNumber, gameParams.maxNumber);
+/*
+        if (operation === '-' && currentTotal - number < 0) {
+            operation = '+';
+        } else if (operation === '/' && currentTotal % number !== 0) {
+            operation = '*';
+        }
+  */      
+        operationsSequence.push(operation + number);
+    }
+}
+
+function showNextOperation() {
+    if (currentIndex < operationsSequence.length) {
+        const operation = operationsSequence[currentIndex];
+        applyOperation(operation);
+        inputDisplay.setText(operation);
+        currentIndex++;
+    }
+}
+
+function applyOperation(operation) {
+    const operator = operation.charAt(0);
+    const number = parseInt(operation.substr(1), 10);
+
+    switch (operator) {
+        case '+':
+            currentTotal += number;
+            break;
+        case '-':
+            currentTotal -= number;
+            break;
+        case '*':
+            currentTotal *= number;
+            break;
+        case '/':
+            currentTotal = Math.floor(currentTotal / number); // Using floor to handle division resulting in fractions
+            break;
+        default:
+            console.error('Invalid operation:', operation);
+            break;
+    }
+}
+
+function updateDisplay() {
+    inputDisplay.text = inputSequence.join(' ');
+    //roundText.setText(`${currentRound}/${gameParams.maxRound}`);
+
+    if (inputEnabled) {
+        instructionText.setText('Írd be a végső eredményt!');
+    } else {
+        instructionText.setText('Tartsd fejben az eredményt!');
+    }
 }
 
 function createNumberButton(scene, x, y, text) {
@@ -139,13 +191,12 @@ function createNumberButton(scene, x, y, text) {
 
     buttonRect.on('pointerdown', () => {
         if (!inputEnabled) return;
-      
+
         if (text === 'C') {
             inputSequence = [];
             scene.sound.play('click', common.soundSettings);
         } else if (text === 'OK') {
-            if (JSON.stringify(inputSequence) === JSON.stringify(numberSequence)) {
-                // Player got the correct sequence
+            if (JSON.stringify(inputSequence) === JSON.stringify(currentTotal)) {
                 if (currentRound === gameParams.maxRound) {
                     // Player has completed all rounds, move to the end scene
                     endGame(true, scene);
@@ -157,7 +208,7 @@ function createNumberButton(scene, x, y, text) {
                     updateDisplay();
                 }
             } else {
-                // Incorrect sequence, move to end scene
+                // Incorrect total, move to end scene
                 endGame(false, scene);
             }
         } else {
@@ -178,26 +229,6 @@ function endGame(gameWon, scene) {
         scene.sound.play('game_over', common.soundSettings);
     }
     scene.scene.start('EndScene');
-}
-
-
-function updateDisplay() {
-    inputDisplay.text = inputSequence.join(' ');
-    roundText.setText(`${currentRound}/${gameParams.maxRound}`);
-
-    if (inputEnabled) {
-        instructionText.setText('Írd be a számokat!');
-    } else {
-        instructionText.setText('Hallgasd a számokat!');
-    }
-}
-
-function playNextNumber() {
-    if (currentIndex < numberSequence.length) {
-        const number = numberSequence[currentIndex];
-        this.sound.play(`${number}`);
-        currentIndex++;
-    }
 }
 
 function update() {

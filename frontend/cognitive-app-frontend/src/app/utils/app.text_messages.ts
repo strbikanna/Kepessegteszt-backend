@@ -33,6 +33,9 @@ export const TEXTS = {
         },
         progress:{
             loading_game: 'Játék betöltése...',
+        },
+        error:{
+            empty_content: 'Még nem érkezett ajánlás',
         }
     },
     user_info: {
@@ -85,6 +88,7 @@ export const TEXTS = {
         http_error_details: 'A szerver válasza: ',
         invalide_start_date: 'Érvénytelen kezdődátum',
         invalide_end_date: 'Érvénytelen végdátum',
+        empty_content: 'Nincs megjeleníthető tartalom',
     },
     actions: {
         cancel: 'Mégse',

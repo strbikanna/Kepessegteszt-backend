@@ -35,18 +35,19 @@ class GameplayResultController(
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('GAME')")
-    fun saveResult(@RequestBody gameplayData: GameplayResultDto, authentication: Authentication){
+    fun saveResult(@RequestBody gameplayData: GameplayResultDto, authentication: Authentication): GameplayResultEntity {
         authService.checkGameAccessAndThrow(authentication, gameplayData)
         val username = gameplayData.username
         if(!profileSnapshotService.existsSnapshotToday(username)){
             profileSnapshotService.saveSnapshotOfUser(username)
         }
-        gameplayResultService.save(gameplayData)
+        return gameplayResultService.save(gameplayData)
     }
 
     @Transactional
     @GetMapping("/results")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("!hasRole('GAME')")
     fun getResultsByUser(authentication: Authentication): List<GameplayResultEntity>{
         val username = authentication.name
         return gameplayResultService.getAllByUser(username)
