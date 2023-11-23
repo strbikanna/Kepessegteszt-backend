@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {map, Observable,} from "rxjs";
+import {catchError, map, Observable, retry, tap, throwError,} from "rxjs";
 import {CognitiveProfile} from "../../model/cognitive_profile.model";
 import {Ability} from "../../model/ability.model";
 import {AppConstants} from "../../utils/constants";
@@ -10,10 +10,13 @@ import {SimpleHttpService} from "../../utils/simple-http.service";
 @Injectable({
   providedIn: 'root'
 })
-export class CognitiveProfileService extends SimpleHttpService{
+export class CognitiveProfileService {
     snapshotEndpoint = '/profile_snapshot'
     profileEndpoint = '/user/profile'
     inspectPath = '/inspect'
+
+    constructor(private http: HttpClient, private helper: SimpleHttpService) { }
+
 
     /**
      * returns the last three profile snapshot
@@ -22,7 +25,7 @@ export class CognitiveProfileService extends SimpleHttpService{
         let params = new HttpParams()
         params = params.set('pageIndex', 0)
         params = params.set('pageSize', 3)
-        return this.http.get<CognitiveProfile[]>(`${this.baseUrl}${this.snapshotEndpoint}`, {params: params}).pipe(
+        return this.http.get<CognitiveProfile[]>(`${this.helper.baseUrl}${this.snapshotEndpoint}`, {params: params}).pipe(
             map((res: any[]) => this.convertToCognitiveProfile(res) )
         )
 
@@ -32,7 +35,7 @@ export class CognitiveProfileService extends SimpleHttpService{
         params = params.set('pageIndex', 0)
         params = params.set('pageSize', 3)
         params = params.set('username', username)
-        return this.http.get<CognitiveProfile[]>(`${this.baseUrl}${this.snapshotEndpoint}${this.inspectPath}`, {params: params}).pipe(
+        return this.http.get<CognitiveProfile[]>(`${this.helper.baseUrl}${this.snapshotEndpoint}${this.inspectPath}`, {params: params}).pipe(
             map((res: any[]) => this.convertToCognitiveProfile(res) )
         )
     }
@@ -41,14 +44,18 @@ export class CognitiveProfileService extends SimpleHttpService{
    * returns the actual cognitive profile of the user logged in
    */
   getCurrentProfile(): Observable<CognitiveProfile>{
-        return this.http.get<CognitiveProfile>(`${this.baseUrl}${this.profileEndpoint}`).pipe(
+        return this.http.get<CognitiveProfile>(`${this.helper.baseUrl}${this.profileEndpoint}`).pipe(
+            retry(3),
+            catchError(this.helper.handleHttpError),
             map((res: any) => this.convertToCognitiveProfile(res.profile)[0] )
         )
   }
   getCurrentProfileOfOtherUser(username: string): Observable<CognitiveProfile>{
         let params = new HttpParams()
         params = params.set('username', username)
-        return this.http.get<CognitiveProfile>(`${this.baseUrl}${this.profileEndpoint}${this.inspectPath}`, {params: params}).pipe(
+        return this.http.get<CognitiveProfile>(`${this.helper.baseUrl}${this.profileEndpoint}${this.inspectPath}`, {params: params}).pipe(
+            retry(3),
+            catchError(this.helper.handleHttpError),
             map((res: any) => this.convertToCognitiveProfile(res.profile)[0] )
         )
   }
@@ -60,7 +67,9 @@ export class CognitiveProfileService extends SimpleHttpService{
       let params = new HttpParams()
       params = params.set('startTime', start.toISOString())
       params = params.set('endTime', end.toISOString())
-      return this.http.get<CognitiveProfile[]>(`${this.baseUrl}${this.snapshotEndpoint}`, {params: params}).pipe(
+      return this.http.get<CognitiveProfile[]>(`${this.helper.baseUrl}${this.snapshotEndpoint}`, {params: params}).pipe(
+          retry(3),
+          catchError(this.helper.handleHttpError),
           map((res: any[]) => this.convertToCognitiveProfile(res) )
       )
   }
@@ -69,12 +78,17 @@ export class CognitiveProfileService extends SimpleHttpService{
         params = params.set('startTime', start.toISOString())
         params = params.set('endTime', end.toISOString())
         params = params.set('username', username)
-        return this.http.get<CognitiveProfile[]>(`${this.baseUrl}${this.snapshotEndpoint}${this.inspectPath}`, {params: params}).pipe(
+        return this.http.get<CognitiveProfile[]>(`${this.helper.baseUrl}${this.snapshotEndpoint}${this.inspectPath}`, {params: params}).pipe(
+            retry(3),
+            catchError(this.helper.handleHttpError),
             map((res: any[]) => this.convertToCognitiveProfile(res) )
         )
     }
     getContacts(): Observable<User[]> {
-        return this.http.get<User[]>(`${AppConstants.authServerUrl}/user/impersonation_contacts`)
+        return this.http.get<User[]>(`${AppConstants.authServerUrl}/user/impersonation_contacts`).pipe(
+            retry(3),
+            catchError(this.helper.handleHttpError),
+        )
     }
   private convertToCognitiveProfile(profileItems: any[]): CognitiveProfile[]{
       let model : CognitiveProfile[] = []

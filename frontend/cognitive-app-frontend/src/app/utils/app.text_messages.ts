@@ -84,11 +84,13 @@ export const TEXTS = {
     error:{
         default_error_message: 'Ismeretlen hiba történt',
         default_error_title: 'Hiba történt',
-        http_error: 'Hiba történt a szerverrel való kommunikáció során',
+        http_error: 'Hiba történt a szerverrel való kommunikáció során.',
         http_error_details: 'A szerver válasza: ',
         invalide_start_date: 'Érvénytelen kezdődátum',
         invalide_end_date: 'Érvénytelen végdátum',
         empty_content: 'Nincs megjeleníthető tartalom',
+        network_error: 'Valószínűleg nincs internetkapcsolat.',
+        unauthorized_error: 'Nincs jogosultságod a kért művelet végrehajtásához.',
     },
     actions: {
         cancel: 'Mégse',
