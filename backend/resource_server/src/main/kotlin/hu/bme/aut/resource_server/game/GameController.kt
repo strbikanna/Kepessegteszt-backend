@@ -21,7 +21,7 @@ class GameController(
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "10") size: Int
     ): List<GameEntity> {
-        return gameService.getAllGames(page, size)
+        return gameService.getAllGamesPaged(page, size)
     }
 
     @GetMapping("/all/count")

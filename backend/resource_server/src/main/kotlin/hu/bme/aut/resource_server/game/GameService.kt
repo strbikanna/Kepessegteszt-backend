@@ -19,8 +19,11 @@ class GameService (
     @Value("\${app.image-path}")
     private lateinit var gameImageLocation: String
 
-    fun getAllGames(pageIndex: Int, pageSize: Int): List<GameEntity> {
+    fun getAllGamesPaged(pageIndex: Int, pageSize: Int): List<GameEntity> {
         return gameRepository.findAll(PageRequest.of(pageIndex, pageSize)).toList()
+    }
+    fun getAllGames(): List<GameEntity> {
+        return gameRepository.findAll()
     }
 
     fun getGameById(id: Int): Optional<GameEntity> {
