@@ -39,7 +39,7 @@ class AutoRecommendationService(
         }
         if (expectedResult == null) return generateRecommendationByNotNormalizedResult(user, game)
 
-        val levelPoints = ScoreCalculator.maxNormalizedNonLevelPoints * motivationRate - expectedResult
+        val levelPoints = expectedResult - ScoreCalculator.maxNormalizedNonLevelPoints * motivationRate
         var recommendedLevel =
             if (levelPoints > ScoreCalculator.levelMultiplicator) levelPoints / ScoreCalculator.levelMultiplicator else 1.0
         if (levelPoints.mod(ScoreCalculator.levelMultiplicator) > motivationRate * ScoreCalculator.levelMultiplicator) recommendedLevel++
@@ -51,7 +51,7 @@ class AutoRecommendationService(
         )
     }
 
-    fun generateRecommendationByNotNormalizedResult(user: UserEntity, game: GameEntity): RecommendedGameEntity {
+    private fun generateRecommendationByNotNormalizedResult(user: UserEntity, game: GameEntity): RecommendedGameEntity {
         val latestResult = dataService.getLatestResultOfUser(game, user)
         var recommendation = RecommendedGameEntity(
             recommendedTo = user,
@@ -59,11 +59,14 @@ class AutoRecommendationService(
             config = mapOf("level" to 1)
         )
         if (latestResult != null) {
-            val maxPossiblePoints = ScoreCalculator.getMaxScoreOfLevel(latestResult)
-            val points = ScoreCalculator.getActualScoreOfLevel(latestResult)
+            val maxPossiblePoints = ScoreCalculator.getMaxScoreOfLevel(latestResult, game)
+            val points = ScoreCalculator.getActualScoreOfLevel(latestResult, game)
             val successRatio = if (maxPossiblePoints != 0.0) points / maxPossiblePoints else 0.0
-            val latestLevel = latestResult.config["level"]?.toString()?.toInt() ?: 1
-            recommendation = if (successRatio > 0.69)
+            val latestLevel =
+                try{
+                    latestResult.config["level"]?.toString()?.toInt() ?: latestResult.result["level"]?.toString()?.toInt() ?: 1
+                }catch (e: NumberFormatException){1}
+            recommendation = if (successRatio >= motivationRate)
                 recommendation.copy(
                     config = mapOf("level" to (latestLevel + 1))
                 ) else

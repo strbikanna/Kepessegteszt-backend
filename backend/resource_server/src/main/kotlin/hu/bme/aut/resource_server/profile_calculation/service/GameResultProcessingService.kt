@@ -73,7 +73,7 @@ class GameResultProcessingService(
         var normalizedResults: List<ResultForCalculationEntity>
         for(i in 0 .. maxPages){
             results = dataService.getAllNonNormalizedResultsOfGame(game, PageRequest.of(i, defaultPageSize))
-            normalizedResults = calculator.calculateNormalizedScores(results)
+            normalizedResults = calculator.calculateNormalizedScores(results, game)
             dataService.deleteAll(results)
             dataService.saveAll(
                 selectRelevantNormalizedResultsForUpdate(normalizedResults, timestamp)
