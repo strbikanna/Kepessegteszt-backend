@@ -15,7 +15,6 @@ object TestDataSource {
             "maxPointsFieldName" to "maxRound",
             "extraPointsFieldName" to "healthPoints",
             "maxExtraPointsFieldName" to "maxHealthPoints",
-            "maxRound" to 10,
             "maxLevel" to 10,
         )
       return GameEntity(
