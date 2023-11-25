@@ -53,9 +53,9 @@ object ScoreCalculator {
             try {
                 L = (result.result[levelFieldName]?.toString())?.toDouble()
                 P = (result.result[pointsFieldName]?.toString())?.toDouble()
-                maxP = (result.result[maxPointsFieldName]?.toString())?.toDouble()
+                maxP = (result.result[maxPointsFieldName]?.toString())?.toDouble() ?: (result.config[maxPointsFieldName]?.toString())?.toDouble()
                 E = (result.result[extraPointsFieldName]?.toString())?.toDouble()
-                maxE = (result.result[maxExtraPointsFieldName]?.toString())?.toDouble()
+                maxE = (result.result[maxExtraPointsFieldName]?.toString())?.toDouble() ?: (result.config[maxExtraPointsFieldName]?.toString())?.toDouble()
                 if(E==null && maxE==null) {
                     E = 0.0
                     maxE = 1.0
