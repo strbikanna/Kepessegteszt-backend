@@ -63,7 +63,6 @@ class AuthServerConfig {
             .exceptionHandling { exceptions ->
                 exceptions
                     .defaultAuthenticationEntryPointFor(
-                        //TODO customize login page
                         LoginUrlAuthenticationEntryPoint("/login"),
                         MediaTypeRequestMatcher(MediaType.TEXT_HTML)
                     )

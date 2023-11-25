@@ -2,6 +2,10 @@ package hu.bme.aut.resource_server.profile_snapshot
 
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.user.UserEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
@@ -44,10 +48,10 @@ class ProfileSnapshotController(
         @RequestParam(required = false) pageSize: Int?,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) startTime: LocalDateTime?,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) endTime: LocalDateTime?,
-    ): List<ProfileSnapshotItem>{
+    ): Deferred<List<ProfileSnapshotItem>> = CoroutineScope(Dispatchers.Default).async{
         authService.checkContactAndThrow(authentication, username)
         val user = authService.getContactByUsername(username)
-        return getSnapshotsOfUserByRequestValues(user, pageIndex, pageSize, startTime, endTime)
+        return@async getSnapshotsOfUserByRequestValues(user, pageIndex, pageSize, startTime, endTime)
     }
 
     private fun getSnapshotsOfUserByRequestValues(

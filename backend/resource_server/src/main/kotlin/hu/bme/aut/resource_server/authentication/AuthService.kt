@@ -5,6 +5,9 @@ import hu.bme.aut.resource_server.gameplayresult.GameplayResultDto
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
@@ -54,23 +57,27 @@ class AuthService(
     fun getContactByUsername(username: String): UserEntity{
         return userRepository.findByUsername(username).orElseThrow()
     }
-    fun checkContactAndThrow(authentication: Authentication, contactUsername: String){
+    suspend fun checkContactAndThrow(authentication: Authentication, contactUsername: String){
         if(webclient==null){
             initWebClient()
         }
         val jwt = authentication.principal as Jwt
         val accessTokenOfUser = jwt.tokenValue
-        val requestSpec = webclient!!
-            .get()
-            .uri("/user/impersonation_contacts")
-            .header("Authorization", "Bearer $accessTokenOfUser")
-            .accept(MediaType.APPLICATION_JSON)
-        val response: Mono<String> = requestSpec.retrieve().bodyToMono(String::class.java)
-        response.block()?.let {
-            if(it.contains(contactUsername)){
-               return
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val requestSpec = webclient!!
+                .get()
+                .uri("/user/impersonation_contacts")
+                .header("Authorization", "Bearer $accessTokenOfUser")
+                .accept(MediaType.APPLICATION_JSON)
+            val response: Mono<String> = requestSpec.retrieve().bodyToMono(String::class.java)
+            response.block()?.let {
+                if (it.contains(contactUsername)) {
+                    return@launch
+                }
             }
+            throw IllegalAccessException("This user is not authorized to see this contact.")
         }
-        throw IllegalAccessException("This user is not authorized to see this contact.")
+
     }
 }
