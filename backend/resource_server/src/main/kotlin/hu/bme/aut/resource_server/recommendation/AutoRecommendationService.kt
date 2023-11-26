@@ -4,8 +4,11 @@ import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.profile_calculation.calculator.AbilityRateCalculatorService
 import hu.bme.aut.resource_server.profile_calculation.calculator.ScoreCalculator
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
+import hu.bme.aut.resource_server.profile_calculation.error.CalculationException
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.user.UserEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -21,7 +24,9 @@ class AutoRecommendationService(
         val normalizedResults = dataService.getAllNormalizedResultsOfGame(game)
         val abilities = game.affectedAbilities
         val modelInput =
-            calculatorService.getAbilityValuesAndValuesFromResultsStructured(normalizedResults, abilities.toList())
+            withContext(Dispatchers.IO) {
+                calculatorService.getAbilityValuesAndValuesFromResultsStructured(normalizedResults, abilities.toList())
+            }
         modelManager.createNewModel(gameId, modelInput.first, modelInput.second)
     }
 
@@ -35,7 +40,11 @@ class AutoRecommendationService(
                 .sortedBy { it.ability.code }
                 .map { it.abilityValue }
             expectedResult = if (profileItems.size != game.affectedAbilities.size) null
-            else modelManager.getEstimationForResult(game.id!!, profileItems)
+            else try{
+                modelManager.getEstimationForResult(game.id!!, profileItems)
+            }catch(e: CalculationException){
+                null
+            }
         }
         if (expectedResult == null) return generateRecommendationByNotNormalizedResult(user, game)
 

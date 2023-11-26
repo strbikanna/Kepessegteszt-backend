@@ -29,7 +29,7 @@ springdoc:
 
 app:
   python:
-    source-location: C:/Users/strbi/Python_projects/HelloWorld
+    source-location: C:/Users/strbi/Python_projects/Neural_network
     models-location: C:/Users/strbi/Python_projects/
   thumbnail-location: C:/Users/annav/Documents/Bme/Szakdoli/Kepessegteszt-backend/game_images/
   image-path: http://localhost:8090/game_images
