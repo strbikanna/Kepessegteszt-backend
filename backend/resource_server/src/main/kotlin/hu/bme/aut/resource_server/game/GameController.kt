@@ -65,8 +65,8 @@ class GameController(
     @DeleteMapping("/{game_id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
-    fun deleteGame(@RequestBody gameEntity: GameEntity, @PathVariable game_id: Int) {
-        if(game_id == gameEntity.id) {
+    fun deleteGame(@PathVariable game_id: Int) {
+        if(gameRepository.existsById(game_id)) {
             gameRepository.deleteById(game_id)
         } else{
             throw IllegalArgumentException("Game ids do not match.")

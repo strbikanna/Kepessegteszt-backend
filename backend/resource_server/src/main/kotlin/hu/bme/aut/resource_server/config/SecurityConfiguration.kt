@@ -32,6 +32,9 @@ class SecurityConfiguration {
             .authorizeHttpRequests{
                 it.requestMatchers(HttpMethod.OPTIONS).permitAll()
                 it.requestMatchers("/error").permitAll()
+                it.requestMatchers("/api-docs").permitAll()
+                it.requestMatchers("/swagger-ui/**").permitAll()
+                it.requestMatchers("/api-docs/swagger-config").permitAll()
                 it.requestMatchers("/game_images/**").permitAll()
                 it.anyRequest().authenticated()
             }

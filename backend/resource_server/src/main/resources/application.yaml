@@ -23,6 +23,10 @@ spring:
         jwt:
           issuer-uri: http://localhost:9000
 
+springdoc:
+  api-docs:
+    path: /api-docs
+
 app:
   python:
     source-location: C:/Users/strbi/Python_projects/HelloWorld

@@ -45,6 +45,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation ("org.flywaydb:flyway-core")
     implementation ("org.flywaydb:flyway-mysql")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
