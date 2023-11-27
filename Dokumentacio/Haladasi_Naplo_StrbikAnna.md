@@ -199,4 +199,21 @@ Javaslataim: A) legyen fix ideig érvényes a token (pl. 30 perc) és erre felh�
 - játékok speciálisabb eredményei, leírói
 - plusz szükségesek lennének minta adatok, de valószínűleg azt majd SQL-ből generálok, az jó?
 
+# 11. 26.
+## A héten a következőkkel haladtam:
+
+### Frontend:
+- refaktoráltam pár komponenst, szervizeket
+- a hibakezelést kicsit továbbfejlesztettem
+- találtam még egy hibát az autentikációnál, azt javítottam
+- az új játékokat beletettem
+
+### Backend
+- a normalizált pontok számítását tovább finomítottam, pár hibakezeléssel kapcsolatos dolgot írtam hozzá
+- hozzáadtam swagger dokumentációt, és javítottam néhány (szerintem nem konzisztens) endpointot
+- konkurrens adatfeldolgozást néhány új helyen is bevezettem
+- teszteket írtam a kiértékelő osztályokhoz
+- megérkezett az igazi Python script!!!! ezt telepítettem, beillesztettem a megfelelő helyre, teszteltem (sajnos nem ment minden azonnal, ahogy számítottam)
+- készítettem adatinicializáló sql-scriptet tárolt eljárás formájában, ezt meg lehet hívni, ha fel akarjuk tölteni az adatbázist minta adatokkal
+
 
