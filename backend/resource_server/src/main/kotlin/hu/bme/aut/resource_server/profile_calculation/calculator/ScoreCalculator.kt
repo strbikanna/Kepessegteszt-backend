@@ -111,8 +111,8 @@ object ScoreCalculator {
     fun getMaxScoreOfLevel(result: ResultForCalculationEntity, game:GameEntity): Double {
         setFieldNamesFromConfig(game)
         return if(maxPointsFieldName != null)
-                (result.result[maxPointsFieldName]?.toString()?.toDouble() ?: 0.0) +
-                (result.result[maxExtraPointsFieldName]?.toString()?.toDouble() ?: 0.0)
+                ((result.result[maxPointsFieldName]?.toString())?.toDouble() ?: (result.config[maxPointsFieldName]?.toString())?.toDouble() ?: 0.0) +
+                ((result.result[maxExtraPointsFieldName]?.toString())?.toDouble() ?: (result.config[maxExtraPointsFieldName]?.toString())?.toDouble() ?: 0.0)
         else maxNormalizedNonLevelPoints
     }
 
