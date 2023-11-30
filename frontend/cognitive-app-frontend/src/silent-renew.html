@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Silent renew</title>
+
+</head>
+<body>
+<script>
+    window.onload = function () {
+        /* The parent window hosts the Angular application */
+        const parent = window.parent;
+        /* Send the id_token information to the oidc message handler */
+        const event = new CustomEvent('oidc-silent-renew-message', { detail: window.location });
+        parent.dispatchEvent(event);
+    };
+</script>
+</body>
+</html>
