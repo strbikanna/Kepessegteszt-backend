@@ -1,5 +1,4 @@
 -- games
--- comment out for tests
 INSERT INTO GAME(id, _name, _description, thumbnail_path, _active, url, config_description)
 VALUES (1, 'balloon-pop', 'This is a very epic game. Try not to die from the bombs.',
         'http://localhost:8090/game_images/balloon_game.jpg', true, null,

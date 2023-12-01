@@ -52,7 +52,7 @@ class BypassFilter(
         val jwt = Jwt.withTokenValue("devgame")
             .header("alg", "none")
             .subject(requestedUsername)
-            .claims { it["game_id"] = game.id }
+            .claims { it["game_id"] = requestedGameId }
             .build()
         SecurityContextHolder.getContext().authentication = JwtAuthenticationToken(jwt, listOf(SimpleGrantedAuthority("ROLE_GAME")))
     }

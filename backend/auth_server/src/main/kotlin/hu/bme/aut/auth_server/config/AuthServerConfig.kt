@@ -109,7 +109,7 @@ class AuthServerConfig {
             "select users.username, roles.role_name "
                     + "from users "
                     + "inner join user_roles ur on ur.user_id = users.id "
-                    + "inner join roles on ur.role_id = roles.id "
+                    + "inner join roles on ur.role_id = roles.role_name "
                     + "where users.username = ?"
         )
         return userdetailsService

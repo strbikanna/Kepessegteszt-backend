@@ -97,7 +97,7 @@ object TestDataSource {
                     "level" to 3,
                     "round" to 6,
                     "maxRound" to 10,
-                    "healthPoints" to 5,
+                    "healthPoints" to 8,
                     "maxHealthPoints" to 10,
                 ),
                 config = mutableMapOf(),
@@ -111,9 +111,9 @@ object TestDataSource {
                 ResultForCalculationEntity(
                 result = mutableMapOf(
                     "level" to 4,
-                    "round" to 5,
+                    "round" to 7,
                     "maxRound" to 10,
-                    "healthPoints" to 2,
+                    "healthPoints" to 7,
                     "maxHealthPoints" to 10,
                 ),
                 config = mutableMapOf(),
