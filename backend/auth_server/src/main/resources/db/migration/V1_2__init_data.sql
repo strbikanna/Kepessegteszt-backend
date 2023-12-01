@@ -25,33 +25,42 @@ INSERT INTO USERS(id, username, email, password, first_name, last_name)
 VALUES (4, 'admin_human', 'immaadmin@vip.hu', 'topSecret', 'Admin', 'Person');
 
 -- roles
-INSERT INTO ROLES(id, role_name)
-VALUES (1, 'TEACHER');
+INSERT INTO ROLES
+VALUES ('TEACHER');
 
-INSERT INTO ROLES(id, role_name)
-VALUES (2, 'SCIENTIST');
+INSERT INTO ROLES
+VALUES ('SCIENTIST');
 
-INSERT INTO ROLES(id, role_name)
-VALUES (3, 'STUDENT');
+INSERT INTO ROLES
+VALUES ('STUDENT');
 
-INSERT INTO ROLES(id, role_name)
-VALUES (4, 'ADMIN');
+INSERT INTO ROLES
+VALUES ( 'ADMIN');
 
-INSERT INTO ROLES(id, role_name)
-VALUES (5, 'PARENT');
+INSERT INTO ROLES
+VALUES ( 'PARENT');
+
+INSERT INTO ROLES
+VALUES ('PARENT_REQUEST');
+
+INSERT INTO ROLES
+VALUES ('TEACHER_REQUEST');
+
+INSERT INTO ROLES
+VALUES ('SCIENTIST_REQUEST');
 
 -- user roles
 INSERT INTO USER_ROLES(user_id, role_id)
-VALUES (1, 3);
+VALUES (1, 'STUDENT');
 
 INSERT INTO USER_ROLES(user_id, role_id)
-VALUES (2, 3);
+VALUES (2, 'STUDENT');
 
 INSERT INTO USER_ROLES(user_id, role_id)
-VALUES (3, 1);
+VALUES (3, 'TEACHER');
 
 INSERT INTO USER_ROLES(user_id, role_id)
-VALUES (4, 4);
+VALUES (4, 'ADMIN');
 
 -- contacts
 INSERT INTO CONTACTS(user_id, contact_id)
