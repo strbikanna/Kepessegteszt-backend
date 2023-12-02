@@ -17,5 +17,6 @@ data class EnumProfileItem(
     override val ability: AbilityEntity,
 
     @Column
+    @Enumerated(value= EnumType.STRING)
     override var abilityValue: EnumAbilityValue
 ): ProfileItem()
