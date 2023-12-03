@@ -119,7 +119,7 @@ function updateCounter() {
             counterText.setFill('#FF0000');
         }
     } else {
-        this.scene.start('EndScene');
+        endGame.call(this);
     }
 }
 
@@ -183,14 +183,7 @@ function popBalloon(scene, balloon) {
 
         // If health points run out, game over
         if (healthPoints <= 0) {
-            scene.registry.set('gameResults', { 
-                mistakes: mistakes, 
-                correct: correct, 
-                score: score,
-                healthPoints: healthPoints,
-                timeLeft: counter,
-            });
-            scene.scene.start('EndScene');
+            endGame.call(this);
         }
 
         resetBalloon(balloon);
@@ -212,6 +205,17 @@ function popBalloon(scene, balloon) {
 
     // Update score display
     scoreText.setText(`Pont: ${score}`);
+}
+
+function endGame() {
+    this.registry.set('gameResults', {
+        mistakes: mistakes, 
+        correct: correct, 
+        score: score,
+        healthPoints: healthPoints,
+        timeLeft: counter,
+    });
+    this.scene.start('EndScene');
 }
 
 // Reset balloon position and type

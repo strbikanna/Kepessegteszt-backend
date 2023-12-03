@@ -81,25 +81,24 @@ class ProfileSnapshotService(
         return snapShots
     }
 
-    //TODO TEST
     fun existsSnapshotToday(username: String):Boolean{
         val user = userRepository.findByUsername(username).orElseThrow()
         val todayStart = getTodayStart()
         val todayEnd = getTodayEnd()
         return floatProfileSnapshotRepository.existsByUserAndTimestampBetween(user, todayStart, todayEnd)
-                && enumProfileSnapshotRepository.existsByUserAndTimestampBetween(user, todayStart, todayEnd)
+                || enumProfileSnapshotRepository.existsByUserAndTimestampBetween(user, todayStart, todayEnd)
     }
     private fun getTodayStart() = LocalDateTime.of(
             LocalDateTime.now().year,
             LocalDateTime.now().month,
             LocalDateTime.now().dayOfMonth,
-            0,0,0
+            0,0,0,
         )
     private fun getTodayEnd() = LocalDateTime.of(
             LocalDateTime.now().year,
             LocalDateTime.now().month,
             LocalDateTime.now().dayOfMonth,
-            23,59,59
+            23,59,59,
         )
 
 }

@@ -1,6 +1,7 @@
 package hu.bme.aut.resource_server.recommended_game
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.user.UserEntity
@@ -32,6 +33,7 @@ data class RecommendedGameEntity(
         @ManyToOne(fetch = FetchType.EAGER)
         val recommender: UserEntity? = null,
 
+        @JsonIgnore
         @ManyToOne
         @JoinColumn(name = "recommendee_id")
         val recommendedTo: UserEntity,

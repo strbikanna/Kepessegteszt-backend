@@ -11,9 +11,6 @@ enum class Role {
 @Entity(name = "ROLES")
 data class RoleEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int? = null,
-
     @Enumerated(EnumType.STRING)
     val roleName: Role
 ) {

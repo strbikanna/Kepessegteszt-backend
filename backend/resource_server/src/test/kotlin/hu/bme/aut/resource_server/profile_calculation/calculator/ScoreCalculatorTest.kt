@@ -31,6 +31,7 @@ class ScoreCalculatorTest {
             configDescription = mutableMapOf(
                 "levelFieldName" to "level",
                 "winFieldName" to "gameWon",
+                "maxLevel" to 10,
             )
         )
     }
@@ -40,7 +41,7 @@ class ScoreCalculatorTest {
     fun shouldCalculateProperGameBasedOnPoints(){
         val normalizedResults = ScoreCalculator.calculateNormalizedScores(listOf(result), game)
         assertEquals(1, normalizedResults.size)
-        val expectedResult = 5* 10.0 + 8.0/10 * 10 + 5.0/6 * 10
+        val expectedResult = (5 * 2.0 /10 + 8.0/10 + 5.0/6)/4
         assertEquals(expectedResult, normalizedResults[0].normalizedResult)
     }
 
@@ -54,17 +55,17 @@ class ScoreCalculatorTest {
     @Test
     fun shouldCalculateProperGameBasedOnWin(){
         val winResult = ResultForCalculationEntity(
-            game = game,
+            game = winGame,
             user = TestDataSource.createUsersForTestWithEmptyProfile(1)[0],
             result = mutableMapOf(
                 "level" to 5,
                 "gameWon" to true,
             ),
-            config = game.configDescription
+            config = winGame.configDescription
         )
         val normalizedResults = ScoreCalculator.calculateNormalizedScores(listOf(winResult), winGame)
         assertEquals(1, normalizedResults.size)
-        val expectedResult = 5* 10.0 + 20.0
+        val expectedResult = (5 /10  + 1.0)/2
         assertEquals(expectedResult, normalizedResults[0].normalizedResult)
     }
 
@@ -136,7 +137,7 @@ class ScoreCalculatorTest {
         )
         val normalizedResults = ScoreCalculator.calculateNormalizedScores(listOf(malformedResult), game)
         assertEquals(1, normalizedResults.size)
-        val expectedResult = 5* 10.0 + 8.0/10 * 10
+        val expectedResult = (5*2/10 + 8.0/10)/4
         assertEquals(expectedResult, normalizedResults[0].normalizedResult)
     }
 }

@@ -45,7 +45,7 @@ private lateinit var autoRecommendationService : AutoRecommendationService
         user.profileFloat.add(
             FloatProfileItem(ability = TestDataSource.affectedAbility , abilityValue = 0.5)
         )
-        bestResult = TestDataSource.createNormalizedResultForUser(user, 37.9, game)
+        bestResult = TestDataSource.createNormalizedResultForUser(user, 0.7, game)
         latestResult = ResultForCalculationEntity(
             user = user,
             game = game,
@@ -65,23 +65,21 @@ private lateinit var autoRecommendationService : AutoRecommendationService
     fun shouldRecommendBasedOnResult_WhenModelNotExists(){
         Mockito.`when`(mockModelManager.existsModel(game.id!!)).thenReturn(false)
         Mockito.`when`(mockDataService.getBestResultOfUser(game, user)).thenReturn(bestResult)
-        //levelPoints based on normalized result = 37.9 - 20.0 * 0.7 = 23.9
-        //recommendedLevel = 23.9 / 10 = 2.39
-        //level points are not exceeding 0.7 motivation value, so recommendedLevel = 2
+        //levelPoints based on normalized result = 0.7 - 0.5 * 0.7 = 0.35
+        //recommendedLevel = 0.35 * 10 * 2 = 7
         val recommendation = autoRecommendationService.generateRecommendationForUser(user, game)
-        assertEquals(2, recommendation.config["level"])
+        assertEquals(7, recommendation.config["level"])
         assertEquals(game, recommendation.game)
         assertEquals(user, recommendation.recommendedTo)
     }
     @Test
     fun shouldRecommendBasedOnModel_WhenModelExists(){
         Mockito.`when`(mockModelManager.existsModel(game.id!!)).thenReturn(true)
-        Mockito.`when`(mockModelManager.getEstimationForResult(game.id!!, listOf(0.5))).thenReturn(41.5)
-        //levelPoints based on normalized result = 41.5 - 20.0 * 0.7 = 27.5
-        //recommendedLevel = 27.5 / 10 = 2.75
-        //level points are exceeding 0.7 motivation value, so recommendedLevel = 3
+        Mockito.`when`(mockModelManager.getEstimationForResult(game.id!!, listOf(0.5))).thenReturn(0.3)
+        //levelPoints based on normalized result = 0.3 - 0.7 * 0.5 = -0.05
+        //recommendedLevel = 1
         val recommendation = autoRecommendationService.generateRecommendationForUser(user, game)
-        assertEquals(3, recommendation.config["level"])
+        assertEquals(1, recommendation.config["level"])
         assertEquals(game, recommendation.game)
         assertEquals(user, recommendation.recommendedTo)
     }

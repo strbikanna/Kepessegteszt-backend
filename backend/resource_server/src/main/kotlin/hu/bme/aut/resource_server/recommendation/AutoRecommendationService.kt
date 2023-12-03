@@ -49,14 +49,12 @@ class AutoRecommendationService(
         if (expectedResult == null) return generateRecommendationByNotNormalizedResult(user, game)
 
         val levelPoints = expectedResult - ScoreCalculator.maxNormalizedNonLevelPoints * motivationRate
-        var recommendedLevel =
-            if (levelPoints > ScoreCalculator.levelMultiplicator) levelPoints / ScoreCalculator.levelMultiplicator else 1.0
-        if (levelPoints.mod(ScoreCalculator.levelMultiplicator) > motivationRate * ScoreCalculator.levelMultiplicator) recommendedLevel++
+        var recommendedLevel = ScoreCalculator.getLevelByLevelPoints(levelPoints, game)
 
         return RecommendedGameEntity(
             recommendedTo = user,
             game = game,
-            config = mapOf("level" to recommendedLevel.toInt())
+            config = mapOf("level" to recommendedLevel)
         )
     }
 

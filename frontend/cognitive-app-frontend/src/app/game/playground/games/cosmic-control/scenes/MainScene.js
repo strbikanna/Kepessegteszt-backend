@@ -210,7 +210,9 @@ function endRound() {
         currentRound++;
         setupRound.call(this);
     } else {
-        this.registry.set('finalScore', score);
+        this.registry.set('gameResults', {
+            score: score,
+        });
         this.scene.start('EndScene');
     }
 }

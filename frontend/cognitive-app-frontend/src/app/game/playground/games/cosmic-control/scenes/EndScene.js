@@ -7,8 +7,9 @@ export const EndScene = {
 };
 
 // Initialize variables
-let finalScore;
+let gameResults;
 let gameParams;
+let userParams;
 
 function preload() {
     this.load.setBaseURL(common.getBaseFolder('cosmic-control'));
@@ -18,12 +19,12 @@ function preload() {
 function create() {
     // Get game parameters
     gameParams = this.registry.get('gameParams');
-    finalScore = this.registry.get('finalScore');
+    gameResults = this.registry.get('gameResults');
 
     this.add.image(400, 300, 'background').setScale(1.2);
 
     // Display final score and life
-    this.add.text(100, 250, `Végső pont: ${finalScore}`, { fontSize: '48px', fill: '#fff', fontStyle: 'bold' });
+    this.add.text(100, 250, `Végső pont: ${gameResults.score}`, { fontSize: '48px', fill: '#fff', fontStyle: 'bold' });
 
     // Create a restart button
     const button = this.add.graphics();
@@ -51,4 +52,7 @@ function create() {
     button.on('pointerdown', () => {
         this.scene.start('StartScene');
     });
+
+    userParams = this.registry.get('userParams');
+    common.postResult(gameResults, gameParams, userParams.game_id, userParams.username, userParams.access_token);
 }
