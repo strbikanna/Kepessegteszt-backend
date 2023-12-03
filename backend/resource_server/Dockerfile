@@ -41,6 +41,6 @@ RUN pip install jep
 RUN JEP_LOCATION=$(pip show jep | grep "Location" | awk '{print $2}') && \
     echo "JEP Location: $JEP_LOCATION"
 
-EXPOSE 8090
+EXPOSE 80
 # Run with container profile and jep on path
 ENTRYPOINT ["java", "-Dspring.profiles.active=container", "-Djava.library.path=$JEP_LOCATION", "-jar", "/resource_server_app/app.jar" ]

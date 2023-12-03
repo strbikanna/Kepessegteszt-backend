@@ -137,13 +137,13 @@ class AuthServerConfig {
 
     @Bean
     fun authorizationServerSettings(): AuthorizationServerSettings {
-        return AuthorizationServerSettings.builder().issuer("http://localhost:9000").build()
+        return AuthorizationServerSettings.builder().issuer("http://cognitiveapp-authentication.northeurope.azurecontainer.io").build()
     }
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = listOf("http://localhost:4200")
+        configuration.allowedOrigins = listOf("*")
         configuration.allowedMethods = listOf("*")
         configuration.allowedHeaders = listOf("*")
         val source = UrlBasedCorsConfigurationSource()

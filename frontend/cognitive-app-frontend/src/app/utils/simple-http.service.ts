@@ -22,6 +22,9 @@ export class SimpleHttpService {
       if(error.status === 401 || error.status === 403){
         return throwError(() => new Error(this.errorTexts.unauthorized_error));
       }
+      if(error.status === 500){
+        return throwError(() => new Error(error.message));
+      }
     }
     return throwError(() => error);
   }

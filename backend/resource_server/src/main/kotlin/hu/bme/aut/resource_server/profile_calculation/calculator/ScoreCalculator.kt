@@ -105,7 +105,7 @@ object ScoreCalculator {
 
     private fun setFieldNamesFromConfig(game: GameEntity) {
         val config = game.configDescription
-        levelFieldName = config["levelFieldName"] as String?
+        levelFieldName = config["levelFieldName"] as String? ?: levelFieldName
         pointsFieldName = config["pointsFieldName"] as String?
         maxPointsFieldName = config["maxPointsFieldName"] as String?
         extraPointsFieldName = config["extraPointsFieldName"] as String? ?: extraPointsFieldName

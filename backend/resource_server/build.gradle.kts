@@ -7,8 +7,12 @@ plugins {
     kotlin("plugin.spring") version "1.8.22"
     kotlin("plugin.jpa") version "1.8.22"
 }
-
-group = "com.example"
+dependencyManagement {
+    imports {
+        mavenBom("com.azure.spring:spring-cloud-azure-dependencies:5.7.0")
+    }
+}
+group = "hu.bme.aut"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -28,10 +32,12 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("com.azure.spring:spring-cloud-azure-starter-jdbc-mysql")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    //kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive")
@@ -39,9 +45,10 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations")
     implementation("io.hypersistence:hypersistence-utils-hibernate-62:3.5.0")
     implementation("org.json:json:20230227")
+    //jep
     implementation("black.ninia:jep:4.1.1")
     runtimeOnly("com.h2database:h2")
-    runtimeOnly("com.mysql:mysql-connector-j")
+    //runtimeOnly("com.mysql:mysql-connector-j")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation ("org.flywaydb:flyway-core")
     implementation ("org.flywaydb:flyway-mysql")

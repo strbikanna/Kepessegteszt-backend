@@ -23,7 +23,6 @@ class GameplayResultRepositoryTest(
 ) {
     @BeforeEach
     fun init(){
-        gameplayResultRepository.deleteAll()
         testService.emptyRepositories()
         testService.fillAbilityRepository()
     }

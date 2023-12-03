@@ -97,7 +97,7 @@
                 </div>
             </mat-expansion-panel>
             <div class="end-button-container">
-                <button mat-button (click)="userToEdit = undefined" color="primary">{{text.actions.cancel}}</button>
+                <button mat-button (click)="userToEdit = undefined" type="button" color="primary">{{text.actions.cancel}}</button>
                 <button mat-flat-button color="primary" type="submit" [disabled]="!userDataForm.valid">{{text.actions.save}}</button>
             </div>
 

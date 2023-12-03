@@ -9,6 +9,6 @@ RUN gradle clean build
 
 FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /opt/app
-EXPOSE 9000
+EXPOSE 80
 COPY --from=builder /workspace/app/build/libs/auth_server-0.0.1-SNAPSHOT.jar /opt/app/app.jar
 ENTRYPOINT ["java","-Dspring.profiles.active=container", "-jar", "/opt/app/app.jar"]

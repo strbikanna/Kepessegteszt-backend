@@ -2,8 +2,8 @@ server:
   port: 8090
 spring:
   datasource:
-    url: jdbc:mysql://cognitive-app-db.mysql.database.azure.com:3306/cognitive_backend
-    username: backend_user
+    url: jdbc:mysql://localhost:3306/cognitive_app
+    username: dev
     password: dev.1122
     driver-class-name: com.mysql.cj.jdbc.Driver
 
@@ -13,7 +13,7 @@ spring:
 
   web:
     resources:
-      static-locations: file:/Users/annav/Documents/Bme/Szakdoli/Kepessegteszt-backend/game_images
+      static-locations: file:/Users/annav/Documents/Bme/Szakdoli/Kepessegteszt-backend/game_images/
   mvc:
     static-path-pattern: /game_images/**
 
@@ -21,7 +21,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:9000
+          issuer-uri: http://cognitiveapp-authentication.northeurope.azurecontainer.io
+          ##http://localhost:9000
 
 springdoc:
   api-docs:

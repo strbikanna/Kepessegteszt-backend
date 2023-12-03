@@ -79,7 +79,7 @@ import {MatDividerModule} from "@angular/material/divider";
         AuthModule.forRoot({
             config: [{
                 configId: 'baseConfig',
-                authority: 'http://localhost:9000',
+                authority: 'http://cognitiveapp-authentication.northeurope.azurecontainer.io',
                 redirectUrl: 'http://localhost:4200',
                 postLogoutRedirectUri: 'http://localhost:4200',
                 clientId: 'frontend-client-002233',
@@ -93,7 +93,7 @@ import {MatDividerModule} from "@angular/material/divider";
             },
                 {
                     configId: 'gameTokenConfig',
-                    authority: 'http://localhost:9000',
+                    authority: 'http://cognitiveapp-authentication.northeurope.azurecontainer.io',
                     redirectUrl: 'http://localhost:4200/games',
                     postLogoutRedirectUri: 'http://localhost:4200',
                     clientId: 'frontend-client-002233',

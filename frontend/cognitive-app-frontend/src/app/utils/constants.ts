@@ -1,5 +1,5 @@
 export const AppConstants = {
-    authServerUrl : 'http://localhost:9000',
+    authServerUrl : 'http://cognitiveapp-authentication.northeurope.azurecontainer.io',
     resourceServerUrl : 'http://localhost:8090',
     impersonationKey: 'impersonation',
     impersonationDisabledKey: 'disabled_impersonation',
