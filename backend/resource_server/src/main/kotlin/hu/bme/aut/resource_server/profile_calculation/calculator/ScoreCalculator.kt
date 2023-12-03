@@ -17,10 +17,10 @@ object ScoreCalculator {
     private var extraPointsFieldName: String = "healthPoints"
     private var maxExtraPointsFieldName: String = "maxHealthPoints"
     private var winFieldName: String? = "gameWon"
-    private val maxLevelFieldName: String = "maxLevel"
+    private const val maxLevelFieldName: String = "maxLevel"
 
-    val maxNormalizedNonLevelPoints = 0.5
-    val levelMultiplicator = 2.0
+    const val maxNormalizedNonLevelPoints = 0.5
+    const val levelMultiplicator = 2.0
 
 
 
@@ -73,7 +73,6 @@ object ScoreCalculator {
             }
 
         }
-
         return normalizedResults
     }
 
@@ -105,7 +104,7 @@ object ScoreCalculator {
 
     private fun setFieldNamesFromConfig(game: GameEntity) {
         val config = game.configDescription
-        levelFieldName = config["levelFieldName"] as String? ?: levelFieldName
+        levelFieldName = config["levelFieldName"] as String? ?: "level"
         pointsFieldName = config["pointsFieldName"] as String?
         maxPointsFieldName = config["maxPointsFieldName"] as String?
         extraPointsFieldName = config["extraPointsFieldName"] as String? ?: extraPointsFieldName

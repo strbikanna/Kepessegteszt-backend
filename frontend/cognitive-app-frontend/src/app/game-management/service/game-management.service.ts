@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {catchError, Observable, retry} from "rxjs";
+import {catchError, map, Observable, retry} from "rxjs";
 import {Game} from "../../model/game.model";
 import {CalculationFeedback} from "../../model/calculation-feedback.model";
 import {SimpleHttpService} from "../../utils/simple-http.service";
@@ -61,7 +61,14 @@ export class GameManagementService {
         .set('gameId', gameId.toString());
     return this.http.post<CalculationFeedback>(`${this.helper.baseUrl}${this.calcPath}/process_results`, {},{params: params}).pipe(
         retry(3),
-        catchError(this.helper.handleHttpError)
+        catchError(this.helper.handleHttpError),
+        map((response: any) => {
+            return {
+                mean: response.meanAndDeviation.mean,
+                deviation: response.meanAndDeviation.deviation,
+                updatedProfilesCount: response.updatedProfilesCount
+            }
+        })
     )
   }
 

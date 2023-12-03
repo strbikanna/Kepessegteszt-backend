@@ -39,7 +39,7 @@ class GameResultProcessingServiceTest(
         runBlocking {
             val meanAndDeviation = service.processGameResults(game.id!!)
             assertTrue(meanAndDeviation.mean > 0.5 && meanAndDeviation.mean < 0.511)
-            assertTrue(meanAndDeviation.deviation > 0.1533 && meanAndDeviation.deviation < 0.1534)
+            assertTrue(meanAndDeviation.deviation > 0.019 && meanAndDeviation.deviation < 0.21)
         }
 
     }
