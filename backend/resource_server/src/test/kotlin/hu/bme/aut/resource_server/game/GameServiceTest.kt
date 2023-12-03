@@ -32,7 +32,7 @@ class GameServiceTest(
                 active = true, url = "test_game_url", configDescription = config, affectedAbilities = mutableSetOf(testUtilsService.abilityColorsense))
         gameRepository.save(game)
         assertNotNull(game.id)
-        assertEquals(gameService.getAllGames()[0].javaClass, GameDto::class.java)
+        assertEquals(gameService.getAllGames(0, 10)[0].javaClass, GameDto::class.java)
     }
 
     @Transactional
@@ -48,7 +48,7 @@ class GameServiceTest(
             active = true, url = "test_game_url2", configDescription = config2, affectedAbilities = mutableSetOf(testUtilsService.abilityGf, testUtilsService.abilityGq))
         gameRepository.save(game1)
         gameRepository.save(game2)
-        val games = gameService.getAllGames()
+        val games = gameService.getAllGames(0, 10)
         for (game in games) {
             assertEquals(game.javaClass, GameDto::class.java)
         }
