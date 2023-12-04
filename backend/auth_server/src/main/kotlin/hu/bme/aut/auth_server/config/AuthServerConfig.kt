@@ -5,6 +5,7 @@ import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet
 import com.nimbusds.jose.jwk.source.JWKSource
 import com.nimbusds.jose.proc.SecurityContext
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
@@ -42,6 +43,9 @@ import javax.sql.DataSource
 @EnableWebSecurity
 @EnableMethodSecurity
 class AuthServerConfig {
+
+    @Value("\${cognitive-app.issuer-url}")
+    private lateinit var issuerUrl: String
 
     @Bean
     @Order(1)
@@ -137,7 +141,7 @@ class AuthServerConfig {
 
     @Bean
     fun authorizationServerSettings(): AuthorizationServerSettings {
-        return AuthorizationServerSettings.builder().issuer("http://cognitiveapp-authentication.northeurope.azurecontainer.io").build()
+        return AuthorizationServerSettings.builder().issuer(issuerUrl).build()
     }
 
     @Bean
