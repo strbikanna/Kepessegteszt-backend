@@ -49,6 +49,7 @@ import { EditGameFormComponent } from './game-management/edit-game-form/edit-gam
 import { GameCardComponent } from './common/game-card/game-card.component';
 import { CalculationDialogComponent } from './game-management/calculation-dialog/calculation-dialog.component';
 import {MatDividerModule} from "@angular/material/divider";
+import {environment} from "../environments/environment";
 
 
 @NgModule({
@@ -79,28 +80,28 @@ import {MatDividerModule} from "@angular/material/divider";
         AuthModule.forRoot({
             config: [{
                 configId: 'baseConfig',
-                authority: 'http://cognitiveapp-authentication.northeurope.azurecontainer.io',
-                redirectUrl: 'http://localhost:4200',
-                postLogoutRedirectUri: 'http://localhost:4200',
-                clientId: 'frontend-client-002233',
+                authority: environment.authServerUrl,
+                redirectUrl: environment.clientUrl,
+                postLogoutRedirectUri: environment.clientUrl,
+                clientId: environment.clientId,
                 scope: 'openid',
                 responseType: 'code',
                 silentRenew: true,
                 useRefreshToken: false,
-                silentRenewUrl: 'http://localhost:4200/silent-renew.html',
+                silentRenewUrl: `${environment.clientUrl}/silent-renew.html`,
                 renewTimeBeforeTokenExpiresInSeconds: 10,
                 logLevel: LogLevel.Debug,
             },
                 {
                     configId: 'gameTokenConfig',
-                    authority: 'http://cognitiveapp-authentication.northeurope.azurecontainer.io',
-                    redirectUrl: 'http://localhost:4200/games',
-                    postLogoutRedirectUri: 'http://localhost:4200',
-                    clientId: 'frontend-client-002233',
+                    authority: environment.authServerUrl,
+                    redirectUrl: `${environment.clientUrl}/games`,
+                    postLogoutRedirectUri: environment.clientUrl,
+                    clientId: environment.clientId,
                     scope: 'openid game',
                     responseType: 'code',
                     silentRenew: true,
-                    silentRenewUrl: 'http://localhost:4200/silent-renew.html',
+                    silentRenewUrl: `${environment.clientUrl}/silent-renew.html`,
                     useRefreshToken: false,
                     logLevel: LogLevel.Debug,
                 },

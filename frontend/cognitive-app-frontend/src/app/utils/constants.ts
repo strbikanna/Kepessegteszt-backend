@@ -1,6 +1,8 @@
+import {environment} from "../../environments/environment";
+
 export const AppConstants = {
-    authServerUrl : 'http://cognitiveapp-authentication.northeurope.azurecontainer.io',
-    resourceServerUrl : 'http://localhost:8090',
+    authServerUrl : environment.authServerUrl,
+    resourceServerUrl : environment.resourceServerUrl,
     impersonationKey: 'impersonation',
     impersonationDisabledKey: 'disabled_impersonation',
 }

@@ -1,4 +1,6 @@
+import {environment} from "../../../../environments/environment";
+
 export const baseConfig = {
-    baseURL: 'http://localhost:8090',
+    baseURL: environment.resourceServerUrl,
     baseFolder: './assets/'
 };
