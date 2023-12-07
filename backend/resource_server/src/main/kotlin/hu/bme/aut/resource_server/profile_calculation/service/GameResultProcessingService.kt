@@ -15,6 +15,10 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
+/**
+ * Service for processing game results.
+ * Responsible for normalizing non-normalized results and keep db consistent.
+ */
 @Service
 class GameResultProcessingService(
     @Autowired private var dataService: ResultForCalculationDataService

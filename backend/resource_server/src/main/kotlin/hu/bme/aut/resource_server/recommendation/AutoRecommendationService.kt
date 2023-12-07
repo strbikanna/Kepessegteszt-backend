@@ -14,6 +14,12 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
+/**
+ * This service is responsible for generating recommendations for users.
+ * It uses the [ResultForCalculationDataService] to get the results of the user and the [AbilityRateCalculatorService]
+ * to calculate the ability values from the results.
+ * It uses the [ModelManager] to get the recommendation model for the game.
+ */
 @Service
 class AutoRecommendationService(
     @Autowired private var dataService: ResultForCalculationDataService,
@@ -37,6 +43,14 @@ class AutoRecommendationService(
         log.trace("Recommendation model created for game with id: $gameId")
     }
 
+    /**
+     * Generates a recommendation for the given user and game.
+     * New unsaved [RecommendedGameEntity] is returned with the recommended level in the config.
+     * Recommendation happens based on
+     * 1. game model
+     * 2. best normalized result of the user
+     * 3. latest result of the user
+     */
     fun generateRecommendationForUser(user: UserEntity, game: GameEntity): RecommendedGameEntity {
         log.trace("Generating recommendation for user ${user.username} for game ${game.name}")
         val expectedResult: Double?

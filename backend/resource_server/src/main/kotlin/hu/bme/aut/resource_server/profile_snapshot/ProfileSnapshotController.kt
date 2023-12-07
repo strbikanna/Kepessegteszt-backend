@@ -24,6 +24,13 @@ class ProfileSnapshotController(
     @Autowired private var profileSnapshotService: ProfileSnapshotService,
     @Autowired private var authService: AuthService
 ) {
+    /**
+     * Returns the profile snapshots of the user.
+     * @param pageIndex The index of the first item.
+     * @param pageSize The number of items to return.
+     * @param startTime The start time of the snapshots.
+     * @param endTime The end time of the snapshots.
+     */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_TEACHER', 'ROLE_PARENT', 'ROLE_STUDENT')")
@@ -38,6 +45,14 @@ class ProfileSnapshotController(
         return getSnapshotsOfUserByRequestValues(user, pageIndex, pageSize, startTime, endTime)
     }
 
+    /**
+     * Returns the profile snapshots of another user.
+     * @param username The username of the user that's profile snapshots are returned.
+     * @param pageIndex The index of the first item.
+     * @param pageSize The number of items to return.
+     * @param startTime The start time of the snapshots.
+     * @param endTime The end time of the snapshots.
+     */
     @GetMapping("/inspect")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_TEACHER', 'ROLE_PARENT')")

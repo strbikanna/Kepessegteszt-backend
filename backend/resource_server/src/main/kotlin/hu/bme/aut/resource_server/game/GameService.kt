@@ -30,6 +30,11 @@ class GameService (
         return gameRepository.findById(id)
     }
 
+    /**
+     * Updates game to have the same fields as param game.
+     * If the url or the configDescription is different, then the old game is set to inactive and a new game is created
+     * with higher version number.
+     */
     fun updateGame(updatedGame: GameEntity): GameEntity {
         val oldGame = gameRepository.findById(updatedGame.id!!).orElseThrow()
         if(oldGame.url != updatedGame.url || !sameConfigDescription(oldGame, updatedGame)) {
@@ -47,6 +52,10 @@ class GameService (
         }
     }
 
+    /**
+     * Saves the thumbnail for the game with the given id.
+     * File location is: thumbnailLocation/gameId.png
+     */
     fun saveThumbnailForGame(id: Int, thumbnail: MultipartFile): GameEntity{
         val game = gameRepository.findById(id).orElseThrow()
         var fileName = "${game.id}"

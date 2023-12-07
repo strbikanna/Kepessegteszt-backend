@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory
 import java.lang.RuntimeException
 import kotlin.math.roundToInt
 
+/**
+ * This class is responsible for calculating the normalized score of a result.
+ */
 object ScoreCalculator {
     private val log: Logger = LoggerFactory.getLogger(ScoreCalculator::class.java)
 
@@ -23,7 +26,10 @@ object ScoreCalculator {
     const val levelMultiplicator = 2.0
 
 
-
+    /**
+     * Calculates the normalized score of the results based on the game config.
+     * @throws CalculationException if the game config is not set properly
+     */
     fun calculateNormalizedScores(
         results: List<ResultForCalculationEntity>,
         game: GameEntity
@@ -112,6 +118,10 @@ object ScoreCalculator {
         winFieldName = config["winFieldName"] as String?
     }
 
+    /**
+     * Returns the level based on the levelPoints of the normalized result.
+     * (Inverse of the normalized level score calculation)
+     */
     fun getLevelByLevelPoints(levelPoints: Double, game: GameEntity): Int {
         if(levelPoints <= 0) return 1
         setFieldNamesFromConfig(game)
@@ -121,6 +131,9 @@ object ScoreCalculator {
         else 1
     }
 
+    /**
+     * Returns the max possible non-normalized points in a level.
+     */
     fun getMaxScoreOfLevel(result: ResultForCalculationEntity, game:GameEntity): Double {
         setFieldNamesFromConfig(game)
         return if(maxPointsFieldName != null)
@@ -129,6 +142,9 @@ object ScoreCalculator {
         else maxNormalizedNonLevelPoints
     }
 
+    /**
+     * Returns the actual non-normalized points in a level.
+     */
     fun getActualScoreOfLevel(result: ResultForCalculationEntity, game: GameEntity): Double {
         setFieldNamesFromConfig(game)
         return if(maxPointsFieldName != null)

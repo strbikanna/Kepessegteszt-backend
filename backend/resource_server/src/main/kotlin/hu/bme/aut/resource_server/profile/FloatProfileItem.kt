@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import jakarta.persistence.*
 
+/**
+ * Entity class for cognitive profile items with float values.
+ * A collection of these items represents a cognitive profile.
+ */
 @Entity
 data class FloatProfileItem(
     @Id

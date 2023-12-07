@@ -15,7 +15,7 @@ import java.io.File
 import java.lang.RuntimeException
 
 /**
- * Manages the neural network models for each game. Stores and reads JSON files containing the models.
+ * Manages the neural network models for each game.
  * Creates new models.
  */
 @Service
@@ -31,6 +31,9 @@ class ModelManager {
 
     private val log: Logger = LoggerFactory.getLogger(ModelManager::class.java)
 
+    /**
+     * Calculates the estimated result of a game based on the given ability values.
+     */
     fun getEstimationForResult(gameId: Int, abilityValues: List<Double?>): Double {
         if(!existsScript()){
             log.error("Script not found at $scriptDir/")
@@ -55,6 +58,9 @@ class ModelManager {
         }
     }
 
+    /**
+     * Creates a new neural network model for the given game.
+     */
     suspend fun createNewModel(gameId: Int, abilityValues: List<List<Double?>>, resultValues: List<Double>) =
         CoroutineScope(Dispatchers.IO).launch {
             if(!existsScript()){
@@ -80,6 +86,10 @@ class ModelManager {
                 throw CalculationException("Exception in creating model of game: ${ex.message}")
             }
         }
+
+    /**
+     * Calculates the ability contributions for the result in the given game.
+     */
     fun calculateRates(abilityValues: List<List<Double>>, resultValues: List<Double>): List<Double> {
         if(!existsScript()){
             log.error("Script not found at $scriptDir/")

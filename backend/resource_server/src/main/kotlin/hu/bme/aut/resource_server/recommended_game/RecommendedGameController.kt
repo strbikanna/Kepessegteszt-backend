@@ -43,6 +43,9 @@ class RecommendedGameController(
         return recommendedGameRepository.save(recommendedGame)
     }
 
+    /**
+     * Returns the recommended games created by the AutoRecommendationService to the user.
+     */
     @GetMapping("/system_recommended")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('STUDENT')")
@@ -54,6 +57,9 @@ class RecommendedGameController(
         return systemRecommendedGames
     }
 
+    /**
+     * Deletes the current recommendations of the user and creates new ones.
+     */
     @PostMapping("/system_recommended")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('STUDENT')")

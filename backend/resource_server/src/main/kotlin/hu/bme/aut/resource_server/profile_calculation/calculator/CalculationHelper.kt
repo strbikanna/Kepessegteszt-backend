@@ -3,6 +3,9 @@ package hu.bme.aut.resource_server.profile_calculation.calculator
 import kotlin.math.pow
 import kotlin.math.sqrt
 
+/**
+ * Helper class for calculation of mean and standard deviation
+ */
 object CalculationHelper {
 
         fun calculateMean(dataSet: List<Double> ): Double{

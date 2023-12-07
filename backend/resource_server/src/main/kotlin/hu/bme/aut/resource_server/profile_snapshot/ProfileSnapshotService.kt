@@ -21,6 +21,9 @@ class ProfileSnapshotService(
         saveEnumProfile(user)
     }
 
+    /**
+     * Saves the snapshot of the user's given abilities.
+     */
     fun saveSnapshotOfUserAbilities(user: UserEntity, abilities: List<AbilityEntity>){
         val floatProfile = user.profileFloat
         val floatProfileSnapshotItems = floatProfile
@@ -34,6 +37,9 @@ class ProfileSnapshotService(
         enumProfileSnapshotRepository.saveAll(enumProfileSnapshotItems)
     }
 
+    /**
+     * Saves the snapshot of each enum profile item of the user.
+     */
     private fun saveEnumProfile(user: UserEntity) {
         val enumProfile = user.profileEnum
         val enumProfileSnapshotItems = enumProfile.map {
@@ -42,6 +48,9 @@ class ProfileSnapshotService(
         enumProfileSnapshotRepository.saveAll(enumProfileSnapshotItems)
     }
 
+    /**
+     * Saves the snapshot of each float profile item of the user.
+     */
     private fun saveFloatProfile(user: UserEntity) {
         val floatProfile = user.profileFloat
         val profileSnapshotItems = floatProfile.map {
@@ -50,10 +59,6 @@ class ProfileSnapshotService(
         floatProfileSnapshotRepository.saveAll(profileSnapshotItems)
     }
 
-    fun saveSnapshotOfUser(user: UserProfileDto){
-        val entity = userRepository.findByUsernameWithProfile(user.username).orElseThrow()
-        saveSnapshotOfUser(entity)
-    }
     fun saveSnapshotOfUser(username: String){
         val entity = userRepository.findByUsernameWithProfile(username).orElseThrow()
         saveSnapshotOfUser(entity)

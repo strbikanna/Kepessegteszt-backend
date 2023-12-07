@@ -18,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 
-
+/**
+ * Helper for authentication related tasks.
+ */
 @Service
 class AuthService(
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
@@ -57,6 +59,11 @@ class AuthService(
     fun getContactByUsername(username: String): UserEntity{
         return userRepository.findByUsername(username).orElseThrow()
     }
+
+    /**
+     * Checks if the user is authorized to see the contact's data.
+     * @throws IllegalAccessException if the user is not authorized to see the contact's data.
+     */
     suspend fun checkContactAndThrow(authentication: Authentication, contactUsername: String){
         if(webclient==null){
             initWebClient()

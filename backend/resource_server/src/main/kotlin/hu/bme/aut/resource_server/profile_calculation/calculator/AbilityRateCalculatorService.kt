@@ -9,11 +9,20 @@ import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
+/**
+ * Helper class for multi-ability games to
+ * determine the affect of each ability on the result.
+ */
 @Service
 class AbilityRateCalculatorService(
     @Autowired private var userRepo: UserRepository,
     @Autowired private var modelManager: ModelManager
 ) {
+    /**
+     * Calculates the contribution of each ability to the result.
+     * @param abilityValues: n*k size 2d array with n users and k abilities containing user ability values
+     * @param resultValues: n size array with normalized results.
+     */
     fun calculateRates(abilityValues: List<List<Double>>, resultValues: List<Double>): List<Double> {
         return modelManager.calculateRates(abilityValues, resultValues)
     }

@@ -6,6 +6,9 @@ import jakarta.persistence.*
 import org.hibernate.annotations.Type
 import io.hypersistence.utils.hibernate.type.json.JsonType
 
+/**
+ * Entity class that represents games.
+ */
 @Entity
 @Table(name = "GAME")
 data class GameEntity(

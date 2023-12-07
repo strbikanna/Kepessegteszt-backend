@@ -26,10 +26,17 @@ class ProfileCalculationController(
     @Autowired private var dataService: ResultForCalculationDataService
 ) {
 
+    /**
+     * Returns the count of results that are not yet processed for the given game.
+     */
     @GetMapping("/result_count")
     @ResponseStatus(HttpStatus.OK)
     fun getResultCountOfGame(@RequestParam gameId: Int): Long = dataService.getCountForNewCalculation(gameId)
 
+    /**
+     * Processes the results of the given game and returns the mean and standard deviation of the results
+     * and the count of updated profiles.
+     */
     @PostMapping("/process_results")
     @ResponseStatus(HttpStatus.CREATED)
     fun processResults(@RequestParam gameId: Int): Deferred<CalculationInfoDto> =

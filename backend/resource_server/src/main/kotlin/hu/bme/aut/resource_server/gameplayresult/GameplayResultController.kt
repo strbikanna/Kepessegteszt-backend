@@ -27,6 +27,7 @@ class GameplayResultController(
 ) {
 
     /**
+     * Endpoint to save results of a played game.
      * auth server shall provide auth token for games which contains
      * game id as subject
      * username as claim

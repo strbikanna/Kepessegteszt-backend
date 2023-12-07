@@ -55,6 +55,9 @@ class GameController(
         return gameRepository.save(gameEntity)
     }
 
+    /**
+     * Endpoint to upload a (new) thumbnail for a game.
+     */
     @PostMapping("/image/{gameId}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")

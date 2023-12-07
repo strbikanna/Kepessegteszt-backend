@@ -11,6 +11,9 @@ import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Type
 import java.time.LocalDateTime
 
+/**
+ * Entity for storing recommended games.
+ */
 @Entity
 @Table(name = "RECOMMENDED_GAME")
 data class RecommendedGameEntity(
