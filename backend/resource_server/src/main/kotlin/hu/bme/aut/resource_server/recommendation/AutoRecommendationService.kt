@@ -9,6 +9,8 @@ import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.user.UserEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -19,7 +21,11 @@ class AutoRecommendationService(
     @Autowired private var modelManager: ModelManager
 ) {
     val motivationRate = 0.7
+
+    var log: Logger = LoggerFactory.getLogger(AutoRecommendationService::class.java)
+
     suspend fun createRecommendationModel(gameId: Int) {
+        log.trace("Creating recommendation model for game with id: $gameId")
         val game = dataService.getGameWithAbilities(gameId)
         val normalizedResults = dataService.getAllNormalizedResultsOfGame(game)
         val abilities = game.affectedAbilities
@@ -28,11 +34,14 @@ class AutoRecommendationService(
                 calculatorService.getAbilityValuesAndValuesFromResultsStructured(normalizedResults, abilities.toList())
             }
         modelManager.createNewModel(gameId, modelInput.first, modelInput.second)
+        log.trace("Recommendation model created for game with id: $gameId")
     }
 
     fun generateRecommendationForUser(user: UserEntity, game: GameEntity): RecommendedGameEntity {
+        log.trace("Generating recommendation for user ${user.username} for game ${game.name}")
         val expectedResult: Double?
         if (!modelManager.existsModel(game.id!!)) {
+            log.trace("No model found for game ${game.name}.")
             expectedResult = dataService.getBestResultOfUser(game, user)?.normalizedResult
         } else {
             val profileItems = user.profileFloat
@@ -40,9 +49,9 @@ class AutoRecommendationService(
                 .sortedBy { it.ability.code }
                 .map { it.abilityValue }
             expectedResult = if (profileItems.size != game.affectedAbilities.size) null
-            else try{
+            else try {
                 modelManager.getEstimationForResult(game.id!!, profileItems)
-            }catch(e: CalculationException){
+            } catch (e: CalculationException) {
                 null
             }
         }
@@ -50,7 +59,7 @@ class AutoRecommendationService(
 
         val levelPoints = expectedResult - ScoreCalculator.maxNormalizedNonLevelPoints * motivationRate
         var recommendedLevel = ScoreCalculator.getLevelByLevelPoints(levelPoints, game)
-
+        log.trace("Recommended level: $recommendedLevel")
         return RecommendedGameEntity(
             recommendedTo = user,
             game = game,
@@ -59,6 +68,7 @@ class AutoRecommendationService(
     }
 
     private fun generateRecommendationByNotNormalizedResult(user: UserEntity, game: GameEntity): RecommendedGameEntity {
+        log.trace("Generating recommendation by not normalized result for user ${user.username} for game ${game.name}")
         val latestResult = dataService.getLatestResultOfUser(game, user)
         var recommendation = RecommendedGameEntity(
             recommendedTo = user,
@@ -70,9 +80,12 @@ class AutoRecommendationService(
             val points = ScoreCalculator.getActualScoreOfLevel(latestResult, game)
             val successRatio = if (maxPossiblePoints != 0.0) points / maxPossiblePoints else 0.0
             val latestLevel =
-                try{
-                    latestResult.config["level"]?.toString()?.toInt() ?: latestResult.result["level"]?.toString()?.toInt() ?: 1
-                }catch (e: NumberFormatException){1}
+                try {
+                    latestResult.config["level"]?.toString()?.toInt() ?: latestResult.result["level"]?.toString()
+                        ?.toInt() ?: 1
+                } catch (e: NumberFormatException) {
+                    1
+                }
             recommendation = if (successRatio >= motivationRate)
                 recommendation.copy(
                     config = mapOf("level" to (latestLevel + 1))
@@ -81,6 +94,7 @@ class AutoRecommendationService(
                     config = mapOf("level" to (latestLevel))
                 )
         }
+        log.trace("Recommended level: {}", recommendation.config["level"])
         return recommendation
     }
 }

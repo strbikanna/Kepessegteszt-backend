@@ -22,7 +22,7 @@ INSERT INTO USERS(id, username, email, password, first_name, last_name)
 VALUES (3, 'teacher_user', 'imaTeacher@education.hu', 'easyPie', 'Teacher', 'Teresa');
 
 INSERT INTO USERS(id, username, email, password, first_name, last_name)
-VALUES (4, 'admin_human', 'immaadmin@vip.hu', 'topSecret', 'Admin', 'Person');
+VALUES (4, 'admin_man', 'immaadmin@vip.hu', 'topSecret', 'Admin', 'Arnold');
 
 -- roles
 INSERT INTO ROLES

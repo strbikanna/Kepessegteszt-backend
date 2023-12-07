@@ -2,6 +2,7 @@ package hu.bme.aut.auth_server.mail_service
 
 import hu.bme.aut.auth_server.user.UserEntity
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.util.UriComponentsBuilder
 import java.time.LocalDateTime
@@ -11,19 +12,21 @@ import java.util.*
 class EmailVerificationService(
     @Autowired private var emailRepository: EmailRepository
 ) {
+    @Value("\${cognitive-app.issuer-url}")
+    private lateinit var appBaseUrl: String
+
     fun createVerificationMessage(verificationEntity: EmailVerificationEntity): String {
         val user = verificationEntity.user
         val url = UriComponentsBuilder
-            .fromHttpUrl("http://localhost:9000/mail/verification")
+            .fromHttpUrl("$appBaseUrl/mail/verification")
             .queryParam("verificationKey", verificationEntity.verificationKey)
             .queryParam("username", user.username)
             .build()
             .toUriString()
-        val message = "Kedves ${user.lastName}!\nAz alábbi linkre kattintva megerősítheted az email címed: " +
-                "Ezzel véglegesítheted a regisztrációd.\n" +
+        val message = "Kedves ${user.lastName}!\nSikeresen regisztráltál. Az alábbi linkre kattintva megerősítheted az email címed. " +
+                "Ezzel véglegesíted a regisztrációd. A link 30 percig érvényes.\n" +
                 "${url}\nÜdv,\nCognitive App Csapat"
         return message
-
     }
 
     fun verifyEmail(verificationKey: String, username: String): Boolean {

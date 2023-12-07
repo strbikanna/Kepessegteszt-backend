@@ -3,10 +3,10 @@ package hu.bme.aut.resource_server.profile_calculation.data
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.user.UserEntity
 import org.springframework.data.domain.Pageable
-import org.springframework.data.repository.CrudRepository
-import org.springframework.data.repository.PagingAndSortingRepository
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.query.Procedure
 
-interface ResultForCalculationRepository : PagingAndSortingRepository<ResultForCalculationEntity, Long>, CrudRepository<ResultForCalculationEntity, Long>
+interface ResultForCalculationRepository : JpaRepository<ResultForCalculationEntity, Long>
 {
     override fun findAll(): List<ResultForCalculationEntity>
     fun findAllByGameAndNormalizedResultNotNull(game: GameEntity, page: Pageable): List<ResultForCalculationEntity>
@@ -20,4 +20,7 @@ interface ResultForCalculationRepository : PagingAndSortingRepository<ResultForC
 
     fun findTopByGameAndUserOrderByNormalizedResultDesc(game: GameEntity, user: UserEntity): ResultForCalculationEntity?
     fun findTopByGameAndUserOrderByTimestampDesc(game: GameEntity, user: UserEntity): ResultForCalculationEntity?
+
+    @Procedure("GenerateResultForCalculationData")
+    fun generateResultForCalculationProcedure(gameId: Int, abilityCode: String)
 }

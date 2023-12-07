@@ -19,7 +19,7 @@ object TestDataSource {
         )
       return GameEntity(
                 version = 1,
-                name = "testGame",
+                name = "Meteorháború",
                 description = "game1",
                 thumbnailPath = "game1",
                 active = true,

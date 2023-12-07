@@ -36,12 +36,14 @@ COPY python_module/ ./resource_server_app/python_module/
 
 ENV PATH=/opt/java/openjdk/bin:$PATH \
     PYTHON_PATH=/app/resource_server_app/python_module \
-    THUMBNAIL_PATH=/app/thumbnails
+    THUMBNAIL_PATH=/app/thumbnails \
+    AUTH_SERVER_URI=https://cognitive-test-auth.azurewebsites.net \
+    RESOURCE_SERVER_URL=https://cognitive-test-backend.azurewebsites.net
 
 # Find the location of jep
 RUN JEP_LOCATION=$(pip show jep | grep "Location" | awk '{print $2}') && \
     echo "JEP Location: $JEP_LOCATION"
 
-EXPOSE 80
+EXPOSE 443
 # Run with container profile and jep on path
 ENTRYPOINT java -Dspring.profiles.active=container -Djava.library.path=/usr/local/lib/python3.9/site-packages/jep -jar /resource_server_app/app.jar

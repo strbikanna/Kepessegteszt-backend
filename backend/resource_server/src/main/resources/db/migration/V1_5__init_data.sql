@@ -1,14 +1,15 @@
 -- games
 INSERT INTO GAME(id, _name, _description, thumbnail_path, _active, url, config_description)
 VALUES (1, 'Lufipukkasztás', 'Pukkaszd ki a lufikat! Vigyázz a bombákkal!',
-        'http://localhost:8090/game_images/balloon_game.jpg', true, null,
+        'http://localhost:8090/game_images/balloon-pop.png', true, null,
         '{
           "gameName": "balloon-pop",
           "gameTitle": "Lufipukkasztás",
           "maxExtraPointsName": "maxHealthPoints",
           "extraPointsName": "healthPoints",
           "pointsName": "correct",
-          "maxPointsName": "spawnedBalloons"
+          "maxPointsName": "spawnedBalloons",
+          "maxLevel": 8
         }');
 
 INSERT INTO GAME(id, _name, _description, thumbnail_path, _active, url, config_description)
@@ -20,12 +21,13 @@ VALUES (2, 'Titkos rádió', 'Eltalálod, melyik gombot kell megnyomni a titkos 
           "maxRound": "Maximum number of rounds.",
           "minNumberCount": "Minimum count of numbers in each round.",
           "maxNumberCount": "Maximum count of numbers that can appear in a round.",
-          "winFieldName": "gameWon"
+          "winFieldName": "gameWon",
+          "maxLevel": 10
         }');
 
 INSERT INTO GAME(id, _name, _description, thumbnail_path, _active, url, config_description)
 VALUES (3, 'Űrirányítás', 'Találd el a megfelelő gombokat, hogy az űrhajód túlélje az űrhajszát.',
-        'http://localhost:8090/game_images/2.png', true, null, '{
+        'http://localhost:8090/game_images/cosmic-control.jpg', true, null, '{
     "gameName": "cosmic-control",
     "gameTitle": "Űrirányítás",
     "maxRound": "Defines the maximum number of rounds in the game.",
@@ -35,12 +37,13 @@ VALUES (3, 'Űrirányítás', 'Találd el a megfelelő gombokat, hogy az űrhaj�
     "maxExtraPointsName": "score",
     "extraPointsName": "correct",
     "pointsName": "round",
-    "maxPointsName": "maxRound"
+    "maxPointsName": "maxRound",
+    "maxLevel": 12
   }');
 
 INSERT INTO GAME(id, _name, _description, thumbnail_path, _active, url, config_description)
 VALUES (4, 'Meteorháború', 'Csak a megfelelő sorrendben kilőtt meteorok számítanak, sikerülni fog?',
-        'http://localhost:8090/game_images/cosmic.jpg', true, null,
+        'http://localhost:8090/game_images/cosmic-sequence.jpg', true, null,
         '{
           "gameName": "cosmic-sequence",
           "gameTitle": "Meteorháború",
@@ -51,16 +54,16 @@ VALUES (4, 'Meteorháború', 'Csak a megfelelő sorrendben kilőtt meteorok szá
           "numbersVisibilityDuration": "Duration of the numbers appearing on the asteroids.",
           "maxNumber": "Highest number appearing on the asteroids.",
           "totalTime": "Total time of the player finding the correct order in milliseconds.",
-          "winFieldName": "gameWon",
           "pointsFieldName": "round",
           "maxPointsFieldName": "maxRound",
           "extraPointsFieldName": "healthPoints",
-          "maxExtraPointsFieldName": "maxHealthPoints"
+          "maxExtraPointsFieldName": "maxHealthPoints",
+          "maxLevel": 8
         }');
 
 INSERT INTO GAME(id, _name, _description, thumbnail_path, _active, url, config_description)
 VALUES (5, 'Űrkutató képzés', 'Jól kell bánni a számokkal, gyakorolj, hogy űrkutató lehess!',
-        'http://localhost:8090/game_images/number_game.jpg', true, null, '{
+        'http://localhost:8090/game_images/number-total.jpg', true, null, '{
     "gameName": "number-total",
     "gameTitle": "Űrkutató képzés",
     "timeBetweenNumbers": "Time interval between the appearance of numbers.",
@@ -71,6 +74,7 @@ VALUES (5, 'Űrkutató képzés', 'Jól kell bánni a számokkal, gyakorolj, hog
     "maxNumber": "The highest number that can be displayed in the game.",
     "operations": "Set of mathematical operations used, e.g., [''+'', ''-''].",
     "totalTime": "Total time of the player inputing numbers in milliseconds.",
-    "winFieldName": "gameWon"
+    "winFieldName": "gameWon",
+    "maxLevel": 10
   }');
 
