@@ -1,25 +1,22 @@
 spring:
+
   datasource:
-#    url: jdbc:h2:mem:cogni-testDB;MODE=MYSQL;NON_KEYWORDS=USER
-#    username: sa
-#    password:
-#    driver-class-name: org.h2.Driver
-    url: jdbc:mysql://cognitive-app-db-eu.mysql.database.azure.com:3306/test?serverTimezone=UTC
-    username: backend_user
-    password: dev.1122
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:mem:cogni-testDB;MODE=MYSQL;NON_KEYWORDS=USER
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
 
   flyway:
     locations: classpath:migration-test
-
-logging:
-  level:
-    org:
-      springframework:
-          data: trace
 
 
 cognititve-app:
   resource-server:
     secutity:
       bypass: true
+
+app:
+  python:
+    # if Python environment is present, set to true
+    exists: false

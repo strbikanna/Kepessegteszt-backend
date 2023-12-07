@@ -2,9 +2,12 @@ package hu.bme.aut.resource_server.recommendation
 
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 
@@ -13,8 +16,12 @@ import org.springframework.test.context.ActiveProfiles
 class ModelManagerTest(
     @Autowired private var modelManager: ModelManager
 ) {
+    @Value("\${app.python.exists}")
+    private var pythonExists: Boolean = true
+
     @Test
     fun shouldCreateModelWithoutError() {
+        assumeTrue(pythonExists)
         val modelInput = createModelInputData()
         assertDoesNotThrow {
             runBlocking {
@@ -27,18 +34,20 @@ class ModelManagerTest(
 
     @Test
     fun shouldReturnEstimation(){
+        assumeTrue(pythonExists)
         val modelInput = createModelInputData()
         runBlocking {
             val job = modelManager.createNewModel(1, modelInput.first, modelInput.second)
             job.join()
             assertTrue(modelManager.existsModel(1))
             val estimation = modelManager.getEstimationForResult(1, modelInput.first[0])
-            //assertTrue(estimation in 40.0..60.0)
+            assertTrue(estimation in 0.4..1.2)
         }
     }
 
     @Test
     fun shouldCalculateAbilityRates(){
+        assumeTrue(pythonExists)
         val modelInput = createModelInputData()
         runBlocking {
             val job = modelManager.createNewModel(1, modelInput.first, modelInput.second)
@@ -57,7 +66,7 @@ class ModelManagerTest(
             listOf(0.95, 1.02, 0.78),
             listOf(1.0, 1.3, 1.1),
         )
-        val mock1DArray = listOf(51.0, 53.0, 47.0, 50.0, 54.0)
+        val mock1DArray = listOf(1.0, 0.9, 0.5, 0.99, 1.1)
         return Pair(mock2DArray, mock1DArray)
     }
 }
