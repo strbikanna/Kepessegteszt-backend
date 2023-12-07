@@ -47,6 +47,10 @@ export class GameManagementService {
     )
   }
 
+  /**
+   * Returns the number of unprocessed game play results for a given game
+   * @param gameId
+   */
   getResultCountOfGame(gameId: number): Observable<number> {
     let params = new HttpParams()
         .set('gameId', gameId.toString());

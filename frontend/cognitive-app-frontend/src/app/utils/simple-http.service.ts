@@ -10,6 +10,10 @@ import {TEXTS} from "./app.text_messages";
 export class SimpleHttpService {
   readonly baseUrl = AppConstants.resourceServerUrl;
 
+  /**
+   * Handle network errors: give reason to status code
+   * @param error
+   */
   handleHttpError(error: HttpErrorResponse) {
     if (error.status === 0) {
       // A client-side or network error occurred.

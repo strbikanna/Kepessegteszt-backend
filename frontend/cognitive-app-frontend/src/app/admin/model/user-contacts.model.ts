@@ -1,3 +1,6 @@
+/**
+ * User model specifically used for admin page.
+ */
 export class UserForAdmin {
     id: number;
     username: string;

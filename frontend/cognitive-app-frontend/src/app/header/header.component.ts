@@ -13,6 +13,7 @@ import {TEXTS} from "../utils/app.text_messages";
 export class HeaderComponent implements OnInit{
   loginStatus = false;
   isAdmin = false;
+  isStudent = false;
   isAdminOrScientist = false;
   text = TEXTS.menu;
 
@@ -22,6 +23,7 @@ export class HeaderComponent implements OnInit{
         UserInfo.loginStatus.subscribe(loginSuccess => {
             this.loginStatus = loginSuccess
             this.isAdmin = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.ADMIN) !== undefined && loginSuccess
+            this.isStudent = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.STUDENT) !== undefined && loginSuccess
             this.isAdminOrScientist = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.ADMIN || role.toUpperCase() === Role.SCIENTIST) !== undefined && loginSuccess
             this.changeDetectorRef.detectChanges()
         });

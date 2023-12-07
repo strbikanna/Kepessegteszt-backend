@@ -19,6 +19,9 @@ export class RecommendedGameService{
         return this.mockData
     }
 
+    /**
+     * Returns recommended game made by backend.
+     */
     getGamesForCurrentUser(): Observable<RecommendedGame[]> {
         return this.http.get<RecommendedGame[]>(`${this.helper.baseUrl}${this.path}${this.systemRecommendedPath}`).pipe(
             map(recommendedGames =>

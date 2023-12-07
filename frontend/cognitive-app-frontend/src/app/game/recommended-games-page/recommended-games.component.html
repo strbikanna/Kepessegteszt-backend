@@ -1,6 +1,6 @@
-<mat-tab-group *ngIf="!loading">
+<mat-tab-group >
     <mat-tab label="{{text.menu.games_for_you}}">
-        <div class="games-container">
+        <div class="games-container" *ngIf="!loading">
             <div *ngFor="let recommendedGame of gamesForYou | async">
                 <app-game-card
                         [game]="recommendedGame.game"
@@ -10,6 +10,9 @@
                 </app-game-card>
                 <br>
             </div>
+        </div>
+        <div  *ngIf="loading" class="loading">
+            <mat-progress-bar  mode="indeterminate"></mat-progress-bar>
         </div>
     </mat-tab>
     <mat-tab label="{{text.menu.teacher_recommendation}}">
@@ -23,4 +26,4 @@
         </div>
     </mat-tab>
 </mat-tab-group>
-<mat-progress-bar  *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+

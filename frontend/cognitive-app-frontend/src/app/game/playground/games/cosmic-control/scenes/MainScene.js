@@ -7,10 +7,14 @@ export const MainScene = {
     update,
 };
 
-let currentRound;
+let gameParams;
+
+let round;
 let timer;
 let score;
 let backgroundSpeed;
+let correct;
+let mistakes;
 
 let leftButton;
 let rightButton;
@@ -35,6 +39,7 @@ function preload() {
 }
 
 function create() {
+    gameParams = this.game.registry.get('gameParams');
     background1 = this.add.image(400, 300, 'background1').setScale(1.2);
     background2 = this.add.image(400, -300, 'background2').setScale(1.2);
 
@@ -48,9 +53,11 @@ function create() {
         repeat: -1
     });
 
-    currentRound = 1;
+    round = 1;
     score = 0;
     backgroundSpeed = 2;
+    correct = 0;
+    mistakes = 0;
 
     // Score Container
     scoreText = this.add.text(30, 25, `Pont: ${score}`, {
@@ -75,7 +82,7 @@ function create() {
     // Round Indicators
     roundIndicators = [];
     for (let i = 0; i < 3; i++) {
-        const indicator = this.add.circle(650 + (i * 30), 45, 10, (i < currentRound) ? 0x00FF00 : 0x888888);
+        const indicator = this.add.circle(650 + (i * 30), 45, 10, (i < round) ? 0x00FF00 : 0x888888);
         roundIndicators.push(indicator);
     }
 
@@ -135,35 +142,25 @@ function setupRound() {
         let lastAction = 'right';
 
         const handleLeftButton = () => {
-            if (currentRound === 1) {
-                score++;
-                speedUpBackground();
-            } else if (currentRound === 3 && lastAction === 'right') {
-                score++;
-                speedUpBackground();
+            if (round === 1) {
+                correctHit();
+            } else if (round === 3 && lastAction === 'right') {
+                correctHit();
                 lastAction = 'left';
             } else {
-                if (score > 0) {
-                    score--;
-                }
-                slowDownBackground();
+                wrongHit()
             }
             updateScoreText();
         };
 
         const handleRightButton = () => {
-            if (currentRound === 2) {
-                score++;
-                speedUpBackground();
-            } else if (currentRound === 3 && lastAction === 'left') {
-                score++;
-                speedUpBackground();
+            if (round === 2) {
+                correctHit();
+            } else if (round === 3 && lastAction === 'left') {
+                correctHit();
                 lastAction = 'right';
             } else {
-                if (score > 0) {
-                    score--;
-                }
-                slowDownBackground();
+                wrongHit()
             }
             updateScoreText();
         };
@@ -176,13 +173,28 @@ function setupRound() {
     });
 }
 
+function correctHit() {
+    score++;
+    correct++;
+    speedUpBackground();
+}
+
+function wrongHit() {
+    score -= 5;
+    if (score < 0) {
+        score = 0;
+    }
+    slowDownBackground();
+    mistakes++;
+}
+
 function speedUpBackground() {
     backgroundSpeed += 0.5;
     backgroundSpeed = Math.min(backgroundSpeed, 10);
 }
 
 function slowDownBackground() {
-    backgroundSpeed -= 1;
+    backgroundSpeed -= 4;
     backgroundSpeed = Math.max(backgroundSpeed, 2);
 }
 
@@ -191,27 +203,30 @@ function updateScoreText() {
 }
 
 function updateButtonStatus() {
-    if (currentRound === 1) {
+    if (round === 1) {
         leftButton.setAlpha(1);
         rightButton.setAlpha(0.2);
     }
-    else if (currentRound === 2) {
+    else if (round === 2) {
         leftButton.setAlpha(0.2);
         rightButton.setAlpha(1);
     }
-    else if (currentRound === 3) {
+    else if (round === 3) {
         leftButton.setAlpha(1);
         rightButton.setAlpha(1);
     }
 }
 
 function endRound() {
-    if (currentRound < 3) {
-        currentRound++;
+    if (round < 3) {
+        round++;
         setupRound.call(this);
     } else {
         this.registry.set('gameResults', {
             score: score,
+            round: round,
+            correct: correct,
+            mistakes: mistakes,
         });
         this.scene.start('EndScene');
     }
@@ -241,6 +256,6 @@ function update() {
     
     // Update Round Indicators
     for (let i = 0; i < 3; i++) {
-        roundIndicators[i].fillColor = (i < currentRound) ? 0x00FF00 : 0x888888;
+        roundIndicators[i].fillColor = (i < round) ? 0x00FF00 : 0x888888;
     }
 }

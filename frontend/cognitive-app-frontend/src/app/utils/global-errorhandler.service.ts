@@ -15,42 +15,52 @@ export class GlobalErrorhandlerService implements ErrorHandler {
         private dialog: MatDialog,
         private router: Router
     ) {
-        router.events.subscribe((e) =>{
-            if(e instanceof NavigationEnd){
+        router.events.subscribe((e) => {
+            if (e instanceof NavigationEnd) {
                 this.previousUrl = this.currentUrl
                 this.currentUrl = e.url
             }
         })
     }
+
     private readonly httpError = TEXTS.error.http_error;
     private readonly httpErrorDetails = TEXTS.error.http_error_details;
     private currentUrl = ''
     private previousUrl = ''
-    private previousError : any = undefined
+    private previousError: any = undefined
 
+    /**
+     * Handles errors globally, displays to user with an alert dialog
+     * @param error
+     */
     handleError(error: any) {
-        let message : string | undefined = undefined
-        let detail : string | undefined = error.message
-        if(error instanceof HttpErrorResponse){
+        let message: string | undefined = undefined
+        let detail: string | undefined = error.message
+        // If the error is an HttpErrorResponse, extracts the error message and details
+        if (error instanceof HttpErrorResponse) {
             message = this.httpError
             detail = detail ?? this.httpErrorDetails
-            if(error.status === 401){
-                this.router.navigate(['/'])
+            if (error.status === 401) {
+                this.zone.run(() =>
+                    this.router.navigate(['/'])
+                )
             }
-            if(error.status === 403){
+            if (error.status === 403) {
                 this.router.navigate([this.previousUrl])
             }
-        }else{
-            if(error && this.previousError && typeof error === typeof this.previousError && error.message === this.previousError.message){
+        } else {
+            //If error occurs multiple times, only show it once
+            if (error && this.previousError && typeof error === typeof this.previousError && error.message === this.previousError.message) {
                 console.log('Same error multiple times')
                 return
             }
         }
+        // Opens the alert dialog with error message and details
         this.zone.run(() =>
             this.dialog.open(
                 AlertDialogComponent,
                 {
-                    data: {message: message, detail: detail }
+                    data: {message: message, detail: detail}
                 }
             )
         );

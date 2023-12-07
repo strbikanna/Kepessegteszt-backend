@@ -11,10 +11,10 @@ export function initialize(params) {
             timeBetweenNumbers: 2000,
             maxRound: 3,
             minNumberCount: 3,
-            maxNumberCount: 5,
+            maxNumberCount: 3,
             maxNumber: 10,
             minNumber: 1,
-            operations: ['+', '-'],
+            operations: ['+'],
         };
     };
 

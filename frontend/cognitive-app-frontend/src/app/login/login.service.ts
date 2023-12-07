@@ -16,6 +16,9 @@ export class LoginService {
 
     constructor(private oidcSecurityService: OidcSecurityService, private http: HttpClient) {}
 
+    /**
+     * Handles base config callback with auth code and retrieves token, fills userinfo after successful authentication.
+     */
     initAuthentication() {
         this.handleAuthCallback(this.BASE_CONFIG_ID)
         this.oidcSecurityService.isAuthenticated(this.BASE_CONFIG_ID).subscribe(authenticated => {
@@ -47,12 +50,19 @@ export class LoginService {
         this.oidcSecurityService.authorize(this.BASE_CONFIG_ID);
     }
 
+    /**
+     * Logs in as another user, if the current user has the impersonation role.
+     * @param username
+     */
     loginAs(username: string) {
         sessionStorage.setItem(AppConstants.impersonationKey, 'true')
         this.oidcSecurityService.logoffLocal(this.BASE_CONFIG_ID)
         this.oidcSecurityService.authorize(this.BASE_CONFIG_ID, {customParams: {'act_as': username}})
     }
 
+    /**
+     * Logs out the current user and removes the impersonation flag.
+     */
     logout() {
         sessionStorage.removeItem(AppConstants.impersonationKey)
         sessionStorage.removeItem(AppConstants.impersonationDisabledKey)

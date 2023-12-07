@@ -46,7 +46,9 @@
                         <mat-label>{{text.value}}</mat-label>
                         <input matInput formControlName="value">
                     </mat-form-field>
-                    <button mat-icon-button color="accent" type="button" (click)="removeConfigDescription(i)">
+                    <button mat-icon-button color="accent" type="button" (click)="removeConfigDescription(i)"
+                            [disabled]="!isConfigEditable(toFromGroup(configForm).controls['key'].value)"
+                    >
                         <mat-icon>delete</mat-icon>
                     </button>
                 </div>

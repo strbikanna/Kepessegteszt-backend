@@ -1,3 +1,6 @@
+/**
+ * Texts displayed in application components.
+ */
 export const TEXTS = {
     menu: {
         login: 'Bejelentkezés',
@@ -106,7 +109,7 @@ export const TEXTS = {
             chart_title: 'Kognitív profil az elmúlt időszakban',
         },
         card: {
-            current_profile: 'Legfrisebb kognitív profil',
+            current_profile: 'Legfrissebb kognitív profil',
             current_profile_description: 'A kognitív profilban szereplő képességek, és értékük ebben az időpontban ',
             no_profile_data_message: 'Nincs elég adat, ezért nem lehet megjeleníteni a kognitív profilt.',
             no_profile_data_action: 'Több játék játszása esetén összeáll a kognitív profil.',

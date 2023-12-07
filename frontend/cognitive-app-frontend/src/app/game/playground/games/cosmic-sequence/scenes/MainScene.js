@@ -14,6 +14,7 @@ let correctOrder;
 let round;
 let newRound;
 let healthPoints;
+let startTime, endTime, totalTime = 0;
 
 // Game objects
 let checkmark;
@@ -104,6 +105,7 @@ function hideAsteroidNumbers() {
         cross.setVisible(false);
         checkmark.setVisible(false);
     });
+    startTime = new Date().getTime();
 }
 
 function spawnNewAsteroids(count) {
@@ -177,9 +179,12 @@ function spawnAsteroid(number, x, y) {
         clickedOrder.push(number);
 
         if (asteroids.countActive() === 0) {
+            endTime = new Date().getTime();
             let isCorrect = clickedOrder.every((value, index) => value === correctOrder[index]);
 
             if (isCorrect) {
+                let timeTaken = endTime - startTime; // Calculate the time taken in ms
+                totalTime += timeTaken; // Add to the total time
                 //checkmark.setVisible(true);
 
                 this.tweens.add({
@@ -221,6 +226,7 @@ function endGame(gameWon) {
         gameWon: gameWon,
         round: round,
         healthPoints: healthPoints,
+        totalTime: totalTime,
     });
     this.scene.start('EndScene');
 }

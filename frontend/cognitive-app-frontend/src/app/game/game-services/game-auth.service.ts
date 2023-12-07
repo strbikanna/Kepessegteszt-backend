@@ -25,6 +25,10 @@ export class GameAuthService {
     constructor(private oidcSecurityService: OidcSecurityService, private http: HttpClient, private router: Router) {
     }
 
+    /**
+     * Handle game config callback with auth code
+     */
+
     initAuthentication() {
         this.oidcSecurityService
             .checkAuth(undefined, this.GAME_CONFIG_ID)
@@ -36,8 +40,11 @@ export class GameAuthService {
             );
     }
 
+    /**
+     * Authorizes chosen game for logged-in user
+     * @param id
+     */
     getGameToken(id: number) {
-        console.log('Trying to authorize with popup')
         GameInfo.currentGameId = id
         GameInfo.authStatus.next(false)
         const isImpersonation = sessionStorage.getItem(AppConstants.impersonationKey)
@@ -49,8 +56,12 @@ export class GameAuthService {
             customParams = {customParams: {game_id: id}}
         }
         this.oidcSecurityService.authorize(this.GAME_CONFIG_ID, customParams)
-
     }
+
+    /**
+     * Sends chosen game to playground with proper config params and navigates to playground
+     * @param recommendation
+     */
 
     publishChosenGame(recommendation: RecommendedGame) {
         recommendation.config.username = UserInfo.currentUser?.username ?? 'unknown'
@@ -66,6 +77,9 @@ export class GameAuthService {
         }
     }
 
+    /**
+     * Retrieves chosen game from session storage if present
+     */
     tryLoadChosenGame(){
         const chosenGame = sessionStorage.getItem(this.sessionStoreKey)
         if(chosenGame !== null){

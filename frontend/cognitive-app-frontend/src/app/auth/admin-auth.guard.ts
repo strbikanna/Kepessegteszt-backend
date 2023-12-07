@@ -4,6 +4,11 @@ import {Role} from "../utils/constants";
 import {UserInfo} from "./userInfo";
 import {inject} from "@angular/core";
 
+/**
+ * Guard route to be only accessible by admin users
+ * @param route
+ * @param state
+ */
 export const adminAuthGuard: CanActivateFn = (route, state) => {
   if(UserInfo.currentUser && hasAdminRole(UserInfo.currentUser))
     return true

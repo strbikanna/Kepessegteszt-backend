@@ -26,6 +26,7 @@ let counterText;
 // Game Results
 let mistakes = 0;
 let correct = 0;
+let spawnedBallons = 0;
 let score;
 let healthPoints;
 
@@ -146,6 +147,7 @@ function spawnBalloon(scene) {
     newBalloon.setScale(0.3);
     newBalloon.speed = calculateSpeed();
     balloons.add(newBalloon);
+    spawnedBallons++;
 }
 
 function calculateSpeed() {
@@ -183,7 +185,7 @@ function popBalloon(scene, balloon) {
 
         // If health points run out, game over
         if (healthPoints <= 0) {
-            endGame.call(this);
+            endGame.call(scene);
         }
 
         resetBalloon(balloon);
@@ -209,6 +211,7 @@ function popBalloon(scene, balloon) {
 
 function endGame() {
     this.registry.set('gameResults', {
+        spawnedBallons: spawnedBallons,
         mistakes: mistakes, 
         correct: correct, 
         score: score,

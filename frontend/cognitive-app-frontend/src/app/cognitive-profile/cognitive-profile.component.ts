@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import { Component, HostListener, OnInit} from '@angular/core';
 import {CognitiveProfileService} from "./service/cognitive-profile.service";
 import {CognitiveProfile} from "../model/cognitive_profile.model";
 import {BehaviorSubject, Observable} from "rxjs";
@@ -25,9 +25,10 @@ export class CognitiveProfileComponent implements OnInit {
     })
     userContactForm = new FormControl<User | null>(null, Validators.required)
     contacts!: Observable<User[]>
-    chosenUser : User | undefined = undefined
+    chosenUser: User | undefined = undefined
     isExpandMoreButtonVisible = true
     loading = true
+    loadingProfile = true
     isInspectorUser = false
 
     constructor(private service: CognitiveProfileService) {
@@ -36,13 +37,14 @@ export class CognitiveProfileComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        if(this.isInspectorUser){
+        if (this.isInspectorUser) {
             this.contacts = this.service.getContacts()
             return
         }
-         this.service.getCurrentProfile().subscribe(profile =>
+        this.service.getCurrentProfile().subscribe(profile => {
             this.currentProfileData = profile
-        )
+            this.loadingProfile = false
+        })
         this.service.getLatestProfiles().subscribe(profiles => {
             this.profileDataHistory.next(profiles)
             this.loading = false
@@ -53,7 +55,8 @@ export class CognitiveProfileComponent implements OnInit {
         const chartPosition = document.getElementById('chart')?.offsetTop
         window.scroll({top: chartPosition, behavior: 'smooth'})
     }
-    onTopClicked(){
+
+    onTopClicked() {
         window.scroll({top: 0, behavior: 'smooth'})
     }
 
@@ -62,22 +65,23 @@ export class CognitiveProfileComponent implements OnInit {
         const chartPosition = document.getElementById('chart')?.offsetTop! - document.getElementById('chart')!.offsetHeight * 0.5
         this.isExpandMoreButtonVisible = chartPosition >= window.scrollY;
     }
-    onUserChosen(){
-        if(this.userContactForm.value == null){
+
+    onUserChosen() {
+        if (this.userContactForm.value == null) {
             return
-        }else{
+        } else {
             this.chosenUser = this.userContactForm.value
-            console.log(this.chosenUser)
-            this.service.getCurrentProfileOfOtherUser(this.chosenUser.username).subscribe(profile =>
+            this.service.getCurrentProfileOfOtherUser(this.chosenUser.username).subscribe(profile => {
                 this.currentProfileData = profile
-            )
+                this.loadingProfile = false
+            })
             this.service.getLatestProfilesOfOtherUser(this.chosenUser.username).subscribe(profiles => {
                 this.profileDataHistory.next(profiles)
                 this.loading = false
             })
         }
-
     }
+
     onDateChosen() {
         if (this.dateForm.controls.start.value == null || this.dateForm.controls.end.value == null) {
             return
