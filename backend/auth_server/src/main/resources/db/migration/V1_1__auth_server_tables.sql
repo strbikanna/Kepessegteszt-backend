@@ -2,7 +2,7 @@ CREATE TABLE USERS(
                       id         int PRIMARY KEY AUTO_INCREMENT,
                       username   varchar(51) UNIQUE NOT NULL,
                       email      varchar(50)        NOT NULL,
-                      password   varchar(50)        NOT NULL,
+                      password   varchar(350)        NOT NULL,
                       first_name varchar(50)        NOT NULL,
                       last_name  varchar(50)        NOT NULL,
                       enabled    boolean DEFAULT TRUE

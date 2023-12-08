@@ -2,6 +2,9 @@ package hu.bme.aut.auth_server.user
 
 import hu.bme.aut.auth_server.role.Role
 
+/**
+ * Data transfer object for the user entity.
+ */
 data class UserDto(
     var id: Int?,
 

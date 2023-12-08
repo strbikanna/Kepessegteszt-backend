@@ -8,6 +8,9 @@ import org.springframework.web.util.UriComponentsBuilder
 import java.time.LocalDateTime
 import java.util.*
 
+/**
+ * Service for email verification.
+ */
 @Service
 class EmailVerificationService(
     @Autowired private var emailRepository: EmailRepository
@@ -15,6 +18,9 @@ class EmailVerificationService(
     @Value("\${cognitive-app.issuer-url}")
     private lateinit var appBaseUrl: String
 
+    /**
+     * Creates the verification email text and url for the user.
+     */
     fun createVerificationMessage(verificationEntity: EmailVerificationEntity): String {
         val user = verificationEntity.user
         val url = UriComponentsBuilder
@@ -29,6 +35,10 @@ class EmailVerificationService(
         return message
     }
 
+    /**
+     * Verifies the email address of the user
+     * based on the verification key and username.
+     */
     fun verifyEmail(verificationKey: String, username: String): Boolean {
         val verification = emailRepository.findByVerificationKey(verificationKey)
         if (verification.isEmpty) {
@@ -38,6 +48,10 @@ class EmailVerificationService(
         return user.username == username && verification.get().valid.isAfter(LocalDateTime.now())
     }
 
+    /**
+     * Creates a verification entity for the user
+     * which stores the verification key and the expiration date.
+     */
     fun createVerificationEntity(user: UserEntity): EmailVerificationEntity {
         val verification = EmailVerificationEntity(
             verificationKey = UUID.randomUUID().toString(),

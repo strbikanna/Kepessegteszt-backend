@@ -3,6 +3,9 @@ package hu.bme.aut.auth_server.user
 import hu.bme.aut.auth_server.role.RoleEntity
 import jakarta.persistence.*
 
+/**
+ * User entity class.
+ */
 @Entity
 @Table(name = "USERS")
 data class UserEntity(

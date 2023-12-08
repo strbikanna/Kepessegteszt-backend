@@ -15,6 +15,11 @@ class UserRegistrationService(
     @Autowired private var passwordEncoder: PasswordEncoder,
     @Autowired private var roleRepository: RoleRepository
 ) {
+    /**
+     * Saves the user to the database.
+     * Encodes the password.
+     * @throws SQLIntegrityConstraintViolationException if the username is already taken.
+     */
     fun saveUserOrThrowException(userData: RegistrationData): UserEntity {
         val encodedPassword = passwordEncoder.encode(userData.password)
         val userEntity = UserEntity(

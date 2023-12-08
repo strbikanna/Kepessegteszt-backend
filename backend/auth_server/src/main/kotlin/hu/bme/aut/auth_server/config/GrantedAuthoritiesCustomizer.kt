@@ -8,6 +8,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.stereotype.Service
 
+/**
+ * Custom converter to map JWT claims to Spring Security authorities.
+ */
 @Service
 class GrantedAuthoritiesCustomizer(
     @Autowired private var userInfoService: UserInfoService

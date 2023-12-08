@@ -6,6 +6,9 @@ import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Service
 
+/**
+ * Service for sending emails.
+ */
 @Service
 class EmailService(@Autowired private var emailSender: JavaMailSender) {
     @Value("\${cognitive-app.mail}")
