@@ -9,6 +9,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import java.util.*
 
+/**
+ * Service class for managing users.
+ */
 @Service
 class UserManagementService(
     @Autowired private var userRepository: UserRepository,
@@ -33,6 +36,9 @@ class UserManagementService(
         return convertUserDto(existingUser)
     }
 
+    /**
+     * Returns the contacts of the user that are students (aka can be impersonated).
+     */
     fun getImpersonationContactDtos(username: String): List<UserDto> {
         val userEntity = loadUserByUsernameWithContacts(username)
         if (userEntity.isEmpty) throw UsernameNotFoundException("Invalid username: $username")
@@ -42,6 +48,9 @@ class UserManagementService(
             .map { convertUserDto(it) }
     }
 
+    /**
+     * Returns all contacts of the user.
+     */
     fun getContactDtos(username: String): List<UserDto> {
         val userEntity = loadUserByUsernameWithContacts(username)
         if (userEntity.isEmpty) throw UsernameNotFoundException("Invalid username: $username")
@@ -75,6 +84,9 @@ class UserManagementService(
         return convertUserDto(savedUserEntity)
     }
 
+    /**
+     * Updates the contacts of the user and the contacts' contacts.
+     */
     @Transactional
     fun updateContactBothSide(dbUser: UserEntity, updatedContactList: List<UserDto>){
         val dbContacts = userRepository.getContactsByUsername(dbUser.username)

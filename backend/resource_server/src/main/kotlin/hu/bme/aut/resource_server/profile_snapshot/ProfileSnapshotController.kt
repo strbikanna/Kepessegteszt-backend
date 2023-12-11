@@ -2,6 +2,10 @@ package hu.bme.aut.resource_server.profile_snapshot
 
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.user.UserEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
@@ -20,6 +24,13 @@ class ProfileSnapshotController(
     @Autowired private var profileSnapshotService: ProfileSnapshotService,
     @Autowired private var authService: AuthService
 ) {
+    /**
+     * Returns the profile snapshots of the user.
+     * @param pageIndex The index of the first item.
+     * @param pageSize The number of items to return.
+     * @param startTime The start time of the snapshots.
+     * @param endTime The end time of the snapshots.
+     */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_TEACHER', 'ROLE_PARENT', 'ROLE_STUDENT')")
@@ -34,6 +45,14 @@ class ProfileSnapshotController(
         return getSnapshotsOfUserByRequestValues(user, pageIndex, pageSize, startTime, endTime)
     }
 
+    /**
+     * Returns the profile snapshots of another user.
+     * @param username The username of the user that's profile snapshots are returned.
+     * @param pageIndex The index of the first item.
+     * @param pageSize The number of items to return.
+     * @param startTime The start time of the snapshots.
+     * @param endTime The end time of the snapshots.
+     */
     @GetMapping("/inspect")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_TEACHER', 'ROLE_PARENT')")
@@ -44,10 +63,10 @@ class ProfileSnapshotController(
         @RequestParam(required = false) pageSize: Int?,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) startTime: LocalDateTime?,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) endTime: LocalDateTime?,
-    ): List<ProfileSnapshotItem>{
+    ): Deferred<List<ProfileSnapshotItem>> = CoroutineScope(Dispatchers.Default).async{
         authService.checkContactAndThrow(authentication, username)
         val user = authService.getContactByUsername(username)
-        return getSnapshotsOfUserByRequestValues(user, pageIndex, pageSize, startTime, endTime)
+        return@async getSnapshotsOfUserByRequestValues(user, pageIndex, pageSize, startTime, endTime)
     }
 
     private fun getSnapshotsOfUserByRequestValues(

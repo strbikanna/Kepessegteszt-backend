@@ -5,6 +5,9 @@ import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.utils.EnumAbilityValue
 import jakarta.persistence.*
 
+/**
+ * Entity class for profile items with enum value (non-discrete).
+ */
 @Entity
 data class EnumProfileItem(
     @Id
@@ -17,5 +20,6 @@ data class EnumProfileItem(
     override val ability: AbilityEntity,
 
     @Column
+    @Enumerated(value= EnumType.STRING)
     override var abilityValue: EnumAbilityValue
 ): ProfileItem()

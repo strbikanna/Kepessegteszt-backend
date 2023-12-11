@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import java.time.LocalDateTime
 
+/**
+ * DTO for the profile snapshot.
+ */
 data class ProfileSnapshotDto(
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")

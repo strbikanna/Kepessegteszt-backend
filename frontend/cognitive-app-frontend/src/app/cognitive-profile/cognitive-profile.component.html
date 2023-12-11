@@ -12,8 +12,8 @@
 </div>
 <mat-divider></mat-divider>
 <div class="profile-container" *ngIf="!isInspectorUser || userContactForm.value">
-    <app-profile-card *ngIf="!loading" [profileData]="currentProfileData" id="card"></app-profile-card>
-    <mat-progress-bar *ngIf="loading" mode="buffer"></mat-progress-bar>
+    <app-profile-card *ngIf="!loadingProfile" [profileData]="currentProfileData" id="card"></app-profile-card>
+    <mat-progress-bar *ngIf="loadingProfile" mode="buffer"></mat-progress-bar>
     <div class="date-picker-container" *ngIf="!loading">
         <h4>{{text.date_picker.see_history}}</h4>
         <p>{{text.date_picker.see_history_description}}</p>

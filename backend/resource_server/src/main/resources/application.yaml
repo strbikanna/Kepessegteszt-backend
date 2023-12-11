@@ -1,8 +1,11 @@
 server:
+  # Local port of app, customize if needed
   port: 8090
+
 spring:
+  # Database connection settings, customize if needed
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/cognitive_app
+    url: jdbc:mysql://localhost:3306/cognitive_app
     username: dev
     password: dev.1122
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -13,7 +16,8 @@ spring:
 
   web:
     resources:
-      static-locations: file:/Users/annav/Documents/Bme/Szakdoli/Kepessegteszt-backend/game_images
+      # Path to static files, set local file path
+      static-locations: file:<local file path>/backend/resource_server/thumbnails/
   mvc:
     static-path-pattern: /game_images/**
 
@@ -21,11 +25,20 @@ spring:
     oauth2:
       resourceserver:
         jwt:
+          # Uri of auth server, customize if needed
           issuer-uri: http://localhost:9000
+
+springdoc:
+  api-docs:
+    path: /api-docs
 
 app:
   python:
-    source-location: C:/Users/strbi/Python_projects/HelloWorld
-    models-location: C:/Users/strbi/Python_projects/
-  thumbnail-location: C:/Users/annav/Documents/Bme/Szakdoli/Kepessegteszt-backend/game_images/
+    # Indicates if Python environment is present
+    exists: true
+    # Path to python module, set local file path
+    source-location: C:<local file path>/backend/resource_server/python_module
+    models-location: C:<local file path>/backend/resource_server/python_module/modellek/
+  thumbnail-location: C:<local file path>/backend/resource_server/thumbnails/
+  # Path to static files, set local port of resource server if needed
   image-path: http://localhost:8090/game_images

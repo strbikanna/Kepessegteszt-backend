@@ -29,8 +29,65 @@ insert into role_to_user(user_id, role_id) values(3,'SCIENTIST');
 
 -- example abilities
 insert into ability
-values('Gf', 'Fluid reasoning', 'The use of deliberate and controlled mental operations to solve
-novel problems that cannot be performed automatically.', 'FLOATING');
+values('Gf', 'Fluid reasoning', 'Képesség új problémák megoldására, logikai következtetésre és absztrakt gondolkodásra.', 'FLOATING');
 
-insert into ability values('Gsm', 'Short-trem memory', 'The ability to apprehend and maintain awareness of a limited
-number of elements of information in the immediate situation.', 'FLOATING');
+insert into ability
+values('Gc', 'Crystallized intelligence', 'Képesség a korábban megszerzett tudás felhasználására.', 'FLOATING');
+
+insert into ability
+values('Gv', 'Visual processing', 'Képesség a vizuális információk feldolgozására, a térbeli tájékozódásra.', 'FLOATING');
+
+insert into ability
+values('Glr', 'Long-term memory', 'Képesség a korábban megszerzett információk felidézésére. Az információ hosszú távú tárolására és lekérdezésére.', 'FLOATING');
+
+insert into ability
+values('Ga', 'Auditory processing', 'Képesség hangok érzékelésére, a hallott információk feldolgozására.', 'FLOATING');
+
+insert into ability
+values('Gsm', 'Short-trem memory', 'Képesség a rövidtávú emlékezet  használatára.', 'FLOATING');
+
+-- student with abilities
+insert into float_profile_item(user_id, ability_id, ability_value) values(2,'Gf', 1.0);
+insert into float_profile_item(user_id, ability_id, ability_value) values(2,'Gc', 0.997);
+insert into float_profile_item(user_id, ability_id, ability_value) values(2,'Gv', 1.002);
+insert into float_profile_item(user_id, ability_id, ability_value) values(2,'Glr', 1.0);
+insert into float_profile_item(user_id, ability_id, ability_value) values(2,'Ga', 1.151);
+insert into float_profile_item(user_id, ability_id, ability_value) values(2,'Gsm', 1.0);
+
+-- snapshot abilities
+insert into float_profile_snapshot_item(user_id, ability_id, ability_value, _timestamp)
+values(2,'Gf', 0.78, '2023-11-01 10:00:00');
+insert into float_profile_snapshot_item(user_id, ability_id, ability_value, _timestamp)
+values(2,'Gf', 0.82, '2023-11-21 14:55:00');
+insert into float_profile_snapshot_item(user_id, ability_id, ability_value, _timestamp)
+values(2,'Gf', 0.91, '2023-12-05 16:15:00');
+
+
+insert into float_profile_snapshot_item(user_id, ability_id, ability_value, _timestamp)
+values(2,'Gc', 0.7, '2023-11-01 10:00:00');
+insert into float_profile_snapshot_item(user_id, ability_id, ability_value, _timestamp)
+values(2,'Gc', 0.76, '2023-11-21 14:55:00');
+insert into float_profile_snapshot_item(user_id, ability_id, ability_value, _timestamp)
+values(2,'Gc', 0.9, '2023-12-05 16:15:00');
+
+insert into float_profile_snapshot_item(user_id, ability_id, ability_value, _timestamp)
+values(2,'Gv', 0.8, '2023-11-01 10:00:00');
+insert into float_profile_snapshot_item(user_id, ability_id, ability_value, _timestamp)
+values(2,'Gv', 0.8, '2023-11-21 14:55:00');
+insert into float_profile_snapshot_item(user_id, ability_id, ability_value, _timestamp)
+values(2,'Gv', 0.99, '2023-12-05 16:15:00');
+
+insert into float_profile_snapshot_item(user_id, ability_id, ability_value, _timestamp)
+values(2,'Glr', 0.9, '2023-11-01 10:00:00');
+insert into float_profile_snapshot_item(user_id, ability_id, ability_value, _timestamp)
+values(2,'Glr', 0.97, '2023-11-21 14:55:00');
+insert into float_profile_snapshot_item(user_id, ability_id, ability_value, _timestamp)
+values(2,'Glr', 0.95, '2023-12-05 16:15:00');
+
+insert into float_profile_snapshot_item(user_id, ability_id, ability_value, _timestamp)
+values(2,'Ga', 1.05, '2023-12-05 16:15:00');
+
+insert into float_profile_snapshot_item(user_id, ability_id, ability_value, _timestamp)
+values(2,'Gsm', 0.96, '2023-12-05 16:15:00');
+
+insert into game_abilities(game_id, ability_code) values(4,'Gv');

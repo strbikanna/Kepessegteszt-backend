@@ -24,7 +24,6 @@ export class AdminPageComponent implements OnInit {
     lastPageEvent: PageEvent | undefined = undefined;
 
     text = TEXTS.admin_page;
-    pageText = TEXTS.paging;
 
     users: Observable<UserForAdmin[]> = new Observable<UserForAdmin[]>();
 
@@ -44,6 +43,9 @@ export class AdminPageComponent implements OnInit {
 
     constructor(private service: AdminService, private _snackbar: MatSnackBar) {}
 
+    /**
+     * Init paged user data
+     */
     ngOnInit(): void {
         this.users = this.service.getAllUsers(0, 10);
         this.service.getNumberOfUsers().subscribe(numberOfUsers => {
@@ -52,6 +54,10 @@ export class AdminPageComponent implements OnInit {
         this.initContactAutocomplete();
     }
 
+    /**
+     * When user chosen, fill userdataForm with user data
+     * @param user chosen user
+     */
     setUpUserToEdit(user: UserForAdmin): void {
         this.userToEdit = user;
         this.service.getContactsOfUser(user).subscribe(contacts => {
@@ -63,8 +69,11 @@ export class AdminPageComponent implements OnInit {
         this.userDataForm.controls.email.setValue(user.email);
         this.resetAutoComplete()
     }
+
+    /**
+     * Sets up autocomplete with users data, displaying name
+     */
     initContactAutocomplete(): void {
-        console.log('init contact autocomplete')
         this.service.getAllUsers().subscribe(contacts => {
             this.contactOptions = contacts.sort((a, b) => a.firstName.localeCompare(b.firstName));
             this.filteredContactOptions = this.contactOptions.filter((val, index) => index < 10);
@@ -74,6 +83,11 @@ export class AdminPageComponent implements OnInit {
             this.filteredContactOptions = this.filterContacts(name);
         });
     }
+
+    /**
+     * When autocomplete input changes, filter contacts
+     * @param value input value
+     */
     filterContacts(value: string) : UserForAdmin[]{
         if(value === '' || value === ' ') return this.contactOptions;
         const filter = value.toLowerCase();
@@ -82,10 +96,19 @@ export class AdminPageComponent implements OnInit {
             .sort((a, b) => a.firstName.localeCompare(b.firstName))
             .filter((val, index) => index < 10);
     }
+
+    /**
+     * Converts user to display name string in autocomplete
+     * @param user
+     */
     convertDisplay(user: UserForAdmin): string{
         if(user.firstName === undefined || user.lastName === undefined) return '';
         return user.firstName + ' ' + user.lastName;
     }
+
+    /**
+     * Adds contact to userToEdit
+     */
     onAddContact(){
         if(this.userToEdit!!.contacts === undefined){
             this.userToEdit!!.contacts = [];
@@ -148,9 +171,19 @@ export class AdminPageComponent implements OnInit {
     requestedRolesOfUser(user: UserForAdmin): string[] {
         return user.roles.filter(role => role.includes('REQUEST'));
     }
+
+    /**
+     * When checkbox of role is changed, add or remove role from userToEdit, and handle requested role grant
+     * @param role
+     * @param checkedState
+     */
     onRoleCheckChanged(role: string, checkedState: MatCheckboxChange){
+        role = role.toUpperCase();
         if(checkedState.checked){
             this.userToEdit?.roles.push(role);
+            if(this.userToEdit?.roles.includes(role + '_REQUEST')){
+                this.userToEdit?.roles.splice(this.userToEdit?.roles.indexOf(role + '_REQUEST'), 1);
+            }
         }else{
             this.userToEdit?.roles.splice(this.userToEdit?.roles.indexOf(role), 1);
         }

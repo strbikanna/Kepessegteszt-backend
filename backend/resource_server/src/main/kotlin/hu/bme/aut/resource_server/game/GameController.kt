@@ -21,7 +21,7 @@ class GameController(
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "10") size: Int
     ): List<GameEntity> {
-        return gameService.getAllGames(page, size)
+        return gameService.getAllGamesPaged(page, size)
     }
 
     @GetMapping("/all/count")
@@ -42,9 +42,9 @@ class GameController(
     @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST')")
     fun updateGame(@RequestBody gameEntity: GameEntity, @PathVariable game_id: Int): GameEntity {
         if(game_id == gameEntity.id) {
-            return gameRepository.save(gameEntity)
+            return gameService.updateGame(gameEntity)
         } else{
-            throw IllegalArgumentException("Game with given ID does not exist.")
+            throw IllegalArgumentException("Game IDs don't match.")
         }
     }
 
@@ -55,6 +55,9 @@ class GameController(
         return gameRepository.save(gameEntity)
     }
 
+    /**
+     * Endpoint to upload a (new) thumbnail for a game.
+     */
     @PostMapping("/image/{gameId}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
@@ -65,8 +68,8 @@ class GameController(
     @DeleteMapping("/{game_id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
-    fun deleteGame(@RequestBody gameEntity: GameEntity, @PathVariable game_id: Int) {
-        if(game_id == gameEntity.id) {
+    fun deleteGame(@PathVariable game_id: Int) {
+        if(gameRepository.existsById(game_id)) {
             gameRepository.deleteById(game_id)
         } else{
             throw IllegalArgumentException("Game ids do not match.")

@@ -12,7 +12,10 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.session.ConcurrentSessionFilter
 
-
+/**
+ * This configuration class is used to bypass the security of the application.
+ * It is only used in the test environment.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity

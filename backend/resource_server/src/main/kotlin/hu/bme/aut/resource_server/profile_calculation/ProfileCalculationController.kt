@@ -4,8 +4,8 @@ import hu.bme.aut.resource_server.profile_calculation.data.CalculationInfoDto
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
 import hu.bme.aut.resource_server.profile_calculation.service.GameResultProcessingService
 import hu.bme.aut.resource_server.profile_calculation.service.UserProfileUpdaterService
+import hu.bme.aut.resource_server.recommendation.AutoRecommendationService
 import kotlinx.coroutines.*
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
@@ -22,14 +22,21 @@ import org.springframework.web.bind.annotation.RestController
 class ProfileCalculationController(
     @Autowired private var profileUpdaterService: UserProfileUpdaterService,
     @Autowired private var resultProcessingService: GameResultProcessingService,
+    @Autowired private var autoRecommendationService: AutoRecommendationService,
     @Autowired private var dataService: ResultForCalculationDataService
 ) {
-    private val log = LoggerFactory.getLogger(ProfileCalculationController::class.java)
 
+    /**
+     * Returns the count of results that are not yet processed for the given game.
+     */
     @GetMapping("/result_count")
     @ResponseStatus(HttpStatus.OK)
     fun getResultCountOfGame(@RequestParam gameId: Int): Long = dataService.getCountForNewCalculation(gameId)
 
+    /**
+     * Processes the results of the given game and returns the mean and standard deviation of the results
+     * and the count of updated profiles.
+     */
     @PostMapping("/process_results")
     @ResponseStatus(HttpStatus.CREATED)
     fun processResults(@RequestParam gameId: Int): Deferred<CalculationInfoDto> =
@@ -37,6 +44,7 @@ class ProfileCalculationController(
             val meanAndDeviation = resultProcessingService.processGameResults(gameId)
             val countOfUpdatedProfiles = dataService.getCountOfRecentCalculation(gameId)
             profileUpdaterService.updateUserProfileByResultsOfGame(gameId, meanAndDeviation)
+            autoRecommendationService.createRecommendationModel(gameId)
             return@async CalculationInfoDto(meanAndDeviation, countOfUpdatedProfiles)
         }
 }

@@ -19,7 +19,7 @@ export class RecommendedGamesComponent implements OnInit {
     scientistRecommendedGames: Observable<RecommendedGame[]> = new Observable<RecommendedGame[]>()
     allGames: Observable<RecommendedGame[]> = new Observable<RecommendedGame[]>()
 
-    loading = false;
+    loading = true;
 
     private storageKey = 'games_chosenGame'
 
@@ -29,7 +29,12 @@ export class RecommendedGamesComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        console.log(this.loading)
         this.gamesForYou = this.gameService.getGamesForCurrentUser()
+        this.gamesForYou.subscribe(games => {
+            console.log('Not loading')
+          this.loading = false;
+        })
         this.teacherRecommendedGames = this.gameService.getTeacherRecommendedGames()
         this.scientistRecommendedGames = this.gameService.getScientistRecommendedGames()
         this.allGames = this.gameService.getAllGames()
@@ -47,7 +52,6 @@ export class RecommendedGamesComponent implements OnInit {
             if (isAuthenticated && this.validChosenGame(this.chosenGame)) {
                 this.loadPlayground(this.chosenGame!);
             } else {
-                this.loading = false;
                 console.log('Not authenticated')
                 //TODO handle failure
             }

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {TEXTS} from "../utils/app.text_messages";
 import {UserInfo} from "../auth/userInfo";
 import {Role} from "../utils/constants";
@@ -8,11 +8,19 @@ import {Role} from "../utils/constants";
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit{
 
   texts = TEXTS.home
   user = UserInfo.currentUser
 
+    constructor(private changeDetectorRef: ChangeDetectorRef,) {  }
+
+    ngOnInit() {
+        UserInfo.loginStatus.subscribe(loginSuccess => {
+            this.user = UserInfo.currentUser
+            this.changeDetectorRef.detectChanges()
+        });
+    }
 
     getFeatureMessageForUser(){
     if(this.user === undefined){

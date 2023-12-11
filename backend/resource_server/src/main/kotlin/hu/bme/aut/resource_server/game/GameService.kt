@@ -19,14 +19,43 @@ class GameService (
     @Value("\${app.image-path}")
     private lateinit var gameImageLocation: String
 
-    fun getAllGames(pageIndex: Int, pageSize: Int): List<GameEntity> {
+    fun getAllGamesPaged(pageIndex: Int, pageSize: Int): List<GameEntity> {
         return gameRepository.findAll(PageRequest.of(pageIndex, pageSize)).toList()
+    }
+    fun getAllGames(): List<GameEntity> {
+        return gameRepository.findAll()
     }
 
     fun getGameById(id: Int): Optional<GameEntity> {
         return gameRepository.findById(id)
     }
 
+    /**
+     * Updates game to have the same fields as param game.
+     * If the url or the configDescription is different, then the old game is set to inactive and a new game is created
+     * with higher version number.
+     */
+    fun updateGame(updatedGame: GameEntity): GameEntity {
+        val oldGame = gameRepository.findById(updatedGame.id!!).orElseThrow()
+        if(oldGame.url != updatedGame.url || !sameConfigDescription(oldGame, updatedGame)) {
+            oldGame.active = false
+            gameRepository.save(oldGame)
+
+            val newVersionedGame = copyGame(updatedGame).copy(
+                id = null,
+                version = oldGame.version + 1
+            )
+            return gameRepository.save(newVersionedGame)
+        } else {
+            updatedGame.version = oldGame.version + 1
+            return gameRepository.save(updatedGame)
+        }
+    }
+
+    /**
+     * Saves the thumbnail for the game with the given id.
+     * File location is: thumbnailLocation/gameId.png
+     */
     fun saveThumbnailForGame(id: Int, thumbnail: MultipartFile): GameEntity{
         val game = gameRepository.findById(id).orElseThrow()
         var fileName = "${game.id}"
@@ -43,8 +72,6 @@ class GameService (
             thumbnailPath = "$gameImageLocation/${fileName}.png",
             version = game.version + 1
         )
-        game.active = false
-        gameRepository.save(game)
         return gameRepository.save(updatedGame)
     }
 
@@ -52,6 +79,7 @@ class GameService (
         val affectedAbilities = mutableSetOf<AbilityEntity>()
         affectedAbilities.addAll(game.affectedAbilities)
         return GameEntity(
+            id = game.id,
             name = game.name,
             description = game.description,
             affectedAbilities = affectedAbilities,
@@ -61,6 +89,14 @@ class GameService (
             thumbnailPath = game.thumbnailPath,
             version = game.version
         )
+    }
+    private fun sameConfigDescription(game1: GameEntity, game2: GameEntity): Boolean{
+        game1.configDescription.entries.forEach { (key, value) ->
+            if(game2.configDescription[key] != value){
+                return false
+            }
+        }
+        return true
     }
 
 }

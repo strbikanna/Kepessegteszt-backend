@@ -2,6 +2,7 @@ server:
   port: 9000
 
 spring:
+  # database config, change it to your own database
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/app_users
     username: dev
@@ -21,17 +22,16 @@ spring:
             enable: true
 
 
-#  profiles:
-#    active: test
-
 logging:
   level:
     org:
       springframework:
         security: trace
-        data:
-          repository: info
+
 
 cognitive-app:
+  # change it to your own domain, this is the issuer in the jwt token
+  # and the url in the emails
+  issuer-url: http://localhost:9000
   mail: noreply@cognitiveapp.hu
   subject: Email cím megerősítése

@@ -25,7 +25,7 @@ class GameServiceTest(
 
     @Transactional
     @Test
-    fun testFindGameDtoById() {
+    fun testFindGameById() {
         val config1 = mutableMapOf<String, Any>("Level" to 0)
         val config2 = mutableMapOf<String, Any>("Level" to 3, "Ability" to "Gf")
         val game1 = GameEntity(

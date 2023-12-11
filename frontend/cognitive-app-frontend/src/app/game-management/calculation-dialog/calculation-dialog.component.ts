@@ -7,6 +7,9 @@ import {Game} from "../../model/game.model";
 import {CalculationFeedback} from "../../model/calculation-feedback.model";
 import {Ability} from "../../model/ability.model";
 
+/**
+ * Dialog that shows game result data calculation data and actions.
+ */
 @Component({
     selector: 'app-calculation-dialog',
     templateUrl: './calculation-dialog.component.html',
@@ -25,9 +28,11 @@ export class CalculationDialogComponent implements OnInit {
     constructor(
         private service: GameManagementService,
         @Inject(MAT_DIALOG_DATA) private gameId: number
-    ) {
-    }
+    ) {}
 
+    /**
+     * Queries game data and current count of result data to game based on injected id.
+     */
     ngOnInit(): void {
         this.service.getGameById(this.gameId).subscribe(game =>
             this.game = game
@@ -38,6 +43,10 @@ export class CalculationDialogComponent implements OnInit {
 
     }
 
+    /**
+     * Calls backend to start result processing for game.
+     * @param game
+     */
     onStartCalculation(game: Game) {
         this.inProgress = true;
         this.service.startResultProcessing(game.id).subscribe(result => {

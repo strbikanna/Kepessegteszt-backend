@@ -43,17 +43,23 @@ class RecommendedGameController(
         return recommendedGameRepository.save(recommendedGame)
     }
 
+    /**
+     * Returns the recommended games created by the AutoRecommendationService to the user.
+     */
     @GetMapping("/system_recommended")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('STUDENT')")
     fun getAllSystemRecommended(authentication: Authentication): List<RecommendedGameEntity> {
         val systemRecommendedGames = gameplayRecommenderService.getAllRecommendationToUser(authentication.name).toMutableList()
-        if(systemRecommendedGames.size < 2){
+        if(systemRecommendedGames.size < 3){
             systemRecommendedGames.addAll(gameplayRecommenderService.createNewRecommendations(authentication.name))
         }
         return systemRecommendedGames
     }
 
+    /**
+     * Deletes the current recommendations of the user and creates new ones.
+     */
     @PostMapping("/system_recommended")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('STUDENT')")

@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.authentication
 
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.mockito.Mockito
@@ -42,6 +43,8 @@ class AuthServiceTest(
         Mockito.`when`(mockRequestHeadersSpec.header("Authorization", "Bearer $testToken")).thenReturn(mockRequestHeadersSpec)
         Mockito.`when`(mockRequestHeadersSpec.retrieve()).thenReturn(mockResponseSpec)
         Mockito.`when`(mockResponseSpec.bodyToMono(String::class.java)).thenReturn(Mono.just(response))
-        assertDoesNotThrow { authService.checkContactAndThrow(mockAuthentication, testUsername)}
+        assertDoesNotThrow {
+           runBlocking { authService.checkContactAndThrow(mockAuthentication, testUsername) }
+        }
     }
 }

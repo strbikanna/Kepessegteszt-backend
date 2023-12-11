@@ -46,6 +46,11 @@ class LoginController(
         emailSenderService.sendSimpleEmail(to = userEntity.email, text = message)
     }
 
+    /**
+     * Catches the exception thrown by the [UserRegistrationService.saveUserOrThrowException] method.
+     * If the username is already taken, it will add the [RegistrationData] to the model with the error flag set to true.
+     * User is then notified that the username is already taken.
+     */
     @ExceptionHandler
     fun handleDuplicateUsername(ex: SQLIntegrityConstraintViolationException, model: Model): String {
         val possibleUsers = badRegistrationCache.filter { ex.message?.contains(it.username) ?: false }

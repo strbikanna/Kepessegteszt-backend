@@ -19,6 +19,10 @@ export class ImpersonationComponent implements OnInit {
   text= TEXTS.impersonation
   private storageKey = AppConstants.impersonationDisabledKey
   constructor(private impersonationService: LoginService) {}
+
+  /**
+   * Checks if user has impersonation role and if so, gets the contacts list
+   */
   ngOnInit(): void {
     UserInfo.loginStatus.subscribe(loginSuccess => {
       if (loginSuccess && this.impersonationService.hasImpersonationRole(UserInfo.currentUser.roles) && !this.isImpersonationDisabled()) {
@@ -29,6 +33,10 @@ export class ImpersonationComponent implements OnInit {
     });
   }
 
+  /**
+   * Initiates impersonation in the name of chosen contact user
+   * @param username
+   */
   signInAs(username: string){
     this.impersonationService.loginAs(username)
     this.canImpersonate = false

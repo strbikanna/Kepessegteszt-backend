@@ -5,6 +5,7 @@ import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet
 import com.nimbusds.jose.jwk.source.JWKSource
 import com.nimbusds.jose.proc.SecurityContext
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
@@ -17,6 +18,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.jwt.JwtDecoder
@@ -43,6 +46,13 @@ import javax.sql.DataSource
 @EnableMethodSecurity
 class AuthServerConfig {
 
+    @Value("\${cognitive-app.issuer-url}")
+    private lateinit var issuerUrl: String
+
+    /**
+     * This filter chain has the settings of the oidc authorization server endpoints.
+     * (e.g. /oauth2/authorize, /oauth2/token, /oauth2/userinfo, /.well-known/openid-configuration)
+     */
     @Bean
     @Order(1)
     fun authServerSecurityFilterChain(http: HttpSecurity, userInfoMapper: UserInfoMapper): SecurityFilterChain {
@@ -63,16 +73,19 @@ class AuthServerConfig {
             .exceptionHandling { exceptions ->
                 exceptions
                     .defaultAuthenticationEntryPointFor(
-                        //TODO customize login page
                         LoginUrlAuthenticationEntryPoint("/login"),
                         MediaTypeRequestMatcher(MediaType.TEXT_HTML)
                     )
-            } // Accept access tokens for User Info and/or Client Registration
+            } // Accept access tokens for User Management and/or Client Registration
             .oauth2ResourceServer { it.jwt(withDefaults()) }
 
         return http.build()
     }
 
+    /**
+     * The secondary filterchain, when the 1st cannot be applied.
+     * (e.g. /login, /register, /mail)
+     */
     @Bean
     @Order(2)
     fun defaultSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -92,6 +105,10 @@ class AuthServerConfig {
         return http.build()
     }
 
+    /**
+     * This bean is responsible for converting the JWT token claims to a Spring Security Authentication object
+     * with user roles.
+     */
     @Bean
     fun customJwtAuthenticationConverter(converter: GrantedAuthoritiesCustomizer): JwtAuthenticationConverter {
         val authConverter = JwtAuthenticationConverter()
@@ -99,6 +116,10 @@ class AuthServerConfig {
         return authConverter
     }
 
+    /**
+     * This bean is responsible for loading the user details from the database.
+     * It is used to determine granted roles and password.
+     */
     @Bean
     fun userDetailsService(dataSource: DataSource): UserDetailsService {
         val userdetailsService = JdbcDaoImpl()
@@ -110,41 +131,60 @@ class AuthServerConfig {
             "select users.username, roles.role_name "
                     + "from users "
                     + "inner join user_roles ur on ur.user_id = users.id "
-                    + "inner join roles on ur.role_id = roles.id "
+                    + "inner join roles on ur.role_id = roles.role_name "
                     + "where users.username = ?"
         )
         return userdetailsService
     }
 
+    /**
+     * This bean is responsible for encoding and decoding the password.
+     */
     @Bean
     fun passwordEncoder(): PasswordEncoder {
-        return NoOpPasswordEncoder.getInstance()
+        return BCryptPasswordEncoder()
     }
 
+    /**
+     * This bean is responsible for storing the registered clients.
+     */
     @Bean
     fun registeredClientRepository(jdbcTemplate: JdbcTemplate) = JdbcRegisteredClientRepository(jdbcTemplate)
 
 
+    /**
+     * This bean is responsible for storing the public key used for signing the JWT tokens.
+     */
     @Bean
     fun jwkSource(): JWKSource<SecurityContext> {
         val jwkSet = JWKSet(generateRsaKey())
         return ImmutableJWKSet(jwkSet)
     }
 
+    /**
+     * This bean is responsible for decoding the JWT tokens.
+     */
     @Bean
     fun jwtDecoder(jwkSource: JWKSource<SecurityContext>): JwtDecoder {
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource)
     }
 
+    /**
+     * This bean is responsible for the authorization server configuration settings.
+     * Sets issuer uri which is used to sign the JWT tokens.
+     */
     @Bean
     fun authorizationServerSettings(): AuthorizationServerSettings {
-        return AuthorizationServerSettings.builder().issuer("http://localhost:9000").build()
+        return AuthorizationServerSettings.builder().issuer(issuerUrl).build()
     }
 
+    /**
+     * This bean is responsible for the CORS configuration.
+     */
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = listOf("http://localhost:4200")
+        configuration.allowedOrigins = listOf("*")
         configuration.allowedMethods = listOf("*")
         configuration.allowedHeaders = listOf("*")
         val source = UrlBasedCorsConfigurationSource()

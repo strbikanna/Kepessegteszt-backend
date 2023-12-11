@@ -3,6 +3,9 @@ import {MatPaginatorIntl} from "@angular/material/paginator";
 import {Injectable} from "@angular/core";
 import {TEXTS} from "../../utils/app.text_messages";
 
+/**
+ * This class is used to translate the paginator labels
+ */
 @Injectable(
     {providedIn: 'root'}
 )

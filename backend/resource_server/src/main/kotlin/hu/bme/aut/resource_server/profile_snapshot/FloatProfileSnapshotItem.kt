@@ -9,6 +9,10 @@ import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDateTime
 
+/**
+ * Entity class that is a snapshot of a user's cognitive profile item with float value
+ * at given time.
+ */
 @Entity
 data class FloatProfileSnapshotItem (
     @Id

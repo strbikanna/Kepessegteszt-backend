@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {User} from "../model/user.model";
 import {LoginService} from "./login.service";
 import {TEXTS} from "../utils/app.text_messages";
+import {UserInfo} from "../auth/userInfo";
 
 @Component({
   selector: 'app-login',
@@ -16,20 +17,16 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.loginService.initAuthentication()
-    this.loginService.loginStatus.subscribe(loginStatus => {
+    UserInfo.loginStatus.subscribe(loginStatus => {
       this.isLoggedIn = loginStatus
       if(this.isLoggedIn){
-        this.user = this.loginService.userInfo
+        this.user = UserInfo.currentUser
       }
     });
   }
 
   login() {
     this.loginService.login()
-  }
-
-  gameToken(){
-    //this.loginService.getGameToken(11)
   }
 
   logout() {

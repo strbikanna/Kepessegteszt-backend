@@ -15,6 +15,9 @@ import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
+/**
+ * Service for updating the user cognitive profiles by the normalized results of a game.
+ */
 @Service
 class UserProfileUpdaterService(
     @Autowired private var snapshotService: ProfileSnapshotService,
@@ -22,8 +25,14 @@ class UserProfileUpdaterService(
     @Autowired private var resultDataService: ResultForCalculationDataService,
     @Autowired private var userService: UserService
 ) {
+    /**
+     * Unit of deviation difference's effect on ability value.
+     */
     private final val deviationDiffMultiplicator = 0.15
 
+    /**
+     * Updates the user profiles by the normalized results of the game with the given id.
+     */
     suspend fun updateUserProfileByResultsOfGame(gameId: Int, normalizationValue: MeanAndDeviation) = withContext(Dispatchers.IO){
         val game = resultDataService.getGameWithAbilities(gameId)
         if(game.affectedAbilities.isEmpty()){

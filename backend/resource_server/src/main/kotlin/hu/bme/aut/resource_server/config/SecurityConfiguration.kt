@@ -16,6 +16,10 @@ import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
+/**
+ * Security configuration for the resource server.
+ * Uses oauth2 jwt authentication.
+ */
 
 @Configuration
 @EnableWebSecurity
@@ -32,6 +36,9 @@ class SecurityConfiguration {
             .authorizeHttpRequests{
                 it.requestMatchers(HttpMethod.OPTIONS).permitAll()
                 it.requestMatchers("/error").permitAll()
+                it.requestMatchers("/api-docs").permitAll()
+                it.requestMatchers("/swagger-ui/**").permitAll()
+                it.requestMatchers("/api-docs/swagger-config").permitAll()
                 it.requestMatchers("/game_images/**").permitAll()
                 it.anyRequest().authenticated()
             }
@@ -39,10 +46,13 @@ class SecurityConfiguration {
         return http.build()
     }
 
+    /**
+     * CORS settings allowing all origins, methods and headers.
+     */
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = mutableListOf("http://localhost:4200", "*")
+        configuration.allowedOrigins = mutableListOf("*")
         configuration.allowedMethods = mutableListOf("*")
         configuration.allowedHeaders = mutableListOf("*")
         val source = UrlBasedCorsConfigurationSource()
@@ -51,6 +61,9 @@ class SecurityConfiguration {
         return source
     }
 
+    /**
+     * Custom converter for jwt authentication.
+     */
     @Bean
     fun customJwtAuthenticationConverter(converter: GrantedAuthoritiesConverter): JwtAuthenticationConverter {
         val authConverter = JwtAuthenticationConverter()
