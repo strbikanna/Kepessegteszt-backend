@@ -1,7 +1,7 @@
 {
   "routes": [
     {
-      "route": "/games"
+      "route": "/*"
     },{
       "route": "/profile"
     }
@@ -10,5 +10,9 @@
     "401": {
       "redirect": "/"
     }
+  },
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/assets/*"]
   }
 }
