@@ -19,8 +19,8 @@ class GameRepositoryTest(
 ) {
     @BeforeEach
     fun emptyRepo() {
+        testUtilsService.emptyRepositories()
         testUtilsService.fillAbilityRepository()
-        gameRepository.deleteAll()
     }
 
     @Transactional

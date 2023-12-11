@@ -10,6 +10,9 @@ import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Type
 import java.time.LocalDateTime
 
+/**
+ * Entity that is immutable and represents a record of a gameplay result.
+ */
 @Entity
 @Table(name = "GAMEPLAY")
 data class GameplayResultEntity(

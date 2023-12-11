@@ -2,6 +2,9 @@ import {Component, ElementRef, HostListener, Input} from '@angular/core';
 import {NG_VALUE_ACCESSOR} from "@angular/forms";
 import {TEXTS} from "../../utils/app.text_messages";
 
+/**
+ * File upload form component
+ */
 @Component({
   selector: 'app-file-upload',
   templateUrl: './file-upload.component.html',

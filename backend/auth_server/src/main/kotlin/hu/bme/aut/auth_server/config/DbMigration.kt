@@ -5,6 +5,9 @@ import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
+/**
+ * This class is responsible for the database migration with flyway.
+ */
 @Configuration
 class DbMigration {
     @Bean

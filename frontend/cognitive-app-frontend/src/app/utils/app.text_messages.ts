@@ -1,3 +1,6 @@
+/**
+ * Texts displayed in application components.
+ */
 export const TEXTS = {
     menu: {
         login: 'Bejelentkezés',
@@ -33,6 +36,9 @@ export const TEXTS = {
         },
         progress:{
             loading_game: 'Játék betöltése...',
+        },
+        error:{
+            empty_content: 'Még nem érkezett ajánlás',
         }
     },
     user_info: {
@@ -81,10 +87,13 @@ export const TEXTS = {
     error:{
         default_error_message: 'Ismeretlen hiba történt',
         default_error_title: 'Hiba történt',
-        http_error: 'Hiba történt a szerverrel való kommunikáció során',
+        http_error: 'Hiba történt a szerverrel való kommunikáció során.',
         http_error_details: 'A szerver válasza: ',
         invalide_start_date: 'Érvénytelen kezdődátum',
         invalide_end_date: 'Érvénytelen végdátum',
+        empty_content: 'Nincs megjeleníthető tartalom',
+        network_error: 'Valószínűleg nincs internetkapcsolat.',
+        unauthorized_error: 'Nincs jogosultságod a kért művelet végrehajtásához.',
     },
     actions: {
         cancel: 'Mégse',
@@ -100,7 +109,7 @@ export const TEXTS = {
             chart_title: 'Kognitív profil az elmúlt időszakban',
         },
         card: {
-            current_profile: 'Legfrisebb kognitív profil',
+            current_profile: 'Legfrissebb kognitív profil',
             current_profile_description: 'A kognitív profilban szereplő képességek, és értékük ebben az időpontban ',
             no_profile_data_message: 'Nincs elég adat, ezért nem lehet megjeleníteni a kognitív profilt.',
             no_profile_data_action: 'Több játék játszása esetén összeáll a kognitív profil.',

@@ -1,121 +1,79 @@
 import { Injectable } from '@angular/core';
-import {delay, Observable, of} from "rxjs";
+import {catchError, map, Observable, retry} from "rxjs";
 import {Game} from "../../model/game.model";
 import {CalculationFeedback} from "../../model/calculation-feedback.model";
 import {SimpleHttpService} from "../../utils/simple-http.service";
-import {HttpParams} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
-export class GameManagementService extends SimpleHttpService{
+export class GameManagementService {
   private path = "/game";
   private calcPath = "/profile-calculation";
+
+  constructor(private helper: SimpleHttpService, private http: HttpClient) { }
   getExistingGamesPaged(pageIndex: number, pageSize: number): Observable<Game[]> {
     let params = new HttpParams()
         .set('page', pageIndex.toString())
         .set('size', pageSize.toString());
-    return this.http.get<Game[]>(`${this.baseUrl}${this.path}/all`, {params: params})
+    return this.http.get<Game[]>(`${this.helper.baseUrl}${this.path}/all`, {params: params}).pipe(
+        retry(3),
+        catchError(this.helper.handleHttpError)
+    )
   }
   getGamesCount(): Observable<number> {
-    return this.http.get<number>(`${this.baseUrl}${this.path}/all/count`)
+    return this.http.get<number>(`${this.helper.baseUrl}${this.path}/all/count`).pipe(
+        retry(3),
+        catchError(this.helper.handleHttpError)
+    )
   }
 
   getGameById(id: number): Observable<Game> {
-    return this.http.get<Game>(`${this.baseUrl}${this.path}/${id}`)
+    return this.http.get<Game>(`${this.helper.baseUrl}${this.path}/${id}`).pipe(
+        retry(3),
+        catchError(this.helper.handleHttpError)
+    )
   }
 
   editGame(game: Game): Observable<Game> {
-    return this.http.put<Game>(`${this.baseUrl}${this.path}/${game.id}`, game)
+    return this.http.put<Game>(`${this.helper.baseUrl}${this.path}/${game.id}`, game).pipe(
+        retry(3),
+    )
   }
   sendGameThumbnail(thumbnail: FormData, gameId: number): Observable<Game>{
-    return this.http.post<Game>(`${this.baseUrl}${this.path}/image/${gameId}`, thumbnail)
+    return this.http.post<Game>(`${this.helper.baseUrl}${this.path}/image/${gameId}`, thumbnail).pipe(
+        retry(3),
+    )
   }
 
+  /**
+   * Returns the number of unprocessed game play results for a given game
+   * @param gameId
+   */
   getResultCountOfGame(gameId: number): Observable<number> {
     let params = new HttpParams()
         .set('gameId', gameId.toString());
-    return this.http.get<number>(`${this.baseUrl}${this.calcPath}/result_count`, {params: params})
+    return this.http.get<number>(`${this.helper.baseUrl}${this.calcPath}/result_count`, {params: params}).pipe(
+        retry(3),
+        catchError(this.helper.handleHttpError)
+    )
   }
 
   startResultProcessing(gameId: number): Observable<CalculationFeedback> {
     let params = new HttpParams()
         .set('gameId', gameId.toString());
-    return this.http.post<CalculationFeedback>(`${this.baseUrl}${this.calcPath}/process_results`, {},{params: params})
+    return this.http.post<CalculationFeedback>(`${this.helper.baseUrl}${this.calcPath}/process_results`, {},{params: params}).pipe(
+        retry(3),
+        catchError(this.helper.handleHttpError),
+        map((response: any) => {
+            return {
+                mean: response.meanAndDeviation.mean,
+                deviation: response.meanAndDeviation.deviation,
+                updatedProfilesCount: response.updatedProfilesCount
+            }
+        })
+    )
   }
 
-
-
-  private mockData: Observable<Game[]> = of([
-    {
-      id: 2,
-      name: "Pop the balloons",
-      description: "Try not to die from the bombs.",
-      thumbnail: "../../assets/balloon_game.jpg",
-      url: undefined,
-      configDescription: {
-        maxLevel: 5,
-        maxPoints: 50,
-        maxExtraPoints: 10,
-        maxTime: 60,
-        extraPointsName: "Health points",
-        pointsName: "Score",
-      },
-      active: true,
-      version: 1,
-      affectedAbilities: [],
-    },
-    {
-      id: 3,
-      name: "Radio buttons",
-      description: "Push the correct buttons of the secret radio.",
-      thumbnail: "../../assets/number_game.jpg",
-      url: undefined,
-      configDescription: {
-        maxLevel: 5,
-        maxPoints: 100,
-        maxTime: 60,
-        extraPointsName: "Extra points",
-        pointsName: "Points",
-      },
-      active: false,
-      version: 2,
-      affectedAbilities: [],
-    },
-    {
-      id: 4,
-      name: "Radio buttons",
-      description: "Will you push the correct buttons of the secret radio?",
-      thumbnail: "../../assets/number_game.jpg",
-      url: undefined,
-      configDescription: {
-        maxLevel: 6,
-        maxPoints: 100,
-        maxTime: 60,
-        extraPointsName: "Extra points",
-        pointsName: "Points",
-      },
-      active: false,
-      version: 1,
-        affectedAbilities: [],
-    },
-    {
-      id: 6,
-      name: "Radio buttons",
-      description: "Push the correct buttons of the secret radio! And here comes the very and mostest extra long text to test the wrapping. ",
-      thumbnail: "../../assets/number_game.jpg",
-      url: undefined,
-      configDescription: {
-        maxLevel: 8,
-        maxPoints: 100,
-        maxTime: 60,
-        extraPointsName: "Extra points",
-        pointsName: "Points",
-      },
-      active: true,
-      version: 3,
-        affectedAbilities: [],
-    }
-      ]
-  )
 }

@@ -1,6 +1,8 @@
+import {environment} from "../../environments/environment";
+
 export const AppConstants = {
-    authServerUrl : 'http://localhost:9000',
-    resourceServerUrl : 'http://localhost:8090',
+    authServerUrl : environment.authServerUrl,
+    resourceServerUrl : environment.resourceServerUrl,
     impersonationKey: 'impersonation',
     impersonationDisabledKey: 'disabled_impersonation',
 }

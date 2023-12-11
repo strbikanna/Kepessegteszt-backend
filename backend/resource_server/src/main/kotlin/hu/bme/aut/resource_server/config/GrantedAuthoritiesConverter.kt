@@ -11,6 +11,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.stereotype.Service
 
+/**
+ * Used to convert the JWT token's claims to a list of granted authorities.
+ * Saves new users in database.
+ */
 @Service
 class GrantedAuthoritiesConverter(
         @Autowired private var userRepository: UserRepository,

@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {map, Observable, of} from "rxjs";
-import {AppConstants} from "../../utils/constants";
 import {RecommendedGame} from "../../model/recommended_game.model";
 import {SimpleHttpService} from "../../utils/simple-http.service";
 
@@ -11,16 +10,20 @@ import {SimpleHttpService} from "../../utils/simple-http.service";
 @Injectable({
     providedIn: 'root'
 })
-export class RecommendedGameService extends SimpleHttpService{
+export class RecommendedGameService{
     private readonly path = '/recommended_game'
     private readonly systemRecommendedPath = '/system_recommended'
+    constructor(private http: HttpClient, private helper: SimpleHttpService) { }
 
     getTeacherRecommendedGames(): Observable<RecommendedGame[]> {
         return this.mockData
     }
 
+    /**
+     * Returns recommended game made by backend.
+     */
     getGamesForCurrentUser(): Observable<RecommendedGame[]> {
-        return this.http.get<RecommendedGame[]>(`${this.baseUrl}${this.path}${this.systemRecommendedPath}`).pipe(
+        return this.http.get<RecommendedGame[]>(`${this.helper.baseUrl}${this.path}${this.systemRecommendedPath}`).pipe(
             map(recommendedGames =>
                 recommendedGames.map(rg =>{
                     rg.config.game_id = rg.id

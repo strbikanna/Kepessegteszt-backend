@@ -4,6 +4,7 @@ import hu.bme.aut.resource_server.TestUtilsService
 import hu.bme.aut.resource_server.profile_calculation.data.MeanAndDeviation
 import hu.bme.aut.resource_server.profile_calculation.service.UserProfileUpdaterService
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -16,6 +17,10 @@ class ProfileUpdaterServiceTest(
     @Autowired private var testService: TestUtilsService
 ) {
 
+    @BeforeEach
+    fun init(){
+        testService.emptyRepositories()
+    }
 
     @Test
     fun shouldUpdateOneAbilityWithoutError(){

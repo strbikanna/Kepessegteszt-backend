@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {LoginResponse, OidcSecurityService} from "angular-auth-oidc-client";
 import {User} from "../model/user.model";
-import {BehaviorSubject, Observable} from "rxjs";
+import { Observable} from "rxjs";
 import {UserInfo} from "../auth/userInfo";
 import {HttpClient} from "@angular/common/http";
 import {AppConstants, Role} from "../utils/constants";
@@ -12,15 +12,13 @@ import {AppConstants, Role} from "../utils/constants";
 })
 export class LoginService {
 
-    public userInfo: User | undefined = undefined
-    public loginStatus: BehaviorSubject<boolean> = new BehaviorSubject(false)
-
     private readonly BASE_CONFIG_ID = 'baseConfig'
 
+    constructor(private oidcSecurityService: OidcSecurityService, private http: HttpClient) {}
 
-    constructor(private oidcSecurityService: OidcSecurityService, private http: HttpClient) {
-    }
-
+    /**
+     * Handles base config callback with auth code and retrieves token, fills userinfo after successful authentication.
+     */
     initAuthentication() {
         this.handleAuthCallback(this.BASE_CONFIG_ID)
         this.oidcSecurityService.isAuthenticated(this.BASE_CONFIG_ID).subscribe(authenticated => {
@@ -41,11 +39,9 @@ export class LoginService {
                 const {isAuthenticated, userData, accessToken, idToken, configId} = loginResponse;
                 if (isAuthenticated) {
                     console.log('User authentication successful')
-                    this.userInfo = this.convertUserData(userData)
-                    UserInfo.currentUser = this.userInfo
+                    UserInfo.currentUser = this.convertUserData(userData)
                     UserInfo.accessToken = accessToken
                 }
-                this.loginStatus.next(isAuthenticated)
                 UserInfo.loginStatus.next(isAuthenticated)
             });
     }
@@ -54,12 +50,19 @@ export class LoginService {
         this.oidcSecurityService.authorize(this.BASE_CONFIG_ID);
     }
 
+    /**
+     * Logs in as another user, if the current user has the impersonation role.
+     * @param username
+     */
     loginAs(username: string) {
         sessionStorage.setItem(AppConstants.impersonationKey, 'true')
         this.oidcSecurityService.logoffLocal(this.BASE_CONFIG_ID)
         this.oidcSecurityService.authorize(this.BASE_CONFIG_ID, {customParams: {'act_as': username}})
     }
 
+    /**
+     * Logs out the current user and removes the impersonation flag.
+     */
     logout() {
         sessionStorage.removeItem(AppConstants.impersonationKey)
         sessionStorage.removeItem(AppConstants.impersonationDisabledKey)
@@ -115,12 +118,9 @@ export class LoginService {
     }
 
     private fillUserInfo() {
-        this.oidcSecurityService.userData$.subscribe(userData => {
-            let userInfo = userData.allUserData.find(data => data !== undefined && data !== null)
-            if (userInfo && userInfo.userData) {
-                this.userInfo = this.convertUserData(userInfo?.userData)
-                UserInfo.currentUser = this.userInfo
-                this.loginStatus.next(true)
+        this.oidcSecurityService.getUserData(this.BASE_CONFIG_ID).subscribe(userData => {
+            if (userData) {
+                UserInfo.currentUser = this.convertUserData(userData)
                 UserInfo.loginStatus.next(true)
             }
         });

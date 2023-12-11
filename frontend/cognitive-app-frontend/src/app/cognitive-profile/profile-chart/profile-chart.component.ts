@@ -15,6 +15,9 @@ export class ProfileChartComponent implements OnInit {
 
     loading = true;
     chartOptions!: EChartsOption
+    /**
+     * @param profileDataObservable: Observable<CognitiveProfile[]> - observable of the cognitive profile data
+     */
     @Input({required: true}) profileDataObservable!: Observable<CognitiveProfile[]>;
     private profileData!: CognitiveProfile[];
     private filteredData: CognitiveProfile[] = [];
@@ -22,6 +25,9 @@ export class ProfileChartComponent implements OnInit {
     hasHistory = false;
     text = TEXTS.cognitive_profile.chart;
 
+    /**
+     * Subscribe to input observable and initialize chart options
+     */
     ngOnInit(): void {
         this.profileDataObservable.subscribe(profileData => {
             if (profileData.length > 0) {
@@ -36,7 +42,11 @@ export class ProfileChartComponent implements OnInit {
         })
     }
 
-    filterDataByAbilities(abilities: Ability[]) {
+    /**
+     * Generates filtered profile data based on the selected abilities
+     * @param abilities
+     */
+    private filterDataByAbilities(abilities: Ability[]) {
         this.filteredData = [];
         this.profileData.forEach(profile => {
             let profileEntries = Array.from(profile.profileItems.entries())
@@ -57,6 +67,10 @@ export class ProfileChartComponent implements OnInit {
         return this.abilityList(this.profileData)
     }
 
+    /**
+     * Handles the ability filter change event: filters data and updates chart options
+     * @param ability
+     */
     onAbilityFilterChange(ability: Ability) {
         if (this.abilitiesForFiltering.find(_ability => _ability.code === ability.code)) {
             this.abilitiesForFiltering = this.abilitiesForFiltering.filter(_ability => _ability.code !== ability.code)
@@ -67,6 +81,11 @@ export class ProfileChartComponent implements OnInit {
         this.initChartOptions(this.filteredData)
     }
 
+    /**
+     * Initializes chart options with profile data dates, abilities and values
+     * @param data
+     * @private
+     */
     private initChartOptions(data: CognitiveProfile[]) {
         this.chartOptions = {
             title: {
@@ -98,6 +117,12 @@ export class ProfileChartComponent implements OnInit {
         }
     }
 
+    /**
+     * Returns the profile values of the given ability in the profile data
+     * @param ability
+     * @private
+     * @returns any[] all ability values of param ability
+     */
     private valuesOfAbility(ability: Ability) {
         return this.profileData.map(profile => {
             const entry = Array.from(profile.profileItems.entries())
@@ -106,6 +131,11 @@ export class ProfileChartComponent implements OnInit {
         })
     }
 
+    /**
+     * Creates array of all distinct abilities in the profile data
+     * @param profileData
+     * @private
+     */
     private abilityList(profileData: CognitiveProfile[]): Ability[] {
         let allAbilities: Ability[] = [];
         profileData.forEach(profile => {
@@ -118,6 +148,11 @@ export class ProfileChartComponent implements OnInit {
         return allAbilities
     }
 
+    /**
+     * Filters out ENUM abilities from the profile data and sorts it by timestamp
+     * @param profileData
+     * @private
+     */
     private filterAndSortProfileData(profileData: CognitiveProfile[]): CognitiveProfile[]{
         return profileData
             .map(profile => {

@@ -14,6 +14,9 @@ import {Game} from "../../model/game.model";
 })
 export class EditGameFormComponent implements OnInit {
 
+    /**
+     * Form model for game data
+     */
     gameForm = this.fb.group({
         name: ['', Validators.required],
         description: ['', Validators.required],
@@ -39,6 +42,9 @@ export class EditGameFormComponent implements OnInit {
     ) {
     }
 
+    /**
+     * retrieve game by route param id data from server
+     */
     ngOnInit(): void {
         this.route.paramMap.subscribe(params => {
             const id = params.get('id') as unknown as number;
@@ -47,10 +53,13 @@ export class EditGameFormComponent implements OnInit {
 
     }
 
-    toFromGroup(formControl: AbstractControl<any>) {
+    toFromGroup(formControl: AbstractControl) {
         return formControl as FormGroup
     }
 
+    /**
+     * Submit form data to server: update game data and send uploaded thumbnail
+     */
     onSubmit() {
         this.loading = true;
         const game: Game = {
@@ -73,14 +82,26 @@ export class EditGameFormComponent implements OnInit {
             this.service.sendGameThumbnail(formData, game.id).subscribe()
         }
     }
+
+    /**
+     * navigate to game management page
+     */
     onBack(){
         this.router.navigate(['/game-management'])
     }
+
+    /**
+     * Constructs affected abilities array based on form data
+     */
     getFormAffectedAbilities() {
         return this.abilitiesForm.controls
             .filter(abilityForm => this.toFromGroup(abilityForm).controls['included'].value)
             .map(abilityForm => this.toAbility(abilityForm as FormGroup))
     }
+
+    /**
+     * Constructs game config JSON based on form data
+     */
     getFormConfig() {
         const config: any = {}
        this.configDescriptionForm.controls
@@ -106,11 +127,17 @@ export class EditGameFormComponent implements OnInit {
         return this.gameForm.controls.configDescription as FormArray
     }
 
+    /**
+     * Creates new config description item with key - value pair
+     * @param key
+     * @param value
+     */
     addConfigDescription(key: string = '', value: string = '') {
         const configDescriptionForm = this.fb.group({
-            key: [key, Validators.compose([Validators.required, Validators.pattern('^[a-zA-Z0-9_-]*$')])],
+            key: [{value: key, disabled: !this.isConfigEditable(key)}, Validators.compose([Validators.required, Validators.pattern('^[a-zA-Z0-9_-]*$')]) ],
             value: [value, Validators.compose([Validators.required, Validators.pattern('^[a-zA-Z0-9_-]*$')])]
         })
+
         this.configDescriptionForm.push(configDescriptionForm)
     }
     removeConfigDescription(index: number) {
@@ -141,6 +168,14 @@ export class EditGameFormComponent implements OnInit {
         if(this.game && this.game.affectedAbilities)
             return this.game!!.affectedAbilities.some(gameAbility => gameAbility.code === ability.code)
         else return false
+    }
+
+    /**
+     * Checks if config description item is editable
+     * @param key
+     */
+    isConfigEditable(key: string){
+        return !key.includes('FieldName') && !key.includes('max')
     }
 
     private setFormAbilities(abilities: Ability[]) {

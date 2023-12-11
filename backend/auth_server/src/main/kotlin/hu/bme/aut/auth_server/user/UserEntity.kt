@@ -3,6 +3,9 @@ package hu.bme.aut.auth_server.user
 import hu.bme.aut.auth_server.role.RoleEntity
 import jakarta.persistence.*
 
+/**
+ * User entity class.
+ */
 @Entity
 @Table(name = "USERS")
 data class UserEntity(
@@ -26,7 +29,7 @@ data class UserEntity(
     @JoinTable(
         name = "USER_ROLES",
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "roleName")],
     )
     val roles: MutableSet<RoleEntity>,
 

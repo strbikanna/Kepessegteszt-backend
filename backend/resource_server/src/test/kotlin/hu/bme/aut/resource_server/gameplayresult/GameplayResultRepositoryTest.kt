@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
-import java.time.Month
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -23,7 +22,6 @@ class GameplayResultRepositoryTest(
 ) {
     @BeforeEach
     fun init(){
-        gameplayResultRepository.deleteAll()
         testService.emptyRepositories()
         testService.fillAbilityRepository()
     }
@@ -74,12 +72,12 @@ class GameplayResultRepositoryTest(
         val user = testService.createUnsavedTestUser()
         testService.saveUser(user)
         gameplayResultRepository.saveAll(createGameplayResults(user))
-        val startOfSearchTime = LocalDateTime.of(2023,Month.OCTOBER,10, 10, 10)
-        val foundList = gameplayResultRepository.findAllByUserAndTimestampBetween(user,startOfSearchTime)
+        val startOfSearchTime = LocalDateTime.now().minusSeconds(1)
+        val foundList = gameplayResultRepository.findAllByUserAndTimestampBetween(user,startOfSearchTime, startOfSearchTime.plusSeconds(2))
         assertEquals(3, foundList.size)
         assertTrue(foundList.all { it.user.id == user.id })
         assertTrue(foundList.all { it.timestamp?.isAfter(startOfSearchTime) ?: false })
-        val emptyResult = gameplayResultRepository.findAllByUserAndTimestampBetween(user,startOfSearchTime, startOfSearchTime.plusDays(1),)
+        val emptyResult = gameplayResultRepository.findAllByUserAndTimestampBetween(user,startOfSearchTime.minusSeconds(5), startOfSearchTime)
         assertEquals(0, emptyResult.size)
     }
 

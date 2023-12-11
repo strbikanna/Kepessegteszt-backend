@@ -61,7 +61,7 @@ class UserRepositoryTest(
     }
 
     @Transactional
-    private fun testSavedUsers(
+    fun testSavedUsers(
             user1: UserEntity,
             user2: UserEntity
     ) {

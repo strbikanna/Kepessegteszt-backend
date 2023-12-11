@@ -4,6 +4,9 @@ import hu.bme.aut.auth_server.user.UserEntity
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
+/**
+ * Entity for storing email verification keys.
+ */
 @Entity(name = "EMAIL")
 data class EmailVerificationEntity(
     @Id

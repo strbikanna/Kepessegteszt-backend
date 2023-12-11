@@ -63,6 +63,10 @@ export class GameManagementComponent implements OnInit {
         else return '';
     }
 
+    /**
+     * Opens a dialog to show the calculation progress
+     * @param game
+     */
     startResultProcessing(game: Game) {
         this.dialog.open(
             CalculationDialogComponent,

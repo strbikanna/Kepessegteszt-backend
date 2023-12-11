@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {AppConstants} from "../../utils/constants";
-import {Observable} from "rxjs";
+import {Observable, retry} from "rxjs";
 import {UserForAdmin} from "../model/user-contacts.model";
 
 @Injectable({
@@ -17,15 +17,27 @@ export class AdminService {
       params = params.append('pageNumber', pageNumber);
       params = params.append('pageSize', pageSize);
     }
-    return this.http.get<UserForAdmin[]>(`${AppConstants.authServerUrl}/user/all`, {params: params});
+    return this.http.get<UserForAdmin[]>(`${AppConstants.authServerUrl}/user/all`, {params: params})
+        .pipe(
+            retry(3)
+        );
   }
   getContactsOfUser(user: UserForAdmin):Observable<UserForAdmin[]>{
-    return this.http.get<UserForAdmin[]>(`${AppConstants.authServerUrl}/user/${user.id}/contacts`);
+    return this.http.get<UserForAdmin[]>(`${AppConstants.authServerUrl}/user/${user.id}/contacts`)
+        .pipe(
+            retry(3)
+        );
   }
   getNumberOfUsers():Observable<number>{
-    return this.http.get<number>(`${AppConstants.authServerUrl}/user/count`);
+    return this.http.get<number>(`${AppConstants.authServerUrl}/user/count`)
+        .pipe(
+            retry(3)
+        );
   }
   updateUserData(user: UserForAdmin): Observable<UserForAdmin>{
-    return this.http.put<UserForAdmin>(`${AppConstants.authServerUrl}/user/${user.id}`, user);
+    return this.http.put<UserForAdmin>(`${AppConstants.authServerUrl}/user/${user.id}`, user)
+        .pipe(
+            retry(3)
+        );
   }
 }

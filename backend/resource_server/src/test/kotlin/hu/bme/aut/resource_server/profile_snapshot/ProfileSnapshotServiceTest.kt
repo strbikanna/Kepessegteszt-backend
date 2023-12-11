@@ -57,5 +57,15 @@ class ProfileSnapshotServiceTest(
         assertTrue(snapShotsFound.any { it.ability.code == "Gf" && it.abilityValue == 5.2})
         assertTrue(snapShotsFound.any { it.abilityValue == EnumAbilityValue.INCLINED})
     }
+    @Test
+    fun shouldFindSnapshotsOfToday(){
+        var userEntity = testUtilsService.createUnsavedTestUser()
+        userEntity = testUtilsService.saveUser(userEntity)
+        //snapshot today will exist
+        snapshotService.saveSnapshotOfUser(userEntity)
+        val savedSnapshots = snapshotService.getSnapshotsOfUser(PlainUserDto(userEntity))
+        assertEquals(2, savedSnapshots.size)
+        assertTrue(snapshotService.existsSnapshotToday(userEntity.username))
+    }
 
 }

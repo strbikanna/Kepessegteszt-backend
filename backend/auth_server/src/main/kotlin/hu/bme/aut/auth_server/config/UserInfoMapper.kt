@@ -7,6 +7,9 @@ import org.springframework.security.oauth2.server.authorization.oidc.authenticat
 import org.springframework.security.oauth2.server.authorization.oidc.authentication.OidcUserInfoAuthenticationToken
 import org.springframework.stereotype.Service
 
+/**
+ * Returns user data from database for the UserInfo endpoint.
+ */
 @Service
 class UserInfoMapper(@Autowired private var userInfoService: UserInfoService) {
     fun mapUserInfo(authContext: OidcUserInfoAuthenticationContext): OidcUserInfo {

@@ -16,6 +16,11 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
+/**
+ * Security filter for testing. It bypasses the OAuth2 authentication and sets the user to the one specified in the
+ * "authUser" header. If the "authGame" header is also present, it sets the user to the one specified in the "authUser"
+ * header and the game to the one specified in the "authGame" header.
+ */
 @Component
 @Profile( "test" )
 @ConditionalOnProperty(name = ["cognitive-app.resource-server.security.bypass"], havingValue = "true", matchIfMissing = false)
@@ -52,7 +57,7 @@ class BypassFilter(
         val jwt = Jwt.withTokenValue("devgame")
             .header("alg", "none")
             .subject(requestedUsername)
-            .claims { it["game_id"] = game.id }
+            .claims { it["game_id"] = requestedGameId }
             .build()
         SecurityContextHolder.getContext().authentication = JwtAuthenticationToken(jwt, listOf(SimpleGrantedAuthority("ROLE_GAME")))
     }

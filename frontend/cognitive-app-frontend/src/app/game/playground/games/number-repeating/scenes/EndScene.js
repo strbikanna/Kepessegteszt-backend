@@ -7,6 +7,8 @@ export const EndScene = {
 };
 
 let userParams;
+let gameResults;
+let gameParams;
 
 function preload() {
     this.load.setBaseURL(common.getBaseFolder('number-repeating'));
@@ -14,23 +16,18 @@ function preload() {
 }
 
 function create() {
-    this.add.image(400, 300, 'background').setScale(1.7);
+    gameParams = this.registry.get('gameParams');
+    gameResults = this.registry.get('gameResults');
 
-    // Check result
-    const gameResult = this.registry.get('gameResult');
-    const resultText = gameResult ? "Gratulálok! Sikerült!" : "Sajnálom, próbáld újra!";
+    this.add.image(400, 300, 'background').setScale(1.7);
+    const resultText = gameResults.gameWon ? "Gratulálok! Sikerült!" : "Sajnálom, próbáld újra!";
     this.add.text(400, 200, resultText, common.retroStyle).setFontSize('32px').setOrigin(0.5);
 
     // Create a "Restart" button
     createRestartButton(this, 400, 400, 'Újra');
 
-    const resultJson = {
-        gameResult: {result: gameResult},
-        timestamp: Date.now(),
-        // ... any other data you want to send
-    };
     userParams = this.registry.get('userParams');
-    common.postResult(resultJson, userParams.game_id, userParams.username, userParams.access_token, userParams.config);
+    common.postResult(gameResults, gameParams, userParams.game_id, userParams.username, userParams.access_token);
 }
 
 function createRestartButton(scene, x, y, text) {

@@ -148,9 +148,7 @@ function createNumberButton(scene, x, y, text) {
                 // Player got the correct sequence
                 if (currentRound === gameParams.maxRound) {
                     // Player has completed all rounds, move to the end scene
-                    scene.registry.set('gameResult', true);
-                    scene.sound.play('win', common.soundSettings);
-                    scene.scene.start('EndScene');
+                    endGame(true, scene);
                 } else {
                     // Move to the next round
                     currentRound++;
@@ -160,9 +158,7 @@ function createNumberButton(scene, x, y, text) {
                 }
             } else {
                 // Incorrect sequence, move to end scene
-                scene.registry.set('gameResult', false);
-                scene.sound.play('game_over', common.soundSettings);
-                scene.scene.start('EndScene');
+                endGame(false, scene);
             }
         } else {
             scene.sound.play('click', common.soundSettings);
@@ -171,6 +167,19 @@ function createNumberButton(scene, x, y, text) {
         updateDisplay();
     });
 }
+
+function endGame(gameWon, scene) {
+    scene.registry.set('gameResults', {
+        gameWon: gameWon
+    });
+    if (gameWon) {
+        scene.sound.play('win', common.soundSettings);
+    } else {
+        scene.sound.play('game_over', common.soundSettings);
+    }
+    scene.scene.start('EndScene');
+}
+
 
 function updateDisplay() {
     inputDisplay.text = inputSequence.join(' ');

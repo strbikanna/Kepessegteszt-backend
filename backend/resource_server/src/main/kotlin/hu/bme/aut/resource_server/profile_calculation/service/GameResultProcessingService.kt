@@ -15,6 +15,10 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
+/**
+ * Service for processing game results.
+ * Responsible for normalizing non-normalized results and keep db consistent.
+ */
 @Service
 class GameResultProcessingService(
     @Autowired private var dataService: ResultForCalculationDataService
@@ -73,7 +77,7 @@ class GameResultProcessingService(
         var normalizedResults: List<ResultForCalculationEntity>
         for(i in 0 .. maxPages){
             results = dataService.getAllNonNormalizedResultsOfGame(game, PageRequest.of(i, defaultPageSize))
-            normalizedResults = calculator.calculateNormalizedScores(results)
+            normalizedResults = calculator.calculateNormalizedScores(results, game)
             dataService.deleteAll(results)
             dataService.saveAll(
                 selectRelevantNormalizedResultsForUpdate(normalizedResults, timestamp)

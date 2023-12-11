@@ -7,6 +7,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.lang.RuntimeException
 
 @Service
@@ -17,13 +18,16 @@ class RecommenderService(
     @Autowired private var userRepository: UserRepository
 ) {
     val log: Logger = LoggerFactory.getLogger(RecommenderService::class.java)
+    @Transactional
     fun getAllRecommendationToUser(username: String): List<RecommendedGameEntity> {
         val user = userRepository.findByUsername(username).orElseThrow()
-        return recommendedGameRepository.findAllByRecommendedToAndCompletedAndRecommender(user, false, null)
+        return recommendedGameRepository
+            .findAllByRecommendedToAndCompletedAndRecommender(user, false, null)
+            .filter { it.game.active }
     }
 
     fun createNewRecommendations(username: String): List<RecommendedGameEntity>{
-        val games = gameRepository.findAll()
+        val games = gameRepository.findAllByActiveIsTrue()
         val user = userRepository.findByUsername(username).orElseThrow()
         val recommendations = mutableListOf<RecommendedGameEntity>()
         try{

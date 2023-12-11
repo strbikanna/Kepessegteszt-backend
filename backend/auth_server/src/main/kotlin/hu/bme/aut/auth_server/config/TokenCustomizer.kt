@@ -14,6 +14,9 @@ import org.springframework.security.oauth2.server.authorization.token.JwtEncodin
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer
 import org.springframework.stereotype.Service
 
+/**
+ * Customizes access and is tokens, facilitates impersonation and game token.
+ */
 @Service
 class TokenCustomizer(
     @Autowired private var userInfoService: UserInfoService,

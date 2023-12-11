@@ -42,14 +42,14 @@ import { ProfileCardComponent } from './cognitive-profile/profile-card/profile-c
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
-import {MatSnackBarModule} from "@angular/material/snack-bar";
 import { NotFoundComponent } from './not-found/not-found.component';
 import { GameManagementComponent } from './game-management/game-management.component';
 import { FileUploadComponent } from './common/file-upload/file-upload.component';
 import { EditGameFormComponent } from './game-management/edit-game-form/edit-game-form.component';
 import { GameCardComponent } from './common/game-card/game-card.component';
 import { CalculationDialogComponent } from './game-management/calculation-dialog/calculation-dialog.component';
-import { AbilityComponent } from './ability/ability.component';
+import {MatDividerModule} from "@angular/material/divider";
+import {environment} from "../environments/environment";
 
 
 @NgModule({
@@ -72,7 +72,6 @@ import { AbilityComponent } from './ability/ability.component';
     EditGameFormComponent,
     GameCardComponent,
     CalculationDialogComponent,
-    AbilityComponent,
   ],
     imports: [
         BrowserModule,
@@ -81,26 +80,29 @@ import { AbilityComponent } from './ability/ability.component';
         AuthModule.forRoot({
             config: [{
                 configId: 'baseConfig',
-                authority: 'http://localhost:9000',
-                redirectUrl: 'http://localhost:4200',
-                postLogoutRedirectUri: 'http://localhost:4200',
-                clientId: 'frontend-client-002233',
+                authority: environment.authServerUrl,
+                redirectUrl: environment.clientUrl,
+                postLogoutRedirectUri: environment.clientUrl,
+                clientId: environment.clientId,
                 scope: 'openid',
                 responseType: 'code',
                 silentRenew: true,
-                useRefreshToken: true,
+                useRefreshToken: false,
+                silentRenewUrl: `${environment.clientUrl}/silent-renew.html`,
+                renewTimeBeforeTokenExpiresInSeconds: 10,
                 logLevel: LogLevel.Debug,
             },
                 {
                     configId: 'gameTokenConfig',
-                    authority: 'http://localhost:9000',
-                    redirectUrl: 'http://localhost:4200/games',
-                    postLogoutRedirectUri: 'http://localhost:4200',
-                    clientId: 'frontend-client-002233',
+                    authority: environment.authServerUrl,
+                    redirectUrl: `${environment.clientUrl}/games`,
+                    postLogoutRedirectUri: environment.clientUrl,
+                    clientId: environment.clientId,
                     scope: 'openid game',
                     responseType: 'code',
                     silentRenew: true,
-                    useRefreshToken: true,
+                    silentRenewUrl: `${environment.clientUrl}/silent-renew.html`,
+                    useRefreshToken: false,
                     logLevel: LogLevel.Debug,
                 },
             ],
@@ -110,7 +112,7 @@ import { AbilityComponent } from './ability/ability.component';
         NgxEchartsModule.forRoot({
             echarts
         }),
-        MatDatepickerModule, MatNativeDateModule, MatSelectModule
+        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule
     ],
   providers: [
       {

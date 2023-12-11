@@ -20,6 +20,7 @@ import hu.bme.aut.resource_server.utils.AbilityType
 import hu.bme.aut.resource_server.utils.RoleName
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class TestUtilsService(
@@ -41,6 +42,7 @@ class TestUtilsService(
     val abilityGsm = AbilityEntity(code = "Gsm", name="Short term memory", description = "Ability to attend to and immediately recall temporally ordered elements in the correct order after a single presentation." )
     val abilityGv = AbilityEntity("Gv", "Visual processing", "?", )
     val abilityColorsense = AbilityEntity("Cls", "Color sense", "If the brain/eye is capable to differentiate colors", AbilityType.ENUMERATED)
+
     fun emptyRepositories(){
         resultForCalcRepository.deleteAll()
         floatProfileSnapshotRepository.deleteAll()

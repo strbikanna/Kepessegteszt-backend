@@ -8,6 +8,11 @@ import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Type
 import java.time.LocalDateTime
 
+/**
+ * Entity class that is "derived" from the GamePlayResult data as it
+ * triggers its creation.
+ * Its main purpose is to support result processing calculation.
+ */
 @Entity(name = "result_for_calculation")
 data class ResultForCalculationEntity(
     @Id
@@ -21,8 +26,14 @@ data class ResultForCalculationEntity(
     @Type(JsonType::class)
     val result: Map<String, Any?>,
 
+    /**
+     * Normalized score, value between 0 and 1.
+     */
     var normalizedResult: Double? = null,
 
+    /**
+     * Config of the played game.
+     */
     @Type(JsonType::class)
     val config: MutableMap<String, Any>,
 

@@ -14,7 +14,7 @@ class GameplayResultService(
 
 ) {
     @Transactional
-    fun save(data: GameplayResultDto){
+    fun save(data: GameplayResultDto): GameplayResultEntity {
         val recommendedGame = recommendedGameRepository.findById(data.gameplayId).orElseThrow()
         recommendedGame.completed = true
         recommendedGameRepository.save(recommendedGame)
@@ -25,7 +25,7 @@ class GameplayResultService(
             user = user,
             recommendedGame = recommendedGame
         )
-        gameplayResultRepository.save(gameplay)
+        return gameplayResultRepository.save(gameplay)
     }
 
     fun getAllByUser(username: String): List<GameplayResultEntity> {
