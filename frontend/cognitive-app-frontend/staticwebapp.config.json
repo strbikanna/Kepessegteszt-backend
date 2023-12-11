@@ -1,7 +1,9 @@
 {
   "routes": [
     {
-      "route": "/*"
+      "route": "/games"
+    },{
+      "route": "/profile"
     }
   ],
   "responseOverrides": {
