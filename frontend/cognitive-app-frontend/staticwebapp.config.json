@@ -2,8 +2,6 @@
   "routes": [
     {
       "route": "/*"
-    },{
-      "route": "/profile"
     }
   ],
   "responseOverrides": {
