@@ -11,11 +11,15 @@ import {TEXTS} from "../utils/app.text_messages";
 })
 
 export class HeaderComponent implements OnInit{
-  loginStatus = false;
-  isAdmin = false;
-  isStudent = false;
-  isAdminOrScientist = false;
-  text = TEXTS.menu;
+
+    loginStatus = false;
+    isAdmin = false;
+    isAdminOrScientist = false;
+    text = TEXTS.menu;
+    isTeacher = false;
+    isScientist = false;
+    isStudent = false;
+ 
 
     constructor(private changeDetectorRef: ChangeDetectorRef,) {  }
 
@@ -25,6 +29,8 @@ export class HeaderComponent implements OnInit{
             this.isAdmin = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.ADMIN) !== undefined && loginSuccess
             this.isStudent = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.STUDENT) !== undefined && loginSuccess
             this.isAdminOrScientist = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.ADMIN || role.toUpperCase() === Role.SCIENTIST) !== undefined && loginSuccess
+            this.isTeacher = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.TEACHER) !== undefined  && this.loginStatus
+            this.isScientist = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.SCIENTIST) !== undefined  && this.loginStatus
             this.changeDetectorRef.detectChanges()
         });
     }

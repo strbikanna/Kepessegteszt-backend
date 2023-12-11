@@ -10,6 +10,7 @@ import {NotFoundComponent} from "../not-found/not-found.component";
 import {GameManagementComponent} from "../game-management/game-management.component";
 import {EditGameFormComponent} from "../game-management/edit-game-form/edit-game-form.component";
 import {editorGuard} from "../auth/editor.guard";
+import {RecommendationComponent} from "../recommendation/recommendation.component";
 
 
 export const appRoutes: Routes = [
@@ -20,5 +21,6 @@ export const appRoutes: Routes = [
     {path: 'games', component: RecommendedGamesComponent, canActivate: [loggedInGuard], title: 'Játékok'},
     {path: 'cognitive-profile', component: CognitiveProfileComponent, canActivate: [loggedInGuard], title: 'Kognitív profil'},
     {path: 'playground', component: PlaygroundComponent, canActivate: [gameGuard], title: 'Játékterület'},
+    {path: 'recommendation', component: RecommendationComponent, canActivate: [loggedInGuard], title: 'Játékok ajánlása'},
     {path: '**', component: NotFoundComponent}
 ];

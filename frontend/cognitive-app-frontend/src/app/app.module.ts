@@ -48,6 +48,7 @@ import { FileUploadComponent } from './common/file-upload/file-upload.component'
 import { EditGameFormComponent } from './game-management/edit-game-form/edit-game-form.component';
 import { GameCardComponent } from './common/game-card/game-card.component';
 import { CalculationDialogComponent } from './game-management/calculation-dialog/calculation-dialog.component';
+import { RecommendationComponent } from './recommendation/recommendation.component';
 import {MatDividerModule} from "@angular/material/divider";
 import {environment} from "../environments/environment";
 
@@ -72,6 +73,7 @@ import {environment} from "../environments/environment";
     EditGameFormComponent,
     GameCardComponent,
     CalculationDialogComponent,
+    RecommendationComponent,
   ],
     imports: [
         BrowserModule,

@@ -11,6 +11,7 @@ export const TEXTS = {
         cognitive_profile: 'Kognitív profil',
         admin: 'Felhasználók kezelése',
         game_management: 'Játékok kezelése',
+        game_recommendation: 'Játékok ajánlása',
     },
     home:{
         welcome: 'Örülünk, hogy itt vagy!',
@@ -169,6 +170,27 @@ export const TEXTS = {
     },
     file_upload: {
         no_content: 'Nincs kiválasztott fájl',
-    }
+    },
+    recommendation_page: {
+        user_data: {
+            first_name: 'Keresztnév',
+            last_name: 'Vezetéknév',
+            already_recommended: 'Korábban ajánlott játékok',
+            not_yet_recommended: 'Még nem ajánlott játékok'
+        },
+        actions: {
+            cancel: 'Mégse',
+            save: 'Mentés',
+            recommend_game: 'Játék ajánlása',
+            remove: 'Ajánlás törlése',
+            add: 'Hozzáadás',
+        },
+        rec_game_data: {
+            name: 'Játék neve: ',
+            time: 'Ajánlás ideje: ',
+            completed: 'Ajánlás állapota: ',
+            config: 'Ajánlott szint: '
+        }
+    },
 
 }
