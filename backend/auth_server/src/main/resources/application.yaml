@@ -1,0 +1,37 @@
+server:
+  port: 9000
+
+spring:
+  # database config, change it to your own database
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/app_users
+    username: dev
+    password: dev.1122
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: cognitive.auth@gmail.com
+    password: sitb uqob dppc flqf
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+logging:
+  level:
+    org:
+      springframework:
+        security: trace
+
+
+cognitive-app:
+  # change it to your own domain, this is the issuer in the jwt token
+  # and the url in the emails
+  issuer-url: http://localhost:9000
+  mail: noreply@cognitiveapp.hu
+  subject: Email cím megerősítése

@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:cogni-devDB;MODE=MYSQL;NON_KEYWORDS=USER
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+logging:
+  level:
+    org:
+      springframework:
+        security: trace
+        data:
+          repository: info

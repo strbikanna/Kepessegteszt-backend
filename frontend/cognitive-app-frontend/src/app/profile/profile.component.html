@@ -1,0 +1,36 @@
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{user.lastName}} {{user.firstName}}</mat-card-title>
+      <mat-card-subtitle>{{text.description}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="profile-data-container">
+      <div class="left-side">
+        <mat-list role="list">
+          <mat-list-item role="listitem">{{text.last_name}}</mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item role="listitem">{{text.first_name}}</mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item role="listitem">{{text.username}}</mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item role="listitem">{{text.email}}</mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item role="listitem">{{text.roles}}</mat-list-item>
+        </mat-list>
+      </div>
+      <div class="right-side">
+        <mat-list role="list">
+          <mat-list-item role="listitem">{{user.lastName}}</mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item role="listitem">{{user.firstName}}</mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item role="listitem">{{user.username}}</mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item role="listitem">{{user.email}}</mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item role="listitem" *ngFor="let role of user.roles">{{role}}</mat-list-item>
+        </mat-list>
+      </div>
+    </mat-card-content>
+  </mat-card>
+

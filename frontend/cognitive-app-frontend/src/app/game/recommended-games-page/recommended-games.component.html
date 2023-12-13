@@ -1,0 +1,29 @@
+<mat-tab-group >
+    <mat-tab label="{{text.menu.games_for_you}}">
+        <div class="games-container" *ngIf="!loading">
+            <div *ngFor="let recommendedGame of gamesForYou | async">
+                <app-game-card
+                        [game]="recommendedGame.game"
+                        [otherTexts]="[recommendedGame.recommendationDate.toLocaleString('hu-HU')]"
+                        [buttonText]="text.game_card.play.toUpperCase()"
+                        (buttonClick)="onGameChosen(recommendedGame)">
+                </app-game-card>
+                <br>
+            </div>
+        </div>
+        <div  *ngIf="loading" class="loading">
+            <mat-progress-bar  mode="indeterminate"></mat-progress-bar>
+        </div>
+    </mat-tab>
+    <mat-tab label="{{text.menu.teacher_recommendation}}">
+       <div class="error-title">
+           <h3>{{text.error.empty_content}}</h3>
+       </div>
+    </mat-tab>
+    <mat-tab label="{{text.menu.scientist_recommendation}}">
+        <div class="error-title">
+            <h3>{{text.error.empty_content}}</h3>
+        </div>
+    </mat-tab>
+</mat-tab-group>
+

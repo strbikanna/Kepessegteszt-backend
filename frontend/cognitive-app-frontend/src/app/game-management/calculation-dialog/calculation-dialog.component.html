@@ -1,0 +1,24 @@
+<div class="container">
+    <h1 mat-dialog-title>{{text.title}}</h1>
+    <div mat-dialog-content>
+        <h4 *ngIf="!feedback && !inProgress">{{text.message}}</h4>
+        <h4 *ngIf="inProgress">{{text.feedback_message}}</h4>
+        <h4 *ngIf="feedback">{{text.success_feedback}}</h4>
+        <p *ngIf="!feedback && !inProgress">{{text.description}}</p>
+        <mat-divider/>
+        <p *ngIf="game">{{text.affected_abilities}} {{transformAffectedAbilities(game.affectedAbilities)}}</p>
+        <p *ngIf="game">{{text.result_count}} {{resultCount}}</p>
+        <p *ngIf="feedback">{{text.result_mean}} {{feedback.mean}}</p>
+        <p *ngIf="feedback">{{text.result_deviation}} {{feedback.deviation}}</p>
+        <p *ngIf="feedback">{{text.result_profile_count}} {{feedback.updatedProfilesCount}}</p>
+        <br>
+    </div>
+    <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
+    <div mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>{{feedback ? okButtonText : cancelButtonText}}</button>
+        <button *ngIf="game" mat-flat-button color="primary" (click)="onStartCalculation(game)" [disabled]="!canStartCalculation()">
+            {{confirmButtonText}}
+        </button>
+    </div>
+</div>
+

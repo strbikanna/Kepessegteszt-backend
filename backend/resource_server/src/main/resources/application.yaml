@@ -1,0 +1,44 @@
+server:
+  # Local port of app, customize if needed
+  port: 8090
+
+spring:
+  # Database connection settings, customize if needed
+  datasource:
+    url: jdbc:mysql://localhost:3306/cognitive_app
+    username: dev
+    password: dev.1122
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  data:
+    rest:
+      default-media-type: application/json
+
+  web:
+    resources:
+      # Path to static files, set local file path
+      static-locations: file:<local file path>/backend/resource_server/thumbnails/
+  mvc:
+    static-path-pattern: /game_images/**
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Uri of auth server, customize if needed
+          issuer-uri: http://localhost:9000
+
+springdoc:
+  api-docs:
+    path: /api-docs
+
+app:
+  python:
+    # Indicates if Python environment is present
+    exists: true
+    # Path to python module, set local file path
+    source-location: C:<local file path>/backend/resource_server/python_module
+    models-location: C:<local file path>/backend/resource_server/python_module/modellek/
+  thumbnail-location: C:<local file path>/backend/resource_server/thumbnails/
+  # Path to static files, set local port of resource server if needed
+  image-path: http://localhost:8090/game_images

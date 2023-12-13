@@ -1,0 +1,22 @@
+spring:
+
+  datasource:
+    url: jdbc:h2:mem:cogni-testDB;MODE=MYSQL;NON_KEYWORDS=USER
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+
+  flyway:
+    locations: classpath:migration-test
+
+
+cognititve-app:
+  resource-server:
+    secutity:
+      bypass: true
+
+app:
+  python:
+    # if Python environment is present, set to true
+    exists: false
