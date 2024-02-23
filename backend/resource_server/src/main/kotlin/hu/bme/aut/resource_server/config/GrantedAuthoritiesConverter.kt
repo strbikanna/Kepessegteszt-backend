@@ -41,12 +41,12 @@ class GrantedAuthoritiesConverter(
                             lastName = source.getClaimAsString("given_name"),
                             profileFloat = mutableSetOf(),
                             profileEnum = mutableSetOf(),
-                            roles = roles.toSet()
+                            roles = roles.toMutableSet()
                     )
             )
         }else{
             var user = userRepository.findByUsername(username).get()
-            user = user.copy(roles = roles.toSet())
+            user = user.copy(roles = roles.toMutableSet())
             userRepository.save(user)
         }
     }
