@@ -2,12 +2,12 @@ package hu.bme.aut.resource_server.authentication
 
 import hu.bme.aut.resource_server.game.GameRepository
 import hu.bme.aut.resource_server.gameplayresult.GameplayResultDto
-import hu.bme.aut.resource_server.user_group.group.Group
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.role.Role
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import hu.bme.aut.resource_server.user_group.UserGroupRepository
+import hu.bme.aut.resource_server.user_group.group.Group
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,7 +32,7 @@ class AuthService(
         @Autowired private var userGroupRepository: UserGroupRepository
 ) {
     @Value("\${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
-    private lateinit var AUTH_SERVER_URI: String;
+    private lateinit var AUTH_SERVER_URI: String
 
     var webclient: WebClient? = null
 

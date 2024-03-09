@@ -1,6 +1,5 @@
 package hu.bme.aut.resource_server.user_group.organization
 
-import hu.bme.aut.resource_server.user_group.group.Group
 import hu.bme.aut.resource_server.user_group.group.GroupRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
