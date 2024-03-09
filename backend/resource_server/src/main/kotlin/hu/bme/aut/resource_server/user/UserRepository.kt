@@ -11,6 +11,8 @@ interface UserRepository: CrudRepository<UserEntity, Int> {
 
     fun existsByUsername(username: String): Boolean
 
+    fun findByIdIn(ids: List<Int>): List<UserEntity>
+
     @Query("SELECT u FROM UserEntity u LEFT JOIN FETCH u.profileFloat LEFT JOIN FETCH u.profileEnum WHERE u.id = :id")
     fun findByIdWithProfile(id: Int): Optional<UserEntity>
 

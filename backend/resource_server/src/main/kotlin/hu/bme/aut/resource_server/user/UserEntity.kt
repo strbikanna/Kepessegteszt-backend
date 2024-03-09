@@ -1,8 +1,8 @@
 package hu.bme.aut.resource_server.user
 
-import hu.bme.aut.resource_server.group.Group
-import hu.bme.aut.resource_server.organization.Address
-import hu.bme.aut.resource_server.organization.Organization
+import hu.bme.aut.resource_server.user_group.group.Group
+import hu.bme.aut.resource_server.user_group.organization.Address
+import hu.bme.aut.resource_server.user_group.organization.Organization
 import hu.bme.aut.resource_server.profile.EnumProfileItem
 import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.profile.ProfileItem
@@ -52,12 +52,16 @@ data class UserEntity(
         val roles: MutableSet<Role>,
 
         @ManyToOne
-        @JoinColumn(name = "subscription", referencedColumnName = "name")
+        @JoinColumn(name = "subscription", referencedColumnName = "_name")
         var subscription: Subscription? = null,
 
-        @ManyToOne
-        @JoinColumn(name = "organization_id", referencedColumnName = "id")
-        var organization: Organization? = null,
+        @ManyToMany
+        @JoinTable(
+                name = "user_organization",
+                joinColumns = [JoinColumn(name = "user_id")],
+                inverseJoinColumns = [JoinColumn(name = "organization_id")]
+        )
+        var organizations: MutableList<Organization> = mutableListOf(),
 
         @ManyToMany
         @JoinTable(
@@ -68,11 +72,20 @@ data class UserEntity(
         val groups: MutableList<Group> = mutableListOf(),
 
 
-) {
+        ) {
     fun getProfile(): MutableSet<ProfileItem> {
         val profile = mutableSetOf<ProfileItem>()
         profile.addAll(profileFloat)
         profile.addAll(profileEnum)
         return profile
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+
+        val userEntity = other as UserEntity
+
+        return id == userEntity.id
     }
 }
