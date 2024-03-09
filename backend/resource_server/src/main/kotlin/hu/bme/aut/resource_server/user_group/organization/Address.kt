@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.organization
+package hu.bme.aut.resource_server.user_group.organization
 
 import jakarta.persistence.Embeddable
 
