@@ -5,4 +5,4 @@ alter table user add constraint fk_user_subscription foreign key (subscription) 
 alter table user add column address_house_number varchar(10);
 alter table user add column address_street varchar(100);
 alter table user add column address_city varchar(100);
-alter table user add column address_postal_code varchar(10);
+alter table user add column address_zip varchar(10);
