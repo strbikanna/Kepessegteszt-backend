@@ -9,6 +9,13 @@ data class Role(
     @Enumerated(value= EnumType.STRING)
     @Column(name="_name")
     val roleName: RoleName,
-)
+){
+    companion object {
+        fun canSeeUserGroupData(roleName: String): Boolean {
+            val role = RoleName.valueOf(roleName.removePrefix("ROLE_"))
+            return role == RoleName.ADMIN || role == RoleName.SCIENTIST || role == RoleName.TEACHER
+        }
+    }
+}
 
 

@@ -2,9 +2,12 @@ package hu.bme.aut.resource_server.authentication
 
 import hu.bme.aut.resource_server.game.GameRepository
 import hu.bme.aut.resource_server.gameplayresult.GameplayResultDto
+import hu.bme.aut.resource_server.user_group.group.Group
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
+import hu.bme.aut.resource_server.role.Role
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
+import hu.bme.aut.resource_server.user_group.UserGroupRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,16 +26,17 @@ import reactor.core.publisher.Mono
  */
 @Service
 class AuthService(
-    @Autowired private var recommendedGameRepository: RecommendedGameRepository,
-    @Autowired private var gameRepository: GameRepository,
-    @Autowired private var userRepository: UserRepository
+        @Autowired private var recommendedGameRepository: RecommendedGameRepository,
+        @Autowired private var gameRepository: GameRepository,
+        @Autowired private var userRepository: UserRepository,
+        @Autowired private var userGroupRepository: UserGroupRepository
 ) {
     @Value("\${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private lateinit var AUTH_SERVER_URI: String;
 
-    var webclient : WebClient? = null
+    var webclient: WebClient? = null
 
-    private fun initWebClient(){
+    private fun initWebClient() {
         webclient = WebClient.create(AUTH_SERVER_URI)
     }
 
@@ -42,21 +46,23 @@ class AuthService(
      * or not matching any game in the database.
      */
     @Transactional
-    fun checkGameAccessAndThrow(authentication: Authentication, gameplay: GameplayResultDto){
+    fun checkGameAccessAndThrow(authentication: Authentication, gameplay: GameplayResultDto) {
         val username = authentication.name
         val gamePlay = recommendedGameRepository.findById(gameplay.gameplayId)
         val jwt = authentication.principal as Jwt
         val tokenGameId = Integer.parseInt(jwt.claims["game_id"] as String?
-            ?: throw IllegalAccessException("This gameplay is not authorized to save result for this user."))
+                ?: throw IllegalAccessException("This gameplay is not authorized to save result for this user."))
         val game = gameRepository.findById(tokenGameId)
-        if(gamePlay.isEmpty || username == null ||game.isEmpty || tokenGameId != gamePlay.get().game.id){
+        if (gamePlay.isEmpty || username == null || game.isEmpty || tokenGameId != gamePlay.get().game.id) {
             throw IllegalAccessException("This gameplay is not authorized to save result for this user.")
         }
     }
-    fun getAuthUser(authentication: Authentication): UserEntity{
+
+    fun getAuthUser(authentication: Authentication): UserEntity {
         return userRepository.findByUsername(authentication.name).orElseThrow()
     }
-    fun getContactByUsername(username: String): UserEntity{
+
+    fun getContactByUsername(username: String): UserEntity {
         return userRepository.findByUsername(username).orElseThrow()
     }
 
@@ -64,8 +70,8 @@ class AuthService(
      * Checks if the user is authorized to see the contact's data.
      * @throws IllegalAccessException if the user is not authorized to see the contact's data.
      */
-    suspend fun checkContactAndThrow(authentication: Authentication, contactUsername: String){
-        if(webclient==null){
+    suspend fun checkContactAndThrow(authentication: Authentication, contactUsername: String) {
+        if (webclient == null) {
             initWebClient()
         }
         val jwt = authentication.principal as Jwt
@@ -73,10 +79,10 @@ class AuthService(
 
         CoroutineScope(Dispatchers.IO).launch {
             val requestSpec = webclient!!
-                .get()
-                .uri("/user/impersonation_contacts")
-                .header("Authorization", "Bearer $accessTokenOfUser")
-                .accept(MediaType.APPLICATION_JSON)
+                    .get()
+                    .uri("/user/impersonation_contacts")
+                    .header("Authorization", "Bearer $accessTokenOfUser")
+                    .accept(MediaType.APPLICATION_JSON)
             val response: Mono<String> = requestSpec.retrieve().bodyToMono(String::class.java)
             response.block()?.let {
                 if (it.contains(contactUsername)) {
@@ -86,5 +92,27 @@ class AuthService(
             throw IllegalAccessException("This user is not authorized to see this contact.")
         }
 
+    }
+
+    @Transactional
+    fun canAccessUserGroup(authentication: Authentication, userGroupId: Int) {
+        val user = getAuthUser(authentication)
+        val uGroup = userGroupRepository.findById(userGroupId).orElseThrow()
+        if (uGroup.admins.contains(user) && authentication.authorities.stream().anyMatch { Role.canSeeUserGroupData(it.authority) }) {
+            return
+        }
+        throw IllegalAccessException("This user is not authorized to see this group.")
+    }
+
+    @Transactional
+    fun getGroupsToAccess(authentication: Authentication): List<Group> {
+        if (authentication.authorities.stream().noneMatch { Role.canSeeUserGroupData(it.authority) }){
+            throw IllegalAccessException("This user is not authorized to see group data.")
+        }
+        val user = getAuthUser(authentication)
+        val groups = user.groups
+        val allGroups = mutableListOf<Group>()
+        groups.forEach { allGroups.addAll(it.getAllGroups()) }
+        return allGroups.filter { it.admins.contains(user) }
     }
 }
