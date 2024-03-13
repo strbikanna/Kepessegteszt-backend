@@ -1,7 +1,8 @@
 package hu.bme.aut.resource_server.user_group.organization
 
-import hu.bme.aut.resource_server.user_group.group.Group
 import hu.bme.aut.resource_server.user_group.UserGroup
+import hu.bme.aut.resource_server.user_group.UserGroupDto
+import hu.bme.aut.resource_server.user_group.group.Group
 import jakarta.persistence.*
 
 @Entity
@@ -50,5 +51,11 @@ class Organization(
         return address.hashCode() + name.hashCode() + id.hashCode()
     }
 
-
+    override fun toDto(): UserGroupDto {
+        return OrganizationDto(
+                id = id!!,
+                name = name,
+                address = address
+        )
+    }
 }

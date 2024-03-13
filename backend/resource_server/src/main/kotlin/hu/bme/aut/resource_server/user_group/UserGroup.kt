@@ -34,4 +34,5 @@ abstract class UserGroup(
 ){
     abstract fun getAllGroups(): List<Group>
     abstract fun getAllUserIds(): Set<Int>
+    abstract fun toDto(): UserGroupDto
 }
