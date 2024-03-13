@@ -1,13 +1,13 @@
 package hu.bme.aut.resource_server.user
 
-import hu.bme.aut.resource_server.user_group.group.Group
-import hu.bme.aut.resource_server.user_group.organization.Address
-import hu.bme.aut.resource_server.user_group.organization.Organization
 import hu.bme.aut.resource_server.profile.EnumProfileItem
 import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.profile.ProfileItem
 import hu.bme.aut.resource_server.role.Role
 import hu.bme.aut.resource_server.role.Subscription
+import hu.bme.aut.resource_server.user_group.group.Group
+import hu.bme.aut.resource_server.user_group.organization.Address
+import hu.bme.aut.resource_server.user_group.organization.Organization
 import jakarta.persistence.*
 import java.time.LocalDate
 
@@ -57,15 +57,15 @@ data class UserEntity(
 
         @ManyToMany
         @JoinTable(
-                name = "user_organization",
+                name = "group_admin",
                 joinColumns = [JoinColumn(name = "user_id")],
-                inverseJoinColumns = [JoinColumn(name = "organization_id")]
+                inverseJoinColumns = [JoinColumn(name = "group_id")]
         )
         var organizations: MutableList<Organization> = mutableListOf(),
 
         @ManyToMany
         @JoinTable(
-                name = "user_group",
+                name = "group_member",
                 joinColumns = [JoinColumn(name = "user_id")],
                 inverseJoinColumns = [JoinColumn(name = "group_id")]
         )
