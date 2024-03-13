@@ -5,10 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.web.bind.annotation.*
-import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Sort
 import org.springframework.security.core.Authentication
+import org.springframework.web.bind.annotation.*
 
 
 @RestController
@@ -22,18 +20,13 @@ class RecommendedGameController(
     @ResponseStatus(HttpStatus.OK)
     fun getRecommendedGamesToUser(
         @RequestParam recommendedTo: UserEntity,
-        @RequestParam(required = false) page: Pageable,
-        @RequestParam(required = false) sort: Sort
+        @RequestParam(required=false) pageIndex: Int?,
+        @RequestParam(required = false) pageSize: Int?,
     ): List<RecommendedGameEntity> {
-        if (page.equals(null) && sort.equals(null))
+        if (pageIndex == null || pageSize == null)
             return recommendedGameRepository.findAllByRecommendedTo(recommendedTo)
-        else if (sort.equals(null))
-            return recommendedGameRepository.findAllPagedByRecommendedTo(recommendedTo, page)
-        else if (page.equals(null))
-            return recommendedGameRepository.findAllSortedByRecommendedTo(recommendedTo, sort)
-        else {
-            return recommendedGameRepository.findAllPagedByRecommendedTo(recommendedTo, PageRequest.of(page.pageNumber, page.pageSize, sort))
-        }
+        else
+            return recommendedGameRepository.findAllPagedByRecommendedTo(recommendedTo, PageRequest.of(pageIndex, pageSize))
     }
 
     @PostMapping("/recommend")
