@@ -51,6 +51,8 @@ import { CalculationDialogComponent } from './game-management/calculation-dialog
 import { RecommendationComponent } from './recommendation/recommendation.component';
 import {MatDividerModule} from "@angular/material/divider";
 import {environment} from "../environments/environment";
+import { ProfileDataComparisonComponent } from './profile-data-comparison/profile-data-comparison.component';
+import { ProfileRadarChartComponent } from './profile-data-comparison/profile-radar-chart/profile-radar-chart.component';
 
 
 @NgModule({
@@ -74,6 +76,8 @@ import {environment} from "../environments/environment";
     GameCardComponent,
     CalculationDialogComponent,
     RecommendationComponent,
+    ProfileDataComparisonComponent,
+    ProfileRadarChartComponent,
   ],
     imports: [
         BrowserModule,

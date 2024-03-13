@@ -109,6 +109,13 @@ export const TEXTS = {
         chart: {
             chart_title: 'Kognitív profil az elmúlt időszakban',
         },
+        radar_chart: {
+            chart_title: 'Kognitív profil összehasonlítása',
+            profile: 'Saját profil',
+            avg_in_group: 'Átlagos értékek a csoportban',
+            max_in_group: 'Maximumális értékek a csoportban',
+            min_in_group: 'Minimum értékek a csoportban',
+        },
         card: {
             current_profile: 'Legfrissebb kognitív profil',
             current_profile_description: 'A kognitív profilban szereplő képességek, és értékük ebben az időpontban ',
