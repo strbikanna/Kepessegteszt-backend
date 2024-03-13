@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
-import java.util.Optional
+import java.util.*
 
 interface UserRepository: CrudRepository<UserEntity, Int> {
     fun findByUsername(username: String): Optional<UserEntity>
@@ -26,4 +26,34 @@ interface UserRepository: CrudRepository<UserEntity, Int> {
     @Transactional
     @Query("UPDATE UserEntity u SET u.firstName = :firstName, u.lastName = :lastName WHERE u.id = :id")
     fun updateUserData(firstName: String, lastName: String, id: Int): Int
+
+    @Query("SELECT SUM(p.abilityValue) FROM UserEntity u JOIN u.profileFloat p " +
+            "WHERE p.ability.code = :abilityCode " +
+            "AND p.abilityValue != null " +
+            "AND u.id IN :userIds" )
+    fun getSumOfAbilityValuesInUserGroup(abilityCode: String, userIds: List<Int>): Double?
+
+    @Query("SELECT AVG(p.abilityValue) FROM UserEntity u JOIN u.profileFloat p " +
+            "WHERE p.ability.code = :abilityCode " +
+            "AND u.id IN :userIds " +
+            "AND p.abilityValue != null" )
+    fun getAverageOfAbilityValuesInUserGroup(abilityCode: String, userIds: List<Int>): Double?
+
+    @Query("SELECT MAX(p.abilityValue) FROM UserEntity u JOIN u.profileFloat p " +
+            "WHERE p.ability.code = :abilityCode " +
+            "AND u.id IN :userIds" )
+    fun getMaxOfAbilityValuesInUserGroup(abilityCode: String, userIds: List<Int>): Double?
+
+    @Query("SELECT MIN(p.abilityValue) FROM UserEntity u JOIN u.profileFloat p " +
+            "WHERE p.ability.code = :abilityCode " +
+            "AND p.abilityValue != null " +
+            "AND u.id IN :userIds" )
+    fun getMinOfAbilityValuesInUserGroup(abilityCode: String, userIds: List<Int>): Double?
+
+    @Query("SELECT p.abilityValue FROM UserEntity u JOIN u.profileFloat p " +
+            "WHERE p.ability.code = :abilityCode " +
+            "AND p.abilityValue != null " +
+            "AND u.id IN :userIds " +
+            "ORDER BY p.abilityValue ASC" )
+    fun getAbilityValuesInUserGroupAscending(abilityCode: String, userIds: List<Int>): List<Double>
 }
