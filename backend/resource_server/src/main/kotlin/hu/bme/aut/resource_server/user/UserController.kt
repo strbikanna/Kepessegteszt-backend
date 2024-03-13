@@ -2,6 +2,7 @@ package hu.bme.aut.resource_server.user
 
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
+import hu.bme.aut.resource_server.user_group.UserGroupDto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +35,21 @@ class UserController(
     = CoroutineScope(Dispatchers.Default).async{
         authService.checkContactAndThrow(authentication, username)
         return@async userService.getUserDtoWithProfileByUsername(username)
+    }
+
+    @GetMapping("/group")
+    @ResponseStatus(HttpStatus.OK)
+    fun getGroupsOfUser(authentication: Authentication): List<UserGroupDto>{
+        val username = authentication.name
+        return userService.getGroupsOfUser(username)
+    }
+
+    @PutMapping("/group")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
+    fun addUserToGroup(authentication: Authentication, @RequestParam(required = true) username: String, @RequestParam(required = true) groupId: Int){
+        authService.canAccessUserGroup(authentication, groupId)
+        userService.addUserToGroup(username, groupId)
     }
 
 }

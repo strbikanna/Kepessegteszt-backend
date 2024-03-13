@@ -1,10 +1,9 @@
 package hu.bme.aut.resource_server.profile_snapshot
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
-import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
 import hu.bme.aut.resource_server.user.UserEntity
-import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
 import hu.bme.aut.resource_server.user.UserRepository
+import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -68,7 +67,7 @@ class ProfileSnapshotService(
         val entity = userRepository.findByUsername(user.username).orElseThrow()
         return getSnapshotsOfUser(entity)
     }
-    fun getSnapshotsOfUser(user: UserEntity, pageIndex: Int = 0, pageSize: Int = 10): List<ProfileSnapshotItem>{
+    fun getSnapshotsOfUser(user: UserEntity, pageIndex: Int = 0, pageSize: Int = 100): List<ProfileSnapshotItem>{
         val snapShots = mutableListOf<ProfileSnapshotItem>()
         val floatSnapshots = floatProfileSnapshotRepository.findAllPagedByUser(user, PageRequest.of(pageIndex, pageSize))
         val enumSnapshots = enumProfileSnapshotRepository.findAllPagedByUser(user, PageRequest.of(pageIndex, pageSize))

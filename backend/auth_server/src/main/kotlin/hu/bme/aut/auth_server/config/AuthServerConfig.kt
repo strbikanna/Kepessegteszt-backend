@@ -19,8 +19,6 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.crypto.factory.PasswordEncoderFactories
-import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository
@@ -90,18 +88,21 @@ class AuthServerConfig {
     @Order(2)
     fun defaultSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
-            .cors(withDefaults())
-            .sessionManagement { SessionCreationPolicy.STATELESS }
-            .authorizeHttpRequests {
-                it.requestMatchers("/register").permitAll()
-                it.requestMatchers("/mail/**").permitAll()
-                it.anyRequest().authenticated()
-            }
-            .oauth2ResourceServer { it.jwt(withDefaults()) }
-            // Redirect to the login page from the authorization server filter chain
-            .formLogin {
-                it.loginPage("/login").permitAll()
-            }
+                .cors(withDefaults())
+                .sessionManagement { SessionCreationPolicy.STATELESS }
+                .authorizeHttpRequests {
+                    it.requestMatchers("/register").permitAll()
+                    it.requestMatchers("/v3/api-docs").permitAll()
+                    it.requestMatchers("/swagger-ui/**").permitAll()
+                    it.requestMatchers("/v3/api-docs/swagger-config").permitAll()
+                    it.requestMatchers("/mail/**").permitAll()
+                    it.anyRequest().authenticated()
+                }
+                .oauth2ResourceServer { it.jwt(withDefaults()) }
+                // Redirect to the login page from the authorization server filter chain
+                .formLogin {
+                    it.loginPage("/login").permitAll()
+                }
         return http.build()
     }
 

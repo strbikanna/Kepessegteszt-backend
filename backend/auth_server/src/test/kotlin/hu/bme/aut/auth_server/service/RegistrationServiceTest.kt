@@ -22,7 +22,7 @@ class RegistrationServiceTest(
         data.firstName = "Test"
         data.lastName = "User"
         data.email = "email"
-        data.username = "username"
+        data.username = "username01"
         data.password = "hashedValue##"
         data.role = Role.STUDENT.name
         val encodedPassword = registrationService.saveUserOrThrowException(data).password
