@@ -19,6 +19,15 @@ class UserGroupService(
         return userGroupRepository.findAll()
     }
 
+    fun addAdminUserToGroup(user: UserEntity, group: UserGroup) {
+        if(user.id == null || group.id == null) {
+            throw IllegalArgumentException("User and group must have an id.")
+        }
+        val dbGroup = userGroupRepository.findById(group.id!!).get()
+        dbGroup.admins.add(user)
+        userGroupRepository.save(group)
+    }
+
     /**
      * Removes user from group members and group admins
      * Also removes user from all child groups

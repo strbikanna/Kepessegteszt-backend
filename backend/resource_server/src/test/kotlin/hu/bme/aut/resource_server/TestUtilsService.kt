@@ -13,15 +13,14 @@ import hu.bme.aut.resource_server.profile_snapshot.EnumProfileSnapshotRepository
 import hu.bme.aut.resource_server.profile_snapshot.FloatProfileSnapshotRepository
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
+import hu.bme.aut.resource_server.role.Role
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
-import hu.bme.aut.resource_server.role.Role
 import hu.bme.aut.resource_server.user_group.UserGroupRepository
 import hu.bme.aut.resource_server.utils.AbilityType
 import hu.bme.aut.resource_server.utils.RoleName
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 @Service
 class TestUtilsService(

@@ -115,4 +115,11 @@ class AuthService(
         groups.forEach { allGroups.addAll(it.getAllGroups()) }
         return allGroups.filter { it.admins.contains(user) }
     }
+
+    @Transactional
+    fun canSeeUserGroupData(authentication: Authentication, userGroupId: Int): Boolean {
+        val user = getAuthUser(authentication)
+        val uGroup = userGroupRepository.findById(userGroupId).orElseThrow()
+        return uGroup.members.contains(user) || uGroup.admins.contains(user)
+    }
 }
