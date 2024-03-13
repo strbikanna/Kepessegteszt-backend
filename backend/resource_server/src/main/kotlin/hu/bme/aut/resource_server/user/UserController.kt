@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.user
 
+import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
 import hu.bme.aut.resource_server.user_group.UserGroupDto
@@ -50,6 +51,42 @@ class UserController(
     fun addUserToGroup(authentication: Authentication, @RequestParam(required = true) username: String, @RequestParam(required = true) groupId: Int){
         authService.canAccessUserGroup(authentication, groupId)
         userService.addUserToGroup(username, groupId)
+    }
+
+    /**
+     * @param aggregationMode: "average" | "sum" | "max" | "min"
+     */
+    @GetMapping("/group_profile/aggregate")
+    @ResponseStatus(HttpStatus.OK)
+    fun compareProfileToGroupData(
+            authentication: Authentication,
+            @RequestParam(required = true) groupId: Int,
+            @RequestParam(required = false) aggregationMode: String = "average"
+    ): Map<AbilityEntity, Double>{
+        authService.canSeeUserGroupData(authentication, groupId)
+        val user = userService.getUserEntityWithProfileByUsername(authentication.name)
+        val abilities = user.profileFloat.map { it.ability }.toSet()
+        return when(aggregationMode){
+            "average" -> userService.getAbilityToAverageValueInGroup(groupId, abilities)
+            "sum" -> userService.getAbilityToSumValueInGroup(groupId, abilities)
+            "max" -> userService.getAbilityToMaxValueInGroup(groupId, abilities)
+            "min" -> userService.getAbilityToMinValueInGroup(groupId, abilities)
+            else -> throw IllegalArgumentException("Invalid aggregation mode, supported modes: average, sum, max, min")
+        }
+    }
+
+    @GetMapping("/group_profile/all")
+    @ResponseStatus(HttpStatus.OK)
+    fun getGroupProfile(authentication: Authentication, @RequestParam(required = true) groupId: Int): Map<AbilityEntity, List<Double>>{
+        authService.canSeeUserGroupData(authentication, groupId)
+        val user = userService.getUserEntityWithProfileByUsername(authentication.name)
+        val abilities = user.profileFloat.map { it.ability }
+        val abilityToValues = mutableMapOf<AbilityEntity, List<Double>>()
+        abilities.forEach {
+            val values = userService.getAbilityValuesInUserGroupAscending(groupId, it.code)
+            abilityToValues[it] = values
+        }
+        return abilityToValues
     }
 
 }

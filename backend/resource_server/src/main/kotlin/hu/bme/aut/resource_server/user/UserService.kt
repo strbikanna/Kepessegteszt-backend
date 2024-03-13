@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.user
 
+import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
 import hu.bme.aut.resource_server.user_group.UserGroupDto
@@ -74,6 +75,49 @@ class UserService(
         org.members.add(user)
         orgRepository.save(org)
         userRepository.save(user)
+    }
+
+    @Transactional
+    fun getAbilityValuesInUserGroupAscending(groupId: Int, abilityCode: String): List<Double> {
+        val group = groupRepository.findById(groupId).orElseThrow()
+        val userIds = group.getAllUserIds().toList()
+        return userRepository.getAbilityValuesInUserGroupAscending(abilityCode, userIds)
+    }
+
+    @Transactional
+    fun getAbilityToAverageValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): Map<AbilityEntity, Double> {
+        return getAbilityToAggregateValuesInGroup(groupId, abilities, userRepository::getAverageOfAbilityValuesInUserGroup)
+    }
+
+    @Transactional
+    fun getAbilityToSumValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): Map<AbilityEntity, Double> {
+        return getAbilityToAggregateValuesInGroup(groupId, abilities, userRepository::getSumOfAbilityValuesInUserGroup)
+    }
+
+    @Transactional
+    fun getAbilityToMaxValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): Map<AbilityEntity, Double> {
+        return getAbilityToAggregateValuesInGroup(groupId, abilities, userRepository::getMaxOfAbilityValuesInUserGroup)
+    }
+
+    @Transactional
+    fun getAbilityToMinValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): Map<AbilityEntity, Double> {
+        return getAbilityToAggregateValuesInGroup(groupId, abilities, userRepository::getMinOfAbilityValuesInUserGroup)
+    }
+
+    private fun getAbilityToAggregateValuesInGroup(groupId: Int,
+                                           abilities: Set<AbilityEntity>,
+                                           aggregationSupplier: (abilityCode: String, userIds: List<Int>) -> Double?
+    ): Map<AbilityEntity, Double> {
+        val group = groupRepository.findById(groupId).orElseThrow()
+        val userIds = group.getAllUserIds().toList()
+        val abilityToAggregate = mutableMapOf<AbilityEntity, Double>()
+        abilities.forEach {
+            val aggregateValue = aggregationSupplier(it.code, userIds)
+            if(aggregateValue != null){
+                abilityToAggregate[it] = aggregateValue
+            }
+        }
+        return abilityToAggregate
     }
 
 }

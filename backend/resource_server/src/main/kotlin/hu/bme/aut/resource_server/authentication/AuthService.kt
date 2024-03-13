@@ -120,6 +120,6 @@ class AuthService(
     fun canSeeUserGroupData(authentication: Authentication, userGroupId: Int): Boolean {
         val user = getAuthUser(authentication)
         val uGroup = userGroupRepository.findById(userGroupId).orElseThrow()
-        return uGroup.members.contains(user) || uGroup.admins.contains(user)
+        return uGroup.members.contains(user) || uGroup.admins.contains(user) || uGroup.getAllUserIds().contains(user.id)
     }
 }
