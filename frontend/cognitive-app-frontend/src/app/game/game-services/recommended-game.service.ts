@@ -5,6 +5,7 @@ import {SimpleHttpService} from "../../utils/simple-http.service";
 import {User} from "../../model/user.model";
 import {Game} from "../../model/game.model";
 import {UserInfo} from "../../auth/userInfo";
+import {HttpClient} from "@angular/common/http";
 
 /**
  * Service that calls backend for recommended game data.
