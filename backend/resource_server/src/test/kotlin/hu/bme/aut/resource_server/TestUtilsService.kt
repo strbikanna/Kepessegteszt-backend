@@ -17,6 +17,8 @@ import hu.bme.aut.resource_server.role.Role
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import hu.bme.aut.resource_server.user_group.UserGroupRepository
+import hu.bme.aut.resource_server.user_group.group.GroupRepository
+import hu.bme.aut.resource_server.user_group.organization.OrganizationRepository
 import hu.bme.aut.resource_server.utils.AbilityType
 import hu.bme.aut.resource_server.utils.RoleName
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,15 +26,17 @@ import org.springframework.stereotype.Service
 
 @Service
 class TestUtilsService(
-        @Autowired var userRepository: UserRepository,
-        @Autowired var abilityRepository: AbilityRepository,
-        @Autowired var floatProfileSnapshotRepository: FloatProfileSnapshotRepository,
-        @Autowired var enumProfileSnapshotRepository: EnumProfileSnapshotRepository,
-        @Autowired var gameRepository: GameRepository,
-        @Autowired var gameplayResultRepository: GameplayResultRepository,
-        @Autowired var recommendedGameRepository: RecommendedGameRepository,
-        @Autowired var resultForCalcRepository: ResultForCalculationRepository,
-        @Autowired var userGroupRepository: UserGroupRepository,
+    @Autowired var userRepository: UserRepository,
+    @Autowired var abilityRepository: AbilityRepository,
+    @Autowired var floatProfileSnapshotRepository: FloatProfileSnapshotRepository,
+    @Autowired var enumProfileSnapshotRepository: EnumProfileSnapshotRepository,
+    @Autowired var gameRepository: GameRepository,
+    @Autowired var gameplayResultRepository: GameplayResultRepository,
+    @Autowired var recommendedGameRepository: RecommendedGameRepository,
+    @Autowired var resultForCalcRepository: ResultForCalculationRepository,
+    @Autowired var userGroupRepository: UserGroupRepository,
+    @Autowired var groupRepository: GroupRepository,
+    @Autowired var organizationRepository: OrganizationRepository
 ) {
     val authHeaderName = "authUser"
     val gameAuthHeaderName = "authGame"
@@ -56,7 +60,7 @@ class TestUtilsService(
     }
 
     fun fillAbilityRepository() {
-        abilityRepository.deleteAll()
+        //abilityRepository.deleteAll()
         abilityRepository.saveAll(listOf(abilityGf, abilityGq, abilityGsm, abilityGv, abilityColorsense))
     }
 

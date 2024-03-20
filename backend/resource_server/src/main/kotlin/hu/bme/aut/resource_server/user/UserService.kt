@@ -59,8 +59,6 @@ class UserService(
             orgOfGroup.members.add(user)
             orgRepository.save(orgOfGroup)
         }
-        group.members.add(user)
-        groupRepository.save(group)
         user.groups.add(group)
         userRepository.save(user)
         user.groups.add(group)

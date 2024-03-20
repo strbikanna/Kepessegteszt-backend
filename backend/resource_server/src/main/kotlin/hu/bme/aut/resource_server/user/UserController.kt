@@ -2,6 +2,7 @@ package hu.bme.aut.resource_server.user
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.authentication.AuthService
+import hu.bme.aut.resource_server.profile.ProfileItem
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
 import hu.bme.aut.resource_server.user_group.UserGroupDto
 import kotlinx.coroutines.CoroutineScope
@@ -21,12 +22,11 @@ class UserController(
     @Autowired private var userService: UserService,
     @Autowired private var authService: AuthService
 ) {
-
     @GetMapping("/profile")
     @ResponseStatus(HttpStatus.OK)
-    fun getUserProfile(authentication: Authentication): UserProfileDto {
+    fun getUserProfile(authentication: Authentication): List<ProfileItem> {
         val username = authentication.name
-        return userService.getUserDtoWithProfileByUsername(username)
+        return userService.getUserDtoWithProfileByUsername(username).profile.toList()
     }
 
     @GetMapping("/profile/inspect")
@@ -38,7 +38,7 @@ class UserController(
         return@async userService.getUserDtoWithProfileByUsername(username)
     }
 
-    @GetMapping("/group")
+    @GetMapping("/groups")
     @ResponseStatus(HttpStatus.OK)
     fun getGroupsOfUser(authentication: Authentication): List<UserGroupDto>{
         val username = authentication.name
