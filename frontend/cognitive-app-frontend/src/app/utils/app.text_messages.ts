@@ -13,7 +13,7 @@ export const TEXTS = {
         game_management: 'Játékok kezelése',
         game_recommendation: 'Játékok ajánlása',
     },
-    home:{
+    home: {
         welcome: 'Örülünk, hogy itt vagy!',
         features_student: 'Játssz a kedvenc játékaiddal és kövesd nyomon a profilod fejlődését!',
         features_parent: 'Kövesd nyomon gyermeked fejlődését és segíts neki a játékok kiválasztásában!',
@@ -21,7 +21,7 @@ export const TEXTS = {
         features_scientist: 'Tölts fel játékokat, ajánld őket diákoknak és kövesd nyomon a fejlődésüket!',
         login: 'Jelentkezz be a játékok eléréséhez!',
     },
-    impersonation:{
+    impersonation: {
         message: 'Bejelentkezhetsz a következő felhasználók nevében, vagy maradhatsz a saját fiókodban.',
         cancel: 'Maradok a saját fiókomban',
     },
@@ -32,13 +32,13 @@ export const TEXTS = {
             games_for_you: 'Játékok neked',
             all_games: 'Összes játék',
         },
-        game_card:{
+        game_card: {
             play: 'Játék indítása',
         },
-        progress:{
+        progress: {
             loading_game: 'Játék betöltése...',
         },
-        error:{
+        error: {
             empty_content: 'Még nem érkezett ajánlás',
         }
     },
@@ -51,19 +51,19 @@ export const TEXTS = {
         roles: 'Szerepkörök',
     },
     playground: {
-        error:{
+        error: {
             title: 'Hiba történt',
             explanation: 'Valószínűleg újratöltötted a játékot vagy megszakadt az internetkapcsolat.' +
                 'Sajnos az előző játékot nem tudod folytatni, térj vissza a játékok oldalra és válassz egy új játékot.',
             action: 'Vissza a játékokhoz',
         }
     },
-    paging:{
-        firstPage : 'Első oldal',
-        itemsPerPage : 'Találatok száma oldalanként',
-        lastPage : 'Utolsó oldal',
-        nextPage : 'Következő oldal',
-        previousPage : 'Előző oldal',
+    paging: {
+        firstPage: 'Első oldal',
+        itemsPerPage: 'Találatok száma oldalanként',
+        lastPage: 'Utolsó oldal',
+        nextPage: 'Következő oldal',
+        previousPage: 'Előző oldal',
     },
     admin_page: {
         user_data: {
@@ -74,7 +74,7 @@ export const TEXTS = {
             roles: 'Szerepkörök',
             contacts: 'Kapcsolatok',
         },
-        actions:{
+        actions: {
             cancel: 'Mégse',
             save: 'Mentés',
             add_contact: 'Kapcsolat hozzáadása',
@@ -85,7 +85,7 @@ export const TEXTS = {
         update_success_message: 'A felhasználó adatai sikeresen frissítve lettek',
         update_error_message: 'A felhasználó adatainak frissítése sikertelen volt',
     },
-    error:{
+    error: {
         default_error_message: 'Ismeretlen hiba történt',
         default_error_title: 'Hiba történt',
         http_error: 'Hiba történt a szerverrel való kommunikáció során.',
@@ -137,18 +137,31 @@ export const TEXTS = {
             choose_contact_description: 'Válaszd ki, kinek a kognitív profilját szeretnéd megtekinteni',
             select: 'Megtekintés',
         },
+        comparison: {
+            title: 'Kognitív profil elemzése',
+            description: 'Válaszd ki, mely csoport adatait szeretnéd összehasonlítani a sajátoddal',
+            avg: 'Átlag',
+            min: 'Minimum',
+            max: 'Maximum',
+            comparison_type: 'Összehasonlítás típusa',
+            comparison_type_description: 'Válaszd ki, milyen módon legyenek megjelenítve a csoport adatai',
+            group_selection: 'Csoport kiválasztása',
+            submit: 'Összehasonlítás',
+            error_group_required: 'Válassz ki egy csoportot az összehasonlításhoz',
+            error_type_required: 'Válassz ki egy összehasonlítási típust',
+            error_no_group: 'Úgy látszik, egyetlen csoportnak sem vagy még tagja'
+        },
     },
 
-    wildcard:{
+    wildcard: {
         title: 'Hupsz, ez az oldal nem található!',
         description: 'A keresett oldal nem található. Ellenőrizd a címet és próbáld újra.',
     },
-    game_management:{
+    game_management: {
         title: 'Játékok kezelése',
-        calculation_dialog:{
+        calculation_dialog: {
             title: 'Játékeredmények kiértékelése',
-            description: 'A játékeredmények kiértékelése magában foglalja az összes eddig összegyűlt játékeredmény feldolgozását. ' +
-                'A játékok pontszámai normalizálva lesznek, és az eredmények alapján a felhasználók képességértékei frissítve lesznek. A kiértékelést nem lehet visszavonni.',
+            description: 'A játékeredmények kiértékelése magában foglalja az összes eddig összegyűlt játékeredmény feldolgozását. A játékok pontszámai normalizálva lesznek, és az eredmények alapján a felhasználók képességértékei frissítve lesznek. A kiértékelést nem lehet visszavonni.',
             message: 'Biztosan szeretnéd elindítani a játékeredmények kiértékelését?',
             result_count: 'A játékhoz érkezett feldolgozatlan eredmények száma: ',
             affected_abilities: 'A játék ezeket a kognitív képességeket vizsgálja: ',
@@ -199,5 +212,4 @@ export const TEXTS = {
             config: 'Ajánlott szint: '
         }
     },
-
 }

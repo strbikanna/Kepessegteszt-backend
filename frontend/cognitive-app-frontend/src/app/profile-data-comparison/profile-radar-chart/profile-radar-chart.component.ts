@@ -22,6 +22,7 @@ export class ProfileRadarChartComponent implements OnInit{
     this.profileDataObservable.pipe(
         combineLatestWith(this.comparisonDataObservable)
     ).subscribe(([profileData, comparisonData]) => {
+      console.log(profileData)
       let cmpData = comparisonData.filter(data => profileData.find(_data => _data.ability.code === data.ability.code) )
         this.initChartOptions(profileData, cmpData)
     })

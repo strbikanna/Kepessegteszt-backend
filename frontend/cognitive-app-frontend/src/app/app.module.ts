@@ -53,6 +53,7 @@ import {MatDividerModule} from "@angular/material/divider";
 import {environment} from "../environments/environment";
 import { ProfileDataComparisonComponent } from './profile-data-comparison/profile-data-comparison.component';
 import { ProfileRadarChartComponent } from './profile-data-comparison/profile-radar-chart/profile-radar-chart.component';
+import {MatRadioModule} from "@angular/material/radio";
 
 
 @NgModule({
@@ -118,7 +119,7 @@ import { ProfileRadarChartComponent } from './profile-data-comparison/profile-ra
         NgxEchartsModule.forRoot({
             echarts
         }),
-        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule
+        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule
     ],
   providers: [
       {
