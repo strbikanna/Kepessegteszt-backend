@@ -10,7 +10,7 @@ import io.hypersistence.utils.hibernate.type.json.JsonType
  * Entity class that represents games.
  */
 @Entity
-@Table(name = "GAME")
+@Table(name = "game")
 data class GameEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
