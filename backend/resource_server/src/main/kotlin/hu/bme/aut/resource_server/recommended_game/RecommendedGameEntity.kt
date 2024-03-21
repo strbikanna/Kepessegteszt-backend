@@ -15,7 +15,7 @@ import java.time.LocalDateTime
  * Entity for storing recommended games.
  */
 @Entity
-@Table(name = "RECOMMENDED_GAME")
+@Table(name = "recommended_game")
 data class RecommendedGameEntity(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
