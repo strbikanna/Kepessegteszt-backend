@@ -7,7 +7,7 @@ import jakarta.persistence.*
  * Entity class representing cognitive abilities.
  */
 @Entity
-@Table(name = "ABILITY")
+@Table(name = "ability")
 data class AbilityEntity(
     /**
      * CHC or other code name of ability. Unique.
