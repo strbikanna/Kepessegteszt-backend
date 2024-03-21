@@ -1,5 +1,5 @@
 -- games
-INSERT INTO GAME(id, _name, _description, thumbnail_path, _active, url, config_description)
+INSERT INTO game(id, _name, _description, thumbnail_path, _active, url, config_description)
 VALUES (1, 'Lufipukkasztás', 'Pukkaszd ki a lufikat! Vigyázz a bombákkal!',
         'http://localhost:8090/game_images/balloon-pop.png', true, null,
         '{
@@ -12,7 +12,7 @@ VALUES (1, 'Lufipukkasztás', 'Pukkaszd ki a lufikat! Vigyázz a bombákkal!',
           "maxLevel": 8
         }');
 
-INSERT INTO GAME(id, _name, _description, thumbnail_path, _active, url, config_description)
+INSERT INTO game(id, _name, _description, thumbnail_path, _active, url, config_description)
 VALUES (2, 'Titkos rádió', 'Eltalálod, melyik gombot kell megnyomni a titkos rádión?',
         'http://localhost:8090/game_images/number_game.jpg', true, null,
         '{
@@ -25,7 +25,7 @@ VALUES (2, 'Titkos rádió', 'Eltalálod, melyik gombot kell megnyomni a titkos 
           "maxLevel": 10
         }');
 
-INSERT INTO GAME(id, _name, _description, thumbnail_path, _active, url, config_description)
+INSERT INTO game(id, _name, _description, thumbnail_path, _active, url, config_description)
 VALUES (3, 'Űrirányítás', 'Találd el a megfelelő gombokat, hogy az űrhajód túlélje az űrhajszát.',
         'http://localhost:8090/game_images/cosmic-control.jpg', true, null, '{
     "gameName": "cosmic-control",
@@ -41,7 +41,7 @@ VALUES (3, 'Űrirányítás', 'Találd el a megfelelő gombokat, hogy az űrhaj�
     "maxLevel": 12
   }');
 
-INSERT INTO GAME(id, _name, _description, thumbnail_path, _active, url, config_description)
+INSERT INTO game(id, _name, _description, thumbnail_path, _active, url, config_description)
 VALUES (4, 'Meteorháború', 'Csak a megfelelő sorrendben kilőtt meteorok számítanak, sikerülni fog?',
         'http://localhost:8090/game_images/cosmic-sequence.jpg', true, null,
         '{
@@ -61,7 +61,7 @@ VALUES (4, 'Meteorháború', 'Csak a megfelelő sorrendben kilőtt meteorok szá
           "maxLevel": 8
         }');
 
-INSERT INTO GAME(id, _name, _description, thumbnail_path, _active, url, config_description)
+INSERT INTO game(id, _name, _description, thumbnail_path, _active, url, config_description)
 VALUES (5, 'Űrkutató képzés', 'Jól kell bánni a számokkal, gyakorolj, hogy űrkutató lehess!',
         'http://localhost:8090/game_images/number-total.jpg', true, null, '{
     "gameName": "number-total",
