@@ -14,7 +14,7 @@ import java.time.LocalDateTime
  * Entity that is immutable and represents a record of a gameplay result.
  */
 @Entity
-@Table(name = "GAMEPLAY")
+@Table(name = "gameplay")
 data class GameplayResultEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
