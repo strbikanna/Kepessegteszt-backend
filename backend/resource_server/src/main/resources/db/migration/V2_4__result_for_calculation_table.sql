@@ -1,4 +1,4 @@
-CREATE TABLE RESULT_FOR_CALCULATION
+CREATE TABLE result_for_calculation
 (
     id                bigint PRIMARY KEY AUTO_INCREMENT,
     _timestamp        datetime NOT NULL,
