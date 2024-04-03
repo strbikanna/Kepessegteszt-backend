@@ -1,8 +1,6 @@
 package hu.bme.aut.resource_server.recommended_game
 
-import hu.bme.aut.resource_server.user.UserEntity
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
@@ -12,28 +10,28 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/recommended_game")
 class RecommendedGameController(
-    @Autowired private var recommendedGameRepository: RecommendedGameRepository,
+    @Autowired private var recommendedGameService: RecommendedGameService,
     @Autowired private var gameplayRecommenderService: RecommenderService
 ) {
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     fun getRecommendedGamesToUser(
-        @RequestParam recommendedTo: UserEntity,
         @RequestParam(required=false) pageIndex: Int?,
         @RequestParam(required = false) pageSize: Int?,
+        authentication: Authentication
     ): List<RecommendedGameEntity> {
         if (pageIndex == null || pageSize == null)
-            return recommendedGameRepository.findAllByRecommendedTo(recommendedTo)
+            return recommendedGameService.getAllRecommendedToUser(authentication.name)
         else
-            return recommendedGameRepository.findAllPagedByRecommendedTo(recommendedTo, PageRequest.of(pageIndex, pageSize))
+            return recommendedGameService.getAllRecommendedToUser(authentication.name, pageIndex, pageSize)
     }
 
     @PostMapping("/recommend")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN') or hasRole('SCIENTIST') or hasRole('TEACHER')")
     fun postRecommendedGameToUser(@RequestBody recommendedGame: RecommendedGameEntity): RecommendedGameEntity {
-        return recommendedGameRepository.save(recommendedGame)
+        return recommendedGameService.addRecommendation(recommendedGame)
     }
 
     /**
