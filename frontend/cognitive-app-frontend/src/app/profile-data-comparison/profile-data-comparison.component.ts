@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ProfileData} from "../model/profile_data.model";
 import {Observable, of} from "rxjs";
-import {AbilityType} from "../model/ability.model";
 import {ProfileDataComparisonService} from "./profile-data-comparison.service";
 import {UserGroup} from "../model/user_group.model";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
@@ -25,9 +24,9 @@ export class ProfileDataComparisonComponent implements OnInit{
         calculationType: new FormControl<'average' | 'min' | 'max' >('average', Validators.required)
     })
     ngOnInit(): void {
-        console.log('init')
         this.groups = this.service.getGroupsOfUser()
         this.userProfileData = this.service.getProfileData()
+        this.dataToCompare = this.service.getProfileDataOfGroup(2, 'average')
     }
 
     onSubmit(){
@@ -39,69 +38,6 @@ export class ProfileDataComparisonComponent implements OnInit{
             )
         }
     }
-
-
-    profileData: Observable<ProfileData[]> = of(
-        [
-            {
-                ability: {
-                    code: '1',
-                    name: 'Ability 1',
-                    description: 'Description 1',
-                    type: AbilityType.FLOAT
-                },
-                value: 1.0
-            },
-            {
-                ability: {
-                    code: '2',
-                    name: 'Ability 2',
-                    description: 'Description 2',
-                    type: AbilityType.FLOAT                },
-                value: 0.8
-            },
-            {
-                ability: {
-                    code: '3',
-                    name: 'Ability 3',
-                    description: 'Description 3',
-                    type: AbilityType.FLOAT
-                },
-                value: 1.6
-            }
-        ]
-    )
-    comparisonData: Observable<ProfileData[]> = of(
-        [
-            {
-                ability: {
-                    code: '1',
-                    name: 'Ability 1',
-                    description: 'Description 1',
-                    type: AbilityType.FLOAT
-                },
-                value: 0.8
-            },
-            {
-                ability: {
-                    code: '2',
-                    name: 'Ability 2',
-                    description: 'Description 2',
-                    type: AbilityType.FLOAT
-                },
-                value: 0.7
-            },
-            {
-                ability: {
-                    code: '3',
-                    name: 'Ability 3',
-                    description: 'Description 3',
-                    type: AbilityType.FLOAT
-                },
-                value: 1.5
-            }
-        ]
-    )
     comparisonTitle: 'avg' | 'max' | 'min' = 'avg';
 
 }

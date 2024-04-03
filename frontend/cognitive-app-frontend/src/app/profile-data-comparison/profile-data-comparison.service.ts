@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {SimpleHttpService} from "../utils/simple-http.service";
-import {filter, map, Observable} from "rxjs";
+import {filter, map, Observable, retry} from "rxjs";
 import {ProfileData} from "../model/profile_data.model";
 import {AbilityType} from "../model/ability.model";
 import {UserGroup} from "../model/user_group.model";
@@ -14,10 +14,8 @@ export class ProfileDataComparisonService {
   constructor(private http: HttpClient, private httpService: SimpleHttpService) { }
   
   getProfileData(): Observable<ProfileData[]> {
-    console.log('getProfileData')
     return this.http.get(this.httpService.baseUrl + '/user/profile').pipe(
         map((response: any) =>{
-          console.log(response)
             return response.filter(
                 (item: any) => item.ability.type === AbilityType.FLOAT.valueOf()
             )
@@ -31,7 +29,6 @@ export class ProfileDataComparisonService {
                 },
                 value: item.abilityValue
               }
-                  console.log(profileData)
                 return profileData;
             })
         })
@@ -44,9 +41,12 @@ export class ProfileDataComparisonService {
 
   getProfileDataOfGroup(groupId: number, aggregationType: 'average'| 'min' | 'max' | 'sum'): Observable<ProfileData[]> {
     const params = new HttpParams()
-        .set('group_id', groupId)
+        .set('groupId', groupId)
         .set('aggregationMode', aggregationType);
-    return this.http.get<ProfileData[]>(this.httpService.baseUrl + '/user/group_profile/aggregate', {params: params});
+    console.log('getting group data')
+    return this.http.get<ProfileData[]>(`${this.httpService.baseUrl}/user/group_profile/aggregate`, {params: params}).pipe(
+        retry(3),
+    )
   }
 
 
