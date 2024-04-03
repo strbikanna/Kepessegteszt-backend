@@ -37,5 +37,6 @@ out/
 .vscode/
 
 ### application settings and data files will be ignored ###
-*.yaml
+src/main/resources/*.yaml
+src/main/resources/db/migration/
 *.sql
