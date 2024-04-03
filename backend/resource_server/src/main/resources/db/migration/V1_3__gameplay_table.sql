@@ -1,4 +1,4 @@
-CREATE TABLE GAMEPLAY(
+CREATE TABLE gameplay(
                          id            bigint           PRIMARY KEY AUTO_INCREMENT,
                          _timestamp    datetime         NOT NULL,
                          result        json             NOT NULL,

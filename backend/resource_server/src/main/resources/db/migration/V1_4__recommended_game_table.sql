@@ -1,4 +1,4 @@
-CREATE TABLE RECOMMENDED_GAME (
+CREATE TABLE recommended_game (
                                   id                 bigint          PRIMARY KEY AUTO_INCREMENT,
                                   _timestamp         datetime,
                                   config             json,

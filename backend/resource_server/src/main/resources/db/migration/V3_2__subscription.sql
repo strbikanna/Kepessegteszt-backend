@@ -1,4 +1,4 @@
-CREATE TABLE SUBSCRIPTION(
+CREATE TABLE subscription(
     _name varchar(100) primary key,
     role_name varchar(30) not null,
     fee decimal not null,

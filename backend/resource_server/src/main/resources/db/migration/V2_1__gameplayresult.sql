@@ -1,5 +1,5 @@
-DROP TABLE GAMEPLAY;
-CREATE TABLE GAMEPLAY(
+DROP TABLE gameplay;
+CREATE TABLE gameplay(
                          id            bigint           PRIMARY KEY AUTO_INCREMENT,
                          _timestamp    datetime         NOT NULL,
                          result        json             NOT NULL,
