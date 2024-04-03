@@ -29,14 +29,15 @@ interface UserRepository: CrudRepository<UserEntity, Int> {
 
     @Query("SELECT SUM(p.abilityValue) FROM UserEntity u JOIN u.profileFloat p " +
             "WHERE p.ability.code = :abilityCode " +
-            "AND p.abilityValue != null " +
+            "AND p.abilityValue is not null " +
             "AND u.id IN :userIds" )
     fun getSumOfAbilityValuesInUserGroup(abilityCode: String, userIds: List<Int>): Double?
 
     @Query("SELECT AVG(p.abilityValue) FROM UserEntity u JOIN u.profileFloat p " +
             "WHERE p.ability.code = :abilityCode " +
-            "AND u.id IN :userIds " +
-            "AND p.abilityValue != null" )
+            "AND p.abilityValue is not null " +
+            "AND u.id IN :userIds"
+    )
     fun getAverageOfAbilityValuesInUserGroup(abilityCode: String, userIds: List<Int>): Double?
 
     @Query("SELECT MAX(p.abilityValue) FROM UserEntity u JOIN u.profileFloat p " +
@@ -46,13 +47,13 @@ interface UserRepository: CrudRepository<UserEntity, Int> {
 
     @Query("SELECT MIN(p.abilityValue) FROM UserEntity u JOIN u.profileFloat p " +
             "WHERE p.ability.code = :abilityCode " +
-            "AND p.abilityValue != null " +
+            "AND p.abilityValue is not null " +
             "AND u.id IN :userIds" )
     fun getMinOfAbilityValuesInUserGroup(abilityCode: String, userIds: List<Int>): Double?
 
     @Query("SELECT p.abilityValue FROM UserEntity u JOIN u.profileFloat p " +
             "WHERE p.ability.code = :abilityCode " +
-            "AND p.abilityValue != null " +
+            "AND p.abilityValue is not null " +
             "AND u.id IN :userIds " +
             "ORDER BY p.abilityValue ASC" )
     fun getAbilityValuesInUserGroupAscending(abilityCode: String, userIds: List<Int>): List<Double>
