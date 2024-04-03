@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### application settings and data files will be ignored ###
+*.yaml
+*.sql
