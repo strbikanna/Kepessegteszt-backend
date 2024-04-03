@@ -1,4 +1,4 @@
-CREATE TABLE EMAIL
+CREATE TABLE email
 (
     id               int PRIMARY KEY AUTO_INCREMENT,
     verification_key varchar(51) UNIQUE NOT NULL,
