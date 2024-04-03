@@ -1,6 +1,5 @@
 package hu.bme.aut.resource_server.user_group.organization
 
-import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user_group.UserGroup
 import hu.bme.aut.resource_server.user_group.UserGroupDto
 import hu.bme.aut.resource_server.user_group.group.Group
@@ -23,9 +22,6 @@ class Organization(
 
         @OneToMany(mappedBy = "organization")
         val groups: MutableList<Group> = mutableListOf(),
-
-        @ManyToMany(mappedBy = "organizations")
-        override val members: MutableList<UserEntity> = mutableListOf()
 
 ) : UserGroup(name = name) {
     override fun getAllGroups(): List<Group> {

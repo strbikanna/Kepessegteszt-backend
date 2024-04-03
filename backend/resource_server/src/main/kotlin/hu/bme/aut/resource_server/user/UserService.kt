@@ -4,6 +4,7 @@ import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
 import hu.bme.aut.resource_server.user_group.UserGroupDto
+import hu.bme.aut.resource_server.user_group.UserGroupRepository
 import hu.bme.aut.resource_server.user_group.group.GroupRepository
 import hu.bme.aut.resource_server.user_group.organization.OrganizationRepository
 import jakarta.transaction.Transactional
@@ -14,7 +15,8 @@ import org.springframework.stereotype.Service
 class UserService(
         @Autowired private var userRepository: UserRepository,
         @Autowired private var groupRepository: GroupRepository,
-        @Autowired private var orgRepository: OrganizationRepository
+        @Autowired private var orgRepository: OrganizationRepository,
+        @Autowired private var uGroupRepository: UserGroupRepository,
 ){
     fun getAllUsers(): List<PlainUserDto>{
         return userRepository.findAll().map { PlainUserDto(it) }
@@ -46,7 +48,8 @@ class UserService(
     @Transactional
     fun getGroupsOfUser(username: String): List<UserGroupDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
-        return user.groups.map { it.toDto() }
+        val allGroups = mutableListOf(user.groups, user.organizations).flatten().map { it.toDto() }
+        return allGroups
     }
 
     @Transactional
@@ -77,7 +80,7 @@ class UserService(
 
     @Transactional
     fun getAbilityValuesInUserGroupAscending(groupId: Int, abilityCode: String): List<Double> {
-        val group = groupRepository.findById(groupId).orElseThrow()
+        val group = uGroupRepository.findById(groupId).orElseThrow()
         val userIds = group.getAllUserIds().toList()
         return userRepository.getAbilityValuesInUserGroupAscending(abilityCode, userIds)
     }
@@ -106,7 +109,7 @@ class UserService(
                                            abilities: Set<AbilityEntity>,
                                            aggregationSupplier: (abilityCode: String, userIds: List<Int>) -> Double?
     ): Map<AbilityEntity, Double> {
-        val group = groupRepository.findById(groupId).orElseThrow()
+        val group = uGroupRepository.findById(groupId).orElseThrow()
         val userIds = group.getAllUserIds().toList()
         val abilityToAggregate = mutableMapOf<AbilityEntity, Double>()
         abilities.forEach {

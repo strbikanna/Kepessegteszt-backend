@@ -1,6 +1,5 @@
 package hu.bme.aut.resource_server.user_group.group
 
-import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user_group.UserGroup
 import hu.bme.aut.resource_server.user_group.UserGroupDto
 import hu.bme.aut.resource_server.user_group.organization.Organization
@@ -19,9 +18,6 @@ class Group (
         @OneToMany(cascade = [CascadeType.ALL])
         @JoinColumn(name = "parent_group_id", referencedColumnName = "id")
         var childGroups: MutableList<Group> = mutableListOf(),
-
-        @ManyToMany(mappedBy = "groups")
-        override val members: MutableList<UserEntity> = mutableListOf()
 
 ): UserGroup(name = name) {
     override fun getAllGroups(): List<Group> {
