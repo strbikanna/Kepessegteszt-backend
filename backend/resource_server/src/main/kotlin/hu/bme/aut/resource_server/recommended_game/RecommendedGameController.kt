@@ -20,11 +20,17 @@ class RecommendedGameController(
         @RequestParam(required=false) pageIndex: Int?,
         @RequestParam(required = false) pageSize: Int?,
         authentication: Authentication
-    ): List<RecommendedGameEntity> {
+    ): List<RecommendedGameDto> {
         if (pageIndex == null || pageSize == null)
             return recommendedGameService.getAllRecommendedToUser(authentication.name)
         else
             return recommendedGameService.getAllRecommendedToUser(authentication.name, pageIndex, pageSize)
+    }
+
+    @GetMapping("/config/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    fun getRecommendedGameParams(@PathVariable id: Long): Map<String, Any>{
+        return recommendedGameService.getRecommendedGameConfig(id)
     }
 
     @PostMapping("/recommend")

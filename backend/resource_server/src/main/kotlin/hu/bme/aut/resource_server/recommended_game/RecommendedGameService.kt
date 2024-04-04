@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class RecommendedGameService(
@@ -12,12 +13,30 @@ class RecommendedGameService(
     @Autowired private var userRepository: UserRepository
 ) {
     @Transactional
-    fun getAllRecommendedToUser(username: String, pageIndex: Int = 0, pageSize: Int = 10): List<RecommendedGameEntity> {
+    fun getAllRecommendedToUser(username: String, pageIndex: Int = 0, pageSize: Int = 10): List<RecommendedGameDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
-        return recommendedGameRepository.findAllPagedByRecommendedTo(user, PageRequest.of(pageIndex, pageSize))
+        return recommendedGameRepository
+            .findAllPagedByRecommendedTo(user, PageRequest.of(pageIndex, pageSize))
+            .map { convertToDto(it) }
+    }
+
+    fun getRecommendedGameConfig(id: Long): Map<String, Any> {
+        val rGame = recommendedGameRepository.findById(id).orElseThrow()
+        return rGame.config
     }
 
     fun addRecommendation(recommendedGame: RecommendedGameEntity): RecommendedGameEntity {
         return recommendedGameRepository.save(recommendedGame)
+    }
+
+    private fun convertToDto(recommendedGame: RecommendedGameEntity): RecommendedGameDto {
+        return RecommendedGameDto(
+            id = recommendedGame.id!!,
+            name = recommendedGame.game.name,
+            description = recommendedGame.game.description,
+            thumbnail = recommendedGame.game.thumbnailPath,
+            recommendationDate = recommendedGame.timestamp ?: LocalDateTime.now(),
+            recommender = recommendedGame.recommender?.firstName + " " + recommendedGame.recommender?.lastName
+        )
     }
 }
