@@ -30,13 +30,14 @@ class RecommendedGameService(
     }
 
     private fun convertToDto(recommendedGame: RecommendedGameEntity): RecommendedGameDto {
+        val recommenderName = if(recommendedGame.recommender != null ) recommendedGame.recommender.firstName + " " + recommendedGame.recommender.lastName else ""
         return RecommendedGameDto(
             id = recommendedGame.id!!,
             name = recommendedGame.game.name,
             description = recommendedGame.game.description,
             thumbnail = recommendedGame.game.thumbnailPath,
             recommendationDate = recommendedGame.timestamp ?: LocalDateTime.now(),
-            recommender = recommendedGame.recommender?.firstName + " " + recommendedGame.recommender?.lastName
+            recommender = recommenderName
         )
     }
 }
