@@ -22,25 +22,25 @@ export class ProfileRadarChartComponent implements OnInit {
 
     ngOnInit() {
         this.comparisonDataObservable.subscribe(data => {
-            this.comparisonData = data
+            this.comparisonData = data.sort((a, b) => a.ability.code.localeCompare(b.ability.code))
             if (this.profileData) {
                 this.comparisonData = data.filter(data => this.profileData.find(_data => _data.ability.code === data.ability.code))
                 this.initChartOptions(this.profileData, this.comparisonData)
             }
         })
         this.profileDataObservable.subscribe((profileData) => {
+            this.profileData = profileData.sort((a, b) => a.ability.code.localeCompare(b.ability.code))
             let cmpData : ProfileData[] = [];
             if(this.comparisonData && this.comparisonData.length > 0){
                 cmpData = this.comparisonData.filter(data => profileData.find(_data => _data.ability.code === data.ability.code))
             }
-            this.initChartOptions(profileData, cmpData)
+            this.initChartOptions(this.profileData, cmpData)
         })
 
     }
 
     private initChartOptions(profileData: ProfileData[], comparisonData: ProfileData[]) {
         this.chartOptions = {
-
             legend: {
                 data: [this.text.profile, this.getComparisonTitle()],
             },
@@ -51,16 +51,20 @@ export class ProfileRadarChartComponent implements OnInit {
             series: [
                 {
                     type: 'radar',
-                    areaStyle: {},
+
                     data: [
                         {
-                            value: this.getRadarData(profileData),
-                            name: this.text.profile
+                            value: this.getRadarData(comparisonData),
+                            name: this.getComparisonTitle(),
+                            symbolSize: 15,
                         },
                         {
-                            value: this.getRadarData(comparisonData),
-                            name: this.getComparisonTitle()
-                        }
+                            value: this.getRadarData(profileData),
+                            name: this.text.profile,
+                            areaStyle: {opacity: 0.5},
+                            symbol: 'diamond',
+                            symbolSize: 15,
+                        },
                     ]
                 }
             ],
@@ -70,8 +74,9 @@ export class ProfileRadarChartComponent implements OnInit {
     }
 
     private getRadarIndicator(profileData: ProfileData[]) {
+        const maxValue = Math.max(...profileData.map(data => data.value))
         return profileData.map(data => {
-            return {name: data.ability.name}
+            return {name: data.ability.name, max: maxValue + 0.2}
         })
     }
 
@@ -87,7 +92,6 @@ export class ProfileRadarChartComponent implements OnInit {
     }
 
     private getRadarData(profileData: ProfileData[]) {
-        profileData.sort((a, b) => a.ability.code.localeCompare(b.ability.code))
         return profileData.map(data => data.value)
     }
 }

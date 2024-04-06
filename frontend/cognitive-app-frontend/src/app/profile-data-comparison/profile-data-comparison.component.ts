@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ProfileData} from "../model/profile_data.model";
-import {Observable, of} from "rxjs";
+import {BehaviorSubject, Observable, of} from "rxjs";
 import {ProfileDataComparisonService} from "./profile-data-comparison.service";
 import {UserGroup} from "../model/user_group.model";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
@@ -16,7 +16,7 @@ export class ProfileDataComparisonComponent implements OnInit{
     text = TEXTS.cognitive_profile.comparison
     groups: Observable<UserGroup[]> = of([]);
     userProfileData: Observable<ProfileData[]> = of([]);
-    dataToCompare: Observable<ProfileData[]> = of([]);
+    dataToCompare: BehaviorSubject<ProfileData[]> = new BehaviorSubject<ProfileData[]>([]);
     calculationTypeOptions = ['average', 'min', 'max']
 
     profileQueryForm = this.formBuilder.group({
@@ -26,15 +26,23 @@ export class ProfileDataComparisonComponent implements OnInit{
     ngOnInit(): void {
         this.groups = this.service.getGroupsOfUser()
         this.userProfileData = this.service.getProfileData()
-        this.dataToCompare = this.service.getProfileDataOfGroup(2, 'average')
+        this.service.getProfileDataOfGroup(2, 'average').subscribe(
+            (data) => {
+                this.dataToCompare.next(data)
+            }
+        )
     }
 
     onSubmit(){
         let selectedGroupId = this.profileQueryForm.get('groupId')?.value
         if(selectedGroupId){
-            this.dataToCompare = this.service.getProfileDataOfGroup(
+            this.service.getProfileDataOfGroup(
                 selectedGroupId,
                 this.profileQueryForm.get('calculationType')?.value ?? 'average'
+            ).subscribe(
+                (data) => {
+                    this.dataToCompare.next(data)
+                }
             )
         }
     }

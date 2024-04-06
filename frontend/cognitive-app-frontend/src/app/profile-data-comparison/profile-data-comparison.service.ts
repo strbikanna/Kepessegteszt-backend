@@ -27,7 +27,7 @@ export class ProfileDataComparisonService {
                   description: item.ability.description,
                   type: item.ability.type
                 },
-                value: item.abilityValue
+                value: item.value
               }
                 return profileData;
             })

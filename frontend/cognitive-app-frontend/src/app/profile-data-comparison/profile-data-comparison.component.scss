@@ -4,6 +4,7 @@
   display: flex;
   padding: 2em;
   flex-wrap: wrap;
+  justify-content: space-evenly;
 }
 .form-container{
   display: flex;
@@ -39,5 +40,7 @@
   color: dimgrey;
 }
 .chart{
-  width: 50%;
+  margin: 1em;
+  min-width: 40em;
+  width: fit-content;
 }
