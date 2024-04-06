@@ -74,8 +74,8 @@ data class UserEntity(
         ) {
     fun getProfile(): MutableSet<ProfileItem> {
         val profile = mutableSetOf<ProfileItem>()
-        profile.addAll(profileFloat)
-        profile.addAll(profileEnum)
+        profile.addAll(profileFloat.map { it.toProfileItem() })
+        profile.addAll(profileEnum.map { it.toProfileItem() })
         return profile
     }
 

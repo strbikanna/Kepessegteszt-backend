@@ -2,6 +2,7 @@ package hu.bme.aut.resource_server.profile_snapshot
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.user.UserEntity
@@ -25,6 +26,7 @@ data class FloatProfileSnapshotItem (
     override val ability: AbilityEntity,
 
     @Column
+    @JsonProperty("value")
     override val abilityValue: Double,
 
     @CreationTimestamp

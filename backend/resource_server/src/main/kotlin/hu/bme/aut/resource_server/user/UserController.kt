@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
-
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -62,7 +61,7 @@ class UserController(
             authentication: Authentication,
             @RequestParam(required = true) groupId: Int,
             @RequestParam(required = false) aggregationMode: String = "average"
-    ): Map<AbilityEntity, Double>{
+    ): List<ProfileItem>{
         authService.canSeeUserGroupData(authentication, groupId)
         val user = userService.getUserEntityWithProfileByUsername(authentication.name)
         val abilities = user.profileFloat.map { it.ability }.toSet()
@@ -77,7 +76,7 @@ class UserController(
 
     @GetMapping("/group_profile/all")
     @ResponseStatus(HttpStatus.OK)
-    fun getGroupProfile(authentication: Authentication, @RequestParam(required = true) groupId: Int): Map<AbilityEntity, List<Double>>{
+    fun getGroupProfile(authentication: Authentication, @RequestParam(required = true) groupId: Int): List<ProfileItem>{
         authService.canSeeUserGroupData(authentication, groupId)
         val user = userService.getUserEntityWithProfileByUsername(authentication.name)
         val abilities = user.profileFloat.map { it.ability }
@@ -86,7 +85,7 @@ class UserController(
             val values = userService.getAbilityValuesInUserGroupAscending(groupId, it.code)
             abilityToValues[it] = values
         }
-        return abilityToValues
+        return abilityToValues.map { ProfileItem( it.key, it.value) }
     }
 
 }
