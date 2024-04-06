@@ -1,6 +1,7 @@
 package hu.bme.aut.resource_server.user
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
+import hu.bme.aut.resource_server.profile.ProfileItem
 import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
 import hu.bme.aut.resource_server.user_group.UserGroupDto
@@ -64,8 +65,6 @@ class UserService(
         }
         user.groups.add(group)
         userRepository.save(user)
-        user.groups.add(group)
-        userRepository.save(user)
     }
 
     @Transactional
@@ -86,29 +85,29 @@ class UserService(
     }
 
     @Transactional
-    fun getAbilityToAverageValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): Map<AbilityEntity, Double> {
+    fun getAbilityToAverageValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): List<ProfileItem> {
         return getAbilityToAggregateValuesInGroup(groupId, abilities, userRepository::getAverageOfAbilityValuesInUserGroup)
     }
 
     @Transactional
-    fun getAbilityToSumValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): Map<AbilityEntity, Double> {
+    fun getAbilityToSumValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): List<ProfileItem> {
         return getAbilityToAggregateValuesInGroup(groupId, abilities, userRepository::getSumOfAbilityValuesInUserGroup)
     }
 
     @Transactional
-    fun getAbilityToMaxValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): Map<AbilityEntity, Double> {
+    fun getAbilityToMaxValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): List<ProfileItem> {
         return getAbilityToAggregateValuesInGroup(groupId, abilities, userRepository::getMaxOfAbilityValuesInUserGroup)
     }
 
     @Transactional
-    fun getAbilityToMinValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): Map<AbilityEntity, Double> {
+    fun getAbilityToMinValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): List<ProfileItem> {
         return getAbilityToAggregateValuesInGroup(groupId, abilities, userRepository::getMinOfAbilityValuesInUserGroup)
     }
 
     private fun getAbilityToAggregateValuesInGroup(groupId: Int,
                                            abilities: Set<AbilityEntity>,
                                            aggregationSupplier: (abilityCode: String, userIds: List<Int>) -> Double?
-    ): Map<AbilityEntity, Double> {
+    ): List<ProfileItem> {
         val group = uGroupRepository.findById(groupId).orElseThrow()
         val userIds = group.getAllUserIds().toList()
         val abilityToAggregate = mutableMapOf<AbilityEntity, Double>()
@@ -118,7 +117,11 @@ class UserService(
                 abilityToAggregate[it] = aggregateValue
             }
         }
-        return abilityToAggregate
+        return abilityToAggregate.map { convertToProfileItem(it.key, it.value)}
+    }
+
+    private fun convertToProfileItem(ability: AbilityEntity, value: Double): ProfileItem {
+        return ProfileItem( ability, value)
     }
 
 }

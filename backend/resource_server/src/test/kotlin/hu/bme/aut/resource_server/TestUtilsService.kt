@@ -172,7 +172,7 @@ class TestUtilsService(
         json["all"] = 10
         json["level"] = 2
         val user = createUnsavedTestUser()
-        userRepository.save(user)
+        saveUser(user)
         return GameplayResultEntity(
                 result = json.toMap(),
                 config = mutableMapOf(),
@@ -186,7 +186,10 @@ class TestUtilsService(
     }
 
     fun saveUser(user: UserEntity): UserEntity {
-        userRepository.delete(user)
+        if(userRepository.existsByUsername(user.username) && user.id == null){
+            val conflictingUser = userRepository.findByUsername(user.username).orElseThrow()
+            userRepository.delete(conflictingUser)
+        }
         return userRepository.save(user)
     }
 
