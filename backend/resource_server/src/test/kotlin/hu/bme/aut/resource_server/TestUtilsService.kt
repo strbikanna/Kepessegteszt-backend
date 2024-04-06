@@ -186,6 +186,7 @@ class TestUtilsService(
     }
 
     fun saveUser(user: UserEntity): UserEntity {
+        userRepository.delete(user)
         return userRepository.save(user)
     }
 

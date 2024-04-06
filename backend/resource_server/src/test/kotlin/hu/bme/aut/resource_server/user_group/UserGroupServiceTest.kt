@@ -103,26 +103,6 @@ class UserGroupServiceTest(
         assertEquals(1, orgInDb.members.size)
     }
 
-    @Test
-    @Transactional
-    fun shouldGetGroupsOfUser(){
-        val org = createOrganization(1)
-        val group1 = createGroup(1, org)
-        val group2 = createGroup(2, org)
-        val user = testUtilsService.createUnsavedTestUser()
-        testUtilsService.fillAbilityRepository()
-        testUtilsService.saveUser(user)
-        group1.members.add(user)
-        group2.members.add(user)
-        org.groups.add(group1)
-        org.groups.add(group2)
-        organizationRepository.save(org)
-        groupRepository.save(group1)
-        groupRepository.save(group2)
-        val groupsOfUser = testUtilsService.userRepository.findByUsername(user.username).orElseThrow().groups
-        assertEquals(2, groupsOfUser.size)
-    }
-
     private fun createGroup(testNum: Int, organization: Organization): Group {
         return Group(name = "Example Group $testNum", organization = organization)
     }

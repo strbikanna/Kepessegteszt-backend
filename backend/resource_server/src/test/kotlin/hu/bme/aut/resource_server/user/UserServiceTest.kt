@@ -92,7 +92,7 @@ class UserServiceTest(
         val updatedUser = userService.updateUserProfile(testUser1)
         assertEquals(2, updatedUser.profile.size)
         val updatedProfileItem = updatedUser.profile.find { it.ability.code == testService.abilityGq.code }!!
-        assertEquals(6.0, updatedProfileItem.abilityValue)
+        assertEquals(6.0, updatedProfileItem.value)
     }
 
     @Test
