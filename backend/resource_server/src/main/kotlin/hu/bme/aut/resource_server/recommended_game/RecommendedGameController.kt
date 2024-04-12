@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.recommended_game
 
+import hu.bme.aut.resource_server.authentication.AuthService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
@@ -11,7 +12,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/recommended_game")
 class RecommendedGameController(
     @Autowired private var recommendedGameService: RecommendedGameService,
-    @Autowired private var gameplayRecommenderService: RecommenderService
+    @Autowired private var gameplayRecommenderService: RecommenderService,
+    @Autowired private var authService: AuthService
 ) {
 
     @GetMapping("/all")
@@ -29,7 +31,8 @@ class RecommendedGameController(
 
     @GetMapping("/config/{id}")
     @ResponseStatus(HttpStatus.OK)
-    fun getRecommendedGameParams(@PathVariable id: Long): Map<String, Any>{
+    fun getRecommendedGameParams(@PathVariable id: Long, authentication: Authentication): Map<String, Any>{
+        authService.checkGameConfigAccessAnThrow(id, authentication)
         return recommendedGameService.getRecommendedGameConfig(id)
     }
 

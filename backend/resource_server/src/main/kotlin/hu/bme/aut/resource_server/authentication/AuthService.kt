@@ -1,6 +1,5 @@
 package hu.bme.aut.resource_server.authentication
 
-import hu.bme.aut.resource_server.game.GameRepository
 import hu.bme.aut.resource_server.gameplayresult.GameplayResultDto
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.role.Role
@@ -27,7 +26,6 @@ import reactor.core.publisher.Mono
 @Service
 class AuthService(
         @Autowired private var recommendedGameRepository: RecommendedGameRepository,
-        @Autowired private var gameRepository: GameRepository,
         @Autowired private var userRepository: UserRepository,
         @Autowired private var userGroupRepository: UserGroupRepository
 ) {
@@ -48,13 +46,18 @@ class AuthService(
     @Transactional
     fun checkGameAccessAndThrow(authentication: Authentication, gameplay: GameplayResultDto) {
         val username = authentication.name
-        val gamePlay = recommendedGameRepository.findById(gameplay.gameplayId)
-        val jwt = authentication.principal as Jwt
-        val tokenGameId = Integer.parseInt(jwt.claims["game_id"] as String?
-                ?: throw IllegalAccessException("This gameplay is not authorized to save result for this user."))
-        val game = gameRepository.findById(tokenGameId)
-        if (gamePlay.isEmpty || username == null || game.isEmpty || tokenGameId != gamePlay.get().game.id) {
+        val dbGamePlay = recommendedGameRepository.findById(gameplay.gameplayId).orElseThrow()
+        if (username != dbGamePlay.recommendedTo.username) {
             throw IllegalAccessException("This gameplay is not authorized to save result for this user.")
+        }
+    }
+
+    @Transactional
+    fun checkGameConfigAccessAnThrow(recommendedGameId: Long, authentication: Authentication) {
+        val username = authentication.name
+        val dbGamePlay = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
+        if (username != dbGamePlay.recommendedTo.username) {
+            throw IllegalAccessException("This recommendation is not set for user: $username.")
         }
     }
 
