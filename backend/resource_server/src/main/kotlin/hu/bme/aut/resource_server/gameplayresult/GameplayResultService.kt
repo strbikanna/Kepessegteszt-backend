@@ -18,10 +18,10 @@ class GameplayResultService(
         val recommendedGame = recommendedGameRepository.findById(data.gameplayId).orElseThrow()
         recommendedGame.completed = true
         recommendedGameRepository.save(recommendedGame)
-        val user = userRepository.findByUsername(data.username).orElseThrow()
+        val user = recommendedGame.recommendedTo
         val gameplay = GameplayResultEntity(
-            result = data.gameResult,
-            config = data.config.toMutableMap(),
+            result = data.result,
+            config = recommendedGame.config.toMutableMap(),
             user = user,
             recommendedGame = recommendedGame
         )

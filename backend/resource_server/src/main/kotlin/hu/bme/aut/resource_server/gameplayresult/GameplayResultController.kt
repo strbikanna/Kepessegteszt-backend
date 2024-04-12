@@ -4,15 +4,9 @@ import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 /**
  * Controller for saving gameplay results and
@@ -35,25 +29,22 @@ class GameplayResultController(
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('GAME')")
     fun saveResult(@RequestBody gameplayData: GameplayResultDto, authentication: Authentication): GameplayResultEntity {
         authService.checkGameAccessAndThrow(authentication, gameplayData)
-        val username = gameplayData.username
+        val username = authentication.name
         if(!profileSnapshotService.existsSnapshotToday(username)){
             profileSnapshotService.saveSnapshotOfUser(username)
         }
+        //TODO: create next config based on result async and return next recommendation id
         return gameplayResultService.save(gameplayData)
     }
 
     @Transactional
     @GetMapping("/results")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("!hasRole('GAME')")
     fun getResultsByUser(authentication: Authentication): List<GameplayResultEntity>{
         val username = authentication.name
         return gameplayResultService.getAllByUser(username)
     }
-
-
 
 }
