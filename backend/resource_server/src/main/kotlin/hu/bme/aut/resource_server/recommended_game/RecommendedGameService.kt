@@ -37,6 +37,7 @@ class RecommendedGameService(
         val recommenderName = if(recommendedGame.recommender != null ) recommendedGame.recommender.firstName + " " + recommendedGame.recommender.lastName else ""
         return RecommendedGameDto(
             id = recommendedGame.id!!,
+            gameId = recommendedGame.game.id!!,
             name = recommendedGame.game.name,
             description = recommendedGame.game.description,
             thumbnail = recommendedGame.game.thumbnailPath,

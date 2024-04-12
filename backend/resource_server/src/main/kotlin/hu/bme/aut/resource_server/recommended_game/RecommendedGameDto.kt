@@ -6,6 +6,8 @@ import java.time.LocalDateTime
 data class RecommendedGameDto(
         val id: Long,
 
+        val gameId: Int,
+
         val name: String,
 
         val description: String,
