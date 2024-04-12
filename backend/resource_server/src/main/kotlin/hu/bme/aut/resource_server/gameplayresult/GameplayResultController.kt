@@ -2,6 +2,11 @@ package hu.bme.aut.resource_server.gameplayresult
 
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
+import hu.bme.aut.resource_server.recommended_game.RecommenderService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
@@ -18,25 +23,31 @@ class GameplayResultController(
     @Autowired private var gameplayResultService: GameplayResultService,
     @Autowired private var profileSnapshotService: ProfileSnapshotService,
     @Autowired private var authService: AuthService,
+    @Autowired private var recommenderService: RecommenderService
 ) {
 
     /**
      * Endpoint to save results of a played game.
-     * auth server shall provide auth token for games which contains
-     * game id as subject
-     * username as claim
-     * GAME role as claim
+     * Returns the id of the next recommendation which has empty config initially.
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun saveResult(@RequestBody gameplayData: GameplayResultDto, authentication: Authentication): GameplayResultEntity {
+    fun saveResult(@RequestBody gameplayData: GameplayResultDto, authentication: Authentication): Long {
         authService.checkGameAccessAndThrow(authentication, gameplayData)
         val username = authentication.name
         if(!profileSnapshotService.existsSnapshotToday(username)){
             profileSnapshotService.saveSnapshotOfUser(username)
         }
-        //TODO: create next config based on result async and return next recommendation id
-        return gameplayResultService.save(gameplayData)
+        val savedResult = gameplayResultService.save(gameplayData)
+        val game = gameplayResultService.getGameOfResult(savedResult.id!!)
+        val nextRecommendation = recommenderService.createEmptyRecommendation(username, game.id!!)
+        CoroutineScope(Dispatchers.Default).async {
+            delay(5000) //TODO remove later
+            val config = recommenderService.createNextRecommendationByResult(savedResult, username)
+            nextRecommendation.config = config
+            recommenderService.save(nextRecommendation)
+        }
+        return nextRecommendation.id!!
     }
 
     @Transactional

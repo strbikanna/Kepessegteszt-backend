@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.gameplayresult
 
+import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,6 +27,12 @@ class GameplayResultService(
             recommendedGame = recommendedGame
         )
         return gameplayResultRepository.save(gameplay)
+    }
+
+    @Transactional
+    fun getGameOfResult(resultId: Long): GameEntity {
+        val result = gameplayResultRepository.findById(resultId).orElseThrow()
+        return result.recommendedGame.game
     }
 
     fun getAllByUser(username: String): List<GameplayResultEntity> {

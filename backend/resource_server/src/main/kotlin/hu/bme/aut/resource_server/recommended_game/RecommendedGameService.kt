@@ -22,6 +22,7 @@ class RecommendedGameService(
 
     fun getRecommendedGameConfig(id: Long): Map<String, Any> {
         val rGame = recommendedGameRepository.findById(id).orElseThrow()
+        if(rGame.config.isEmpty()) throw NoSuchElementException("No config found for recommendation.")
         return rGame.config
     }
 
