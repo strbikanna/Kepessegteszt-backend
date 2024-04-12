@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  */
 data class GameplayResultDto(
 
-    val result: Map<String, Any?>,
+    val result: Map<String, Any>,
 
     /**
      * The id of the recommended game that was played.
