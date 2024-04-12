@@ -12,11 +12,14 @@ class RecommendedGameService(
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
     @Autowired private var userRepository: UserRepository
 ) {
+    /**
+     * Get all recommendations to user which are not yet completed.
+     */
     @Transactional
     fun getAllRecommendedToUser(username: String, pageIndex: Int = 0, pageSize: Int = 10): List<RecommendedGameDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
         return recommendedGameRepository
-            .findAllPagedByRecommendedTo(user, PageRequest.of(pageIndex, pageSize))
+            .findAllPagedByRecommendedToAndCompleted(user, false, PageRequest.of(pageIndex, pageSize))
             .map { convertToDto(it) }
     }
 
