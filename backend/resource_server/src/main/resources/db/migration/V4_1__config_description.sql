@@ -1,6 +1,6 @@
 -- config description item used for automating configuration of gameplays based on difficulty level
 create table config_description_item (
-    id long primary key auto_increment,
+    id bigint primary key auto_increment,
     param_name varchar(100) not null,
     easiest_value int not null,
     hardest_value int not null,
@@ -8,7 +8,7 @@ create table config_description_item (
     increment int not null,
     description varchar(255) not null,
     game_id int,
-    foreign key fk_config_item_game(game_id) references game(id)
+    constraint fk_config_item_game foreign key (game_id) references game (id)
 );
 
 -- delete config_description json from game later
