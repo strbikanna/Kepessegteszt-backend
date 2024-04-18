@@ -2,9 +2,10 @@ package hu.bme.aut.resource_server.game
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import hu.bme.aut.resource_server.ability.AbilityEntity
+import hu.bme.aut.resource_server.game.game_config.ConfigItem
+import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.*
 import org.hibernate.annotations.Type
-import io.hypersistence.utils.hibernate.type.json.JsonType
 
 /**
  * Entity class that represents games.
@@ -32,14 +33,19 @@ data class GameEntity(
 
     val url: String?,
 
+    //TODO remove when normalization is refactored
     @Type(JsonType::class)
     val configDescription: MutableMap<String, Any>,
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "GAME_ABILITIES",
-        joinColumns = arrayOf(JoinColumn(name = "game_id")),
-        inverseJoinColumns = arrayOf(JoinColumn(name = "ability_code"))
+        joinColumns = [JoinColumn(name = "game_id")],
+        inverseJoinColumns = [JoinColumn(name = "ability_code")]
     )
-    val affectedAbilities: MutableSet<AbilityEntity>
+    val affectedAbilities: MutableSet<AbilityEntity>,
+
+    @OneToMany
+    @JoinColumn(name = "game_id")
+    val configItems: MutableSet<ConfigItem> = mutableSetOf()
 )
