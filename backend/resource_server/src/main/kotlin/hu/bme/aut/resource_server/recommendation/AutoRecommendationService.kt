@@ -13,6 +13,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import kotlin.random.Random
 
 /**
  * This service is responsible for generating recommendations for users.
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Service
 class AutoRecommendationService(
     @Autowired private var dataService: ResultForCalculationDataService,
     @Autowired private var calculatorService: AbilityRateCalculatorService,
-    @Autowired private var modelManager: ModelManager
+    @Autowired private var modelManager: ModelManager,
 ) {
     val motivationRate = 0.7
 
@@ -40,7 +41,18 @@ class AutoRecommendationService(
                 calculatorService.getAbilityValuesAndValuesFromResultsStructured(normalizedResults, abilities.toList())
             }
         modelManager.createNewModel(gameId, modelInput.first, modelInput.second)
-        log.trace("Recommendation model created for game with id: $gameId")
+        log.info("Recommendation model created for game with id: $gameId")
+    }
+
+    suspend fun createNextRecommendationBasedOnResult(prevConfig: Map<String, Any>, result: Map<String, Any>, username: String): Map<String, Any> = withContext(Dispatchers.Default){
+        log.trace("Creating next recommendation based on result for user: $username")
+        val recommendation = mutableMapOf<String, Any>()
+        prevConfig.forEach { (key, value) ->
+                if (value is Int) {recommendation[key] = value + Random.nextInt(0, 2)}
+                else recommendation[key] = value
+        }
+        log.info("Next recommendation created based on result for user: $username")
+        return@withContext recommendation
     }
 
     /**
@@ -51,8 +63,9 @@ class AutoRecommendationService(
      * 2. best normalized result of the user
      * 3. latest result of the user
      */
+    //TODO make this suspend but take care of lazy loading and transactional issues
     fun generateRecommendationForUser(user: UserEntity, game: GameEntity): RecommendedGameEntity {
-        log.trace("Generating recommendation for user ${user.username} for game ${game.name}")
+        log.info("Generating recommendation for user ${user.username} for game ${game.name}")
         val expectedResult: Double?
         if (!modelManager.existsModel(game.id!!)) {
             log.trace("No model found for game ${game.name}.")

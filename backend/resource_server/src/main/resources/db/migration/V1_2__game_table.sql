@@ -1,4 +1,4 @@
-CREATE TABLE GAME
+CREATE TABLE game
 (
     id                 int              PRIMARY KEY AUTO_INCREMENT,
     version            int              NOT NULL DEFAULT 1,
@@ -10,7 +10,7 @@ CREATE TABLE GAME
     config_description json             NOT NULL
 );
 
-CREATE TABLE GAME_ABILITIES
+CREATE TABLE game_abilities
 (
     game_id         int         NOT NULL,
     ability_code    varchar(5)  NOT NULL,

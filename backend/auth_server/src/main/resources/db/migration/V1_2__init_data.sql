@@ -12,56 +12,56 @@ values ('eeaw-56h89-o45jk-24c01', 'postman-client-007', '$2a$10$/MfkXXcAQtLaYkOS
     
 
 -- users
-INSERT INTO USERS(id, username, email, password, first_name, last_name) -- password is strongHashed11
+INSERT INTO users(id, username, email, password, first_name, last_name) -- password is strongHashed11
 VALUES (1, 'student_user', 'imaStudent@gmail.com', '$2a$10$9M/SoUsEs7Uw//XhT95yl.vuTPUpnkbyFr7FqHpjZUqmmtFqtmrmS', 'Student', 'Simon');
 
-INSERT INTO USERS(id, username, email, password, first_name, last_name) -- őassword is hashedValue##
+INSERT INTO users(id, username, email, password, first_name, last_name) -- őassword is hashedValue##
 VALUES (2, 'smart_student', 'smarty11@gmail.com', '$2a$10$gSEsFgTQ0LjwriT9chQdIOt/vFzMyrOTicHx/zHOg9L57nPNpcLLm', 'Smart', 'Martha');
 
-INSERT INTO USERS(id, username, email, password, first_name, last_name) -- password is easyPie
+INSERT INTO users(id, username, email, password, first_name, last_name) -- password is easyPie
 VALUES (3, 'teacher_user', 'imaTeacher@education.hu', '$2a$10$HriyN0j9B1iS0eJ40uqV2.a/dFNMlkZ26.NLbCeRBCecgRAjhp0Ru', 'Teacher', 'Teresa');
 
-INSERT INTO USERS(id, username, email, password, first_name, last_name) -- password is topSecret
+INSERT INTO users(id, username, email, password, first_name, last_name) -- password is topSecret
 VALUES (4, 'admin_man', 'immaadmin@vip.hu', '$2a$10$FQw1GzjQwJc0IDU1ZA92yOjagIngXHVXzdk6l/nFvU7syKpJyafqG', 'Admin', 'Arnold');
 
 -- roles
-INSERT INTO ROLES
+INSERT INTO roles
 VALUES ('TEACHER');
 
-INSERT INTO ROLES
+INSERT INTO roles
 VALUES ('SCIENTIST');
 
-INSERT INTO ROLES
+INSERT INTO roles
 VALUES ('STUDENT');
 
-INSERT INTO ROLES
+INSERT INTO roles
 VALUES ( 'ADMIN');
 
-INSERT INTO ROLES
+INSERT INTO roles
 VALUES ( 'PARENT');
 
-INSERT INTO ROLES
+INSERT INTO roles
 VALUES ('PARENT_REQUEST');
 
-INSERT INTO ROLES
+INSERT INTO roles
 VALUES ('TEACHER_REQUEST');
 
-INSERT INTO ROLES
+INSERT INTO roles
 VALUES ('SCIENTIST_REQUEST');
 
 -- user roles
-INSERT INTO USER_ROLES(user_id, role_id)
+INSERT INTO user_roles(user_id, role_id)
 VALUES (1, 'STUDENT');
 
-INSERT INTO USER_ROLES(user_id, role_id)
+INSERT INTO user_roles(user_id, role_id)
 VALUES (2, 'STUDENT');
 
-INSERT INTO USER_ROLES(user_id, role_id)
+INSERT INTO user_roles(user_id, role_id)
 VALUES (3, 'TEACHER');
 
-INSERT INTO USER_ROLES(user_id, role_id)
+INSERT INTO user_roles(user_id, role_id)
 VALUES (4, 'ADMIN');
 
 -- contacts
-INSERT INTO CONTACTS(user_id, contact_id)
+INSERT INTO contacts(user_id, contact_id)
 VALUES (1,3);
