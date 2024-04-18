@@ -28,7 +28,7 @@ data class RecommendedGameEntity(
         val timestamp: LocalDateTime? = null,
 
         @Type(JsonType::class)
-        val config: Map<String, Any>,
+        var config: Map<String, Any>,
 
         var completed: Boolean = false,
 

@@ -39,6 +39,7 @@ class GameplayResultControllerTest(
     @BeforeEach
     fun init(){
         testService.emptyRepositories()
+        testService.fillAbilityRepository()
         requestSpec = RequestSpecBuilder()
             .setBaseUri("http://localhost")
             .setPort(port!!)
@@ -52,9 +53,9 @@ class GameplayResultControllerTest(
     fun shouldReturnForbiddenWithoutCorrectAuthentication(){
         val authUser = testService.saveAuthUserWithRights(RoleName.STUDENT)
         val game = testService.createAndSaveRecommendedGame(authUser)
-        val gameplayData = GameplayResultDto(gameResult= mapOf(), username = testService.authUsername, gameplayId = game.id!!, config = game.config )
+        val gameplayData = GameplayResultDto(result= mapOf(), gameplayId = game.id!! )
         given(requestSpec)
-            .header(testService.authHeaderName, testService.authUsername)
+            .header(testService.authHeaderName, "random user")
             .body(gameplayData)
             .post(gameplayEndpoint)
             .then().statusCode(HttpStatus.FORBIDDEN.value())
@@ -66,7 +67,7 @@ class GameplayResultControllerTest(
         val game = testService.saveAuthGame()
         val recommendedGame = createAndSaveRecommendedGameForAuth(user, game)
         val result = mapOf(Pair("success", true))
-        val gameplayData = GameplayResultDto(gameResult= result, username = testService.authUsername, gameplayId = recommendedGame.id!!, config = mapOf() )
+        val gameplayData = GameplayResultDto(result= result,  gameplayId = recommendedGame.id!! )
         given(requestSpec)
             .header(testService.authHeaderName, testService.authUsername)
             .header(testService.gameAuthHeaderName, testService.authGameId)

@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.gameplayresult
 
+import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,14 +19,20 @@ class GameplayResultService(
         val recommendedGame = recommendedGameRepository.findById(data.gameplayId).orElseThrow()
         recommendedGame.completed = true
         recommendedGameRepository.save(recommendedGame)
-        val user = userRepository.findByUsername(data.username).orElseThrow()
+        val user = recommendedGame.recommendedTo
         val gameplay = GameplayResultEntity(
-            result = data.gameResult,
-            config = data.config.toMutableMap(),
+            result = data.result,
+            config = recommendedGame.config.toMutableMap(),
             user = user,
             recommendedGame = recommendedGame
         )
         return gameplayResultRepository.save(gameplay)
+    }
+
+    @Transactional
+    fun getGameOfResult(resultId: Long): GameEntity {
+        val result = gameplayResultRepository.findById(resultId).orElseThrow()
+        return result.recommendedGame.game
     }
 
     fun getAllByUser(username: String): List<GameplayResultEntity> {

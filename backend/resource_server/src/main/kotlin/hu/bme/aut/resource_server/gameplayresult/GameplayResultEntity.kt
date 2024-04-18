@@ -1,7 +1,6 @@
 package hu.bme.aut.resource_server.gameplayresult
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.user.UserEntity
 import io.hypersistence.utils.hibernate.type.json.JsonType
@@ -25,7 +24,7 @@ data class GameplayResultEntity(
     val timestamp: LocalDateTime? = null,
 
     @Type(JsonType::class)
-    val result: Map<String, Any?>,
+    val result: Map<String, Any>,
 
     @JsonIgnore
     @ManyToOne(fetch= FetchType.LAZY)

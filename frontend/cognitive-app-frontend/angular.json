@@ -49,6 +49,7 @@
                   "maximumError": "8kb"
                 }
               ],
+              "baseHref": "/cogniapp/",
               "outputHashing": "all"
             },
             "development": {

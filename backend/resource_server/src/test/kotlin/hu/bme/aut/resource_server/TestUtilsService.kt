@@ -162,7 +162,7 @@ class TestUtilsService(
     }
 
     fun createGamePlayResult(): GameplayResultEntity {
-        val json = mutableMapOf<String, Any?>()
+        val json = mutableMapOf<String, Any>()
         json["time"] = 100
         json["correct"] = 10
         json["all"] = 10
