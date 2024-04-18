@@ -21,7 +21,7 @@ class Organization(
         val address: Address,
 
         @OneToMany(mappedBy = "organization")
-        val groups: MutableList<Group> = mutableListOf()
+        val groups: MutableList<Group> = mutableListOf(),
 
 ) : UserGroup(name = name) {
     override fun getAllGroups(): List<Group> {

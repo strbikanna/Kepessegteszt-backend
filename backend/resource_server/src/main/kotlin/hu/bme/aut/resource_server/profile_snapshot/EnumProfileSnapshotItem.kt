@@ -2,6 +2,7 @@ package hu.bme.aut.resource_server.profile_snapshot
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.profile.EnumProfileItem
 import hu.bme.aut.resource_server.user.UserEntity
@@ -36,6 +37,7 @@ class EnumProfileSnapshotItem  (
 
     @Column
     @Enumerated(EnumType.STRING)
+    @JsonProperty("value")
     override val abilityValue: EnumAbilityValue,
 
     ) : ProfileSnapshotItem() {

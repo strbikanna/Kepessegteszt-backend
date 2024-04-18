@@ -1,8 +1,11 @@
 package hu.bme.aut.resource_server.user
 
+import hu.bme.aut.resource_server.ability.AbilityEntity
+import hu.bme.aut.resource_server.profile.ProfileItem
 import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
 import hu.bme.aut.resource_server.user_group.UserGroupDto
+import hu.bme.aut.resource_server.user_group.UserGroupRepository
 import hu.bme.aut.resource_server.user_group.group.GroupRepository
 import hu.bme.aut.resource_server.user_group.organization.OrganizationRepository
 import jakarta.transaction.Transactional
@@ -13,7 +16,8 @@ import org.springframework.stereotype.Service
 class UserService(
         @Autowired private var userRepository: UserRepository,
         @Autowired private var groupRepository: GroupRepository,
-        @Autowired private var orgRepository: OrganizationRepository
+        @Autowired private var orgRepository: OrganizationRepository,
+        @Autowired private var uGroupRepository: UserGroupRepository,
 ){
     fun getAllUsers(): List<PlainUserDto>{
         return userRepository.findAll().map { PlainUserDto(it) }
@@ -45,7 +49,8 @@ class UserService(
     @Transactional
     fun getGroupsOfUser(username: String): List<UserGroupDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
-        return user.groups.map { it.toDto() }
+        val allGroups = mutableListOf(user.groups, user.organizations).flatten().map { it.toDto() }
+        return allGroups
     }
 
     @Transactional
@@ -58,10 +63,6 @@ class UserService(
             orgOfGroup.members.add(user)
             orgRepository.save(orgOfGroup)
         }
-        group.members.add(user)
-        groupRepository.save(group)
-        user.groups.add(group)
-        userRepository.save(user)
         user.groups.add(group)
         userRepository.save(user)
     }
@@ -74,6 +75,53 @@ class UserService(
         org.members.add(user)
         orgRepository.save(org)
         userRepository.save(user)
+    }
+
+    @Transactional
+    fun getAbilityValuesInUserGroupAscending(groupId: Int, abilityCode: String): List<Double> {
+        val group = uGroupRepository.findById(groupId).orElseThrow()
+        val userIds = group.getAllUserIds().toList()
+        return userRepository.getAbilityValuesInUserGroupAscending(abilityCode, userIds)
+    }
+
+    @Transactional
+    fun getAbilityToAverageValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): List<ProfileItem> {
+        return getAbilityToAggregateValuesInGroup(groupId, abilities, userRepository::getAverageOfAbilityValuesInUserGroup)
+    }
+
+    @Transactional
+    fun getAbilityToSumValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): List<ProfileItem> {
+        return getAbilityToAggregateValuesInGroup(groupId, abilities, userRepository::getSumOfAbilityValuesInUserGroup)
+    }
+
+    @Transactional
+    fun getAbilityToMaxValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): List<ProfileItem> {
+        return getAbilityToAggregateValuesInGroup(groupId, abilities, userRepository::getMaxOfAbilityValuesInUserGroup)
+    }
+
+    @Transactional
+    fun getAbilityToMinValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): List<ProfileItem> {
+        return getAbilityToAggregateValuesInGroup(groupId, abilities, userRepository::getMinOfAbilityValuesInUserGroup)
+    }
+
+    private fun getAbilityToAggregateValuesInGroup(groupId: Int,
+                                           abilities: Set<AbilityEntity>,
+                                           aggregationSupplier: (abilityCode: String, userIds: List<Int>) -> Double?
+    ): List<ProfileItem> {
+        val group = uGroupRepository.findById(groupId).orElseThrow()
+        val userIds = group.getAllUserIds().toList()
+        val abilityToAggregate = mutableMapOf<AbilityEntity, Double>()
+        abilities.forEach {
+            val aggregateValue = aggregationSupplier(it.code, userIds)
+            if(aggregateValue != null){
+                abilityToAggregate[it] = aggregateValue
+            }
+        }
+        return abilityToAggregate.map { convertToProfileItem(it.key, it.value)}
+    }
+
+    private fun convertToProfileItem(ability: AbilityEntity, value: Double): ProfileItem {
+        return ProfileItem( ability, value)
     }
 
 }

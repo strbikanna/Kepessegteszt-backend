@@ -51,6 +51,9 @@ import { CalculationDialogComponent } from './game-management/calculation-dialog
 import { RecommendationComponent } from './recommendation/recommendation.component';
 import {MatDividerModule} from "@angular/material/divider";
 import {environment} from "../environments/environment";
+import { ProfileDataComparisonComponent } from './profile-data-comparison/profile-data-comparison.component';
+import { ProfileRadarChartComponent } from './profile-data-comparison/profile-radar-chart/profile-radar-chart.component';
+import {MatRadioModule} from "@angular/material/radio";
 
 
 @NgModule({
@@ -74,6 +77,8 @@ import {environment} from "../environments/environment";
     GameCardComponent,
     CalculationDialogComponent,
     RecommendationComponent,
+    ProfileDataComparisonComponent,
+    ProfileRadarChartComponent,
   ],
     imports: [
         BrowserModule,
@@ -114,7 +119,7 @@ import {environment} from "../environments/environment";
         NgxEchartsModule.forRoot({
             echarts
         }),
-        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule
+        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule
     ],
   providers: [
       {

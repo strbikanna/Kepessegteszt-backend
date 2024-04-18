@@ -11,6 +11,7 @@ import {GameManagementComponent} from "../game-management/game-management.compon
 import {EditGameFormComponent} from "../game-management/edit-game-form/edit-game-form.component";
 import {editorGuard} from "../auth/editor.guard";
 import {RecommendationComponent} from "../recommendation/recommendation.component";
+import {ProfileDataComparisonComponent} from "../profile-data-comparison/profile-data-comparison.component";
 
 
 export const appRoutes: Routes = [
@@ -18,6 +19,7 @@ export const appRoutes: Routes = [
     {path: 'edit-game/:id', component: EditGameFormComponent, canActivate: [editorGuard], title: 'Játék szerkesztése'},
     {path: '', component: HomeComponent, title: 'Cognitive App'},
     {path: 'profile', component: ProfileComponent, canActivate: [loggedInGuard], title: 'Profil'},
+    {path: 'profile-compare', component: ProfileDataComparisonComponent, /*canActivate: [loggedInGuard],*/ title: 'Profil összehasonlítás'},
     {path: 'games', component: RecommendedGamesComponent, canActivate: [loggedInGuard], title: 'Játékok'},
     {path: 'cognitive-profile', component: CognitiveProfileComponent, canActivate: [loggedInGuard], title: 'Kognitív profil'},
     {path: 'playground', component: PlaygroundComponent, canActivate: [gameGuard], title: 'Játékterület'},

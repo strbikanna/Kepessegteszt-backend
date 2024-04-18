@@ -57,26 +57,25 @@ data class UserEntity(
 
         @ManyToMany
         @JoinTable(
-                name = "group_admin",
-                joinColumns = [JoinColumn(name = "user_id")],
-                inverseJoinColumns = [JoinColumn(name = "group_id")]
+                name = "org_member",
+                joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
+                inverseJoinColumns = [JoinColumn(name = "org_id", referencedColumnName = "id")],
         )
         var organizations: MutableList<Organization> = mutableListOf(),
 
         @ManyToMany
         @JoinTable(
                 name = "group_member",
-                joinColumns = [JoinColumn(name = "user_id")],
-                inverseJoinColumns = [JoinColumn(name = "group_id")]
+                joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
+                inverseJoinColumns = [JoinColumn(name = "group_id", referencedColumnName = "id")],
         )
         val groups: MutableList<Group> = mutableListOf(),
-
 
         ) {
     fun getProfile(): MutableSet<ProfileItem> {
         val profile = mutableSetOf<ProfileItem>()
-        profile.addAll(profileFloat)
-        profile.addAll(profileEnum)
+        profile.addAll(profileFloat.map { it.toProfileItem() })
+        profile.addAll(profileEnum.map { it.toProfileItem() })
         return profile
     }
 

@@ -21,6 +21,15 @@ CREATE TABLE group_member
     constraint fk_group_member_group foreign key (group_id) references user_group (id)
 );
 
+CREATE TABLE org_member
+(
+    user_id  int NOT NULL,
+    org_id int NOT NULL,
+    constraint pk_user_org primary key (user_id, org_id),
+    constraint fk_org_member_user foreign key (user_id) references user (id),
+    constraint fk_org_member_org foreign key (org_id) references user_group (id)
+);
+
 CREATE TABLE group_admin
 (
     user_id  int NOT NULL,
