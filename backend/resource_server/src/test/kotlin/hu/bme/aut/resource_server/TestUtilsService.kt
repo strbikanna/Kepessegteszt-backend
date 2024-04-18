@@ -60,7 +60,7 @@ class TestUtilsService(
     }
 
     fun fillAbilityRepository() {
-        //abilityRepository.deleteAll()
+        abilityRepository.deleteAll()
         abilityRepository.saveAll(listOf(abilityGf, abilityGq, abilityGsm, abilityGv, abilityColorsense))
     }
 
@@ -116,7 +116,6 @@ class TestUtilsService(
     }
 
     fun fillUserRepository() {
-        userRepository.deleteAll()
         fillAbilityRepository()
         val user1 = createUnsavedTestUser().copy(username = "test_user1")
         userRepository.save(user1)
@@ -186,10 +185,10 @@ class TestUtilsService(
     }
 
     fun saveUser(user: UserEntity): UserEntity {
-        if(userRepository.existsByUsername(user.username) && user.id == null){
-            val conflictingUser = userRepository.findByUsername(user.username).orElseThrow()
-            userRepository.delete(conflictingUser)
-        }
+//        if(userRepository.existsByUsername(user.username) && user.id == null){
+//            val conflictingUser = userRepository.findByUsername(user.username).orElseThrow()
+//            userRepository.delete(conflictingUser)
+//        }
         return userRepository.save(user)
     }
 
