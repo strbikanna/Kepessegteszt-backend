@@ -164,14 +164,12 @@ class TestUtilsService(
         return recommendedGameRepository.save(recommendedGameEntity)
     }
 
-    fun createGamePlayResult(): GameplayResultEntity {
+    fun createGamePlayResult(user: UserEntity): GameplayResultEntity {
         val json = mutableMapOf<String, Any>()
         json["time"] = 100
         json["correct"] = 10
         json["all"] = 10
         json["level"] = 2
-        val user = createUnsavedTestUser()
-        saveUser(user)
         return GameplayResultEntity(
                 result = json.toMap(),
                 config = mutableMapOf(),

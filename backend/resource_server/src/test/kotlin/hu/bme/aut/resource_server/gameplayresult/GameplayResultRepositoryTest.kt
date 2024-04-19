@@ -28,7 +28,9 @@ class GameplayResultRepositoryTest(
     @Transactional
     @Test
     fun shouldSaveGameplay(){
-        val gameplay = testService.createGamePlayResult()
+        val user = testService.createUnsavedTestUser()
+        testService.saveUser(user)
+        val gameplay = testService.createGamePlayResult(user)
         var saved = gameplayResultRepository.save(gameplay)
         saved = gameplayResultRepository.findById(saved.id!!).get()
         assertEquals(saved.result, gameplay.result)

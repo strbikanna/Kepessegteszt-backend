@@ -8,17 +8,15 @@ import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationD
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
 import hu.bme.aut.resource_server.user.UserEntity
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-class AutoRecommendationServiceTest {
+class AutoRecommendationServiceUnitTest {
 @Mock
 private lateinit var mockDataService: ResultForCalculationDataService
 
