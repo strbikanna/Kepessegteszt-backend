@@ -1,4 +1,4 @@
-create table config_item
+create table config_description_item
 (
     id            bigint primary key auto_increment,
     param_name    varchar(100) not null,
