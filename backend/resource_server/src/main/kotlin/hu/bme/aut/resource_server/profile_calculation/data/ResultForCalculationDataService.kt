@@ -2,6 +2,9 @@ package hu.bme.aut.resource_server.profile_calculation.data
 
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.GameRepository
+import hu.bme.aut.resource_server.gameplayresult.GameplayResultRepository
+import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
+import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.user.UserEntity
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class ResultForCalculationDataService(
     @Autowired private var resultForCalculationRepository: ResultForCalculationRepository,
-    @Autowired private var gameRepository: GameRepository
+    @Autowired private var gameRepository: GameRepository,
+    @Autowired private var gameplayResultRepository: GameplayResultRepository,
+    @Autowired private var recommendedGameRepository: RecommendedGameRepository
 ) {
     private val log = LoggerFactory.getLogger(ResultForCalculationDataService::class.java)
     fun getCountForNewCalculation(gameId: Int): Long {
@@ -37,6 +42,7 @@ class ResultForCalculationDataService(
     }
     fun getGame(gameId: Int): GameEntity  = gameRepository.findById(gameId).orElseThrow()
     fun getGameWithAbilities(gameId: Int): GameEntity  = gameRepository.findByIdWithAbilities(gameId).orElseThrow()
+    fun getGameWithConfigItems(gameId: Int): GameEntity = gameRepository.findByIdWithConfigItems(gameId).orElseThrow()
 
     fun getAllNormalizedResultsOfGame(game: GameEntity) = resultForCalculationRepository.findAllByGameAndNormalizedResultNotNull(game)
     fun getAllNonNormalizedResultsOfGame(game: GameEntity, page: Pageable) = resultForCalculationRepository.findAllByGameAndNormalizedResultNull(game, page)
@@ -53,6 +59,16 @@ class ResultForCalculationDataService(
      * Returns the latest normalized or non-normalized result of the given user for the given game.
      */
     fun getLatestResultOfUser(game: GameEntity, user: UserEntity) = resultForCalculationRepository.findTopByGameAndUserOrderByTimestampDesc(game, user)
+
+    fun getResultById(resultId: Long) = gameplayResultRepository.findById(resultId).orElseThrow()
+
+    fun getPreviousRecommendation(currRecommendation: RecommendedGameEntity): RecommendedGameEntity?{
+        return recommendedGameRepository.findTopByTimestampBeforeAndRecommendedToAndGameOrderByTimestamp(
+            currRecommendation.timestamp!!,
+            currRecommendation.recommendedTo,
+            currRecommendation.game
+        )
+    }
 
 
     /**

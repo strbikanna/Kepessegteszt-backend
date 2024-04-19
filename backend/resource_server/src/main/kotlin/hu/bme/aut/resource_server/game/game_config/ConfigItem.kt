@@ -13,6 +13,8 @@ data class ConfigItem(
 
     val paramName: String,
 
+    val paramOrder: Int,
+
     val easiestValue: Int,
 
     val hardestValue: Int,
