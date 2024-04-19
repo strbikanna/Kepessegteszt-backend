@@ -42,8 +42,8 @@ class RecommenderService(
         return recommendedGameRepository.save(recommendation)
     }
 
-    suspend fun createNextRecommendationByResult(gameResult: GameplayResultEntity, username: String): Map<String, Any>{
-        return autoRecommender.createNextRecommendationBasedOnResult(gameResult.config, gameResult.result, username)
+    suspend fun createNextRecommendationByResult(gameResult: GameplayResultEntity): Map<String, Any>{
+        return autoRecommender.createNextRecommendationBasedOnResult(gameResult.id!!)
     }
 
     fun createNewRecommendations(username: String): List<RecommendedGameEntity>{

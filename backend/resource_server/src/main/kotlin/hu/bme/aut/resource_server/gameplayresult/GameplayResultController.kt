@@ -43,7 +43,7 @@ class GameplayResultController(
         val nextRecommendation = recommenderService.createEmptyRecommendation(username, game.id!!)
         CoroutineScope(Dispatchers.Default).async {
             delay(5000) //TODO remove later
-            val config = recommenderService.createNextRecommendationByResult(savedResult, username)
+            val config = recommenderService.createNextRecommendationByResult(savedResult)
             nextRecommendation.config = config
             recommenderService.save(nextRecommendation)
         }
