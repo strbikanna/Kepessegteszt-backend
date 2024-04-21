@@ -2,6 +2,9 @@ package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.user.UserRepository
 import jakarta.transaction.Transactional
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -23,10 +26,16 @@ class RecommendedGameService(
             .map { convertToDto(it) }
     }
 
-    fun getRecommendedGameConfig(id: Long): Map<String, Any> {
-        val rGame = recommendedGameRepository.findById(id).orElseThrow()
-        if(rGame.config.isEmpty()) throw NoSuchElementException("No config found for recommendation.")
-        return rGame.config
+    suspend fun getRecommendedGameConfig(id: Long): Map<String, Any> = withContext(Dispatchers.IO){
+        var rGame = recommendedGameRepository.findById(id).orElseThrow()
+        repeat(10){
+            if(rGame.config.isNotEmpty()){
+                return@withContext rGame.config
+            }
+            delay(300)
+            rGame = recommendedGameRepository.findById(id).orElseThrow()
+        }
+        throw NoSuchElementException("No config found for recommendation.")
     }
 
     fun addRecommendation(recommendedGame: RecommendedGameEntity): RecommendedGameEntity {

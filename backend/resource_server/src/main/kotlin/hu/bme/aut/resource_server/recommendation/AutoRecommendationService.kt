@@ -53,8 +53,8 @@ class AutoRecommendationService(
      * After reaching max or min, the next parameter is changed and the value is set to the initial value.
      */
     @Transactional
-    suspend fun createNextRecommendationBasedOnResult(resultId: Long): Map<String, Any> {
-//        withContext(Dispatchers.Default) {
+    suspend fun createNextRecommendationBasedOnResult(resultId: Long): Map<String, Any> =
+        withContext(Dispatchers.Default) {
             val result = dataService.getResultById(resultId)
             val user = result.user
             val game = dataService.getGameWithConfigItems(result.recommendedGame.game.id!!)
@@ -81,7 +81,7 @@ class AutoRecommendationService(
                 nextRecommendation[easierRecommendationParam.first] = easierRecommendationParam.second
             }
             log.info("Next recommendation created based on result for user: ${user.username}")
-            return nextRecommendation
+            return@withContext nextRecommendation
         }
 
     fun findNextParamToChange(configItems: Set<ConfigItem>, currConfig: Map<String, Any>, lastChangedParam: ConfigItem): ConfigItem {
@@ -104,7 +104,7 @@ class AutoRecommendationService(
      * Returns the last changed config parameter of the recommendation or the first one if no change happened.
      */
     @Transactional
-    fun getLastChangedParam(
+    suspend fun getLastChangedParam(
         recommendation: RecommendedGameEntity,
         previousRecommendation: RecommendedGameEntity
     ): ConfigItem {

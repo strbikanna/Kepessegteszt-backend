@@ -1,6 +1,10 @@
 package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.authentication.AuthService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
@@ -31,9 +35,9 @@ class RecommendedGameController(
 
     @GetMapping("/config/{id}")
     @ResponseStatus(HttpStatus.OK)
-    fun getRecommendedGameParams(@PathVariable id: Long, authentication: Authentication): Map<String, Any>{
+    fun getRecommendedGameParams(@PathVariable id: Long, authentication: Authentication): Deferred<Map<String, Any>> = CoroutineScope(Dispatchers.Default).async{
         authService.checkGameConfigAccessAnThrow(id, authentication)
-        return recommendedGameService.getRecommendedGameConfig(id)
+         return@async recommendedGameService.getRecommendedGameConfig(id)
     }
 
     @PostMapping("/recommend")
