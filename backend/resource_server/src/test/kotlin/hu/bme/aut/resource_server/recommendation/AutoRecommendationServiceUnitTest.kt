@@ -7,13 +7,16 @@ import hu.bme.aut.resource_server.profile_calculation.calculator.AbilityRateCalc
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
 import hu.bme.aut.resource_server.user.UserEntity
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
+import java.time.LocalDateTime
 
 @ExtendWith(MockitoExtension::class)
 class AutoRecommendationServiceUnitTest {
@@ -106,6 +109,23 @@ private lateinit var autoRecommendationService : AutoRecommendationService
         assertEquals(1, recommendation.config["level"])
         assertEquals(game, recommendation.game)
         assertEquals(user, recommendation.recommendedTo)
+    }
+
+    @Test
+    fun `Should Recommend Harder When Result Is Success`(){
+        val latestRecommendation = TestDataSource.createRecommendationForUser(user, game).copy(timestamp = LocalDateTime.now())
+        val modifiedConfig = latestRecommendation.config.toMutableMap()
+        modifiedConfig["speed"] = 9
+        val previousRecommendation = TestDataSource.createRecommendationForUser(user, game)
+            .copy(timestamp = LocalDateTime.now().minusDays(1), config = modifiedConfig)
+        val result = TestDataSource.createGameplayResultForUser(user, latestRecommendation).copy(result = mapOf("success" to true))
+        `when`(mockDataService.getResultById(1)).thenReturn(result)
+        `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
+        `when`(mockDataService.getPreviousRecommendation(latestRecommendation)).thenReturn(previousRecommendation)
+        runBlocking {
+            val nextRecommendation =  autoRecommendationService.createNextRecommendationBasedOnResult(1)
+            assertEquals(11, nextRecommendation["speed"])
+        }
     }
 
 
