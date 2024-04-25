@@ -59,6 +59,10 @@ class AutoRecommendationService(
             val user = result.user
             val game = dataService.getGameWithConfigItems(result.recommendedGame.game.id!!)
             log.trace("Creating next recommendation based on result for user: ${user.username}")
+            if(game.configItems.isEmpty()){
+                log.warn("No config items found for game ${game.name}")
+                return@withContext emptyMap()
+            }
             val nextRecommendation = result.recommendedGame.config.toMutableMap()
             val previousRecommendation = dataService.getPreviousRecommendation(result.recommendedGame)  ?: result.recommendedGame
             val lastChangedParam = getLastChangedParam(result.recommendedGame, previousRecommendation)
@@ -120,7 +124,7 @@ class AutoRecommendationService(
 
     fun isResultSuccess(result: GameplayResultEntity): Boolean{
         //TODO implement better solution
-        return result.result["success"] as Boolean
+        return result.result["passed"] as Boolean
     }
 
     fun recommendEasier(configDescription: ConfigItem, currentValue: Int): Pair<String, Int> {

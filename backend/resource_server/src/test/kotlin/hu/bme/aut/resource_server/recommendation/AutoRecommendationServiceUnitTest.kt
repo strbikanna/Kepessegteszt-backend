@@ -118,7 +118,7 @@ private lateinit var autoRecommendationService : AutoRecommendationService
         modifiedConfig["speed"] = 9
         val previousRecommendation = TestDataSource.createRecommendationForUser(user, game)
             .copy(timestamp = LocalDateTime.now().minusDays(1), config = modifiedConfig)
-        val result = TestDataSource.createGameplayResultForUser(user, latestRecommendation).copy(result = mapOf("success" to true))
+        val result = TestDataSource.createGameplayResultForUser(user, latestRecommendation).copy(result = mapOf("passed" to true))
         `when`(mockDataService.getResultById(1)).thenReturn(result)
         `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
         `when`(mockDataService.getPreviousRecommendation(latestRecommendation)).thenReturn(previousRecommendation)

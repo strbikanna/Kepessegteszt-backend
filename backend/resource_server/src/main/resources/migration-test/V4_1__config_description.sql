@@ -2,6 +2,7 @@ create table config_description_item
 (
     id            bigint primary key auto_increment,
     param_name    varchar(100) not null,
+    param_order   int          not null,
     easiest_value int          not null,
     hardest_value int          not null,
     initial_value int          not null,

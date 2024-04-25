@@ -149,7 +149,7 @@ class TestUtilsService(
                 active = true,
                 url = "testUrl",
                 configDescription = mutableMapOf("Level" to 0),
-                affectedAbilities = mutableSetOf(abilityGf)
+                 affectedAbilities = mutableSetOf(abilityGf)
         )
         return gameRepository.save(game)
     }

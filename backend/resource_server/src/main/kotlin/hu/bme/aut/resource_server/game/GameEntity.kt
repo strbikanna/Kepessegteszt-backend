@@ -5,6 +5,8 @@ import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
 import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.*
+import org.hibernate.annotations.Cascade
+import org.hibernate.annotations.CascadeType
 import org.hibernate.annotations.Type
 
 /**
@@ -47,5 +49,6 @@ data class GameEntity(
 
     @OneToMany
     @JoinColumn(name = "game_id")
+    @Cascade(CascadeType.ALL)
     val configItems: MutableSet<ConfigItem> = mutableSetOf()
 )

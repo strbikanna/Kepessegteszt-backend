@@ -38,6 +38,7 @@ class GameplayResultController(
         if(!profileSnapshotService.existsSnapshotToday(username)){
             profileSnapshotService.saveSnapshotOfUser(username)
         }
+        //TODO check if result is already existing for this recommendation
         val savedResult = gameplayResultService.save(gameplayData)
         val game = gameplayResultService.getGameOfResult(savedResult.id!!)
         val nextRecommendation = recommenderService.createEmptyRecommendation(username, game.id!!)
