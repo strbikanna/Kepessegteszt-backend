@@ -6,7 +6,6 @@ import hu.bme.aut.resource_server.recommended_game.RecommenderService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
@@ -38,12 +37,14 @@ class GameplayResultController(
         if(!profileSnapshotService.existsSnapshotToday(username)){
             profileSnapshotService.saveSnapshotOfUser(username)
         }
-        //TODO check if result is already existing for this recommendation
         val savedResult = gameplayResultService.save(gameplayData)
+        val existingNextRecommendation = gameplayResultService.getNextRecommendationForGameIfExists(savedResult.recommendedGame.id!!, username)
+        if(existingNextRecommendation != null){
+            return existingNextRecommendation.id!!
+        }
         val game = gameplayResultService.getGameOfResult(savedResult.id!!)
         val nextRecommendation = recommenderService.createEmptyRecommendation(username, game.id!!)
         CoroutineScope(Dispatchers.Default).async {
-            delay(5000) //TODO remove later
             val config = recommenderService.createNextRecommendationByResult(savedResult)
             nextRecommendation.config = config
             recommenderService.save(nextRecommendation)
