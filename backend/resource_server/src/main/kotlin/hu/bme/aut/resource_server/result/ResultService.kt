@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.gameplayresult
+package hu.bme.aut.resource_server.result
 
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
@@ -9,36 +9,36 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class GameplayResultService(
-    @Autowired private var gameplayResultRepository: GameplayResultRepository,
+class ResultService(
+    @Autowired private var resultRepository: ResultRepository,
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
     @Autowired private var userRepository: UserRepository
 
 ) {
     @Transactional
-    fun save(data: GameplayResultDto): GameplayResultEntity {
+    fun save(data: ResultDto): ResultEntity {
         val recommendedGame = recommendedGameRepository.findById(data.gameplayId).orElseThrow()
         recommendedGame.completed = true
         recommendedGameRepository.save(recommendedGame)
         val user = recommendedGame.recommendedTo
-        val gameplay = GameplayResultEntity(
+        val gameplay = ResultEntity(
             result = data.result,
             config = recommendedGame.config.toMutableMap(),
             user = user,
             recommendedGame = recommendedGame
         )
-        return gameplayResultRepository.save(gameplay)
+        return resultRepository.save(gameplay)
     }
 
     @Transactional
     fun getGameOfResult(resultId: Long): GameEntity {
-        val result = gameplayResultRepository.findById(resultId).orElseThrow()
+        val result = resultRepository.findById(resultId).orElseThrow()
         return result.recommendedGame.game
     }
 
-    fun getAllByUser(username: String): List<GameplayResultEntity> {
+    fun getAllByUser(username: String): List<ResultEntity> {
         val user = userRepository.findByUsername(username).orElseThrow()
-        return gameplayResultRepository.findAllByUser(user)
+        return resultRepository.findAllByUser(user)
     }
 
     @Transactional

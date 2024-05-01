@@ -2,12 +2,12 @@ package hu.bme.aut.resource_server.recommendation
 
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
-import hu.bme.aut.resource_server.gameplayresult.GameplayResultEntity
 import hu.bme.aut.resource_server.profile_calculation.calculator.AbilityRateCalculatorService
 import hu.bme.aut.resource_server.profile_calculation.calculator.ScoreCalculator
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
 import hu.bme.aut.resource_server.profile_calculation.error.CalculationException
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
+import hu.bme.aut.resource_server.result.ResultEntity
 import hu.bme.aut.resource_server.user.UserEntity
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
@@ -122,8 +122,7 @@ class AutoRecommendationService(
             ?: firstOrderConfigItem
     }
 
-    fun isResultSuccess(result: GameplayResultEntity): Boolean{
-        //TODO implement better solution
+    fun isResultSuccess(result: ResultEntity): Boolean{
         return result.result["passed"] as Boolean
     }
 

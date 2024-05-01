@@ -4,8 +4,6 @@ import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.ability.AbilityRepository
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.GameRepository
-import hu.bme.aut.resource_server.gameplayresult.GameplayResultEntity
-import hu.bme.aut.resource_server.gameplayresult.GameplayResultRepository
 import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationRepository
@@ -13,6 +11,8 @@ import hu.bme.aut.resource_server.profile_snapshot.EnumProfileSnapshotRepository
 import hu.bme.aut.resource_server.profile_snapshot.FloatProfileSnapshotRepository
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
+import hu.bme.aut.resource_server.result.ResultEntity
+import hu.bme.aut.resource_server.result.ResultRepository
 import hu.bme.aut.resource_server.role.Role
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
@@ -31,7 +31,7 @@ class TestUtilsService(
     @Autowired var floatProfileSnapshotRepository: FloatProfileSnapshotRepository,
     @Autowired var enumProfileSnapshotRepository: EnumProfileSnapshotRepository,
     @Autowired var gameRepository: GameRepository,
-    @Autowired var gameplayResultRepository: GameplayResultRepository,
+    @Autowired var resultRepository: ResultRepository,
     @Autowired var recommendedGameRepository: RecommendedGameRepository,
     @Autowired var resultForCalcRepository: ResultForCalculationRepository,
     @Autowired var userGroupRepository: UserGroupRepository,
@@ -52,7 +52,7 @@ class TestUtilsService(
         resultForCalcRepository.deleteAll()
         floatProfileSnapshotRepository.deleteAll()
         enumProfileSnapshotRepository.deleteAll()
-        gameplayResultRepository.deleteAll()
+        resultRepository.deleteAll()
         recommendedGameRepository.deleteAll()
         userGroupRepository.deleteAll()
         userRepository.deleteAll()
@@ -164,13 +164,13 @@ class TestUtilsService(
         return recommendedGameRepository.save(recommendedGameEntity)
     }
 
-    fun createGamePlayResult(user: UserEntity): GameplayResultEntity {
+    fun createGamePlayResult(user: UserEntity): ResultEntity {
         val json = mutableMapOf<String, Any>()
         json["time"] = 100
         json["correct"] = 10
         json["all"] = 10
         json["level"] = 2
-        return GameplayResultEntity(
+        return ResultEntity(
                 result = json.toMap(),
                 config = mutableMapOf(),
                 user = user,

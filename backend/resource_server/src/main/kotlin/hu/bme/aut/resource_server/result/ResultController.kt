@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.gameplayresult
+package hu.bme.aut.resource_server.result
 
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/gameplay")
-class GameplayResultController(
-    @Autowired private var gameplayResultService: GameplayResultService,
+class ResultController(
+    @Autowired private var resultService: ResultService,
     @Autowired private var profileSnapshotService: ProfileSnapshotService,
     @Autowired private var authService: AuthService,
     @Autowired private var recommenderService: RecommenderService
@@ -31,18 +31,18 @@ class GameplayResultController(
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun saveResult(@RequestBody gameplayData: GameplayResultDto, authentication: Authentication): Long {
+    fun saveResult(@RequestBody gameplayData: ResultDto, authentication: Authentication): Long {
         authService.checkGameAccessAndThrow(authentication, gameplayData)
         val username = authentication.name
         if(!profileSnapshotService.existsSnapshotToday(username)){
             profileSnapshotService.saveSnapshotOfUser(username)
         }
-        val savedResult = gameplayResultService.save(gameplayData)
-        val existingNextRecommendation = gameplayResultService.getNextRecommendationForGameIfExists(savedResult.recommendedGame.id!!, username)
+        val savedResult = resultService.save(gameplayData)
+        val existingNextRecommendation = resultService.getNextRecommendationForGameIfExists(savedResult.recommendedGame.id!!, username)
         if(existingNextRecommendation != null){
             return existingNextRecommendation.id!!
         }
-        val game = gameplayResultService.getGameOfResult(savedResult.id!!)
+        val game = resultService.getGameOfResult(savedResult.id!!)
         val nextRecommendation = recommenderService.createEmptyRecommendation(username, game.id!!)
         CoroutineScope(Dispatchers.Default).async {
             val config = recommenderService.createNextRecommendationByResult(savedResult)
@@ -55,9 +55,9 @@ class GameplayResultController(
     @Transactional
     @GetMapping("/results")
     @ResponseStatus(HttpStatus.OK)
-    fun getResultsByUser(authentication: Authentication): List<GameplayResultEntity>{
+    fun getResultsByUser(authentication: Authentication): List<ResultEntity>{
         val username = authentication.name
-        return gameplayResultService.getAllByUser(username)
+        return resultService.getAllByUser(username)
     }
 
 }

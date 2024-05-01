@@ -2,9 +2,9 @@ package hu.bme.aut.resource_server.profile_calculation.data
 
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.GameRepository
-import hu.bme.aut.resource_server.gameplayresult.GameplayResultRepository
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
+import hu.bme.aut.resource_server.result.ResultRepository
 import hu.bme.aut.resource_server.user.UserEntity
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional
 class ResultForCalculationDataService(
     @Autowired private var resultForCalculationRepository: ResultForCalculationRepository,
     @Autowired private var gameRepository: GameRepository,
-    @Autowired private var gameplayResultRepository: GameplayResultRepository,
+    @Autowired private var resultRepository: ResultRepository,
     @Autowired private var recommendedGameRepository: RecommendedGameRepository
 ) {
     private val log = LoggerFactory.getLogger(ResultForCalculationDataService::class.java)
@@ -60,7 +60,7 @@ class ResultForCalculationDataService(
      */
     fun getLatestResultOfUser(game: GameEntity, user: UserEntity) = resultForCalculationRepository.findTopByGameAndUserOrderByTimestampDesc(game, user)
 
-    fun getResultById(resultId: Long) = gameplayResultRepository.findById(resultId).orElseThrow()
+    fun getResultById(resultId: Long) = resultRepository.findById(resultId).orElseThrow()
 
     fun getPreviousRecommendation(currRecommendation: RecommendedGameEntity): RecommendedGameEntity?{
         return recommendedGameRepository.findTopByTimestampBeforeAndRecommendedToAndGameOrderByTimestamp(

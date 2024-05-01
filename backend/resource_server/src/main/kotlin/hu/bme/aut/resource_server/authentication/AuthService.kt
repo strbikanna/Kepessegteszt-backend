@@ -1,7 +1,7 @@
 package hu.bme.aut.resource_server.authentication
 
-import hu.bme.aut.resource_server.gameplayresult.GameplayResultDto
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
+import hu.bme.aut.resource_server.result.ResultDto
 import hu.bme.aut.resource_server.role.Role
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
@@ -44,7 +44,7 @@ class AuthService(
      * or not matching any game in the database.
      */
     @Transactional
-    fun checkGameAccessAndThrow(authentication: Authentication, gameplay: GameplayResultDto) {
+    fun checkGameAccessAndThrow(authentication: Authentication, gameplay: ResultDto) {
         val username = authentication.name
         val dbGamePlay = recommendedGameRepository.findById(gameplay.gameplayId).orElseThrow()
         if (username != dbGamePlay.recommendedTo.username) {

@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.gameplayresult
+package hu.bme.aut.resource_server.result
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
@@ -14,7 +14,7 @@ import java.time.LocalDateTime
  */
 @Entity
 @Table(name = "GAMEPLAY")
-data class GameplayResultEntity(
+data class ResultEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,

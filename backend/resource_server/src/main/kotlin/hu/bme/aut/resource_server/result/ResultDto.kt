@@ -1,10 +1,10 @@
-package hu.bme.aut.resource_server.gameplayresult
+package hu.bme.aut.resource_server.result
 
 /**
  * DTO for the result of a gameplay.
  * Games send their data in this format.
  */
-data class GameplayResultDto(
+data class ResultDto(
 
     val result: Map<String, Any>,
 

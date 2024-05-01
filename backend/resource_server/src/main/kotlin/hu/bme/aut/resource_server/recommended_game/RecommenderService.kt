@@ -1,8 +1,8 @@
 package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.game.GameRepository
-import hu.bme.aut.resource_server.gameplayresult.GameplayResultEntity
 import hu.bme.aut.resource_server.recommendation.AutoRecommendationService
+import hu.bme.aut.resource_server.result.ResultEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -42,7 +42,7 @@ class RecommenderService(
         return recommendedGameRepository.save(recommendation)
     }
 
-    suspend fun createNextRecommendationByResult(gameResult: GameplayResultEntity): Map<String, Any>{
+    suspend fun createNextRecommendationByResult(gameResult: ResultEntity): Map<String, Any>{
         return autoRecommender.createNextRecommendationBasedOnResult(gameResult.id!!)
     }
 

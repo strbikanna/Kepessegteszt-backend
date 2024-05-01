@@ -1,7 +1,7 @@
 package hu.bme.aut.resource_server.recommendation
 
 import hu.bme.aut.resource_server.TestUtilsService
-import hu.bme.aut.resource_server.gameplayresult.GameplayResultEntity
+import hu.bme.aut.resource_server.result.ResultEntity
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -32,11 +32,11 @@ class AutoRecommendationServiceIntTest(
 
     }
 
-    private fun createResult(): GameplayResultEntity{
+    private fun createResult(): ResultEntity{
         val user = testService.createUnsavedTestUser()
         testService.saveUser(user)
         val result = testService.createGamePlayResult(user)
-        testService.gameplayResultRepository.save(result)
+        testService.resultRepository.save(result)
         return result
     }
 

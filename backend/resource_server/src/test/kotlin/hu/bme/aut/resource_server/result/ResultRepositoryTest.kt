@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.gameplayresult
+package hu.bme.aut.resource_server.result
 
 import hu.bme.aut.resource_server.TestUtilsService
 import hu.bme.aut.resource_server.user.UserEntity
@@ -15,8 +15,8 @@ import java.time.LocalDateTime
 
 @SpringBootTest
 @ActiveProfiles("test")
-class GameplayResultRepositoryTest(
-    @Autowired private var gameplayResultRepository: GameplayResultRepository,
+class ResultRepositoryTest(
+    @Autowired private var resultRepository: ResultRepository,
     @Autowired private var testService: TestUtilsService
 
 ) {
@@ -31,8 +31,8 @@ class GameplayResultRepositoryTest(
         val user = testService.createUnsavedTestUser()
         testService.saveUser(user)
         val gameplay = testService.createGamePlayResult(user)
-        var saved = gameplayResultRepository.save(gameplay)
-        saved = gameplayResultRepository.findById(saved.id!!).get()
+        var saved = resultRepository.save(gameplay)
+        saved = resultRepository.findById(saved.id!!).get()
         assertEquals(saved.result, gameplay.result)
         assertEquals(100, saved.result["time"])
         assertEquals(10, saved.result["correct"])
@@ -44,8 +44,8 @@ class GameplayResultRepositoryTest(
     fun multipleSaveShouldNotThrow(){
         val user = testService.createUnsavedTestUser()
         testService.saveUser(user)
-        assertDoesNotThrow { gameplayResultRepository.saveAll(createGameplayResults(user))}
-        assertDoesNotThrow { gameplayResultRepository.saveAll(createGameplayResults(user))}
+        assertDoesNotThrow { resultRepository.saveAll(createGameplayResults(user))}
+        assertDoesNotThrow { resultRepository.saveAll(createGameplayResults(user))}
     }
     @Test
     fun shouldFindGameplaysOfUser(){
@@ -55,10 +55,10 @@ class GameplayResultRepositoryTest(
         testService.saveUser(user2)
         val resultList1 = createGameplayResults(user1)
         val resultList2 = createGameplayResults(user2)
-        gameplayResultRepository.saveAll(resultList1)
-        gameplayResultRepository.saveAll(resultList2)
-        val savedOfUser1 = gameplayResultRepository.findAllByUser(user1)
-        val savedOfUser2 = gameplayResultRepository.findAllByUser(user2)
+        resultRepository.saveAll(resultList1)
+        resultRepository.saveAll(resultList2)
+        val savedOfUser1 = resultRepository.findAllByUser(user1)
+        val savedOfUser2 = resultRepository.findAllByUser(user2)
         assertEquals(3, savedOfUser1.size)
         assertEquals(3, savedOfUser2.size)
         assertTrue(savedOfUser1.all { it.user.id == user1.id })
@@ -73,32 +73,32 @@ class GameplayResultRepositoryTest(
     fun shouldFindAllByUserAndTime(){
         val user = testService.createUnsavedTestUser()
         testService.saveUser(user)
-        gameplayResultRepository.saveAll(createGameplayResults(user))
+        resultRepository.saveAll(createGameplayResults(user))
         val startOfSearchTime = LocalDateTime.now().minusSeconds(1)
-        val foundList = gameplayResultRepository.findAllByUserAndTimestampBetween(user,startOfSearchTime, startOfSearchTime.plusSeconds(2))
+        val foundList = resultRepository.findAllByUserAndTimestampBetween(user,startOfSearchTime, startOfSearchTime.plusSeconds(2))
         assertEquals(3, foundList.size)
         assertTrue(foundList.all { it.user.id == user.id })
         assertTrue(foundList.all { it.timestamp?.isAfter(startOfSearchTime) ?: false })
-        val emptyResult = gameplayResultRepository.findAllByUserAndTimestampBetween(user,startOfSearchTime.minusSeconds(5), startOfSearchTime)
+        val emptyResult = resultRepository.findAllByUserAndTimestampBetween(user,startOfSearchTime.minusSeconds(5), startOfSearchTime)
         assertEquals(0, emptyResult.size)
     }
 
-    private fun createGameplayResults(user: UserEntity): List<GameplayResultEntity>{
+    private fun createGameplayResults(user: UserEntity): List<ResultEntity>{
         val game = testService.createAndSaveRecommendedGame(user)
-        val gameplayList = listOf<GameplayResultEntity>(
-            GameplayResultEntity(
+        val gameplayList = listOf<ResultEntity>(
+            ResultEntity(
                 result = mapOf(Pair("level", 1), Pair("score", 2)),
                 user = user,
                 recommendedGame = game,
                 config = mutableMapOf<String, Any>("speed" to "slow")
             ),
-            GameplayResultEntity(
+            ResultEntity(
                 result = mapOf(Pair("level", 2), Pair("time", 210)),
                 user = user,
                 recommendedGame = game,
                 config = mutableMapOf<String, Any>()
             ),
-            GameplayResultEntity(
+            ResultEntity(
                 result = mapOf(Pair("level", 3), Pair("score", 0)),
                 user = user,
                 recommendedGame = game,

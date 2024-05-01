@@ -3,10 +3,10 @@ package hu.bme.aut.resource_server.profile_calculation
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
-import hu.bme.aut.resource_server.gameplayresult.GameplayResultEntity
 import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
+import hu.bme.aut.resource_server.result.ResultEntity
 import hu.bme.aut.resource_server.user.UserEntity
 
 object TestDataSource {
@@ -109,8 +109,8 @@ object TestDataSource {
 
     }
 
-    fun createGameplayResultForUser(user: UserEntity, recommendation: RecommendedGameEntity): GameplayResultEntity {
-        return GameplayResultEntity(
+    fun createGameplayResultForUser(user: UserEntity, recommendation: RecommendedGameEntity): ResultEntity {
+        return ResultEntity(
             id = 1,
             result = mutableMapOf(),
             config = recommendation.config.toMutableMap(),

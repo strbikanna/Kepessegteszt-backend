@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.gameplayresult
+package hu.bme.aut.resource_server.result
 
 import hu.bme.aut.resource_server.TestUtilsService
 import hu.bme.aut.resource_server.game.GameEntity
@@ -25,7 +25,7 @@ import org.springframework.test.context.ActiveProfiles
     properties= ["cognitive-app.resource-server.security.bypass=true"]
 )
 @ActiveProfiles("test")
-class GameplayResultControllerTest(
+class ResultControllerTest(
     @Autowired private var testService: TestUtilsService,
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
 ) {
@@ -53,7 +53,7 @@ class GameplayResultControllerTest(
     fun shouldReturnForbiddenWithoutCorrectAuthentication(){
         val authUser = testService.saveAuthUserWithRights(RoleName.STUDENT)
         val game = testService.createAndSaveRecommendedGame(authUser)
-        val gameplayData = GameplayResultDto(result= mapOf(), gameplayId = game.id!! )
+        val gameplayData = ResultDto(result= mapOf(), gameplayId = game.id!! )
         given(requestSpec)
             .header(testService.authHeaderName, "random user")
             .body(gameplayData)
@@ -67,7 +67,7 @@ class GameplayResultControllerTest(
         val game = testService.saveAuthGame()
         val recommendedGame = createAndSaveRecommendedGameForAuth(user, game)
         val result = mapOf(Pair("success", true))
-        val gameplayData = GameplayResultDto(result= result,  gameplayId = recommendedGame.id!! )
+        val gameplayData = ResultDto(result= result,  gameplayId = recommendedGame.id!! )
         given(requestSpec)
             .header(testService.authHeaderName, testService.authUsername)
             .header(testService.gameAuthHeaderName, testService.authGameId)
