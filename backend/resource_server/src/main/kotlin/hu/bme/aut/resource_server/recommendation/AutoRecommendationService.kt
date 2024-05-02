@@ -122,16 +122,16 @@ class AutoRecommendationService(
             ?: firstOrderConfigItem
     }
 
-    fun isResultSuccess(result: ResultEntity): Boolean{
+    private fun isResultSuccess(result: ResultEntity): Boolean{
         return result.result["passed"] as Boolean
     }
 
-    fun recommendEasier(configDescription: ConfigItem, currentValue: Int): Pair<String, Int> {
+    private fun recommendEasier(configDescription: ConfigItem, currentValue: Int): Pair<String, Int> {
         if (currentValue == configDescription.easiestValue) return Pair(configDescription.paramName, currentValue)
         return Pair(configDescription.paramName, currentValue - configDescription.increment)
     }
 
-    fun recommendHarder(configDescription: ConfigItem, currentValue: Int): Pair<String, Int> {
+    private fun recommendHarder(configDescription: ConfigItem, currentValue: Int): Pair<String, Int> {
         if (currentValue == configDescription.hardestValue) return Pair(configDescription.paramName, currentValue)
         return Pair(configDescription.paramName, currentValue + configDescription.increment)
     }

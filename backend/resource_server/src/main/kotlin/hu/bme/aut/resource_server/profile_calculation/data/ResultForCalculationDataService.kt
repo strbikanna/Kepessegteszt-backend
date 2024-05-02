@@ -9,9 +9,7 @@ import hu.bme.aut.resource_server.user.UserEntity
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 /**
  * Service for handling ResultForCalculationEntity objects and calling repository methods.
@@ -28,6 +26,10 @@ class ResultForCalculationDataService(
         val game = getGame(gameId)
         return resultForCalculationRepository.countByGameAndNormalizedResultNull(game)
     }
+
+    /**
+     * Returns the count of the non-normalized results for the given game.
+     */
     fun getCountForNewCalculation(game: GameEntity): Long =
          resultForCalculationRepository.countByGameAndNormalizedResultNull(game)
 
@@ -70,32 +72,4 @@ class ResultForCalculationDataService(
         )
     }
 
-
-    /**
-     * Calls database procedure each hour 00 minutes to insert test data for calculation.
-     * Maximum 800 rows are inserted.
-     * Only inserts data for Meteorháború and/or CosmicSequence games.
-     */
-    @Scheduled(cron = "0 0 * * * *" )
-    @Transactional
-    fun insertCalcDataEachHour() {
-        var game = gameRepository.findGameByName("Meteorháború")
-        if(game.isEmpty) game = gameRepository.findGameByName("cosmic-sequence")
-        if(game.isEmpty) game = gameRepository.findGameByName("CosmicSequence")
-        if(game.isEmpty){
-            log.error("Game for calculation data insert not found.")
-            return
-        }
-        val currentNonNormalizedResultsCount = resultForCalculationRepository.countByGameAndNormalizedResultNull(game.get())
-        if(currentNonNormalizedResultsCount < 800){
-            log.info("Generating calculation data for game ${game.get().name}")
-            resultForCalculationRepository
-                .generateResultForCalculationProcedure(
-                    game.get().id!!,
-                    game.get().affectedAbilities.first().code
-                )
-            val countAfterInsert = resultForCalculationRepository.countByGameAndNormalizedResultNull(game.get())
-            log.info("Calculation data generated for game ${game.get().name}. Inserted ${countAfterInsert - currentNonNormalizedResultsCount} new rows.")
-        }
-    }
 }

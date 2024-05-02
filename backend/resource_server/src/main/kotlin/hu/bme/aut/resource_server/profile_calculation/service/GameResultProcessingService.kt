@@ -1,14 +1,12 @@
 package hu.bme.aut.resource_server.profile_calculation.service
 
+import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.profile_calculation.calculator.CalculationHelper
 import hu.bme.aut.resource_server.profile_calculation.calculator.ScoreCalculator
 import hu.bme.aut.resource_server.profile_calculation.data.MeanAndDeviation
-import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
-import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationRepository
-import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
+import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
@@ -36,6 +34,7 @@ class GameResultProcessingService(
             val normalizationTimeStamp = LocalDateTime.now()
             normalizeNewResults(game, normalizationTimeStamp)
             val newNormalizedResults = deleteOlderNormalizedResults(game)
+            //TODO paging for large datasets
             val mean = CalculationHelper.calculateMean(newNormalizedResults.map { it.normalizedResult!! })
             val deviation = CalculationHelper.calculateStdDeviation(newNormalizedResults.map { it.normalizedResult!! }, mean)
             return@withContext MeanAndDeviation(mean, deviation)
