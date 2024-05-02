@@ -128,5 +128,51 @@ private lateinit var autoRecommendationService : AutoRecommendationService
         }
     }
 
+    @Test
+    fun `Should change the 2nd param if the first has max value and result is success`(){
+        val previousRecommendation = TestDataSource.createRecommendationForUser(user, game).copy(timestamp = LocalDateTime.now().minusDays(1))
+        val modifiedConfig = previousRecommendation.config.toMutableMap()
+        val firstOrderParam = game.configItems.find { it.paramOrder == 1 }!!
+        val secondOrderParam = game.configItems.find { it.paramOrder == 2 }!!
+        modifiedConfig[firstOrderParam.paramName] = firstOrderParam.hardestValue
+        val latestRecommendation = TestDataSource.createRecommendationForUser(user, game)
+            .copy(timestamp = LocalDateTime.now(), config = modifiedConfig)
+        val result = TestDataSource.createGameplayResultForUser(user, latestRecommendation).copy(result = mapOf("passed" to true))
+        `when`(mockDataService.getResultById(1)).thenReturn(result)
+        `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
+        `when`(mockDataService.getPreviousRecommendation(latestRecommendation)).thenReturn(previousRecommendation)
+        runBlocking {
+            val nextRecommendation =  autoRecommendationService.createNextRecommendationBasedOnResult(1)
+            assertEquals(firstOrderParam.initialValue, nextRecommendation[firstOrderParam.paramName])
+            assertEquals(secondOrderParam.initialValue + secondOrderParam.increment, nextRecommendation[secondOrderParam.paramName])
+            assertEquals(2, nextRecommendation.size)
+        }
+
+    }
+
+    //Current config is: first order param: max value, second order param: initial value
+    //Result is not success
+    //Expected: first order param: initial value, second order param: initial value - increment
+    @Test
+    fun `Should recommend easier when result is NOT success`(){
+        val previousRecommendation = TestDataSource.createRecommendationForUser(user, game).copy(timestamp = LocalDateTime.now().minusDays(1))
+        val modifiedConfig = previousRecommendation.config.toMutableMap()
+        val firstOrderParam = game.configItems.find { it.paramOrder == 1 }!!
+        val secondOrderParam = game.configItems.find { it.paramOrder == 2 }!!
+        modifiedConfig[firstOrderParam.paramName] = firstOrderParam.hardestValue
+        val latestRecommendation = TestDataSource.createRecommendationForUser(user, game)
+            .copy(timestamp = LocalDateTime.now(), config = modifiedConfig)
+        val result = TestDataSource.createGameplayResultForUser(user, latestRecommendation).copy(result = mapOf("passed" to false))
+        `when`(mockDataService.getResultById(1)).thenReturn(result)
+        `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
+        `when`(mockDataService.getPreviousRecommendation(latestRecommendation)).thenReturn(previousRecommendation)
+        runBlocking {
+            val nextRecommendation =  autoRecommendationService.createNextRecommendationBasedOnResult(1)
+            assertEquals(firstOrderParam.initialValue, nextRecommendation[firstOrderParam.paramName])
+            assertEquals(secondOrderParam.initialValue - secondOrderParam.increment, nextRecommendation[secondOrderParam.paramName])
+            assertEquals(2, nextRecommendation.size)
+        }
+    }
+
 
 }

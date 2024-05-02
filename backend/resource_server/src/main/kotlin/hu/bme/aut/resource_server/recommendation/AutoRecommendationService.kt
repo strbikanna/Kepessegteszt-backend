@@ -68,7 +68,7 @@ class AutoRecommendationService(
             val lastChangedParam = getLastChangedParam(result.recommendedGame, previousRecommendation)
             var nextParamToChange: ConfigItem? = lastChangedParam
             var currValue = result.recommendedGame.config[lastChangedParam.paramName] as Int
-            if(currValue >= lastChangedParam.hardestValue || currValue <= lastChangedParam.easiestValue){
+            if(currValue + lastChangedParam.increment > lastChangedParam.hardestValue || currValue - lastChangedParam.increment < lastChangedParam.easiestValue){
                 nextParamToChange = game.configItems.find { it.paramOrder == lastChangedParam.paramOrder + 1 }
                 if(nextParamToChange != null){
                     nextRecommendation[lastChangedParam.paramName] = lastChangedParam.initialValue
@@ -88,13 +88,19 @@ class AutoRecommendationService(
             return@withContext nextRecommendation
         }
 
-    fun findNextParamToChange(configItems: Set<ConfigItem>, currConfig: Map<String, Any>, lastChangedParam: ConfigItem): ConfigItem {
+    /**
+     * Finds the next parameter to change in the config.
+     * The next parameter is the one with the next order after the last changed parameter.
+     * If the last changed parameter already has minimum or maximum value then the next parameter is the one with the next order
+     * that has no minimum or maximum value.
+     */
+    private fun findNextParamToChange(configItems: Set<ConfigItem>, currConfig: Map<String, Any>, lastChangedParam: ConfigItem): ConfigItem {
         var paramToChange = lastChangedParam
         var currValue = currConfig[paramToChange.paramName] as Int
         val paramCondition = if(currValue >= paramToChange.hardestValue){
-            {c: Int -> c >= paramToChange.hardestValue}
+            {c: Int -> c + paramToChange.increment > paramToChange.hardestValue}
         } else {
-            {c: Int -> c <= paramToChange.easiestValue}
+            {c: Int -> c - paramToChange.increment < paramToChange.easiestValue}
         }
         var maxCycle = configItems.size
         while (paramCondition(currValue) && maxCycle-- > 0) {
@@ -107,8 +113,8 @@ class AutoRecommendationService(
     /**
      * Returns the last changed config parameter of the recommendation or the first one if no change happened.
      */
-    @Transactional
-    suspend fun getLastChangedParam(
+    //@Transactional
+    private fun getLastChangedParam(
         recommendation: RecommendedGameEntity,
         previousRecommendation: RecommendedGameEntity
     ): ConfigItem {

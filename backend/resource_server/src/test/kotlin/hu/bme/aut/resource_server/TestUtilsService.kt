@@ -149,7 +149,7 @@ class TestUtilsService(
                 active = true,
                 url = "testUrl",
                 configDescription = mutableMapOf("Level" to 0),
-                 affectedAbilities = mutableSetOf(abilityGf)
+                affectedAbilities = mutableSetOf(abilityGf)
         )
         return gameRepository.save(game)
     }
@@ -170,6 +170,7 @@ class TestUtilsService(
         json["correct"] = 10
         json["all"] = 10
         json["level"] = 2
+        json["passed"] = true
         return ResultEntity(
                 result = json.toMap(),
                 config = mutableMapOf(),
