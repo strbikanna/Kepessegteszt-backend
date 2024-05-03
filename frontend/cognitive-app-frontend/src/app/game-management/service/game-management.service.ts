@@ -41,6 +41,12 @@ export class GameManagementService {
         retry(3),
     )
   }
+
+  createGame(game: Game): Observable<Game> {
+    return this.http.post<Game>(`${this.helper.baseUrl}${this.path}`, game).pipe(
+        retry(3),
+    )
+  }
   sendGameThumbnail(thumbnail: FormData, gameId: number): Observable<Game>{
     return this.http.post<Game>(`${this.helper.baseUrl}${this.path}/image/${gameId}`, thumbnail).pipe(
         retry(3),

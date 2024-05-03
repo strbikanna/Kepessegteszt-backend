@@ -80,15 +80,24 @@ export class EditGameFormComponent implements OnInit {
             configDescription: this.game?.configDescription ?? '',
             configItems: this.getFormConfigItems()
         }
-        console.log(game)
-        // this.service.editGame(game).subscribe(game => {
-        //     this.onBack()
-        // })
-        // if(this.gameForm.controls.thumbnail.value){
-        //     const formData = new FormData()
-        //     formData.set('file', this.gameForm.controls.thumbnail.value)
-        //     this.service.sendGameThumbnail(formData, game.id).subscribe()
-        // }
+        if(this.game === undefined){
+            this.service.createGame(game).subscribe(game => {
+                this.sendThumbnail(game)
+                this.onBack()
+            })
+        }
+        this.service.editGame(game).subscribe(game => {
+            this.sendThumbnail(game)
+            this.onBack()
+        })
+
+    }
+    private sendThumbnail(game: Game){
+        if(this.gameForm.controls.thumbnail.value){
+            const formData = new FormData()
+            formData.set('file', this.gameForm.controls.thumbnail.value)
+            this.service.sendGameThumbnail(formData, game.id!!).subscribe()
+        }
     }
 
     addConfigItem() {

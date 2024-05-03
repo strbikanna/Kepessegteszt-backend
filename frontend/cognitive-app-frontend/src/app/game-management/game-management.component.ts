@@ -47,6 +47,10 @@ export class GameManagementComponent implements OnInit {
         this.router.navigate(['edit-game', game.id],);
     }
 
+    navigateToNewGame() {
+        this.router.navigate(['edit-game']);
+    }
+
     getCardTexts(game: Game): string[] {
         let appTexts = TEXTS.game_management.edit_form
         let texts: string[] = [];
