@@ -1,0 +1,46 @@
+.card{
+    margin-bottom: 1rem;
+}
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+
+}
+.cardContentItem{
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5em;
+}
+.cardLabel{
+    color: gray;
+    margin-top:0;
+    margin-bottom: 0;
+    margin-right: 1rem;
+}
+.formRow{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    :nth-child{
+        width: max-content;
+    }
+}
+.formContainer{
+    margin: 1em;
+}
+.paramOrderField{
+    width: 60%;
+    mat-hint{
+        height: max-content;
+    }
+    margin-bottom: 1em;
+}
+.textField{
+    width: 60%;
+}
+.cancelButton{
+    margin-right: 1em;
+}

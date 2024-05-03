@@ -77,7 +77,7 @@ export class RecommendedGamesComponent implements OnInit {
         if (this.validChosenGame(rGame)) {
             this.loading = true;
             sessionStorage.setItem(this.storageKey, JSON.stringify(rGame))
-            this.authService.getGameToken(rGame.game.id)
+            this.authService.getGameToken(rGame.game.id!!)
         }
     }
 

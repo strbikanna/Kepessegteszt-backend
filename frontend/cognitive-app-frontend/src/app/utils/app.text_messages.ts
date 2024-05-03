@@ -95,6 +95,7 @@ export const TEXTS = {
         empty_content: 'Nincs megjeleníthető tartalom',
         network_error: 'Valószínűleg nincs internetkapcsolat.',
         unauthorized_error: 'Nincs jogosultságod a kért művelet végrehajtásához.',
+        invalid_values: 'A megadott értékek nem megfelelőek.',
     },
     actions: {
         cancel: 'Mégse',
@@ -186,6 +187,18 @@ export const TEXTS = {
             affected_abilities: 'Mért kognitív képességek',
             value: 'Érték',
             config_error_message: 'Ezek a karakterek használhatók: "a-z", "A-Z", "0-9", "-", "_"',
+        },
+        config_item_form: {
+            title: 'Konfigurációs elem adatai',
+            param_name: 'Paraméter neve',
+            initial_value: 'Kezdőérték',
+            hardest_value: 'Legnehezebb érték',
+            easiest_value: 'Legkönnyebb érték',
+            increment: 'Léptetés',
+            param_order: 'Paraméter sorszáma',
+            param_order_description: 'Azt fejezi ki, hogy mennyire befolyásolja a játékbeállítást, minél kisebb a szám, annál relevánsabb a paraméter.',
+            description: 'Leírás',
+            description_placeholder: 'Opcionális leírás a paraméterről',
         }
     },
     file_upload: {

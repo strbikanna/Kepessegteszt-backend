@@ -127,6 +127,7 @@ export class RecommendedGameService{
                 active: true,
                 version: 1,
                 affectedAbilities: [],
+                configItems: [],
             },
             {
                 id: 3,
@@ -144,6 +145,7 @@ export class RecommendedGameService{
                 active: false,
                 version: 2,
                 affectedAbilities: [],
+                configItems: [],
             },
             {
                 id: 4,
@@ -161,6 +163,7 @@ export class RecommendedGameService{
                 active: false,
                 version: 1,
                 affectedAbilities: [],
+                configItems: [],
             },
             {
                 id: 6,
@@ -178,6 +181,7 @@ export class RecommendedGameService{
                 active: true,
                 version: 3,
                 affectedAbilities: [],
+                configItems: [],
             },
             {
                 id: 7,
@@ -193,7 +197,8 @@ export class RecommendedGameService{
                     gameTitle: "Are you a space cadet?",
                     level: 2
                 },
-                affectedAbilities: []
+                affectedAbilities: [],
+                configItems: [],
             }
         ]
     )
@@ -228,6 +233,7 @@ export class RecommendedGameService{
                     active: true,
                     version: 1,
                     affectedAbilities: [],
+                    configItems: [],
 
                 },
                 config: {
@@ -265,6 +271,7 @@ export class RecommendedGameService{
                     active: true,
                     version: 1,
                     affectedAbilities: [],
+                    configItems: [],
                 },
                 config: {
                     game_id: 6,
@@ -301,6 +308,7 @@ export class RecommendedGameService{
                     active: true,
                     version: 1,
                     affectedAbilities: [],
+                    configItems: [],
                 },
                 config: {
                     game_id: 7,

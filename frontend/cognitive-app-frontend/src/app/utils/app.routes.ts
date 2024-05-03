@@ -17,6 +17,7 @@ import {ProfileDataComparisonComponent} from "../profile-data-comparison/profile
 export const appRoutes: Routes = [
     {path: 'game-management', component: GameManagementComponent, canActivate: [editorGuard], title: 'Játékok kezelése'},
     {path: 'edit-game/:id', component: EditGameFormComponent, canActivate: [editorGuard], title: 'Játék szerkesztése'},
+    {path: 'edit-game', component: EditGameFormComponent, canActivate: [editorGuard], title: 'Játék szerkesztése'},
     {path: '', component: HomeComponent, title: 'Cognitive App'},
     {path: 'profile', component: ProfileComponent, canActivate: [loggedInGuard], title: 'Profil'},
     {path: 'profile-compare', component: ProfileDataComparisonComponent, /*canActivate: [loggedInGuard],*/ title: 'Profil összehasonlítás'},

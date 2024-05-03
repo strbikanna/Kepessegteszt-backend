@@ -49,7 +49,7 @@ export class CalculationDialogComponent implements OnInit {
      */
     onStartCalculation(game: Game) {
         this.inProgress = true;
-        this.service.startResultProcessing(game.id).subscribe(result => {
+        this.service.startResultProcessing(game.id!!).subscribe(result => {
             this.inProgress = false;
             this.feedback = result;
         })

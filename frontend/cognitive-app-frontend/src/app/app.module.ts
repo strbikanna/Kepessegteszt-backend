@@ -54,6 +54,7 @@ import {environment} from "../environments/environment";
 import { ProfileDataComparisonComponent } from './profile-data-comparison/profile-data-comparison.component';
 import { ProfileRadarChartComponent } from './profile-data-comparison/profile-radar-chart/profile-radar-chart.component';
 import {MatRadioModule} from "@angular/material/radio";
+import { ConfigItemFormComponent } from './game-management/config-item-form/config-item-form.component';
 
 
 @NgModule({
@@ -79,6 +80,7 @@ import {MatRadioModule} from "@angular/material/radio";
     RecommendationComponent,
     ProfileDataComparisonComponent,
     ProfileRadarChartComponent,
+    ConfigItemFormComponent,
   ],
     imports: [
         BrowserModule,

@@ -1,7 +1,8 @@
 import {Ability} from "./ability.model";
+import {ConfigItem} from "./config_item.model";
 
 export interface Game {
-    id: number;
+    id: number | undefined;
     name: string;
     description: string;
     thumbnail: string;
@@ -10,4 +11,5 @@ export interface Game {
     version: number;
     configDescription: any;
     affectedAbilities: Ability[];
+    configItems: ConfigItem[];
 }
