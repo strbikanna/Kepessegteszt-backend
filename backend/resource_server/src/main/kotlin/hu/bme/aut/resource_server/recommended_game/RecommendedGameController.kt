@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*
 class RecommendedGameController(
     @Autowired private var recommendedGameService: RecommendedGameService,
     @Autowired private var gameplayRecommenderService: RecommenderService,
+    @Autowired private var recommenderService: RecommenderService,
     @Autowired private var authService: AuthService
 ) {
 
@@ -26,11 +27,14 @@ class RecommendedGameController(
         @RequestParam(required=false) pageIndex: Int?,
         @RequestParam(required = false) pageSize: Int?,
         authentication: Authentication
-    ): List<RecommendedGameDto> {
-        if (pageIndex == null || pageSize == null)
-            return recommendedGameService.getAllRecommendedToUser(authentication.name)
+    ): List<RecommendedGameDto>{
+        val recommendations = if (pageIndex == null || pageSize == null)
+            recommendedGameService.getAllRecommendedToUser(authentication.name)
         else
-            return recommendedGameService.getAllRecommendedToUser(authentication.name, pageIndex, pageSize)
+            recommendedGameService.getAllRecommendedToUser(authentication.name, pageIndex, pageSize)
+        return recommendations.ifEmpty {
+            recommenderService.createDefaultRecommendationsForUser(authentication.name).map { it.toDto() }
+        }
     }
 
     @GetMapping("/config/{id}")

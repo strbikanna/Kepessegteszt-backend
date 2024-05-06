@@ -46,6 +46,21 @@ class RecommenderService(
         return autoRecommender.createNextRecommendationBasedOnResult(gameResult.id!!)
     }
 
+    @Transactional
+    fun createDefaultRecommendationsForUser(username: String): List<RecommendedGameEntity>{
+        val user = userRepository.findByUsername(username).orElseThrow()
+        val games = gameRepository.findAllByActiveIsTrue()
+        val recommendations = mutableListOf<RecommendedGameEntity>()
+        games.forEach {game ->
+            recommendations.add(RecommendedGameEntity(
+                game = game,
+                recommendedTo = user,
+                config = game.configItems.associateBy({it.paramName}, {it.initialValue})
+            ))
+        }
+        return recommendedGameRepository.saveAll(recommendations).map { it }
+    }
+
     fun createNewRecommendations(username: String): List<RecommendedGameEntity>{
         val games = gameRepository.findAllByActiveIsTrue()
         val user = userRepository.findByUsername(username).orElseThrow()
