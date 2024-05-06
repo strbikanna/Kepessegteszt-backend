@@ -146,7 +146,7 @@ object TestDataSource {
                         "maxRound" to 10,
                         "healthPoints" to 8,
                         "maxHealthPoints" to 10,
-                    ),
+                        "passed" to false                    ),
                     config = mutableMapOf(),
                     user = users[i - 1],
                     game = game,
@@ -162,6 +162,7 @@ object TestDataSource {
                         "maxRound" to 10,
                         "healthPoints" to 8,
                         "maxHealthPoints" to 10,
+                        "passed" to true
                     ),
                     config = mutableMapOf(),
                     user = users[i - 1],
@@ -178,6 +179,7 @@ object TestDataSource {
                         "maxRound" to 10,
                         "healthPoints" to 7,
                         "maxHealthPoints" to 10,
+                        "passed" to true
                     ),
                     config = mutableMapOf(),
                     user = users[i - 1],

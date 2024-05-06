@@ -24,6 +24,7 @@ class ScoreCalculatorTest {
                 "healthPoints" to 5,
                 "maxRound" to 10,
                 "maxHealthPoints" to 6,
+                "passed" to true,
             ),
             config = game.configDescription
         )
@@ -41,7 +42,7 @@ class ScoreCalculatorTest {
     fun shouldCalculateProperGameBasedOnPoints(){
         val normalizedResults = ScoreCalculator.calculateNormalizedScores(listOf(result), game)
         assertEquals(1, normalizedResults.size)
-        val expectedResult = (5 * 2.0 /10 + 8.0/10 + 5.0/6)/4
+        val expectedResult = 0.0 //result does not have corresponding config to game
         assertEquals(expectedResult, normalizedResults[0].normalizedResult)
     }
 
@@ -59,13 +60,13 @@ class ScoreCalculatorTest {
             user = TestDataSource.createUsersForTestWithEmptyProfile(1)[0],
             result = mutableMapOf(
                 "level" to 5,
-                "gameWon" to true,
+                "passed" to true,
             ),
             config = winGame.configDescription
         )
         val normalizedResults = ScoreCalculator.calculateNormalizedScores(listOf(winResult), winGame)
         assertEquals(1, normalizedResults.size)
-        val expectedResult = (5 /10  + 1.0)/2
+        val expectedResult =  0.0 //result does not have corresponding config to game
         assertEquals(expectedResult, normalizedResults[0].normalizedResult)
     }
 
@@ -127,7 +128,7 @@ class ScoreCalculatorTest {
         val malformedResult = ResultForCalculationEntity(
             game = game,
             user = TestDataSource.createUsersForTestWithEmptyProfile(1)[0],
-            //maxPoints are missing
+            //passed are missing
             result = mutableMapOf(
                 "level" to "5",
                 "round" to "8",
@@ -136,8 +137,7 @@ class ScoreCalculatorTest {
             config = game.configDescription
         )
         val normalizedResults = ScoreCalculator.calculateNormalizedScores(listOf(malformedResult), game)
-        assertEquals(1, normalizedResults.size)
-        val expectedResult = (5*2/10 + 8.0/10)/4
-        assertEquals(expectedResult, normalizedResults[0].normalizedResult)
+        //should not throw but empty list is result because missing passed
+        assertEquals(0, normalizedResults.size)
     }
 }

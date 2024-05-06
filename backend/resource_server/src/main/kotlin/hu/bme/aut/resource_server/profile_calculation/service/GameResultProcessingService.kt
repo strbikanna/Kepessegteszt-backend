@@ -30,7 +30,7 @@ class GameResultProcessingService(
      */
     suspend fun processGameResults(gameId: Int): MeanAndDeviation =
         withContext(Dispatchers.IO){
-            val game = dataService.getGame(gameId)
+            val game = dataService.getGameWithConfigItems(gameId)
             val normalizationTimeStamp = LocalDateTime.now()
             normalizeNewResults(game, normalizationTimeStamp)
             val newNormalizedResults = deleteOlderNormalizedResults(game)

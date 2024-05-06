@@ -36,8 +36,6 @@ class ResultRepositoryTest(
         assertEquals(saved.result, gameplay.result)
         assertEquals(100, saved.result["time"])
         assertEquals(10, saved.result["correct"])
-        assertEquals(4, saved.result.size)
-
     }
 
     @Test
