@@ -5,6 +5,7 @@ import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -36,9 +37,15 @@ class ResultService(
         return result.recommendedGame.game
     }
 
-    fun getAllByUser(username: String): List<ResultEntity> {
+    @Transactional
+    fun getAllByUser(username: String): List<ResultDetailsDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
-        return resultRepository.findAllByUser(user)
+        return resultRepository.findAllByUser(user).map { convertToDto(it) }
+    }
+
+    @Transactional
+    fun getAll(pageIndex: Int=0, pageSize: Int=10): List<ResultDetailsDto>{
+        return resultRepository.findAll(PageRequest.of(pageIndex, pageSize)).content.map { convertToDto(it) }
     }
 
     @Transactional
@@ -46,6 +53,17 @@ class ResultService(
         val user = userRepository.findByUsername(username).orElseThrow()
         val game = recommendedGameRepository.findById(recommendationId).orElseThrow().game
         return recommendedGameRepository.findByRecommendedToAndGameAndCompletedAndRecommender(user, game, false, null)
+    }
+
+    private fun convertToDto(result: ResultEntity): ResultDetailsDto {
+        return ResultDetailsDto(
+            id = result.id!!,
+            result = result.result,
+            timestamp = result.timestamp!!,
+            config = result.config,
+            gameId = result.recommendedGame.game.id!!,
+            username = result.user.username
+        )
     }
 
 }

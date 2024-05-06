@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.game
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
@@ -37,7 +38,8 @@ data class GameEntity(
 
     //TODO remove when normalization is refactored
     @Type(JsonType::class)
-    val configDescription: MutableMap<String, Any>,
+    @JsonIgnore
+    val configDescription: MutableMap<String, Any> = mutableMapOf(),
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

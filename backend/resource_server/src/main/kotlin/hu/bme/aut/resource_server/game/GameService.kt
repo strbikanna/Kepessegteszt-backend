@@ -1,13 +1,14 @@
 package hu.bme.aut.resource_server.game
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
+import hu.bme.aut.resource_server.game.game_config.isSame
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
-import java.util.Optional
+import java.util.*
 
 @Service
 class GameService (
@@ -87,12 +88,14 @@ class GameService (
             active = game.active,
             configDescription = game.configDescription,
             thumbnailPath = game.thumbnailPath,
-            version = game.version
+            version = game.version,
+            configItems = game.configItems.map { it.copy(id=null) }.toMutableSet()
         )
     }
     private fun sameConfigDescription(game1: GameEntity, game2: GameEntity): Boolean{
-        game1.configDescription.entries.forEach { (key, value) ->
-            if(game2.configDescription[key] != value){
+        game1.configItems.forEach { item ->
+            val itemToCompare = game2.configItems.find{ it.paramName == item.paramName } ?: return false
+            if(!item.isSame(itemToCompare)){
                 return false
             }
         }

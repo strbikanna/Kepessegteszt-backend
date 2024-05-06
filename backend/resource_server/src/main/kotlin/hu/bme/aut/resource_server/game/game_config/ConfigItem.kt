@@ -27,3 +27,12 @@ data class ConfigItem(
 
     val description: String
 )
+fun ConfigItem.isSame(other: ConfigItem): Boolean {
+    return paramName == other.paramName &&
+            paramOrder == other.paramOrder &&
+            easiestValue == other.easiestValue &&
+            hardestValue == other.hardestValue &&
+            initialValue == other.initialValue &&
+            increment == other.increment &&
+            description == other.description
+}

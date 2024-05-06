@@ -23,6 +23,7 @@ class RecommendedGameService(
         val user = userRepository.findByUsername(username).orElseThrow()
         return recommendedGameRepository
             .findAllPagedByRecommendedToAndCompleted(user, false, PageRequest.of(pageIndex, pageSize))
+            .filter { it.game.active }
             .map { convertToDto(it) }
     }
 

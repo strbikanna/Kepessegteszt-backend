@@ -55,7 +55,7 @@ class RecommendedGameController(
     @PreAuthorize("hasRole('STUDENT')")
     fun getAllSystemRecommended(authentication: Authentication): List<RecommendedGameEntity> {
         val systemRecommendedGames = gameplayRecommenderService.getAllRecommendationToUser(authentication.name).toMutableList()
-        if(systemRecommendedGames.size < 3){
+        if(systemRecommendedGames.size < 1){
             systemRecommendedGames.addAll(gameplayRecommenderService.createNewRecommendations(authentication.name))
         }
         return systemRecommendedGames
