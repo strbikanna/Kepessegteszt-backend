@@ -18,12 +18,25 @@ class RecommenderService(
     @Autowired private var userRepository: UserRepository
 ) {
     val log: Logger = LoggerFactory.getLogger(RecommenderService::class.java)
+
+    /**
+     * Get all recommendations to user which are not yet completed and the game is active.
+     * If the user has no recommendation for a game, a default recommendation is created.
+     */
     @Transactional
     fun getAllRecommendationToUser(username: String): List<RecommendedGameEntity> {
         val user = userRepository.findByUsername(username).orElseThrow()
-        return recommendedGameRepository
+        val games = gameRepository.findAllByActiveIsTrue()
+        val allRecommendations = recommendedGameRepository
             .findAllByRecommendedToAndCompletedAndRecommender(user, false, null)
             .filter { it.game.active }
+            .toMutableList()
+        games.forEach { game ->
+            if(allRecommendations.none { game.id == it.game.id }){
+                allRecommendations.add(createDefaultRecommendationToUserForGame(username, game.id!!))
+            }
+        }
+        return allRecommendations
     }
 
     @Transactional
@@ -59,6 +72,17 @@ class RecommenderService(
             ))
         }
         return recommendedGameRepository.saveAll(recommendations).map { it }
+    }
+
+    @Transactional
+    fun createDefaultRecommendationToUserForGame(username: String, gameId: Int): RecommendedGameEntity{
+        val user = userRepository.findByUsername(username).orElseThrow()
+        val game = gameRepository.findById(gameId).orElseThrow()
+        return recommendedGameRepository.save(RecommendedGameEntity(
+            game = game,
+            recommendedTo = user,
+            config = game.configItems.associateBy({it.paramName}, {it.initialValue})
+        ))
     }
 
     fun createNewRecommendations(username: String): List<RecommendedGameEntity>{

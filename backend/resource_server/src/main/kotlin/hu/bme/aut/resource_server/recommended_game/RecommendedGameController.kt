@@ -28,13 +28,10 @@ class RecommendedGameController(
         @RequestParam(required = false) pageSize: Int?,
         authentication: Authentication
     ): List<RecommendedGameDto>{
-        val recommendations = if (pageIndex == null || pageSize == null)
+        return if (pageIndex == null || pageSize == null)
             recommendedGameService.getAllRecommendedToUser(authentication.name)
         else
             recommendedGameService.getAllRecommendedToUser(authentication.name, pageIndex, pageSize)
-        return recommendations.ifEmpty {
-            recommenderService.createDefaultRecommendationsForUser(authentication.name).map { it.toDto() }
-        }
     }
 
     @GetMapping("/config/{id}")
