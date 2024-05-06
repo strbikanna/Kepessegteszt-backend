@@ -1,4 +1,10 @@
 <div>
+    <mat-paginator [length]="dataLength"
+                   [pageSize]="defaultPageSize"
+                   [pageSizeOptions]="pageSizeOptions"
+                   aria-label="Select page"
+                   (page)="handlePageEvent($event)">
+    </mat-paginator>
     <div *ngFor="let result of results |async">
         <app-result-info-card
                 [result]="result"

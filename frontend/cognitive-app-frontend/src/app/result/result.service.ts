@@ -12,9 +12,13 @@ export class ResultService {
 
   constructor(private http: HttpClient, private httpService: SimpleHttpService) { }
 
-  getAllResults() : Observable<Result[]> {
+  getAllResults(pageIndex: number=0, pageSize: number=10 ) : Observable<Result[]> {
       if (UserInfo.isAdmin()) {
-          return this.http.get<Result[]>(this.httpService.baseUrl + '/gameplay/results/all').pipe(
+          const params = {
+                pageIndex: pageIndex.toString(),
+                pageSize: pageSize.toString()
+          }
+          return this.http.get<Result[]>(this.httpService.baseUrl + '/gameplay/results/all', {params: params}).pipe(
               map((data: Result[]) =>
                   data.map((result: Result) => this.mapResult(result))
               ),
