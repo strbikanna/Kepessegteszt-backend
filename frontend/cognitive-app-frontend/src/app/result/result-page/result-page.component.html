@@ -1,0 +1,8 @@
+<div>
+    <div *ngFor="let result of results |async">
+        <app-result-info-card
+                [result]="result"
+                [game]="getGame(result.gameId)"
+        ></app-result-info-card>
+    </div>
+</div>

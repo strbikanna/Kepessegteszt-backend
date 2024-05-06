@@ -9,8 +9,10 @@ export const TEXTS = {
         games: 'Játékok',
         profile: 'Profil',
         cognitive_profile: 'Kognitív profil',
-        admin: 'Felhasználók kezelése',
+        profile_comparison: 'Kognitív profil elemzés',
+        user_management: 'Felhasználók kezelése',
         game_management: 'Játékok kezelése',
+        result_management: 'Eredmények',
         game_recommendation: 'Játékok ajánlása',
     },
     home: {
@@ -225,4 +227,16 @@ export const TEXTS = {
             config: 'Ajánlott szint: '
         }
     },
+    result: {
+        result_info: {
+            game_name: 'Játék neve: ',
+            timestamp: 'Játék időpontja',
+            result: 'Eredmény ',
+            passed: 'Sikeres',
+            failed: 'Sikertelen',
+            config: 'Játék konfiguráció',
+            result_detailed: 'Játék eredmény részletei',
+            username: 'Játékos'
+        }
+    }
 }

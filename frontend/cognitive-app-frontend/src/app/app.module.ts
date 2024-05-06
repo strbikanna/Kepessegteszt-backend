@@ -55,6 +55,8 @@ import { ProfileDataComparisonComponent } from './profile-data-comparison/profil
 import { ProfileRadarChartComponent } from './profile-data-comparison/profile-radar-chart/profile-radar-chart.component';
 import {MatRadioModule} from "@angular/material/radio";
 import { ConfigItemFormComponent } from './game-management/config-item-form/config-item-form.component';
+import { ResultInfoCardComponent } from './result/result-info-card/result-info-card.component';
+import { ResultPageComponent } from './result/result-page/result-page.component';
 
 
 @NgModule({
@@ -81,6 +83,8 @@ import { ConfigItemFormComponent } from './game-management/config-item-form/conf
     ProfileDataComparisonComponent,
     ProfileRadarChartComponent,
     ConfigItemFormComponent,
+    ResultInfoCardComponent,
+    ResultPageComponent,
   ],
     imports: [
         BrowserModule,

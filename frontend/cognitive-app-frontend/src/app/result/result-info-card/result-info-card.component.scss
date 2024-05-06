@@ -1,0 +1,16 @@
+.passed{
+    color: #0A6847;
+    background: #7ABA78;
+    margin-right: 2em;
+}
+.failed{
+    background: #CA8787;
+    color: #C40C0C;
+}
+:host{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2em;
+    margin-inline: 3em;
+}

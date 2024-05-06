@@ -1,6 +1,7 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TEXTS} from "../../utils/app.text_messages";
 import {Game} from "../../model/game.model";
+import {imagePaths} from "../../utils/app.image_resources";
 
 /**
  * Game card with uniform look.
@@ -10,7 +11,7 @@ import {Game} from "../../model/game.model";
   templateUrl: './game-card.component.html',
   styleUrls: ['./game-card.component.scss']
 })
-export class GameCardComponent {
+export class GameCardComponent implements OnInit {
   text = TEXTS.games;
 
   /**
@@ -38,6 +39,11 @@ export class GameCardComponent {
    */
   @Output() extraButtonClick: EventEmitter<Game> = new EventEmitter<Game>();
 
+  ngOnInit() {
+    if(!this.game.thumbnail)
+      this.game.thumbnail = this.imagePaths.defaultGamePicture;
+  }
+
   raiseClickEvent(game: Game){
     this.buttonClick.emit(game);
   }
@@ -45,4 +51,5 @@ export class GameCardComponent {
     this.extraButtonClick.emit(game);
   }
 
+  protected readonly imagePaths = imagePaths;
 }
