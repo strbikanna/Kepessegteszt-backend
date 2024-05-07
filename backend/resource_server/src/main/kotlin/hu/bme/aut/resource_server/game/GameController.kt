@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.game
 
+import hu.bme.aut.resource_server.recommended_game.RecommenderService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,7 +13,8 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/game")
 class GameController(
     @Autowired private var gameRepository: GameRepository,
-    @Autowired private var gameService: GameService
+    @Autowired private var gameService: GameService,
+    @Autowired private var recommenderService: RecommenderService
 ) {
 
     @GetMapping("/all")
@@ -52,7 +54,9 @@ class GameController(
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
     fun createGame(@RequestBody gameEntity: GameEntity): GameEntity {
-        return gameRepository.save(gameEntity)
+        val game = gameRepository.save(gameEntity)
+        recommenderService.createDefaultRecommendationsForGame(game.id!!)
+        return game
     }
 
     /**

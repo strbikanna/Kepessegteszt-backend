@@ -28,6 +28,7 @@ class RecommendedGameController(
         @RequestParam(required = false) pageSize: Int?,
         authentication: Authentication
     ): List<RecommendedGameDto>{
+        recommenderService.createDefaultRecommendationsForUser(authentication.name)
         return if (pageIndex == null || pageSize == null)
             recommendedGameService.getAllRecommendedToUser(authentication.name)
         else

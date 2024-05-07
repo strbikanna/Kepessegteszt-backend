@@ -26,21 +26,13 @@ class RecommenderService(
     @Transactional
     fun getAllRecommendationToUser(username: String): List<RecommendedGameEntity> {
         val user = userRepository.findByUsername(username).orElseThrow()
-        val games = gameRepository.findAllByActiveIsTrue()
-        val allRecommendations = recommendedGameRepository
+        return recommendedGameRepository
             .findAllByRecommendedToAndCompletedAndRecommender(user, false, null)
             .filter { it.game.active }
-            .toMutableList()
-        games.forEach { game ->
-            if(allRecommendations.none { game.id == it.game.id }){
-                allRecommendations.add(createDefaultRecommendationToUserForGame(username, game.id!!))
-            }
-        }
-        return allRecommendations
     }
 
     @Transactional
-    fun createEmptyRecommendation(username: String, gameId: Int): RecommendedGameEntity{
+    fun createEmptyRecommendation(username: String, gameId: Int): RecommendedGameEntity {
         val user = userRepository.findByUsername(username).orElseThrow()
         val game = gameRepository.findById(gameId).orElseThrow()
         val recommendation = RecommendedGameEntity(
@@ -51,57 +43,83 @@ class RecommenderService(
         return recommendedGameRepository.save(recommendation)
     }
 
-    fun save(recommendation: RecommendedGameEntity): RecommendedGameEntity{
+    fun save(recommendation: RecommendedGameEntity): RecommendedGameEntity {
         return recommendedGameRepository.save(recommendation)
     }
 
-    suspend fun createNextRecommendationByResult(gameResult: ResultEntity): Map<String, Any>{
+    suspend fun createNextRecommendationByResult(gameResult: ResultEntity): Map<String, Any> {
         return autoRecommender.createNextRecommendationBasedOnResult(gameResult.id!!)
     }
 
     @Transactional
-    fun createDefaultRecommendationsForUser(username: String): List<RecommendedGameEntity>{
+    fun createDefaultRecommendationsForUser(username: String): List<RecommendedGameEntity> {
         val user = userRepository.findByUsername(username).orElseThrow()
-        val games = gameRepository.findAllByActiveIsTrue()
+        val games = gameRepository
+            .findAllByActiveIsTrue()
+            .filter { game ->
+                recommendedGameRepository.findAllByRecommendedToAndGame(user, game)
+                    .isEmpty()
+            }
         val recommendations = mutableListOf<RecommendedGameEntity>()
-        games.forEach {game ->
-            recommendations.add(RecommendedGameEntity(
-                game = game,
-                recommendedTo = user,
-                config = game.configItems.associateBy({it.paramName}, {it.initialValue})
-            ))
+        games.forEach { game ->
+            recommendations.add(
+                RecommendedGameEntity(
+                    game = game,
+                    recommendedTo = user,
+                    config = game.configItems.associateBy({ it.paramName }, { it.initialValue })
+                )
+            )
         }
         return recommendedGameRepository.saveAll(recommendations).map { it }
     }
 
     @Transactional
-    fun createDefaultRecommendationToUserForGame(username: String, gameId: Int): RecommendedGameEntity{
-        val user = userRepository.findByUsername(username).orElseThrow()
+    fun createDefaultRecommendationsForGame(gameId: Int): List<RecommendedGameEntity> {
+        val users = userRepository.findAll()
         val game = gameRepository.findById(gameId).orElseThrow()
-        return recommendedGameRepository.save(RecommendedGameEntity(
-            game = game,
-            recommendedTo = user,
-            config = game.configItems.associateBy({it.paramName}, {it.initialValue})
-        ))
+        val recommendations = mutableListOf<RecommendedGameEntity>()
+        users.forEach { user ->
+            recommendations.add(
+                RecommendedGameEntity(
+                    game = game,
+                    recommendedTo = user,
+                    config = game.configItems.associateBy({ it.paramName }, { it.initialValue })
+                )
+            )
+        }
+        return recommendedGameRepository.saveAll(recommendations).map { it }
     }
 
-    fun createNewRecommendations(username: String): List<RecommendedGameEntity>{
+    @Transactional
+    fun createDefaultRecommendationToUserForGame(username: String, gameId: Int): RecommendedGameEntity {
+        val user = userRepository.findByUsername(username).orElseThrow()
+        val game = gameRepository.findById(gameId).orElseThrow()
+        return recommendedGameRepository.save(
+            RecommendedGameEntity(
+                game = game,
+                recommendedTo = user,
+                config = game.configItems.associateBy({ it.paramName }, { it.initialValue })
+            )
+        )
+    }
+
+    fun createNewRecommendations(username: String): List<RecommendedGameEntity> {
         val games = gameRepository.findAllByActiveIsTrue()
         val user = userRepository.findByUsername(username).orElseThrow()
         val recommendations = mutableListOf<RecommendedGameEntity>()
-        try{
-            games.forEach {game ->
+        try {
+            games.forEach { game ->
                 recommendations.add(autoRecommender.generateRecommendationForUser(user, game))
             }
             recommendedGameRepository.saveAll(recommendations)
-        }catch(e: RuntimeException){
+        } catch (e: RuntimeException) {
             log.error("Error while generating recommendation for user $username", e)
             return recommendations
         }
-      return recommendations
+        return recommendations
     }
 
-    fun deleteRecommendations(recommendations: List<RecommendedGameEntity>){
+    fun deleteRecommendations(recommendations: List<RecommendedGameEntity>) {
         recommendedGameRepository.deleteAll(recommendations)
     }
 

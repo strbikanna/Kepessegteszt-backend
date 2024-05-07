@@ -10,6 +10,7 @@ import java.time.LocalDateTime
 
 interface RecommendedGameRepository: CrudRepository<RecommendedGameEntity, Long>, PagingAndSortingRepository<RecommendedGameEntity, Long> {
     fun findAllByRecommendedTo(recommendedTo: UserEntity): List<RecommendedGameEntity>
+    fun findAllByRecommendedToAndGame(recommendedTo: UserEntity, game:GameEntity): List<RecommendedGameEntity>
     fun findAllByRecommendedToAndCompleted(recommendedTo: UserEntity, completed: Boolean): List<RecommendedGameEntity>
     fun findAllPagedByRecommendedToAndCompleted(recommendedTo: UserEntity, completed: Boolean, page: Pageable): List<RecommendedGameEntity>
     fun findAllByRecommendedToAndRecommender(recommendedTo: UserEntity, recommendedBy: UserEntity): List<RecommendedGameEntity>
@@ -18,5 +19,5 @@ interface RecommendedGameRepository: CrudRepository<RecommendedGameEntity, Long>
     fun findAllSortedByRecommendedTo(recommendedTo: UserEntity, sort: Sort): List<RecommendedGameEntity>
     fun findTopByTimestampBeforeAndRecommendedToAndGameOrderByTimestamp(timestamp: LocalDateTime, recommendedTo: UserEntity, game: GameEntity): RecommendedGameEntity?
 
-    fun findByRecommendedToAndGameAndCompletedAndRecommender(user: UserEntity, game: GameEntity, completed: Boolean, recommender: UserEntity?): RecommendedGameEntity?
+    fun findByRecommendedToAndGameAndCompletedAndRecommender(user: UserEntity, game: GameEntity, completed: Boolean, recommender: UserEntity?): List<RecommendedGameEntity>
 }

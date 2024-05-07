@@ -13,8 +13,8 @@ import java.time.LocalDateTime
 @Service
 class RecommendedGameService(
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
-    @Autowired private var userRepository: UserRepository
-) {
+    @Autowired private var userRepository: UserRepository,
+    ) {
     /**
      * Get all recommendations to user which are not yet completed.
      */
