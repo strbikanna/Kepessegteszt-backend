@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
@@ -59,18 +60,39 @@ class ResultController(
     @Transactional
     @GetMapping("/results")
     @ResponseStatus(HttpStatus.OK)
-    fun getResultsByUser(authentication: Authentication): List<ResultDetailsDto >{
+    fun getResultsByUser(
+        authentication: Authentication,
+        @RequestParam sortBy: String= "timestamp",
+        @RequestParam sortOrder: String = "DESC",
+        @RequestParam pageSize: Int = 0,
+        @RequestParam pageIndex: Int = 10
+    ): List<ResultDetailsDto >{
         val username = authentication.name
-        return resultService.getAllByUser(username)
+        return resultService.getAllByUser(username, PageRequest.of(pageIndex, pageSize, resultService.convertSortBy(sortBy, sortOrder)))
     }
     @Transactional
     @GetMapping("/results/all")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
-    fun getAllResults(@RequestParam pageSize: Int?, @RequestParam pageIndex: Int?): List<ResultDetailsDto >{
-        if(pageSize == null || pageIndex == null)
-            return resultService.getAll()
-        return resultService.getAll(pageIndex, pageSize)
+    fun getAllResults(@RequestParam sortBy: String = "timestamp",
+                      @RequestParam sortOrder: String = "DESC",
+                      @RequestParam pageSize: Int = 0,
+                      @RequestParam pageIndex: Int = 10): List<ResultDetailsDto >{
+        return resultService.getAll(PageRequest.of(pageIndex, pageSize, resultService.convertSortBy(sortBy, sortOrder)))
+    }
+
+    @GetMapping("/count")
+    @ResponseStatus(HttpStatus.OK)
+    fun countResults(authentication: Authentication): Long {
+        val username = authentication.name
+        return resultService.getCountOfResultsByUser(username)
+    }
+
+    @GetMapping("/count/all")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
+    fun countAllResults(): Long {
+        return resultService.getCountOfResults()
     }
 
 }
