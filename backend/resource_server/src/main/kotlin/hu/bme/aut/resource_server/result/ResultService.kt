@@ -49,6 +49,10 @@ class ResultService(
         return resultRepository.findAll(page).content.map { convertToDto(it) }
     }
 
+    fun getAll(): List<ResultEntity> {
+        return resultRepository.findAll().toList()
+    }
+
     @Transactional
     fun getNextRecommendationForGameIfExists(recommendationId: Long, username: String): RecommendedGameEntity? {
         val user = userRepository.findByUsername(username).orElseThrow()

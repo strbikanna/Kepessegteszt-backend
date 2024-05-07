@@ -3,11 +3,13 @@ package hu.bme.aut.resource_server.result
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
 import hu.bme.aut.resource_server.recommended_game.RecommenderService
+import jakarta.servlet.http.HttpServletResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
@@ -93,6 +95,17 @@ class ResultController(
     @PreAuthorize("hasRole('ADMIN')")
     fun countAllResults(): Long {
         return resultService.getCountOfResults()
+    }
+
+    @GetMapping("/csv")
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN') || hasRole('SCIENTIST')")
+    fun exportResultsToCsv(response: HttpServletResponse) {
+        response.contentType = "text/csv"
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"results.csv\"")
+        val results = resultService.getAll()
+        ExportCsvService.exportCsv(results, response.writer)
     }
 
 }

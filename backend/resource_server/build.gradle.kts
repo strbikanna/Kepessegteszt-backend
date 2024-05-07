@@ -47,12 +47,16 @@ dependencies {
     implementation("org.json:json:20230227")
     //jep
     implementation("black.ninia:jep:4.1.1")
+    //h2
     runtimeOnly("com.h2database:h2")
-    //runtimeOnly("com.mysql:mysql-connector-j")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    //flyway
     implementation ("org.flywaydb:flyway-core")
     implementation ("org.flywaydb:flyway-mysql")
+    //swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
+    //csv parser
+    implementation("org.apache.commons:commons-csv:1.8")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
