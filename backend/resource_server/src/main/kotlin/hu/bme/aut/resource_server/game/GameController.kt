@@ -39,12 +39,16 @@ class GameController(
     }
 
 
-    @PutMapping("/{game_id}")
+    @PutMapping("/{gameId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST')")
-    fun updateGame(@RequestBody gameEntity: GameEntity, @PathVariable game_id: Int): GameEntity {
-        if(game_id == gameEntity.id) {
-            return gameService.updateGame(gameEntity)
+    fun updateGame(@RequestBody gameEntity: GameEntity, @PathVariable gameId: Int): GameEntity {
+        if(gameId == gameEntity.id) {
+            val updated = gameService.updateGame(gameEntity)
+            if(updated.id != gameId){
+                recommenderService.createDefaultRecommendationsForGame(updated.id!!)
+            }
+            return updated
         } else{
             throw IllegalArgumentException("Game IDs don't match.")
         }
