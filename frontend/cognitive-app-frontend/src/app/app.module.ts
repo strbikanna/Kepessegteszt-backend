@@ -57,6 +57,8 @@ import { ConfigItemFormComponent } from './game-management/config-item-form/conf
 import { ResultInfoCardComponent } from './result/result-info-card/result-info-card.component';
 import { ResultPageComponent } from './result/result-page/result-page.component';
 import { ConfirmDialogComponent } from './common/confirm-dialog/confirm-dialog.component';
+import { CsvDownloadButtonComponent } from './common/csv-download-button/csv-download-button.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -85,6 +87,7 @@ import { ConfirmDialogComponent } from './common/confirm-dialog/confirm-dialog.c
     ResultInfoCardComponent,
     ResultPageComponent,
     ConfirmDialogComponent,
+    CsvDownloadButtonComponent,
   ],
     imports: [
         BrowserModule,
@@ -125,7 +128,7 @@ import { ConfirmDialogComponent } from './common/confirm-dialog/confirm-dialog.c
         NgxEchartsModule.forRoot({
             echarts
         }),
-        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule
+        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule
     ],
   providers: [
       {

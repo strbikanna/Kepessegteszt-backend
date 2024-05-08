@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ResultService} from "../result.service";
 import {GameManagementService} from "../../game-management/service/game-management.service";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {Result} from "../../model/result.model";
 import {Game} from "../../model/game.model";
 import {MatPaginatorIntl, PageEvent} from "@angular/material/paginator";
@@ -20,15 +20,12 @@ export class ResultPageComponent implements  OnInit{
   pageSizeOptions = [5, 25, 100];
   dataLength = 0;
   defaultPageSize = 10;
-  constructor(private resultService: ResultService, private gameService: GameManagementService) { }
+  constructor(protected resultService: ResultService, private gameService: GameManagementService) { }
   ngOnInit() {
     this.results = this.resultService.getAllResults()
     this.resultService.getCountOfResults().subscribe(count => this.dataLength = count);
   }
 
-  getCsvPath(): string {
-    return this.resultService.csvPath;
-  }
 
   getGame(gameId: number): Observable<Game> {
     return this.gameService.getGameById(gameId);

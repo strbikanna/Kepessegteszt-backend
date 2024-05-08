@@ -211,6 +211,9 @@ export const TEXTS = {
     file_upload: {
         no_content: 'Nincs kiválasztott fájl',
     },
+    csv_download: {
+        download_info: 'Adatok letöltése CSV fájlként.',
+    },
     recommendation_page: {
         user_data: {
             first_name: 'Keresztnév',

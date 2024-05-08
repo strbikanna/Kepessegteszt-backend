@@ -41,7 +41,6 @@ export class ResultService {
             catchError(this.httpService.handleHttpError)
         )
     }
-
     private mapResult(result: Result): Result {
         return {
             ...result,

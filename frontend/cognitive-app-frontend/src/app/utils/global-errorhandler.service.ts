@@ -5,6 +5,7 @@ import {AlertDialogComponent} from "../common/alert-dialog/alert-dialog.componen
 import {TEXTS} from "./app.text_messages";
 import {NavigationEnd, Router} from "@angular/router";
 import {UserInfo} from "../auth/userInfo";
+import {AppConstants} from "./constants";
 
 @Injectable({
     providedIn: 'root'
@@ -36,17 +37,21 @@ export class GlobalErrorhandlerService implements ErrorHandler {
     handleError(error: any) {
         let message: string | undefined = undefined
         let detail: string | undefined = error.message
+        console.log(error)
+
         // If the error is an HttpErrorResponse, extracts the error message and details
         if (error instanceof HttpErrorResponse) {
             message = this.httpError
             detail = detail ?? this.httpErrorDetails
             if (error.status === 401) {
-                UserInfo.loginStatus.next(false)
+                detail = TEXTS.error.unauthorized_error
+                this.logoffLocally();
                 this.zone.run(() =>
                     this.router.navigate(['/'])
                 )
             }
             if (error.status === 403) {
+                detail = TEXTS.error.unauthorized_error
                 this.router.navigate([this.previousUrl])
             }
         } else {
@@ -67,5 +72,11 @@ export class GlobalErrorhandlerService implements ErrorHandler {
         );
         this.previousError = error ?? this.previousError
         console.error('Error from global error handler', error);
+    }
+
+    private logoffLocally() {
+        UserInfo.loginStatus.next(false)
+        sessionStorage.removeItem(AppConstants.impersonationKey)
+        sessionStorage.removeItem(AppConstants.impersonationDisabledKey)
     }
 }
