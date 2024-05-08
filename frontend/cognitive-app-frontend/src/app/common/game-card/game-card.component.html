@@ -3,6 +3,7 @@
         <img src="{{game.thumbnail}}">
         <div class="text-content">
             <mat-card-title>{{game.name}}</mat-card-title>
+            <mat-card-subtitle>ID: {{game.id}}</mat-card-subtitle>
             <p>{{game.description}}</p>
             <p *ngFor="let text of otherTexts">{{text}}</p>
         </div>
