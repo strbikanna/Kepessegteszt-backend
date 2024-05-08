@@ -16,6 +16,6 @@ export class UserInfo{
   }
   public static accessToken: string
   public static isAdmin(){
-    return this.currentUser.roles.includes(Role.ADMIN)
+    return this.currentUser.roles.includes(Role.ADMIN) && this.loginStatus.value
   }
 }
