@@ -38,7 +38,7 @@ class GameService (
      */
     fun updateGame(updatedGame: GameEntity): GameEntity {
         val oldGame = gameRepository.findById(updatedGame.id!!).orElseThrow()
-        if(oldGame.url != updatedGame.url || !sameConfigDescription(oldGame, updatedGame)) {
+        if(!sameConfigDescription(oldGame, updatedGame)) {
             oldGame.active = false
             gameRepository.save(oldGame)
 
@@ -65,13 +65,11 @@ class GameService (
             fileName = "${game.id}_${System.currentTimeMillis()}"
             file = File("$thumbnailLocation/${fileName}.png")
         }
-
         file.outputStream().use {
             it.write(thumbnail.bytes)
         }
-        val updatedGame = copyGame(game).copy(
+        val updatedGame = game.copy(
             thumbnailPath = "$gameImageLocation/${fileName}.png",
-            version = game.version + 1
         )
         return gameRepository.save(updatedGame)
     }
@@ -84,7 +82,6 @@ class GameService (
             name = game.name,
             description = game.description,
             affectedAbilities = affectedAbilities,
-            url = game.url,
             active = game.active,
             configDescription = game.configDescription,
             thumbnailPath = game.thumbnailPath,
@@ -93,6 +90,9 @@ class GameService (
         )
     }
     private fun sameConfigDescription(game1: GameEntity, game2: GameEntity): Boolean{
+        if(game1.configItems.size != game2.configItems.size){
+            return false
+        }
         game1.configItems.forEach { item ->
             val itemToCompare = game2.configItems.find{ it.paramName == item.paramName } ?: return false
             if(!item.isSame(itemToCompare)){

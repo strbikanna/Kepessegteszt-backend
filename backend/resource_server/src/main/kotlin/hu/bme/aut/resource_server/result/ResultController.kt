@@ -80,7 +80,9 @@ class ResultController(
                       @RequestParam sortOrder: String = "DESC",
                       @RequestParam pageSize: Int = 0,
                       @RequestParam pageIndex: Int = 10): List<ResultDetailsDto >{
-        return resultService.getAll(PageRequest.of(pageIndex, pageSize, resultService.convertSortBy(sortBy, sortOrder)))
+        val sort = resultService.convertSortBy(sortBy, sortOrder)
+        val res = resultService.getAll(PageRequest.of(pageIndex, pageSize, sort))
+        return res
     }
 
     @GetMapping("/count")

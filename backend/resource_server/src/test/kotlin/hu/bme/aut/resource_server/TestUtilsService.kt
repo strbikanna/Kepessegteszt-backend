@@ -106,7 +106,6 @@ class TestUtilsService(
                 thumbnailPath = "test/files/assets",
                 description = "Auth test game description",
                 active = true,
-                url = "testUrl",
                 configDescription = mutableMapOf(),
                 affectedAbilities = abilities
         )
@@ -147,7 +146,6 @@ class TestUtilsService(
                 thumbnailPath = "test/files/assets",
                 description = "Test game description",
                 active = true,
-                url = "testUrl",
                 configDescription = mutableMapOf("Level" to 0),
                 affectedAbilities = mutableSetOf(abilityGf)
         )

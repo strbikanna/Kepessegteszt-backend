@@ -53,7 +53,7 @@ class AutoRecommendationServiceIntTest(
             val recommendation = autoRecommendationService.createNextRecommendationBasedOnResult(result.id!!)
             assertTrue(recommendation.isNotEmpty())
             val changedParam = configItems.find { it.paramOrder == 1 }!!
-            assertEquals(changedParam.initialValue + changedParam.increment, recommendation[changedParam!!.paramName]!!)
+            assertEquals(changedParam.initialValue + changedParam.increment, recommendation[changedParam.paramName]!!)
         }
     }
 

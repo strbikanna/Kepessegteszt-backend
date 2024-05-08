@@ -34,8 +34,6 @@ data class GameEntity(
     @Column(name ="_active")
     var active: Boolean,
 
-    val url: String?,
-
     //TODO remove when normalization is refactored
     @Type(JsonType::class)
     @JsonIgnore
