@@ -13,7 +13,7 @@ internal object ExportCsvService{
     fun exportCsv(results: List<ResultEntity>, writer: Writer) {
         val jsonMapper = jacksonObjectMapper()
         try {
-            CSVPrinter(writer, CSVFormat.DEFAULT).use { csvPrinter ->
+            CSVPrinter(writer, CSVFormat.EXCEL).use { csvPrinter ->
                 csvPrinter.printRecord("ID", "Timestamp", "User ID", "Game name", "Config", "Result", "Result passed")
                 results.forEach { result ->
                     val configString = jsonMapper.writeValueAsString(result.config).replace("\"", "")

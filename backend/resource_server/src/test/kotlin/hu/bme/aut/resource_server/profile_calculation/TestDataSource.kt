@@ -50,7 +50,6 @@ object TestDataSource {
             description = "game1",
             thumbnailPath = "game1",
             active = true,
-            url = null,
             configDescription = config,
             affectedAbilities = mutableSetOf(affectedAbility),
             configItems = mutableSetOf(configItem1, configItem2),

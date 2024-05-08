@@ -57,7 +57,7 @@ class ResultService(
     fun getNextRecommendationForGameIfExists(recommendationId: Long, username: String): RecommendedGameEntity? {
         val user = userRepository.findByUsername(username).orElseThrow()
         val game = recommendedGameRepository.findById(recommendationId).orElseThrow().game
-        return recommendedGameRepository.findByRecommendedToAndGameAndCompletedAndRecommender(user, game, false, null).first()
+        return recommendedGameRepository.findByRecommendedToAndGameAndCompletedAndRecommender(user, game, false, null).firstOrNull()
     }
 
     fun convertSortBy(sortBy: String, sortOrder: String): Sort {

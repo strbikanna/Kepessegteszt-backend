@@ -74,9 +74,9 @@ object ScoreCalculator {
             if(result.config.containsKey(configItem.paramName)) {
                 val configInResult =
                     if(configItem.hardestValue > configItem.easiestValue) {
-                        (result.config[configItem.paramName] as Double)
+                        (result.config[configItem.paramName] as Int)
                     }else{
-                        configItem.easiestValue - (result.config[configItem.paramName] as Double) //distance from easiest value
+                        configItem.easiestValue - (result.config[configItem.paramName] as Int) //distance from easiest value
                     }
                 difficulty += configInResult / configItem.hardestValue
                 configItemCount++
