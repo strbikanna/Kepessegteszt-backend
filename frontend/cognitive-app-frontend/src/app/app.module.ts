@@ -20,7 +20,6 @@ import { ImpersonationComponent } from './impersonation/impersonation.component'
 import {AuthInterceptor} from "./auth/auth.interceptor";
 import { RecommendedGamesComponent } from './game/recommended-games-page/recommended-games.component';
 import {MatTabsModule} from "@angular/material/tabs";
-import { PlaygroundComponent } from './game/playground/playground.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from "@angular/material/dialog";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatChipsModule} from "@angular/material/chips";
@@ -66,7 +65,6 @@ import { ResultPageComponent } from './result/result-page/result-page.component'
     HomeComponent,
     ProfileComponent,
     RecommendedGamesComponent,
-    PlaygroundComponent,
     HeaderComponent,
     ImpersonationComponent,
     AlertDialogComponent,
