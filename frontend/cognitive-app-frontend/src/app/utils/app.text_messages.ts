@@ -98,6 +98,7 @@ export const TEXTS = {
         network_error: 'Valószínűleg nincs internetkapcsolat.',
         unauthorized_error: 'Nincs jogosultságod a kért művelet végrehajtásához.',
         invalid_values: 'A megadott értékek nem megfelelőek.',
+        invalid_param_order: 'Ez a sorszám már létezik.',
     },
     actions: {
         cancel: 'Mégse',
@@ -189,6 +190,10 @@ export const TEXTS = {
             affected_abilities: 'Mért kognitív képességek',
             value: 'Érték',
             config_error_message: 'Ezek a karakterek használhatók: "a-z", "A-Z", "0-9", "-", "_"',
+            confirm: {
+                title: 'Biztosan mented a játékot?',
+                message: 'Megváltozott a játékkonfiguráció. Az előző játék így inaktív lesz és egy új játék lesz létrehozva a megadott adatokkal. A mentés után az új játéknak új ID-ja lesz!'
+            }
         },
         config_item_form: {
             title: 'Konfigurációs elem adatai',

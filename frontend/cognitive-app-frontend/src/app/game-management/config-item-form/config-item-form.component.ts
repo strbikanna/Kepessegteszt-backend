@@ -19,12 +19,13 @@ export class ConfigItemFormComponent implements ControlValueAccessor, OnInit{
 
     @Input() configItemData: ConfigItem | undefined;
     @Input() initialEditable: boolean = true;
+    @Input() forbiddenParamOrders: number[] = [];
     @Output() delete = new EventEmitter<void>();
     @Output() save = new EventEmitter<ConfigItem>();
 
     private onResult: (configItem: ConfigItem) => void = () => {};
 
-    protected errorMessage = TEXTS.error.invalid_values;
+    protected errorMessages = TEXTS.error
     protected texts = TEXTS.game_management.config_item_form;
     protected actionTexts = TEXTS.actions
     protected editable = true
@@ -33,11 +34,16 @@ export class ConfigItemFormComponent implements ControlValueAccessor, OnInit{
 
     private areValuesValid: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         const configItem = this.getConfigItemFromForm(control);
-        const valid = (configItem.easiestValue < configItem.hardestValue && configItem.increment > 0
+        const validConfig = (configItem.easiestValue < configItem.hardestValue && configItem.increment > 0
                 && configItem.initialValue >= configItem.easiestValue && configItem.initialValue <= configItem.hardestValue) ||
             (configItem.easiestValue > configItem.hardestValue && configItem.increment < 0
                 && configItem.initialValue <= configItem.easiestValue && configItem.initialValue >= configItem.hardestValue);
-        return valid ? null : {invalidValues: true};
+        return validConfig ? null : {invalidValues: true};
+    }
+    private paramOrderValid: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+        const paramOrder = control.value
+        if(this.configItem?.paramOrder === paramOrder) return null;
+        return this.forbiddenParamOrders.includes(paramOrder) ? {invalidParamOrder: true} : null;
     }
 
     protected configItemForm = this.fb.group({
@@ -46,7 +52,7 @@ export class ConfigItemFormComponent implements ControlValueAccessor, OnInit{
         hardestValue: [10, Validators.required],
         easiestValue: [1, Validators.required],
         increment: [1, Validators.required],
-        paramOrder: [this.minParamOrder, [Validators.required, Validators.min(this.minParamOrder)]],
+        paramOrder: [this.minParamOrder, [Validators.required, Validators.min(this.minParamOrder), this.paramOrderValid]],
         description: ['']
     }, {validators: this.areValuesValid})
 
@@ -56,6 +62,13 @@ export class ConfigItemFormComponent implements ControlValueAccessor, OnInit{
         this.editable = this.initialEditable;
         if (this.configItemData) {
             this.writeValue(this.configItemData);
+        }else{
+            for(let i = 1; i< this.forbiddenParamOrders.length+2; i++){
+                if(!this.forbiddenParamOrders.includes(i)){
+                    this.minParamOrder = i;
+                    break;
+                }
+            }
         }
     }
 
@@ -120,4 +133,5 @@ export class ConfigItemFormComponent implements ControlValueAccessor, OnInit{
         this.configItemForm.controls.paramOrder.setValue(configItem.paramOrder);
         this.configItemForm.controls.description.setValue(configItem.description);
     }
+
 }

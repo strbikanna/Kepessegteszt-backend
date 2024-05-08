@@ -6,7 +6,9 @@ import {TEXTS} from "../../utils/app.text_messages";
 import {AbilityService} from "../../ability/ability.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Game} from "../../model/game.model";
-import {ConfigItem} from "../../model/config_item.model";
+import {ConfigItem, isSameConfigItem} from "../../model/config_item.model";
+import {MatDialog} from "@angular/material/dialog";
+import {ConfirmDialogComponent} from "../../common/confirm-dialog/confirm-dialog.component";
 
 @Component({
     selector: 'app-edit-game-form',
@@ -34,14 +36,15 @@ export class EditGameFormComponent implements OnInit {
     protected text = TEXTS.game_management.edit_form
     protected thumbnail: string = ''
     protected actionText = TEXTS.actions
+    usedParamOrders: number[] = []
 
     constructor(private service: GameManagementService,
                 private abilityService: AbilityService,
                 private route: ActivatedRoute,
                 private fb: FormBuilder,
-                private router: Router
-    ) {
-    }
+                private router: Router,
+                private dialog: MatDialog
+    ) {}
 
     /**
      * retrieve game by route param id data from server
@@ -55,7 +58,6 @@ export class EditGameFormComponent implements OnInit {
                 this.initWithEmptyGame();
             }
         })
-
     }
 
     toFromGroup(formControl: AbstractControl) {
@@ -88,7 +90,23 @@ export class EditGameFormComponent implements OnInit {
             this.sendThumbnail(game)
             this.onBack()
         })
+    }
 
+    onSave(){
+        if(this.game && this.game.id && this.configChanged()){
+            this.openConfirmDialog()
+        }else{
+            this.onSubmit()
+        }
+    }
+
+    openConfirmDialog() {
+        this.dialog.open(ConfirmDialogComponent, {data: {
+                title: this.text.confirm.title,
+                message: this.text.confirm.message,
+                onCancel: () => {},
+                onOk: () => this.onSubmit()
+            }})
     }
     private sendThumbnail(game: Game){
         if(this.gameForm.controls.thumbnail.value){
@@ -120,7 +138,10 @@ export class EditGameFormComponent implements OnInit {
         this.gameForm.controls.configItems.removeAt(index)
     }
     onUpdateConfigItem(index: number, configItem: ConfigItem) {
+        let oldConfigItem = this.gameForm.controls.configItems.at(index).value
+        this.usedParamOrders = this.usedParamOrders.filter(order => order !== oldConfigItem?.paramOrder)
         this.gameForm.controls.configItems.at(index).setValue(configItem)
+        this.usedParamOrders.push(configItem.paramOrder)
     }
 
     get configItemsForm() {
@@ -180,7 +201,7 @@ export class EditGameFormComponent implements OnInit {
                 formControls.configItems.push(control)
             })
             this.thumbnail = game.thumbnail
-
+            this.usedParamOrders = game.configItems.map(item => item.paramOrder)
             this.loading = false;
             this.abilityService.getAllAbilities().subscribe(abilities => {
                 this.setFormAbilities(abilities)
@@ -211,5 +232,16 @@ export class EditGameFormComponent implements OnInit {
             )
             this.abilitiesForm.push(abilityForm)
         })
+    }
+    private configChanged(): boolean{
+        if(!this.game) return false
+        let formConfigItems = this.getFormConfigItems()
+        if(formConfigItems.length !== this.game.configItems.length) return true
+        for(let i = 0; i < formConfigItems.length; i++){
+            if(!this.game.configItems.find(item => isSameConfigItem(item, formConfigItems[i]))){
+                return true
+            }
+        }
+        return false
     }
 }

@@ -56,6 +56,7 @@ import {MatRadioModule} from "@angular/material/radio";
 import { ConfigItemFormComponent } from './game-management/config-item-form/config-item-form.component';
 import { ResultInfoCardComponent } from './result/result-info-card/result-info-card.component';
 import { ResultPageComponent } from './result/result-page/result-page.component';
+import { ConfirmDialogComponent } from './common/confirm-dialog/confirm-dialog.component';
 
 
 @NgModule({
@@ -83,6 +84,7 @@ import { ResultPageComponent } from './result/result-page/result-page.component'
     ConfigItemFormComponent,
     ResultInfoCardComponent,
     ResultPageComponent,
+    ConfirmDialogComponent,
   ],
     imports: [
         BrowserModule,

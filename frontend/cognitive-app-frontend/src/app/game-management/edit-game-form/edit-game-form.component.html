@@ -1,5 +1,5 @@
 <h2>{{text.title}} {{game?.name}}</h2>
-<form [formGroup]="gameForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="gameForm" (ngSubmit)="onSave()">
     <h4>{{text.data_section_title}}</h4>
     <mat-form-field>
         <mat-label>{{text.name}}</mat-label>
@@ -30,7 +30,7 @@
         <h4>{{text.config_description}}</h4>
         <ng-container [formArrayName]="'configItems'">
             <ng-container *ngFor="let configItem of configItemsForm.controls; let i = index">
-                <app-config-item-form [configItemData]="configItem.value" [initialEditable]="configItem.enabled"
+                <app-config-item-form [configItemData]="configItem.value" [initialEditable]="configItem.enabled" [forbiddenParamOrders]="usedParamOrders"
                                         (delete)="onDeleteConfigItem(i)" (save)="onUpdateConfigItem(i, $event)"
                 ></app-config-item-form>
             </ng-container>

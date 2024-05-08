@@ -17,7 +17,7 @@ export class ResultPageComponent implements  OnInit{
 
   protected results! : Observable<Result[]>;
 
-  pageSizeOptions = [3, 25, 100];
+  pageSizeOptions = [5, 25, 100];
   dataLength = 0;
   defaultPageSize = 10;
   constructor(private resultService: ResultService, private gameService: GameManagementService) { }

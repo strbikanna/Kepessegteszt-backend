@@ -27,6 +27,9 @@
             <mat-label>{{texts.param_order}}</mat-label>
             <input matInput type="number" formControlName="paramOrder">
             <mat-hint>{{texts.param_order_description}}</mat-hint>
+            <mat-error *ngIf="configItemForm.controls.paramOrder.errors?.['invalidParamOrder']">
+                {{errorMessages.invalid_param_order}}
+            </mat-error>
         </mat-form-field>
     </div>
     <div>
@@ -36,10 +39,10 @@
         </mat-form-field>
     </div>
     <mat-error *ngIf="configItemForm.errors?.['invalidValues'] && (configItemForm.touched || configItemForm.dirty)">
-        {{errorMessage}}
+        {{errorMessages.invalid_values}}
     </mat-error>
     <button mat-stroked-button color="primary" (click)="onCancel()" type="button" class="cancelButton">{{actionTexts.cancel}}</button>
-    <button mat-raised-button color="primary" [disabled]="configItemForm.invalid" (click)="onSubmit()" type="submit">{{actionTexts.save}}</button>
+    <button mat-raised-button color="primary" [disabled]="configItemForm.invalid" (click)="onSubmit()" type="submit">{{actionTexts.ok}}</button>
 </form>
 <div *ngIf="!editable && configItem">
     <mat-card class="card">
