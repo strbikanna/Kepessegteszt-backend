@@ -13,11 +13,6 @@
         <mat-checkbox formControlName="active">{{text.active}}</mat-checkbox>
 
     </div>
-
-    <mat-form-field>
-        <mat-label>{{text.url}}</mat-label>
-        <input matInput formControlName="url">
-    </mat-form-field>
     <div id="abilities">
         <h4>{{text.affected_abilities}}</h4>
         <ng-container formArrayName="abilities">
@@ -27,7 +22,6 @@
                         {{abilityName(abilityForm)}}
                     </mat-checkbox>
                 </div>
-
             </ng-container>
         </ng-container>
 

@@ -67,31 +67,24 @@ export class GameAuthService {
         recommendation.config.username = UserInfo.currentUser?.username ?? 'unknown'
         recommendation.config.access_token = GameInfo.accessToken
 
-        if(recommendation.game.url !== undefined && recommendation.game.url !== null && recommendation.game.url !== '') {
-            this.openGameUrl(recommendation)
-            return
-        }else{
-            this.chosenGame.next(recommendation)
-            this.saveChosenGame(recommendation)
-            this.router.navigate(['/playground'],)
-        }
+        this.chosenGame.next(recommendation)
+        this.saveChosenGame(recommendation)
+        this.router.navigate(['/playground'],)
+
     }
 
     /**
      * Retrieves chosen game from session storage if present
      */
-    tryLoadChosenGame(){
+    tryLoadChosenGame() {
         const chosenGame = sessionStorage.getItem(this.sessionStoreKey)
-        if(chosenGame !== null){
+        if (chosenGame !== null) {
             this.chosenGame.next(JSON.parse(chosenGame))
         }
     }
-    private saveChosenGame(game: RecommendedGame){
-        sessionStorage.setItem(this.sessionStoreKey, JSON.stringify(game))
-    }
 
-    private openGameUrl(recommendedGame: RecommendedGame) {
-        this.http.post(recommendedGame.game.url!, recommendedGame.config)
+    private saveChosenGame(game: RecommendedGame) {
+        sessionStorage.setItem(this.sessionStoreKey, JSON.stringify(game))
     }
 
 }

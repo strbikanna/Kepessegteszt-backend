@@ -115,7 +115,6 @@ export class RecommendedGameService{
                 name: "Pop the balloons",
                 description: "Try not to die from the bombs.",
                 thumbnail: "../../assets/balloon_game.jpg",
-                url: undefined,
                 configDescription: {
                     maxLevel: 5,
                     maxPoints: 50,
@@ -134,7 +133,6 @@ export class RecommendedGameService{
                 name: "Radio buttons",
                 description: "Push the correct buttons of the secret radio.",
                 thumbnail: "../../assets/number_game.jpg",
-                url: undefined,
                 configDescription: {
                     maxLevel: 5,
                     maxPoints: 100,
@@ -152,7 +150,6 @@ export class RecommendedGameService{
                 name: "Radio buttons",
                 description: "Will you push the correct buttons of the secret radio?",
                 thumbnail: "../../assets/number_game.jpg",
-                url: undefined,
                 configDescription: {
                     maxLevel: 6,
                     maxPoints: 100,
@@ -170,7 +167,6 @@ export class RecommendedGameService{
                 name: "Radio buttons",
                 description: "Push the correct buttons of the secret radio! And here comes the very and mostest extra long text to test the wrapping. ",
                 thumbnail: "../../assets/number_game.jpg",
-                url: undefined,
                 configDescription: {
                     maxLevel: 8,
                     maxPoints: 100,
@@ -189,7 +185,6 @@ export class RecommendedGameService{
                 description: "Enjoy space life.",
                 thumbnail: "../../assets/cosmic.jpg",
                 active: true,
-                url: undefined,
                 version: 1,
                 configDescription: {
                     game_id: 3,
@@ -228,7 +223,6 @@ export class RecommendedGameService{
                     name: "Pop the balloons",
                     description: "Try not to die from the bombs.",
                     thumbnail: "../../assets/balloon_game.jpg",
-                    url: undefined,
                     configDescription: {},
                     active: true,
                     version: 1,
@@ -266,7 +260,6 @@ export class RecommendedGameService{
                     name: "Radio buttons",
                     description: "Push the correct buttons of the secret radio.",
                     thumbnail: "../../assets/number_game.jpg",
-                    url: undefined,
                     configDescription: {},
                     active: true,
                     version: 1,
@@ -303,7 +296,6 @@ export class RecommendedGameService{
                     name: "Cosmic sequence",
                     description: "Enjoy space life.",
                     thumbnail: "../../assets/cosmic.jpg",
-                    url: undefined,
                     configDescription: {},
                     active: true,
                     version: 1,

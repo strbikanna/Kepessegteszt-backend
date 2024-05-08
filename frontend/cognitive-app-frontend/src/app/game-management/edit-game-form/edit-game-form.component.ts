@@ -22,7 +22,6 @@ export class EditGameFormComponent implements OnInit {
         name: ['', Validators.required],
         description: ['', Validators.required],
         version: [{value: 1, disabled: true}, Validators.required],
-        url: [''],
         thumbnail: [null],
         active: [true, Validators.required],
         abilities: this.fb.array([]),
@@ -75,7 +74,6 @@ export class EditGameFormComponent implements OnInit {
             version: this.gameForm.controls.version.value ?? 1,
             thumbnail: this.game?.thumbnail ?? '',
             active: this.gameForm.controls.active.value ?? true,
-            url: this.gameForm.controls.url.value ?? undefined,
             affectedAbilities: this.getFormAffectedAbilities(),
             configDescription: this.game?.configDescription ?? '',
             configItems: this.getFormConfigItems()
@@ -176,7 +174,6 @@ export class EditGameFormComponent implements OnInit {
             formControls.description.setValue(game.description)
             formControls.active.setValue(game.active)
             formControls.version.setValue(game.version)
-            formControls.url.setValue(game.url ?? '')
             game.configItems.forEach(item => {
                 const control = new FormControl<ConfigItem>(item)
                 control.disable()
