@@ -4,23 +4,30 @@ import {GameManagementService} from "../../game-management/service/game-manageme
 import {Observable} from "rxjs";
 import {Result} from "../../model/result.model";
 import {Game} from "../../model/game.model";
-import {PageEvent} from "@angular/material/paginator";
+import {MatPaginatorIntl, PageEvent} from "@angular/material/paginator";
+import {PaginatorTranslator} from "../../common/paginator/paginator-translator";
 
 @Component({
   selector: 'app-result-page',
   templateUrl: './result-page.component.html',
-  styleUrls: ['./result-page.component.scss']
+  styleUrls: ['./result-page.component.scss'],
+  providers: [{provide: MatPaginatorIntl, useClass: PaginatorTranslator}],
 })
 export class ResultPageComponent implements  OnInit{
 
   protected results! : Observable<Result[]>;
 
-  pageSizeOptions = [10, 25, 100];
+  pageSizeOptions = [3, 25, 100];
   dataLength = 0;
   defaultPageSize = 10;
   constructor(private resultService: ResultService, private gameService: GameManagementService) { }
   ngOnInit() {
     this.results = this.resultService.getAllResults()
+    this.resultService.getCountOfResults().subscribe(count => this.dataLength = count);
+  }
+
+  getCsvPath(): string {
+    return this.resultService.csvPath;
   }
 
   getGame(gameId: number): Observable<Game> {
