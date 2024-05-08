@@ -4,6 +4,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {AlertDialogComponent} from "../common/alert-dialog/alert-dialog.component";
 import {TEXTS} from "./app.text_messages";
 import {NavigationEnd, Router} from "@angular/router";
+import {UserInfo} from "../auth/userInfo";
 
 @Injectable({
     providedIn: 'root'
@@ -13,8 +14,7 @@ export class GlobalErrorhandlerService implements ErrorHandler {
     constructor(
         private zone: NgZone,
         private dialog: MatDialog,
-        private router: Router
-    ) {
+        private router: Router) {
         router.events.subscribe((e) => {
             if (e instanceof NavigationEnd) {
                 this.previousUrl = this.currentUrl
@@ -41,6 +41,7 @@ export class GlobalErrorhandlerService implements ErrorHandler {
             message = this.httpError
             detail = detail ?? this.httpErrorDetails
             if (error.status === 401) {
+                UserInfo.loginStatus.next(false)
                 this.zone.run(() =>
                     this.router.navigate(['/'])
                 )
