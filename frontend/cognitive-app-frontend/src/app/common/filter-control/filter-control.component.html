@@ -1,0 +1,21 @@
+<section *ngIf="dataArrived">
+    <mat-form-field *ngIf="filterElementInputs.length > 10">
+        <input matInput type="text" [(ngModel)]="inputFilterValue" (change)="filterFilterElementInputs()">
+    </mat-form-field>
+    <cdk-virtual-scroll-viewport itemSize="50" class="scrollViewPort">
+        <mat-checkbox
+                [indeterminate]="someChecked()"
+                [checked]="allChecked()"
+                (change)="allFilterChosen($event.checked)"
+        >{{ text.check_all }}
+        </mat-checkbox>
+
+        <div *ngFor="let filter of filterElementInputs" class="checkBoxRow">
+            <mat-checkbox
+                    [checked]="filter.checked"
+                    (change)="filterChosen(filter.name, $event.checked)"
+            >{{ filter.name }}
+            </mat-checkbox>
+        </div>
+    </cdk-virtual-scroll-viewport>
+</section>

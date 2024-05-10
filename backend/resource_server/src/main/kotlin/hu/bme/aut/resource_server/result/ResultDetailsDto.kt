@@ -8,6 +8,7 @@ data class ResultDetailsDto(
     val result: Map<String, Any>,
     val config: Map<String, Any>,
     val gameId: Int,
+    val gameName: String,
     val username: String
 ) {
 }

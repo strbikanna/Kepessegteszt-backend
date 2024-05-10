@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {SimpleHttpService} from "../utils/simple-http.service";
 import {catchError, map, Observable, retry} from "rxjs";
 import {Result} from "../model/result.model";
@@ -14,14 +14,20 @@ export class ResultService {
 
     csvPath = this.httpService.baseUrl + '/gameplay/csv';
 
-    getAllResults(pageIndex: number = 0, pageSize: number = 10,
-                  sortBy: "timestamp" | "user" | "username" | "game" = "timestamp",
-                  sortOrder: "ASC" | "DESC" = "DESC"): Observable<Result[]> {
-        const params = {
-            pageIndex: pageIndex.toString(),
-            pageSize: pageSize.toString(),
-            sortBy: sortBy,
-            sortOrder: sortOrder
+    getAllResultsFiltered(searchOptions: SearchOptions = this.defaultSearchOptions): Observable<Result[]> {
+        let params =  new HttpParams()
+        params = params.set('sortBy', searchOptions.sortBy)
+        params = params.set('sortOrder', searchOptions.sortOrder)
+        params = params.set('pageIndex', searchOptions.pageIndex.toString())
+        params = params.set('pageSize', searchOptions.pageSize.toString())
+        if (searchOptions.gameNames) {
+            params = params.set('gameNames', searchOptions.gameNames.join(','))
+        }
+        if (searchOptions.usernames && UserInfo.isAdmin()) {
+            params = params.set('usernames', searchOptions.usernames.join(','))
+        }
+        if (searchOptions.passed != null) {
+            params = params.set('resultWin', searchOptions.passed.toString())
         }
         let path = UserInfo.isAdmin() ? '/gameplay/results/all' : '/gameplay/results';
 
@@ -32,6 +38,22 @@ export class ResultService {
             retry(3),
             catchError(this.httpService.handleHttpError)
         )
+    }
+
+    getSortedAndPagedResults(results: Result[],sortBy: "timestamp" | "username" | "game", sortMode: "ASC" | "DESC", count: number) : Result[]{
+        let sortedResults = results.sort((a, b) => {
+            let order = 0;
+                switch (sortBy) {
+                    case "timestamp":
+                        order = a.timestamp < b.timestamp ? -1 : 1; break;
+                    case "username":
+                        order = (a.username ?? 'a') < (b.username ?? 'b') ? -1 : 1; break;
+                    case "game":
+                        order = a.gameName < b.gameName ? -1 : 1; break;
+                }
+            return sortMode === "ASC" ? order : -order;
+        });
+        return sortedResults.slice(0, count);
     }
 
     getCountOfResults(): Observable<number> {
@@ -47,4 +69,19 @@ export class ResultService {
             passed: result.result.passed
         }
     }
+    private defaultSearchOptions: SearchOptions = {
+            sortBy: "timestamp",
+            sortOrder: "DESC",
+            pageIndex: 0,
+            pageSize: 10,
+    }
+}
+export interface SearchOptions {
+    sortBy: "timestamp" | "username" | "game";
+    sortOrder: "ASC" | "DESC";
+    pageIndex: number;
+    pageSize: number;
+    usernames?: string[];
+    gameNames?: string[];
+    passed?: boolean;
 }

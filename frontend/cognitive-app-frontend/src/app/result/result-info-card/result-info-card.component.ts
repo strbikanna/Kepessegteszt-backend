@@ -9,19 +9,11 @@ import {Observable} from "rxjs";
     templateUrl: './result-info-card.component.html',
     styleUrls: ['./result-info-card.component.scss']
 })
-export class ResultInfoCardComponent implements OnInit {
+export class ResultInfoCardComponent {
 
     @Input({required: true}) result!: Result;
-    @Input({required: true}) game!: Observable<Game>;
-    gameName: string = '';
 
     protected readonly texts = TEXTS.result.result_info
-
-    ngOnInit() {
-        this.game.subscribe((game: Game) => {
-            this.gameName = game.name;
-        })
-    }
 
     getContent(config: any): string{
         return JSON.stringify(config);

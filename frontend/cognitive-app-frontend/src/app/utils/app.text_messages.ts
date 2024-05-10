@@ -108,6 +108,7 @@ export const TEXTS = {
         calculation: 'Kiértékelés',
         delete: 'Törlés',
         upload: 'Feltöltés',
+        check_all: 'Összes kijelölése',
     },
     cognitive_profile: {
         chart: {
@@ -237,7 +238,7 @@ export const TEXTS = {
     },
     result: {
         result_info: {
-            game_name: 'Játék neve: ',
+            game: 'Játék neve ',
             timestamp: 'Játék időpontja',
             result: 'Eredmény ',
             passed: 'Sikeres',
@@ -245,6 +246,15 @@ export const TEXTS = {
             config: 'Játék konfiguráció',
             result_detailed: 'Játék eredmény részletei',
             username: 'Játékos'
-        }
+        },
+        sort: "Rendezés",
+        filter: "Szűrés",
+        filter_and_sort: "Szűrés és rendezés",
+        username: "Felhasználónév alapján",
+        game: "Játék alapján",
+        passed: "Játékeredmény alapján",
+        timestamp: "Időpont alapján",
+        apply: "Kiválasztás alkalmazása",
+
     }
 }

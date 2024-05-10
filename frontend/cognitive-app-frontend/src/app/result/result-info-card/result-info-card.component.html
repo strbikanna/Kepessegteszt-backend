@@ -6,7 +6,7 @@
         <mat-chip  *ngIf="!result.passed" class="infoIcon">
             <mat-icon>close</mat-icon>
         </mat-chip>
-        <mat-panel-title> {{ gameName }} </mat-panel-title>
+        <mat-panel-title> {{ result.gameName }} </mat-panel-title>
         <mat-panel-description> {{ result.username }} </mat-panel-description>
         <mat-panel-description> {{ result.timestamp }} </mat-panel-description>
     </mat-expansion-panel-header>

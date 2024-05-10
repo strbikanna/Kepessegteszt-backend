@@ -1,21 +1,53 @@
 <div class="pagerRow">
+    <button mat-button color="primary" (click)="drawer.toggle()">
+        {{text.filter_and_sort}}
+    </button>
+    <app-csv-download-button [csvLink]="resultService.csvPath"></app-csv-download-button>
     <mat-paginator [length]="dataLength"
                    [pageSize]="defaultPageSize"
                    [pageSizeOptions]="pageSizeOptions"
                    aria-label="Select page"
                    (page)="handlePageEvent($event)">
     </mat-paginator>
-
-
-    <div class="toolsContainer">
-        <app-csv-download-button [csvLink]="resultService.csvPath"></app-csv-download-button>
-    </div>
 </div>
-<div class="cardsContainer">
-    <div *ngFor="let result of results |async">
-        <app-result-info-card
-                [result]="result"
-                [game]="getGame(result.gameId)"
-        ></app-result-info-card>
+<mat-drawer-container autosize class="drawerContainer">
+    <mat-drawer mode="side" #drawer>
+        <div class="toolsContainer">
+            <div>
+                <h4>{{text.sort}}</h4>
+                <app-sort-control [sortElements]="sortOptions"
+                                  (onSort)="onSortElementChosen($event)"></app-sort-control>
+            </div>
+            <div class="filter">
+                <h4>{{text.filter}}</h4>
+                <p>{{text.username}}</p>
+                <app-filter-control [filterElements]="userNameOptions"
+                                    (onFilter)="onUserNamesChosen($event)"></app-filter-control>
+                <mat-divider></mat-divider>
+                <p>{{text.game}}</p>
+
+                <app-filter-control [filterElements]="gameNameOptions"
+                                    (onFilter)="onGameNamesChosen($event)"></app-filter-control>
+                <mat-divider></mat-divider>
+                <p>{{text.passed}}</p>
+                <app-filter-control [filterElements]="of([text.result_info.passed, text.result_info.failed])"
+                                    (onFilter)="onPassedChosen($event)"
+                >
+                </app-filter-control>
+            </div>
+        </div>
+
+        <button mat-flat-button color="primary" (click)="getResults()">
+            <mat-icon>refresh</mat-icon>
+            {{text.apply}}
+        </button>
+    </mat-drawer>
+    <div class="cardsContainer" (click)="drawer.close()" >
+        <div>
+            <app-result-info-card
+                    *ngFor="let result of results |async"
+                    [result]="result"
+            ></app-result-info-card>
+        </div>
     </div>
-</div>
+</mat-drawer-container>
