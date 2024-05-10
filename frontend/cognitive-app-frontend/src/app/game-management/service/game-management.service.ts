@@ -37,6 +37,8 @@ export class GameManagementService {
   }
 
   editGame(game: Game): Observable<Game> {
+    if(!game.id) return this.createGame(game);
+
     return this.http.put<Game>(`${this.helper.baseUrl}${this.path}/${game.id}`, game).pipe(
         retry(3),
     )

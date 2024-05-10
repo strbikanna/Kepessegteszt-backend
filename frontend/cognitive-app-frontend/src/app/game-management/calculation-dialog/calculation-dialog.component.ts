@@ -56,7 +56,8 @@ export class CalculationDialogComponent implements OnInit {
     }
 
     canStartCalculation(){
-        return this.game !== undefined && !this.inProgress && this.feedback === undefined && this.resultCount && this.resultCount > 0;
+        return this.game !== undefined && !this.inProgress && this.feedback === undefined && this.resultCount && this.resultCount > 0
+            && this.game.affectedAbilities && this.game.affectedAbilities.length > 0;
     }
 
     getResultCount(gameId: number): Observable<number> {

@@ -6,7 +6,8 @@
         <h4 *ngIf="feedback">{{text.success_feedback}}</h4>
         <p *ngIf="!feedback && !inProgress">{{text.description}}</p>
         <mat-divider/>
-        <p *ngIf="game">{{text.affected_abilities}} {{transformAffectedAbilities(game.affectedAbilities)}}</p>
+        <p *ngIf="game && game.affectedAbilities">{{text.affected_abilities}} {{transformAffectedAbilities(game.affectedAbilities)}}</p>
+        <mat-error *ngIf="!game || game.affectedAbilities.length <=0 ">{{text.no_abilities}}</mat-error>
         <p *ngIf="game">{{text.result_count}} {{resultCount}}</p>
         <p *ngIf="feedback">{{text.result_mean}} {{feedback.mean}}</p>
         <p *ngIf="feedback">{{text.result_deviation}} {{feedback.deviation}}</p>
