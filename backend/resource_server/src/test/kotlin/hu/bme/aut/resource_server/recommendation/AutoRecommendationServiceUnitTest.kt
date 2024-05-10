@@ -152,7 +152,7 @@ private lateinit var autoRecommendationService : AutoRecommendationService
 
     //Current config is: first order param: max value, second order param: initial value
     //Result is not success
-    //Expected: first order param: initial value, second order param: initial value - increment
+    //Expected: first order param: max value - increment, second order param: initial value
     @Test
     fun `Should recommend easier when result is NOT success`(){
         val previousRecommendation = TestDataSource.createRecommendationForUser(user, game).copy(timestamp = LocalDateTime.now().minusDays(1))
@@ -168,8 +168,8 @@ private lateinit var autoRecommendationService : AutoRecommendationService
         `when`(mockDataService.getPreviousRecommendation(latestRecommendation)).thenReturn(previousRecommendation)
         runBlocking {
             val nextRecommendation =  autoRecommendationService.createNextRecommendationBasedOnResult(1)
-            assertEquals(firstOrderParam.initialValue, nextRecommendation[firstOrderParam.paramName])
-            assertEquals(secondOrderParam.initialValue - secondOrderParam.increment, nextRecommendation[secondOrderParam.paramName])
+            assertEquals(firstOrderParam.hardestValue - firstOrderParam.increment, nextRecommendation[firstOrderParam.paramName])
+            assertEquals(secondOrderParam.initialValue, nextRecommendation[secondOrderParam.paramName])
             assertEquals(2, nextRecommendation.size)
         }
     }
