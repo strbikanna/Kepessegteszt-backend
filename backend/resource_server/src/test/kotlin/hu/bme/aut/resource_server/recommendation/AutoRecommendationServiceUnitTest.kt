@@ -174,5 +174,37 @@ private lateinit var autoRecommendationService : AutoRecommendationService
         }
     }
 
+    @Test
+    fun `should change first param on first recommendation`(){
+        val latestRecommendation = TestDataSource.createRecommendationForUser(user, game).copy(timestamp = LocalDateTime.now())
+        val result = TestDataSource.createGameplayResultForUser(user, latestRecommendation).copy(result = mapOf("passed" to true),
+            config = game.configItems.associate { it.paramName to it.initialValue }.toMutableMap())
+        `when`(mockDataService.getResultById(1)).thenReturn(result)
+        `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
+        `when`(mockDataService.getPreviousRecommendation(latestRecommendation)).thenReturn(null)
+        runBlocking {
+            val nextRecommendation =  autoRecommendationService.createNextRecommendationBasedOnResult(1)
+            assertEquals(2, nextRecommendation.size)
+            val firstOrderParam = game.configItems.find { it.paramOrder == 1 }!!
+            assertEquals(firstOrderParam.initialValue + firstOrderParam.increment, nextRecommendation[firstOrderParam.paramName])
+        }
+    }
+
+    @Test
+    fun `should change first param on first recommendation even if that is on min value when success`(){
+        val latestRecommendation = TestDataSource.createRecommendationForUser(user, game).copy(timestamp = LocalDateTime.now(),
+            config = game.configItems.associate { it.paramName to it.easiestValue }.toMutableMap())
+        val result = TestDataSource.createGameplayResultForUser(user, latestRecommendation).copy(result = mapOf("passed" to true))
+        val firstOrderParam = game.configItems.find { it.paramOrder == 1 }!!
+        `when`(mockDataService.getResultById(1)).thenReturn(result)
+        `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
+        `when`(mockDataService.getPreviousRecommendation(latestRecommendation)).thenReturn(null)
+        runBlocking {
+            val nextRecommendation =  autoRecommendationService.createNextRecommendationBasedOnResult(1)
+            assertEquals(2, nextRecommendation.size)
+            assertEquals(firstOrderParam.easiestValue + firstOrderParam.increment, nextRecommendation[firstOrderParam.paramName])
+        }
+    }
+
 
 }

@@ -63,12 +63,14 @@ class AutoRecommendationService(
                 log.warn("No config items found for game ${game.name}")
                 return@withContext emptyMap()
             }
+            val success = isResultSuccess(result)
             val nextRecommendation = result.recommendedGame.config.toMutableMap()
             val previousRecommendation = dataService.getPreviousRecommendation(result.recommendedGame)  ?: result.recommendedGame
             val lastChangedParam = getLastChangedParam(result.recommendedGame, previousRecommendation)
             var nextParamToChange: ConfigItem? = lastChangedParam
             var currValue = result.recommendedGame.config[lastChangedParam.paramName] as Int
-            if(currValue + lastChangedParam.increment > lastChangedParam.hardestValue || currValue - lastChangedParam.increment < lastChangedParam.easiestValue){
+            if((currValue + lastChangedParam.increment > lastChangedParam.hardestValue && success) ||
+                currValue - lastChangedParam.increment < lastChangedParam.easiestValue && !success){
                 nextParamToChange = game.configItems.find { it.paramOrder == lastChangedParam.paramOrder + 1 }
                 if(nextParamToChange != null){
                     nextRecommendation[lastChangedParam.paramName] = lastChangedParam.initialValue
@@ -77,7 +79,7 @@ class AutoRecommendationService(
                 }
                 currValue = result.recommendedGame.config[nextParamToChange.paramName] as Int
             }
-            if (isResultSuccess(result)) {
+            if (success) {
                 val harderRecommendationParam = recommendHarder(nextParamToChange!!, currValue)
                 nextRecommendation[harderRecommendationParam.first] = harderRecommendationParam.second
             } else {
