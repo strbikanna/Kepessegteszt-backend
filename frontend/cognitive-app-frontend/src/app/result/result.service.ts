@@ -20,8 +20,8 @@ export class ResultService {
         params = params.set('sortOrder', searchOptions.sortOrder)
         params = params.set('pageIndex', searchOptions.pageIndex.toString())
         params = params.set('pageSize', searchOptions.pageSize.toString())
-        if (searchOptions.gameNames) {
-            params = params.set('gameNames', searchOptions.gameNames.join(','))
+        if (searchOptions.gameIds) {
+            params = params.set('gameIds', searchOptions.gameIds.join(','))
         }
         if (searchOptions.usernames && UserInfo.isAdmin()) {
             params = params.set('usernames', searchOptions.usernames.join(','))
@@ -38,22 +38,6 @@ export class ResultService {
             retry(3),
             catchError(this.httpService.handleHttpError)
         )
-    }
-
-    getSortedAndPagedResults(results: Result[],sortBy: "timestamp" | "username" | "game", sortMode: "ASC" | "DESC", count: number) : Result[]{
-        let sortedResults = results.sort((a, b) => {
-            let order = 0;
-                switch (sortBy) {
-                    case "timestamp":
-                        order = a.timestamp < b.timestamp ? -1 : 1; break;
-                    case "username":
-                        order = (a.username ?? 'a') < (b.username ?? 'b') ? -1 : 1; break;
-                    case "game":
-                        order = a.gameName < b.gameName ? -1 : 1; break;
-                }
-            return sortMode === "ASC" ? order : -order;
-        });
-        return sortedResults.slice(0, count);
     }
 
     getCountOfResults(): Observable<number> {
@@ -82,6 +66,6 @@ export interface SearchOptions {
     pageIndex: number;
     pageSize: number;
     usernames?: string[];
-    gameNames?: string[];
+    gameIds?: number[];
     passed?: boolean;
 }

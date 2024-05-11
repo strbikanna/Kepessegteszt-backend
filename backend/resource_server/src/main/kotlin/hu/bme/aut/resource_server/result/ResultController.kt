@@ -68,12 +68,12 @@ class ResultController(
         @RequestParam sortOrder: String = "DESC",
         @RequestParam pageSize: Int = 10,
         @RequestParam pageIndex: Int = 0,
-        @RequestParam gameNames: List<String>? = null,
+        @RequestParam gameIds: List<Int>? = null,
         @RequestParam resultWin: Boolean? = null
     ): List<ResultDetailsDto >{
         val username = authentication.name
-        if(!gameNames.isNullOrEmpty() || resultWin != null){
-            return resultService.getAllFiltered(listOf(username), PageRequest.of(pageIndex, pageSize, resultService.convertSortBy(sortBy, sortOrder)), gameNames, resultWin)
+        if(!gameIds.isNullOrEmpty() || resultWin != null){
+            return resultService.getAllFiltered(listOf(username), PageRequest.of(pageIndex, pageSize, resultService.convertSortBy(sortBy, sortOrder)), gameIds, resultWin)
         }
         return resultService.getAllByUser(username, PageRequest.of(pageIndex, pageSize, resultService.convertSortBy(sortBy, sortOrder)))
     }
@@ -85,16 +85,16 @@ class ResultController(
                       @RequestParam sortOrder: String = "DESC",
                       @RequestParam pageSize: Int = 10,
                       @RequestParam pageIndex: Int = 0,
-                      @RequestParam gameNames: List<String>? = null,
+                      @RequestParam gameIds: List<Int>? = null,
                       @RequestParam resultWin: Boolean? = null,
                       @RequestParam usernames: List<String>? = null
                       ): List<ResultDetailsDto >{
         val sort = resultService.convertSortBy(sortBy, sortOrder)
         if(!usernames.isNullOrEmpty()){
-            return resultService.getAllFiltered(usernames, PageRequest.of(pageIndex, pageSize, sort), gameNames, resultWin)
+            return resultService.getAllFiltered(usernames, PageRequest.of(pageIndex, pageSize, sort), gameIds, resultWin)
         }
-        if(!gameNames.isNullOrEmpty() || resultWin != null){
-            return resultService.getAllFiltered(PageRequest.of(pageIndex, pageSize, sort), gameNames, resultWin)
+        if(!gameIds.isNullOrEmpty() || resultWin != null){
+            return resultService.getAllFiltered(PageRequest.of(pageIndex, pageSize, sort), gameIds, resultWin)
         }
         val res = resultService.getAll(PageRequest.of(pageIndex, pageSize, sort))
         return res

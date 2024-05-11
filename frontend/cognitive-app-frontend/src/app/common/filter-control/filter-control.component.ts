@@ -27,7 +27,6 @@ export class FilterControlComponent implements OnInit {
                 return {name: element, checked: false}
             });
             this.actualFilterElementInputs = this.filterElementInputs;
-            console.log(elements)
             this.dataArrived = true;
         })
     }
