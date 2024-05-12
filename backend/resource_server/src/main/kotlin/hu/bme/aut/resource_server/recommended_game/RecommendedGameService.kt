@@ -19,7 +19,7 @@ class RecommendedGameService(
      * Get all recommendations to user which are not yet completed.
      */
     @Transactional
-    fun getAllRecommendedToUser(username: String, pageIndex: Int = 0, pageSize: Int = 10): List<RecommendedGameDto> {
+    fun getAllRecommendedToUser(username: String, pageIndex: Int = 0, pageSize: Int = 100): List<RecommendedGameDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
         return recommendedGameRepository
             .findAllPagedByRecommendedToAndCompleted(user, false, PageRequest.of(pageIndex, pageSize))

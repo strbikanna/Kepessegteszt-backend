@@ -85,11 +85,12 @@ export class EditGameFormComponent implements OnInit {
                 this.sendThumbnail(game)
                 this.onBack()
             })
+        }else{
+            this.service.editGame(game).subscribe(game => {
+                this.sendThumbnail(game)
+                this.onBack()
+            })
         }
-        this.service.editGame(game).subscribe(game => {
-            this.sendThumbnail(game)
-            this.onBack()
-        })
     }
 
     onSave(){
