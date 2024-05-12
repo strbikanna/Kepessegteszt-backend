@@ -37,7 +37,9 @@ export class ConfigItemFormComponent implements ControlValueAccessor, OnInit{
         const validConfig = (configItem.easiestValue < configItem.hardestValue && configItem.increment > 0
                 && configItem.initialValue >= configItem.easiestValue && configItem.initialValue <= configItem.hardestValue) ||
             (configItem.easiestValue > configItem.hardestValue && configItem.increment < 0
-                && configItem.initialValue <= configItem.easiestValue && configItem.initialValue >= configItem.hardestValue);
+                && configItem.initialValue <= configItem.easiestValue && configItem.initialValue >= configItem.hardestValue) ||
+            (configItem.easiestValue === configItem.hardestValue && configItem.initialValue === configItem.easiestValue
+                && configItem.increment === 0);
         return validConfig ? null : {invalidValues: true};
     }
     private paramOrderValid: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
