@@ -26,11 +26,6 @@ export class ProfileDataComparisonComponent implements OnInit{
     ngOnInit(): void {
         this.groups = this.service.getGroupsOfUser()
         this.userProfileData = this.service.getProfileData()
-        this.service.getProfileDataOfGroup(2, 'average').subscribe(
-            (data) => {
-                this.dataToCompare.next(data)
-            }
-        )
     }
 
     onSubmit(){

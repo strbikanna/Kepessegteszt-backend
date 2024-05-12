@@ -134,4 +134,12 @@ class UserServiceTest(
         val userInDb = testService.userRepository.findByUsername(user.username).orElseThrow()
         assertEquals(1, userInDb.groups.size)
     }
+
+    @Test
+    fun testEmptyUserGroups(){
+        val user = testService.createUnsavedTestUser()
+        testService.saveUser(user)
+        val groups = userService.getGroupsOfUser(user.username)
+        assertEquals(0, groups.size)
+    }
 }

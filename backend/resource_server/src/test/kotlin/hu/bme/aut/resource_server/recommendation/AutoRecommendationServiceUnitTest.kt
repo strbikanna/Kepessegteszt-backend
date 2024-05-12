@@ -206,5 +206,27 @@ private lateinit var autoRecommendationService : AutoRecommendationService
         }
     }
 
+    /**
+     * When increment is 0, the value should not change
+     */
+    @Test
+    fun `should work with 0 increment`(){
+        game = game.copy(configItems = game.configItems.map { it.copy(increment = 0) }.toMutableSet())
+        val latestRecommendation = TestDataSource.createRecommendationForUser(user, game).copy(timestamp = LocalDateTime.now(),
+            config = game.configItems.associate { it.paramName to it.initialValue }.toMutableMap())
+        val result = TestDataSource.createGameplayResultForUser(user, latestRecommendation).copy(result = mapOf("passed" to true))
+        val firstOrderParam = game.configItems.find { it.paramOrder == 1 }!!
+        val secondOrderParam = game.configItems.find { it.paramOrder == 2 }!!
+        `when`(mockDataService.getResultById(1)).thenReturn(result)
+        `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
+        `when`(mockDataService.getPreviousRecommendation(latestRecommendation)).thenReturn(null)
+        runBlocking {
+            val nextRecommendation =  autoRecommendationService.createNextRecommendationBasedOnResult(1)
+            assertEquals(2, nextRecommendation.size)
+            assertEquals(firstOrderParam.initialValue, nextRecommendation[firstOrderParam.paramName])
+            assertEquals(secondOrderParam.initialValue, nextRecommendation[secondOrderParam.paramName])
+        }
+    }
+
 
 }
