@@ -65,37 +65,36 @@ import { FilterControlComponent } from './common/filter-control/filter-control.c
 import {CdkFixedSizeVirtualScroll, CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
 import {MatSidenavModule} from "@angular/material/sidenav";
 
-
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    HomeComponent,
-    ProfileComponent,
-    RecommendedGamesComponent,
-    HeaderComponent,
-    ImpersonationComponent,
-    AlertDialogComponent,
-    CognitiveProfileComponent,
-    ProfileChartComponent,
-    ProfileCardComponent,
-    NotFoundComponent,
-    GameManagementComponent,
-    FileUploadComponent,
-    EditGameFormComponent,
-    GameCardComponent,
-    CalculationDialogComponent,
-    RecommendationComponent,
-    ProfileDataComparisonComponent,
-    ProfileRadarChartComponent,
-    ConfigItemFormComponent,
-    ResultInfoCardComponent,
-    ResultPageComponent,
-    ConfirmDialogComponent,
-    CsvDownloadButtonComponent,
-    SortControlComponent,
-    FilterControlComponent,
-  ],
+    declarations: [
+        AppComponent,
+        LoginComponent,
+        HomeComponent,
+        ProfileComponent,
+        RecommendedGamesComponent,
+        HeaderComponent,
+        ImpersonationComponent,
+        AlertDialogComponent,
+        CognitiveProfileComponent,
+        ProfileChartComponent,
+        ProfileCardComponent,
+        NotFoundComponent,
+        GameManagementComponent,
+        FileUploadComponent,
+        EditGameFormComponent,
+        GameCardComponent,
+        CalculationDialogComponent,
+        RecommendationComponent,
+        ProfileDataComparisonComponent,
+        ProfileRadarChartComponent,
+        ConfigItemFormComponent,
+        ResultInfoCardComponent,
+        ResultPageComponent,
+        ConfirmDialogComponent,
+        CsvDownloadButtonComponent,
+        SortControlComponent,
+        FilterControlComponent,
+    ],
     imports: [
         BrowserModule,
         RouterModule.forRoot(appRoutes),
@@ -137,25 +136,25 @@ import {MatSidenavModule} from "@angular/material/sidenav";
         }),
         MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule
     ],
-  providers: [
-      {
-        provide: HTTP_INTERCEPTORS,
-        useClass: AuthInterceptor,
-        multi: true
-      },
-    {
-      provide: MAT_DIALOG_DEFAULT_OPTIONS,
-      useValue: {
-        disableClose: false,
-        hasBackdrop: true
-      }
-    },
-    {
-      provide: ErrorHandler,
-      useClass: GlobalErrorhandlerService,
-    },
-    provideRouter(appRoutes, withComponentInputBinding()),
-  ],
-  bootstrap: [AppComponent]
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true
+        },
+        {
+            provide: MAT_DIALOG_DEFAULT_OPTIONS,
+            useValue: {
+                disableClose: false,
+                hasBackdrop: true
+            }
+        },
+        {
+            provide: ErrorHandler,
+            useClass: GlobalErrorhandlerService,
+        },
+        provideRouter(appRoutes, withComponentInputBinding()),
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

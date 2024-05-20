@@ -15,6 +15,7 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatButtonModule} from "@angular/material/button";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {UserSearchComponent} from "./common/user_contact_autocomplete/user-search/user-search.component";
 
 
 @NgModule({
@@ -32,10 +33,14 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
         MatAutocompleteModule,
         MatButtonModule,
         MatDividerModule,
-        MatSnackBarModule
+        MatSnackBarModule,
     ],
     declarations: [
         AdminPageComponent,
+        UserSearchComponent
+    ],
+    exports: [
+        UserSearchComponent
     ]
 })
 export class AdminModule {

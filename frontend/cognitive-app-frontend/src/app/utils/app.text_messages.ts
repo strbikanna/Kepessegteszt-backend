@@ -52,14 +52,6 @@ export const TEXTS = {
         username: 'Felhasználónév',
         roles: 'Szerepkörök',
     },
-    playground: {
-        error: {
-            title: 'Hiba történt',
-            explanation: 'Valószínűleg újratöltötted a játékot vagy megszakadt az internetkapcsolat.' +
-                'Sajnos az előző játékot nem tudod folytatni, térj vissza a játékok oldalra és válassz egy új játékot.',
-            action: 'Vissza a játékokhoz',
-        }
-    },
     paging: {
         firstPage: 'Első oldal',
         itemsPerPage: 'Találatok száma oldalanként',
@@ -86,6 +78,12 @@ export const TEXTS = {
         },
         update_success_message: 'A felhasználó adatai sikeresen frissítve lettek',
         update_error_message: 'A felhasználó adatainak frissítése sikertelen volt',
+    },
+    contact_autocomplete: {
+        label: 'Kapcsolatok',
+        hint: 'Kapcsolat hozzáadása',
+        placeholder: 'Új kapcsolat',
+        buttonText: 'Hozzáadás',
     },
     error: {
         default_error_message: 'Ismeretlen hiba történt',

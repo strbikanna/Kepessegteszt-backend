@@ -48,7 +48,7 @@
                         {{text.user_data.roles}}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <mat-checkbox *ngFor="let role of actualRolesOfUser(user)" checked
+                <mat-checkbox *ngFor="let role of actualRolesOfUser(user)" checked="{{true}}"
                               (change)="onRoleCheckChanged(role, $event)">{{role}}</mat-checkbox>
                 <mat-checkbox *ngFor="let role of notRolesOfUser(user)"
                               (change)="onRoleCheckChanged(role, $event)">{{role}}</mat-checkbox>
@@ -65,27 +65,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <div class="contact-panel">
-                    <div class="add-contact">
-                        <mat-form-field>
-                            <mat-label>{{text.user_data.contacts}}</mat-label>
-                            <input type="text"
-                                   placeholder="Új kapcsolat"
-                                   aria-label="Text"
-                                   matInput
-                                   formControlName="contactAutocompleteForm"
-                                   [matAutocomplete]="auto">
-                            <mat-hint>{{text.actions.add_contact}}</mat-hint>
-                            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="convertDisplay">
-                                <mat-option *ngFor="let option of filteredContactOptions" [value]="option">
-                                    {{option.firstName}} {{option.lastName}}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                        <button matSuffix mat-flat-button aria-label="Submit" type="button" (click)="onAddContact()" color="primary">
-                            {{text.actions.add}}
-                        </button>
-                    </div>
-
+                    <app-user-search (onContactSelected)="onAddContact($event)" [userToExclude]="user" [displayCurrentUser]="true"/>
                     <div class="contact-list">
                         <div *ngFor="let contact of user.contacts" class="existing-contact">
                             <div>{{contact.firstName}} {{contact.lastName}} </div>
