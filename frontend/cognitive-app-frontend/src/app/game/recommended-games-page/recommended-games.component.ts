@@ -30,7 +30,6 @@ export class RecommendedGamesComponent implements OnInit {
         this.teacherRecommendedGames = this.gameService.getTeacherRecommendedGames()
         this.scientistRecommendedGames = this.gameService.getScientistRecommendedGames()
         this.allGames = this.gameService.getAllGames()
-
     }
 
 }

@@ -64,6 +64,8 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import { FilterControlComponent } from './common/filter-control/filter-control.component';
 import {CdkFixedSizeVirtualScroll, CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
 import {MatSidenavModule} from "@angular/material/sidenav";
+import { GameSearchComponent } from './game-management/game-search/game-search.component';
+import { RecommendationDetailCardComponent } from './recommendation-detail-card/recommendation-detail-card.component';
 
 @NgModule({
     declarations: [
@@ -94,6 +96,8 @@ import {MatSidenavModule} from "@angular/material/sidenav";
         CsvDownloadButtonComponent,
         SortControlComponent,
         FilterControlComponent,
+        GameSearchComponent,
+        RecommendationDetailCardComponent,
     ],
     imports: [
         BrowserModule,
