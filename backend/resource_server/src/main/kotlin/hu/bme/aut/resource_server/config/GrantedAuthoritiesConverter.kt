@@ -34,21 +34,19 @@ class GrantedAuthoritiesConverter(
 
     private fun saveUser(source: Jwt, roles: MutableList<Role>) {
         val username = source.subject
-        if (!userRepository.existsByUsername(username)) {
+        val userDb = userRepository.findByUsername(username).orElse(null)
+        val firstNameClaim = source.getClaimAsString("family_name")
+        val lastNameClaim = source.getClaimAsString("given_name")
+        if(userDb == null || userDb.roles.isEmpty() || userDb.firstName != firstNameClaim || userDb.lastName != lastNameClaim){
             userRepository.save(
-                    UserEntity(
-                            username = username,
-                            firstName = source.getClaimAsString("family_name"),
-                            lastName = source.getClaimAsString("given_name"),
-                            profileFloat = mutableSetOf(),
-                            profileEnum = mutableSetOf(),
-                            roles = roles.toMutableSet()
-                    )
+                UserEntity(
+                    id = userDb?.id,
+                    username = username,
+                    firstName = source.getClaimAsString("family_name"),
+                    lastName = source.getClaimAsString("given_name"),
+                    roles = roles.toMutableSet()
+                )
             )
-        }else{
-            var user = userRepository.findByUsername(username).get()
-            user = user.copy(roles = roles.toMutableSet())
-            userRepository.save(user)
         }
     }
 
