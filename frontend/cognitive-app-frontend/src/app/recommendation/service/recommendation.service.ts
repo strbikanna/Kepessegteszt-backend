@@ -13,7 +13,6 @@ export class RecommendationService {
   constructor(private http: HttpClient, private httpService: SimpleHttpService) { }
 
   saveRecommendation(recommendation: Recommendation): Observable<RecommendedGame>{
-    console.log(recommendation)
     return this.http.post<RecommendedGame>(`${this.httpService.baseUrl}/recommended_game/recommend`, recommendation);
   }
 }

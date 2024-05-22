@@ -5,5 +5,26 @@
   width: 100%;
   height: 100%;
 }
+:host{
+  display: grid;
+  height: 100vh;
+  grid-template-rows: auto 1fr auto;
+}
+footer{
+    width: 100%;
+    height: 4em;
+  color: #531499;
+  border-radius: 0.2em;
+div{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+  width: 95%;
+  mat-icon{
+    margin-right: 0.5em;
+  }
+}
+}
 
 

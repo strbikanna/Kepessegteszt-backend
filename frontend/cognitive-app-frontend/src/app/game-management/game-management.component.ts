@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {MatPaginatorIntl, PageEvent} from "@angular/material/paginator";
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatPaginator, MatPaginatorIntl, PageEvent} from "@angular/material/paginator";
 import {GameManagementService} from "./service/game-management.service";
 import {Observable} from "rxjs";
 import {Game} from "../model/game.model";
@@ -24,11 +24,14 @@ export class GameManagementComponent implements OnInit {
     lastPageEvent: PageEvent | undefined = undefined;
     games!: Observable<Game[]>
 
+    @ViewChild('paginatorTop') paginatorTop!: MatPaginator
+    @ViewChild('paginatorBottom') paginatorBottom!: MatPaginator
 
     constructor(
         private service: GameManagementService,
         private router: Router,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+
     ) {
     }
 
@@ -38,6 +41,8 @@ export class GameManagementComponent implements OnInit {
     }
 
     handlePageEvent(event: PageEvent): void {
+        this.paginatorTop.pageIndex = event.pageIndex;
+        this.paginatorBottom.pageIndex = event.pageIndex;
         this.lastPageEvent = event;
         this.defaultPageSize = event.pageSize;
         this.games = this.service.getExistingGamesPaged(event.pageIndex, event.pageSize);
