@@ -65,7 +65,7 @@ export class ResultPageComponent implements OnInit {
     }
 
     onUserNamesChosen(userNames: string[] | undefined) {
-        this.chosenUserNames = userNames ?? [];
+        this.chosenUserNames = userNames?.map(name => name.split(' ')[2].slice(1,-1)) ?? [];
     }
 
     onGameNamesChosen(gameNames: string[] | undefined) {
@@ -159,7 +159,7 @@ export class ResultPageComponent implements OnInit {
 
     private loadUsernames() {
         this.userNameOptions = this.userService.getAllUsers().pipe(
-            map(users => users.map(user => user.username))
+            map(users => users.map(user => `${user.firstName} ${user.lastName} (${user.username})`))
         )
     }
 
