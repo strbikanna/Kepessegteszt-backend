@@ -10,6 +10,7 @@ import {SortElement} from "../../common/sort-control/sort-control.component";
 import {UserService} from "angular-auth-oidc-client/lib/user-data/user.service";
 import {AdminService} from "../../admin/service/admin.service";
 import {TEXTS} from "../../utils/app.text_messages";
+import {UserInfo} from "../../auth/userInfo";
 
 @Component({
     selector: 'app-result-page',
@@ -28,7 +29,7 @@ export class ResultPageComponent implements OnInit {
     lastPageEvent: PageEvent = {pageIndex: 0, pageSize: this.defaultPageSize, length: this.dataLength};
     userNameOptions: Observable<string[]> = new Observable<string[]>();
     gameNameOptions: Observable<string[]> = new Observable<string[]>();
-    sortOptions: string[] = [this.text.timestamp, this.text.username, this.text.game];
+    sortOptions: string[] = [this.text.timestamp, this.text.game];
     loading = true;
 
     @ViewChild('paginator') paginator!: MatPaginator
@@ -57,7 +58,10 @@ export class ResultPageComponent implements OnInit {
             })
         this.resultService.getCountOfResults().subscribe(count => this.dataLength = count);
         this.loadGameNames();
-        this.loadUsernames();
+        if(UserInfo.isAdmin()){
+            this.sortOptions.push(this.text.username)
+            this.loadUsernames();
+        }
     }
 
     onSortElementChosen(sortElement: SortElement) {
@@ -196,4 +200,5 @@ export class ResultPageComponent implements OnInit {
     }
 
     protected readonly of = of;
+    protected readonly UserInfo = UserInfo;
 }
