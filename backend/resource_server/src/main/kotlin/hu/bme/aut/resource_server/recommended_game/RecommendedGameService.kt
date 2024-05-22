@@ -1,6 +1,10 @@
 package hu.bme.aut.resource_server.recommended_game
 
+import hu.bme.aut.resource_server.game.GameRepository
+import hu.bme.aut.resource_server.role.Role
+import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
+import hu.bme.aut.resource_server.utils.RoleName
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -14,6 +18,7 @@ import java.time.LocalDateTime
 class RecommendedGameService(
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
     @Autowired private var userRepository: UserRepository,
+    @Autowired private var gameRepository: GameRepository
     ) {
     /**
      * Get all recommendations to user which are not yet completed.
@@ -39,8 +44,23 @@ class RecommendedGameService(
         throw NoSuchElementException("No config found for recommendation.")
     }
 
-    fun addRecommendation(recommendedGame: RecommendedGameEntity): RecommendedGameEntity {
-        return recommendedGameRepository.save(recommendedGame)
+    fun addRecommendation(recommendation: RecommendationDto, recommenderUsername: String): RecommendedGameEntity {
+        val recommender = userRepository.findByUsername(recommenderUsername).orElseThrow()
+        val recommendedTo = userRepository.findByUsername(recommendation.recommendedTo).orElse(
+            userRepository.save(UserEntity(
+                username = recommendation.recommendedTo,
+                firstName = "",
+                lastName = "",
+                roles = mutableSetOf(Role(RoleName.STUDENT)),
+            ))
+        )
+        val game = gameRepository.findById(recommendation.gameId).orElseThrow()
+        return recommendedGameRepository.save(RecommendedGameEntity(
+            game = game,
+            recommendedTo = recommendedTo,
+            recommender = recommender,
+            config = recommendation.config
+        ))
     }
 
     private fun convertToDto(recommendedGame: RecommendedGameEntity): RecommendedGameDto {
