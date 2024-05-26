@@ -12,7 +12,6 @@ import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
 
 @Service
 class RecommendedGameService(
@@ -29,7 +28,7 @@ class RecommendedGameService(
         return recommendedGameRepository
             .findAllPagedByRecommendedToAndCompleted(user, false, PageRequest.of(pageIndex, pageSize))
             .filter { it.game.active }
-            .map { convertToDto(it) }
+            .map { it.toDto() }
     }
 
     suspend fun getRecommendedGameConfig(id: Long): Map<String, Any> = withContext(Dispatchers.IO){
@@ -61,18 +60,5 @@ class RecommendedGameService(
             recommender = recommender,
             config = recommendation.config
         ))
-    }
-
-    private fun convertToDto(recommendedGame: RecommendedGameEntity): RecommendedGameDto {
-        val recommenderName = if(recommendedGame.recommender != null ) recommendedGame.recommender.firstName + " " + recommendedGame.recommender.lastName else ""
-        return RecommendedGameDto(
-            id = recommendedGame.id!!,
-            gameId = recommendedGame.game.id!!,
-            name = recommendedGame.game.name,
-            description = recommendedGame.game.description,
-            thumbnail = recommendedGame.game.thumbnailPath,
-            recommendationDate = recommendedGame.timestamp ?: LocalDateTime.now(),
-            recommender = recommenderName
-        )
     }
 }

@@ -13,9 +13,9 @@
                 <h3 class="title">{{ texts.chosenGame }}:</h3>
             </div>
             <div class="chipContainer">
-                <mat-chip *ngIf="chosenUser">{{ chosenUser?.firstName }} {{ chosenUser?.lastName }}</mat-chip>
+                <mat-chip *ngIf="chosenUser">{{ chosenUser.firstName }} {{ chosenUser.lastName }}</mat-chip>
                 <mat-chip *ngIf="!chosenUser">?</mat-chip>
-                <mat-chip *ngIf="chosenGame">{{ chosenGame?.name }}</mat-chip>
+                <mat-chip *ngIf="chosenGame">{{ chosenGame.name }}</mat-chip>
                 <mat-chip *ngIf="!chosenGame">?</mat-chip>
             </div>
 
