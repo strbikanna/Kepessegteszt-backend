@@ -39,7 +39,7 @@ class GrantedAuthoritiesConverter(
         val userDb = userRepository.findByUsername(username).orElse(null)
         val firstNameClaim = source.getClaimAsString("family_name")
         val lastNameClaim = source.getClaimAsString("given_name")
-        if(userDb == null){
+        if(userDb == null && userRepository.existsByUsername(username).not()){
             userRepository.save(
                 UserEntity(
                     id = userDb?.id,
