@@ -1,0 +1,19 @@
+<div [formGroup]="sortModeForm">
+    <mat-form-field style="margin-right: 2em">
+        <mat-select formControlName="sortElement">
+            <mat-option value="{{undefined}}" (click)="sortChosen()"></mat-option>
+            <mat-option *ngFor="let sortElement of sortElements" value="{{sortElement}}"
+                        (click)="sortChosen()">{{ sortElement }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-button-toggle-group appearance="standard" formControlName="sortDirection" (change)="sortChosen()">
+        <mat-button-toggle value="asc">
+            <mat-icon>arrow_upward</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="desc">
+            <mat-icon>arrow_downward</mat-icon>
+        </mat-button-toggle>
+    </mat-button-toggle-group>
+
+</div>

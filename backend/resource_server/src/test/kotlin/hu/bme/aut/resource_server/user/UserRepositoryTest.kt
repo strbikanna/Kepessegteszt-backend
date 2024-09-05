@@ -53,6 +53,7 @@ class UserRepositoryTest(
     }
 
     @Test
+    @Transactional
     fun shouldSaveMoreUsersCorrectly() {
         val user1 = saveAndTestUser1()
         val user2 = saveAndTestUser2()
@@ -61,6 +62,7 @@ class UserRepositoryTest(
     }
 
     @Test
+    @Transactional
     fun shouldGetGroupAverage(){
         val user1 = saveAndTestUser1()
         val user2 = saveAndTestUser2()

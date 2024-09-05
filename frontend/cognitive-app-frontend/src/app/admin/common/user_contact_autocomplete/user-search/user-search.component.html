@@ -1,0 +1,20 @@
+<div class="add-contact">
+    <mat-form-field>
+        <mat-label>{{text.label}}</mat-label>
+        <input type="text"
+               placeholder="{{text.placeholder}}"
+               aria-label="Text"
+               matInput
+               [formControl]="contactAutocompleteForm"
+               [matAutocomplete]="auto">
+        <mat-hint>{{text.hint}}</mat-hint>
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="convertDisplay">
+            <mat-option *ngFor="let option of filteredContactOptions" [value]="option">
+                {{option.firstName}} {{option.lastName}}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+    <button matSuffix mat-flat-button aria-label="Submit" type="button" (click)="onAddContact()" color="primary">
+        {{text.buttonText}}
+    </button>
+</div>

@@ -21,12 +21,12 @@ export class SimpleHttpService {
     } else {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong.
-      if(error.status === 401 || error.status === 403){
-        return throwError(() => new Error(TEXTS.error.unauthorized_error));
-      }
-      if(error.status === 500){
-        return throwError(() => new Error(error.message));
-      }
+      // if(error.status === 401 || error.status === 403){
+      //   return throwError(() => new Error(TEXTS.error.unauthorized_error));
+      // }
+      // if(error.status === 500){
+      //   return throwError(() => new Error(error.message));
+      // }
     }
     return throwError(() => error);
   }

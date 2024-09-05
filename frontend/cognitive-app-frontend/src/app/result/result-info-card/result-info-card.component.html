@@ -1,0 +1,18 @@
+<mat-expansion-panel class="{{result.passed ? 'passed' : 'failed'}}">
+    <mat-expansion-panel-header class="container">
+        <mat-chip  *ngIf="result.passed" class="infoIcon">
+            <mat-icon>check</mat-icon>
+        </mat-chip>
+        <mat-chip  *ngIf="!result.passed" class="infoIcon">
+            <mat-icon>close</mat-icon>
+        </mat-chip>
+        <mat-panel-title> {{ result.gameName }} </mat-panel-title>
+        <mat-panel-description> {{ result.username }} </mat-panel-description>
+        <mat-panel-description> {{ result.timestamp }} </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div> {{texts.result}}: {{result.passed ? texts.passed : texts.failed }} </div>
+    <div> {{texts.timestamp}}: {{result.timestamp}} </div>
+    <div> {{texts.username}}: {{result.username}} </div>
+    <div> {{texts.config}}: {{getContent(result.config)}} </div>
+    <div> {{texts.result}}: {{getContent(result.result)}} </div>
+</mat-expansion-panel>

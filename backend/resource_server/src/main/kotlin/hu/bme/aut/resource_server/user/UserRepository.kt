@@ -9,6 +9,8 @@ import java.util.*
 interface UserRepository: CrudRepository<UserEntity, Int> {
     fun findByUsername(username: String): Optional<UserEntity>
 
+    fun findAllByUsernameIn(username: List<String>): List<UserEntity>
+
     fun existsByUsername(username: String): Boolean
 
     fun findByIdIn(ids: List<Int>): List<UserEntity>

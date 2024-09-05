@@ -1,5 +1,5 @@
-<h2>{{text.title}}: {{game?.name}}</h2>
-<form [formGroup]="gameForm" (ngSubmit)="onSubmit()">
+<h2>{{text.title}} {{game?.name}}</h2>
+<form [formGroup]="gameForm" (ngSubmit)="onSave()">
     <h4>{{text.data_section_title}}</h4>
     <mat-form-field>
         <mat-label>{{text.name}}</mat-label>
@@ -13,11 +13,6 @@
         <mat-checkbox formControlName="active">{{text.active}}</mat-checkbox>
 
     </div>
-
-    <mat-form-field>
-        <mat-label>{{text.url}}</mat-label>
-        <input matInput formControlName="url">
-    </mat-form-field>
     <div id="abilities">
         <h4>{{text.affected_abilities}}</h4>
         <ng-container formArrayName="abilities">
@@ -27,34 +22,21 @@
                         {{abilityName(abilityForm)}}
                     </mat-checkbox>
                 </div>
-
             </ng-container>
         </ng-container>
 
     </div>
     <div id="config">
         <h4>{{text.config_description}}</h4>
-        <ng-container formArrayName="configDescription">
-            <ng-container *ngFor="let configForm of configDescriptionForm.controls; let i = index">
-                <div [formGroup]="toFromGroup(configForm)">
-                    <mat-form-field id="config-key">
-                        <mat-label>{{text.name}}</mat-label>
-                        <input matInput formControlName="key">
-                        <mat-error>{{text.config_error_message}}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field id="config-value">
-                        <mat-label>{{text.value}}</mat-label>
-                        <input matInput formControlName="value">
-                    </mat-form-field>
-                    <button mat-icon-button color="accent" type="button" (click)="removeConfigDescription(i)"
-                            [disabled]="!isConfigEditable(toFromGroup(configForm).controls['key'].value)"
-                    >
-                        <mat-icon>delete</mat-icon>
-                    </button>
-                </div>
+        <ng-container [formArrayName]="'configItems'">
+            <ng-container *ngFor="let configItem of configItemsForm.controls; let i = index">
+                <app-config-item-form [configItemData]="configItem.value" [initialEditable]="configItem.enabled" [forbiddenParamOrders]="usedParamOrders"
+                                        (delete)="onDeleteConfigItem(i)" (save)="onUpdateConfigItem(i, $event)"
+                ></app-config-item-form>
             </ng-container>
+
         </ng-container>
-        <button mat-mini-fab color="primary" type="button" (click)="addConfigDescription()" class="add-button">
+        <button mat-mini-fab color="primary" type="button" (click)="addConfigItem()" class="add-button">
             <mat-icon>add</mat-icon>
         </button>
     </div>
@@ -66,7 +48,7 @@
     <div id="actions">
         <button mat-button color="primary" type="button"
                 (click)="onBack()">{{actionText.cancel}}</button>
-        <button mat-raised-button color="primary" type="submit" class="submit-button">{{actionText.save}}</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="gameForm.invalid" class="submit-button">{{actionText.save}}</button>
     </div>
 
 </form>

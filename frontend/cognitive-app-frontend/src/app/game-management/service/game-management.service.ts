@@ -13,10 +13,10 @@ export class GameManagementService {
   private calcPath = "/profile-calculation";
 
   constructor(private helper: SimpleHttpService, private http: HttpClient) { }
-  getExistingGamesPaged(pageIndex: number, pageSize: number): Observable<Game[]> {
+  getExistingGamesPaged(pageIndex?: number, pageSize?: number): Observable<Game[]> {
     let params = new HttpParams()
-        .set('page', pageIndex.toString())
-        .set('size', pageSize.toString());
+    if(pageIndex) params = params.set('pageIndex', pageIndex.toString())
+    if(pageSize) params = params.set('pageSize', pageSize.toString())
     return this.http.get<Game[]>(`${this.helper.baseUrl}${this.path}/all`, {params: params}).pipe(
         retry(3),
         catchError(this.helper.handleHttpError)
@@ -37,7 +37,15 @@ export class GameManagementService {
   }
 
   editGame(game: Game): Observable<Game> {
+    if(!game.id) return this.createGame(game);
+
     return this.http.put<Game>(`${this.helper.baseUrl}${this.path}/${game.id}`, game).pipe(
+        retry(3),
+    )
+  }
+
+  createGame(game: Game): Observable<Game> {
+    return this.http.post<Game>(`${this.helper.baseUrl}${this.path}`, game).pipe(
         retry(3),
     )
   }

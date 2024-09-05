@@ -37,11 +37,11 @@ data class UserEntity(
 
         @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
         @JoinColumn(name = "user_id")
-        var profileFloat: MutableSet<FloatProfileItem>,
+        var profileFloat: MutableSet<FloatProfileItem> = mutableSetOf(),
 
         @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
         @JoinColumn(name = "user_id")
-        var profileEnum: MutableSet<EnumProfileItem>,
+        var profileEnum: MutableSet<EnumProfileItem> = mutableSetOf(),
 
         @ManyToMany
         @JoinTable(

@@ -1,19 +1,21 @@
 package hu.bme.aut.resource_server.recommendation
 
 import hu.bme.aut.resource_server.game.GameEntity
+import hu.bme.aut.resource_server.game.game_config.ConfigItem
 import hu.bme.aut.resource_server.profile_calculation.calculator.AbilityRateCalculatorService
 import hu.bme.aut.resource_server.profile_calculation.calculator.ScoreCalculator
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
 import hu.bme.aut.resource_server.profile_calculation.error.CalculationException
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
+import hu.bme.aut.resource_server.result.ResultEntity
 import hu.bme.aut.resource_server.user.UserEntity
+import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import kotlin.random.Random
 
 /**
  * This service is responsible for generating recommendations for users.
@@ -44,15 +46,102 @@ class AutoRecommendationService(
         log.info("Recommendation model created for game with id: $gameId")
     }
 
-    suspend fun createNextRecommendationBasedOnResult(prevConfig: Map<String, Any>, result: Map<String, Any>, username: String): Map<String, Any> = withContext(Dispatchers.Default){
-        log.trace("Creating next recommendation based on result for user: $username")
-        val recommendation = mutableMapOf<String, Any>()
-        prevConfig.forEach { (key, value) ->
-                if (value is Int) {recommendation[key] = value + Random.nextInt(0, 2)}
-                else recommendation[key] = value
+    /**
+     * Creates a new recommendation based on the current result and the previous and current recommendation.
+     * The config parameters are changed in their defined order.
+     * The config params are incremented to max if the result was successful, decremented otherwise.
+     * After reaching max or min, the next parameter is changed and the value is set to the initial value.
+     */
+    @Transactional
+    suspend fun createNextRecommendationBasedOnResult(resultId: Long): Map<String, Any> =
+        withContext(Dispatchers.Default) {
+            val result = dataService.getResultById(resultId)
+            val user = result.user
+            val game = dataService.getGameWithConfigItems(result.recommendedGame.game.id!!)
+            log.trace("Creating next recommendation based on result for user: ${user.username}")
+            if(game.configItems.isEmpty()){
+                log.warn("No config items found for game ${game.name}")
+                return@withContext emptyMap()
+            }
+            val success = isResultSuccess(result)
+            val nextRecommendation = result.recommendedGame.config.toMutableMap()
+            val previousRecommendation = dataService.getPreviousRecommendation(result.recommendedGame)  ?: result.recommendedGame
+            val lastChangedParam = getLastChangedParam(result.recommendedGame, previousRecommendation)
+            var nextParamToChange: ConfigItem? = lastChangedParam
+            var currValue = result.recommendedGame.config[lastChangedParam.paramName] as Int
+            if((currValue + lastChangedParam.increment > lastChangedParam.hardestValue && success) ||
+                currValue - lastChangedParam.increment < lastChangedParam.easiestValue && !success){
+                nextParamToChange = game.configItems.find { it.paramOrder == lastChangedParam.paramOrder + 1 }
+                if(nextParamToChange != null){
+                    nextRecommendation[lastChangedParam.paramName] = lastChangedParam.initialValue
+                }else{
+                    nextParamToChange = findNextParamToChange(game.configItems, result.config, lastChangedParam)
+                }
+                currValue = result.recommendedGame.config[nextParamToChange.paramName] as Int
+            }
+            if (success) {
+                val harderRecommendationParam = recommendHarder(nextParamToChange!!, currValue)
+                nextRecommendation[harderRecommendationParam.first] = harderRecommendationParam.second
+            } else {
+                val easierRecommendationParam = recommendEasier(nextParamToChange!!, currValue)
+                nextRecommendation[easierRecommendationParam.first] = easierRecommendationParam.second
+            }
+            log.info("Next recommendation created based on result for user: ${user.username}")
+            return@withContext nextRecommendation
         }
-        log.info("Next recommendation created based on result for user: $username")
-        return@withContext recommendation
+
+    /**
+     * Finds the next parameter to change in the config.
+     * The next parameter is the one with the next order after the last changed parameter.
+     * If the last changed parameter already has minimum or maximum value then the next parameter is the one with the next order
+     * that has no minimum or maximum value.
+     */
+    private fun findNextParamToChange(configItems: Set<ConfigItem>, currConfig: Map<String, Any>, lastChangedParam: ConfigItem): ConfigItem {
+        var paramToChange = lastChangedParam
+        var currValue = currConfig[paramToChange.paramName] as Int
+        val paramCondition = if(currValue >= paramToChange.hardestValue){
+            {c: Int -> c + paramToChange.increment > paramToChange.hardestValue}
+        } else {
+            {c: Int -> c - paramToChange.increment < paramToChange.easiestValue}
+        }
+        var maxCycle = configItems.size
+        while (paramCondition(currValue) && maxCycle-- > 0) {
+            paramToChange = configItems.find { it.paramOrder == paramToChange.paramOrder + 1 } ?: configItems.first()
+            currValue = currConfig[paramToChange.paramName] as Int
+        }
+        return paramToChange
+    }
+
+    /**
+     * Returns the last changed config parameter of the recommendation or the first one if no change happened.
+     */
+    //@Transactional
+    private fun getLastChangedParam(
+        recommendation: RecommendedGameEntity,
+        previousRecommendation: RecommendedGameEntity
+    ): ConfigItem {
+        val game = dataService.getGameWithConfigItems(recommendation.game.id!!)
+        val firstOrderConfigItem = game.configItems.find { it.paramOrder == 1 }!!
+        val currentConfig = recommendation.config
+        val previousConfig = previousRecommendation.config
+        val changedConfigName = currentConfig.keys.find { name -> currentConfig[name] != previousConfig[name] }
+            ?: return firstOrderConfigItem
+        return game.configItems.find { it.paramName == changedConfigName }
+            ?: firstOrderConfigItem
+    }
+
+    private fun isResultSuccess(result: ResultEntity): Boolean{
+        return result.result["passed"] as Boolean
+    }
+
+    private fun recommendEasier(configDescription: ConfigItem, currentValue: Int): Pair<String, Int> {
+        if (currentValue == configDescription.easiestValue) return Pair(configDescription.paramName, currentValue)
+        return Pair(configDescription.paramName, currentValue - configDescription.increment)
+    }
+
+    private fun recommendHarder(configDescription: ConfigItem, currentValue: Int): Pair<String, Int> {
+        if (currentValue == configDescription.hardestValue) return Pair(configDescription.paramName, currentValue)
+        return Pair(configDescription.paramName, currentValue + configDescription.increment)
     }
 
     /**

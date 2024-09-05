@@ -45,3 +45,16 @@ data class RecommendedGameEntity(
         @JoinColumn(name = "game_id")
         val game: GameEntity
 )
+
+fun RecommendedGameEntity.toDto(): RecommendedGameDto{
+        val recommenderName = if(this.recommender != null ) this.recommender.firstName + " " + this.recommender.lastName else ""
+        return RecommendedGameDto(
+                id = this.id!!,
+                gameId = this.game.id!!,
+                name = this.game.name,
+                description = this.game.description,
+                thumbnail = this.game.thumbnailPath,
+                recommendationDate = this.timestamp ?: LocalDateTime.now(),
+                recommender = recommenderName
+        )
+}

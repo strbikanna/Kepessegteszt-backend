@@ -22,4 +22,7 @@ interface GameRepository : CrudRepository<GameEntity, Int>, PagingAndSortingRepo
     @Query("SELECT g FROM GameEntity g LEFT JOIN FETCH g.affectedAbilities WHERE g.id = :id")
     fun findByIdWithAbilities(id: Int): Optional<GameEntity>
 
+    @Query("SELECT g FROM GameEntity g LEFT JOIN FETCH g.configItems WHERE g.id = :id")
+    fun findByIdWithConfigItems(id: Int): Optional<GameEntity>
+
 }

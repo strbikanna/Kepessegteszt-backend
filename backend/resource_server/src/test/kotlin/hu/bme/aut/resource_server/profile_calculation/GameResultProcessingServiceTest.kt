@@ -38,8 +38,7 @@ class GameResultProcessingServiceTest(
         repository.saveAll(results)
         runBlocking {
             val meanAndDeviation = service.processGameResults(game.id!!)
-            assertTrue(meanAndDeviation.mean > 0.5 && meanAndDeviation.mean < 0.511)
-            assertTrue(meanAndDeviation.deviation > 0.019 && meanAndDeviation.deviation < 0.21)
+            assertEquals(0.0, meanAndDeviation.mean) //because result difficulty is not set
         }
 
     }

@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * Used to convert the JWT token's claims to a list of granted authorities.
@@ -20,6 +21,7 @@ class GrantedAuthoritiesConverter(
         @Autowired private var userRepository: UserRepository,
 ) : Converter<Jwt, Collection<GrantedAuthority>> {
 
+    @Transactional
     override fun convert(source: Jwt): Collection<GrantedAuthority> {
         val roles = getRolesFromJwt(source)
         //TODO load subscription and add subscription role
@@ -34,21 +36,26 @@ class GrantedAuthoritiesConverter(
 
     private fun saveUser(source: Jwt, roles: MutableList<Role>) {
         val username = source.subject
-        if (!userRepository.existsByUsername(username)) {
+        val userDb = userRepository.findByUsername(username).orElse(null)
+        val firstNameClaim = source.getClaimAsString("family_name")
+        val lastNameClaim = source.getClaimAsString("given_name")
+        if(userDb == null && userRepository.existsByUsername(username).not()){
             userRepository.save(
-                    UserEntity(
-                            username = username,
-                            firstName = source.getClaimAsString("family_name"),
-                            lastName = source.getClaimAsString("given_name"),
-                            profileFloat = mutableSetOf(),
-                            profileEnum = mutableSetOf(),
-                            roles = roles.toMutableSet()
-                    )
+                UserEntity(
+                    id = userDb?.id,
+                    username = username,
+                    firstName = source.getClaimAsString("family_name"),
+                    lastName = source.getClaimAsString("given_name"),
+                    roles = roles.toMutableSet()
+                )
             )
-        }else{
-            var user = userRepository.findByUsername(username).get()
-            user = user.copy(roles = roles.toMutableSet())
-            userRepository.save(user)
+        }
+        else if(userDb.roles.isEmpty() || userDb.firstName != firstNameClaim || userDb.lastName != lastNameClaim){
+            userRepository.save(userDb.copy(
+                firstName = firstNameClaim,
+                lastName = lastNameClaim,
+                roles = roles.toMutableSet()
+            ))
         }
     }
 

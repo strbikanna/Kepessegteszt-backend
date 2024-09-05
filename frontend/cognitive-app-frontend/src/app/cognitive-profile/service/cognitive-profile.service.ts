@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {catchError, map, Observable, retry,} from "rxjs";
+import {catchError, map, Observable, of, retry,} from "rxjs";
 import {CognitiveProfile} from "../../model/cognitive_profile.model";
 import {Ability} from "../../model/ability.model";
 import {AppConstants} from "../../utils/constants";
@@ -60,6 +60,7 @@ export class CognitiveProfileService {
             catchError(this.helper.handleHttpError),
             map((res: any) => this.convertToCognitiveProfile(res)[0])
         )
+
     }
 
     /**
@@ -86,7 +87,7 @@ export class CognitiveProfileService {
         return this.http.get<CognitiveProfile[]>(`${this.helper.baseUrl}${this.snapshotEndpoint}`, {params: params}).pipe(
             retry(3),
             catchError(this.helper.handleHttpError),
-            map((res: any[]) => this.convertToCognitiveProfile(res))
+            map((res: any[]) => this.convertToCognitiveProfile(res) )
         )
     }
 
@@ -130,12 +131,15 @@ export class CognitiveProfileService {
             let profileAtTime = model.find(profile =>
                 profile.timestamp.getFullYear() === item.timestamp.getFullYear()
                 && profile.timestamp.getMonth() === item.timestamp.getMonth()
-                && profile.timestamp.getDay() === item.timestamp.getDay()
+                && profile.timestamp.getDate() === item.timestamp.getDate()
             )
             if (profileAtTime) {
                 profileAtTime.profileItems.set(item.ability, item.value)
             } else {
-                let profile = {timestamp: item.timestamp, profileItems: new Map<Ability, any>()}
+                let profile = {
+                    timestamp: new Date(item.timestamp),
+                    profileItems: new Map<Ability, any>()
+                }
                 profile.profileItems.set(item.ability, item.value)
                 model.push(profile)
             }

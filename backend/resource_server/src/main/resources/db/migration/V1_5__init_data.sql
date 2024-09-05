@@ -27,6 +27,13 @@ VALUES (7,'Űrlénykihallgatás', 'Segíts a robotnak a tolmácsolásban!',
     "maxLevel": 10
   }');
 
+INSERT INTO game(id, _name, _description, thumbnail_path, _active, url, config_description)
+VALUES (8,'Űrninja', 'Vágd szét a gyümiket a gravitációs térben, mielőtt leesnének!',
+        'http://localhost:8090/game_images/translator-robot.jpg', true, null, '{
+    "winFieldName": "gameWon",
+    "maxLevel": 10
+  }');
+
 -- recommended games
 INSERT INTO recommended_game(_timestamp, config, _level, recommendee_id, game_id)
 VALUES (now(), '{
@@ -43,5 +50,16 @@ VALUES (now(), '{
   "number_of_questions": 5,
   "word_length": 3,
   "change_letter_number": 1,
-  "probably_changed": 0.5
+  "probably_changed": 50
 }', 5, 1, 7);
+
+INSERT INTO recommended_game(_timestamp, config, _level, recommendee_id, game_id)
+VALUES (now(), '{
+  "gravity": 2,
+  "maxLife": 5,
+  "maxFruitCount": 3,
+  "bombSpawnRate": 1,
+  "fruitSpeed": 2,
+  "gameMode": 1,
+  "scoreToWin": 10
+}', 5, 1, 8);
