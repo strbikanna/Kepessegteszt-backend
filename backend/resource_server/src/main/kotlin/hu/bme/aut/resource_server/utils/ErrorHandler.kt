@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.utils
 
+import hu.bme.aut.resource_server.authentication.AuthException
 import hu.bme.aut.resource_server.profile_calculation.error.CalculationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -31,5 +32,17 @@ class ErrorHandler {
     fun handleCalculationException(exception: CalculationException): ResponseEntity<String>{
         val message = exception.message ?: "Error in calculation."
         return ResponseEntity(message, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    @ExceptionHandler(CoroutineException::class)
+    fun handleCoroutineException(exception: CoroutineException): ResponseEntity<String>{
+        val message = exception.message ?: "Unknown error."
+        return ResponseEntity(message, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    @ExceptionHandler(AuthException::class)
+    fun handleAuthException(exception: AuthException): ResponseEntity<String>{
+        val message = exception.message ?: "Authentication error."
+        return ResponseEntity(message, HttpStatus.FORBIDDEN)
     }
 }
