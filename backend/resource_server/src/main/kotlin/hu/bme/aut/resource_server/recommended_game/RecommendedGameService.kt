@@ -1,10 +1,7 @@
 package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.game.GameRepository
-import hu.bme.aut.resource_server.role.Role
-import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
-import hu.bme.aut.resource_server.utils.RoleName
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -34,14 +31,14 @@ class RecommendedGameService(
     /**
      * Retrieve the configuration of a recommended game. If the configuration is not yet available, it waits for it to be available.
      */
-    suspend fun getRecommendedGameConfig(id: Long): Map<String, Any> = withContext(Dispatchers.IO){
-        var rGame = recommendedGameRepository.findById(id).orElseThrow()
+    suspend fun getRecommendedGameConfig(recommendedGameId: Long): Map<String, Any> = withContext(Dispatchers.IO){
+        var rGame = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
         repeat(10){
             if(rGame.config.isNotEmpty()){
                 return@withContext rGame.config
             }
             delay(300)
-            rGame = recommendedGameRepository.findById(id).orElseThrow()
+            rGame = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
         }
         throw NoSuchElementException("No config found for recommendation.")
     }

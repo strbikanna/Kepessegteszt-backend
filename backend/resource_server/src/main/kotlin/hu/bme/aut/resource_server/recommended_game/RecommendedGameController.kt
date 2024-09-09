@@ -37,7 +37,7 @@ class RecommendedGameController(
 
     @GetMapping("/config/{id}")
     @ResponseStatus(HttpStatus.OK)
-    fun getRecommendedGameParams(@PathVariable id: Long, authentication: Authentication): Deferred<Map<String, Any>> = CoroutineScope(Dispatchers.Default).async{
+    fun getRecommendedGameConfig(@PathVariable id: Long, authentication: Authentication): Deferred<Map<String, Any>> = CoroutineScope(Dispatchers.Default).async{
         authService.checkGameConfigAccessAnThrow(id, authentication)
          return@async recommendedGameService.getRecommendedGameConfig(id)
     }
@@ -45,9 +45,9 @@ class RecommendedGameController(
     @PostMapping("/recommend")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN') or hasRole('SCIENTIST') or hasRole('TEACHER')")
-    fun postRecommendedGameToUser(@RequestBody recommendedGame: RecommendationDto, authentication: Authentication): Deferred<RecommendedGameEntity> = CoroutineScope(Dispatchers.Default).async {
+    fun postRecommendedGameToUser(@RequestBody recommendedGame: RecommendationDto, authentication: Authentication): Deferred<RecommendedGameDto> = CoroutineScope(Dispatchers.Default).async {
         authService.checkContactAndThrow(authentication, recommendedGame.recommendedTo)
-        return@async recommendedGameService.addRecommendation(recommendedGame, authentication.name)
+        return@async recommendedGameService.addRecommendation(recommendedGame, authentication.name).toDto()
     }
 
     /**
@@ -56,12 +56,12 @@ class RecommendedGameController(
     @GetMapping("/system_recommended")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('STUDENT')")
-    fun getAllSystemRecommended(authentication: Authentication): List<RecommendedGameEntity> {
+    fun getAllSystemRecommended(authentication: Authentication): List<RecommendedGameDto> {
         val systemRecommendedGames = gameplayRecommenderService.getAllRecommendationToUser(authentication.name).toMutableList()
         if(systemRecommendedGames.size < 1){
             systemRecommendedGames.addAll(gameplayRecommenderService.createNewRecommendations(authentication.name))
         }
-        return systemRecommendedGames
+        return systemRecommendedGames.map { it.toDto() }
     }
 
     /**
@@ -70,9 +70,9 @@ class RecommendedGameController(
     @PostMapping("/system_recommended")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('STUDENT')")
-    fun generateNewRecommendations(authentication: Authentication): List<RecommendedGameEntity> {
+    fun generateNewRecommendations(authentication: Authentication): List<RecommendedGameDto> {
         val currentActiveRecommendations = gameplayRecommenderService.getAllRecommendationToUser(authentication.name)
         gameplayRecommenderService.deleteRecommendations(currentActiveRecommendations)
-        return gameplayRecommenderService.createNewRecommendations(authentication.name)
+        return gameplayRecommenderService.createNewRecommendations(authentication.name).map { it.toDto() }
     }
 }
