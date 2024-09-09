@@ -27,10 +27,13 @@ class RecommenderService(
     fun getAllRecommendationToUser(username: String): List<RecommendedGameEntity> {
         val user = userRepository.findByUsername(username).orElseThrow()
         return recommendedGameRepository
-            .findAllByRecommendedToAndCompletedAndRecommender(user, false, null)
+            .findAllByRecommendedToAndCompleted(user, false)
             .filter { it.game.active }
     }
 
+    /**
+     * Saves an empty recommendation for the user and the game.
+     */
     @Transactional
     fun createEmptyRecommendation(username: String, gameId: Int): RecommendedGameEntity {
         val user = userRepository.findByUsername(username).orElseThrow()
@@ -51,6 +54,9 @@ class RecommenderService(
         return autoRecommender.createNextRecommendationBasedOnResult(gameResult.id!!)
     }
 
+    /**
+     * Creates default recommendations for the user for the active games which have no recommendation.
+     */
     @Transactional
     fun createDefaultRecommendationsForUser(username: String): List<RecommendedGameEntity> {
         val user = userRepository.findByUsername(username).orElseThrow()
@@ -73,6 +79,9 @@ class RecommenderService(
         return recommendedGameRepository.saveAll(recommendations).map { it }
     }
 
+    /**
+     * Creates default recommendations for the game for all users even if there is an existing recommendation.
+     */
     @Transactional
     fun createDefaultRecommendationsForGame(gameId: Int): List<RecommendedGameEntity> {
         val users = userRepository.findAll()
@@ -90,6 +99,9 @@ class RecommenderService(
         return recommendedGameRepository.saveAll(recommendations).map { it }
     }
 
+    /**
+     * Creates a default recommendation for the user for the game.
+     */
     @Transactional
     fun createDefaultRecommendationToUserForGame(username: String, gameId: Int): RecommendedGameEntity {
         val user = userRepository.findByUsername(username).orElseThrow()
