@@ -3,7 +3,7 @@
     <h2 class="title">{{ texts.subtitle }}</h2>
     <div class="topContainer">
         <div>
-            <app-user-search (onContactSelected)="onUserSelected($event)" [text]="texts.user_autocomplete"/>
+            <app-user-search (onContactSelected)="onUserSelected($event)" [showOnlyContacts]="true" [text]="texts.user_autocomplete"/>
             <app-game-search (onGameSelected)="onGameSelected($event)"/>
 
         </div>

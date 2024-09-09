@@ -12,8 +12,8 @@ export class ContactService {
 
   constructor(private http: HttpClient) { }
 
-  getContactsToShow(user: UserForAdmin): Observable<UserForAdmin[]>{
-    if(UserInfo.isAdmin()) {
+  getContactsToShow(user: UserForAdmin, onlyContacts: boolean = false): Observable<UserForAdmin[]>{
+    if(UserInfo.isAdmin() && !onlyContacts) {
       return this.getAllUsers();
     }
     return this.getContactsOfUser(user.id);

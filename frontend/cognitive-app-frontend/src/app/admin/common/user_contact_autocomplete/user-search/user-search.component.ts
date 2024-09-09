@@ -13,6 +13,7 @@ export class UserSearchComponent implements OnInit {
 
   @Input() text = TEXTS.contact_autocomplete;
   @Input() displayCurrentUser: boolean = false;
+  @Input() showOnlyContacts: boolean = false;
   @Input() userToExclude: UserForAdmin | undefined
   @Output() onContactSelected: EventEmitter<UserForAdmin> = new EventEmitter<UserForAdmin>();
 
@@ -24,7 +25,7 @@ export class UserSearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.service.getCurrUser().subscribe(user => {
-      this.service.getContactsToShow(user).subscribe(contacts => {
+      this.service.getContactsToShow(user, this.showOnlyContacts).subscribe(contacts => {
         this.contactOptions = contacts.sort((a, b) => a.firstName.localeCompare(b.firstName));
         if(!this.displayCurrentUser) this.contactOptions = this.contactOptions.filter(contact => contact.id !== user.id);
         if(this.userToExclude) this.contactOptions = this.contactOptions.filter(contact => contact.id !== this.userToExclude?.id)
