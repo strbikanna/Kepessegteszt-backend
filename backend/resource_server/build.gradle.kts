@@ -1,15 +1,15 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.2.2"
-    id("io.spring.dependency-management") version "1.1.4"
-    kotlin("jvm") version "1.8.22"
-    kotlin("plugin.spring") version "1.8.22"
-    kotlin("plugin.jpa") version "1.8.22"
+    alias(libs.plugins.springframework.boot)
+    alias(libs.plugins.spring.dependency.management)
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.spring)
+    alias(libs.plugins.kotlin.jpa)
 }
 dependencyManagement {
     imports {
-        mavenBom("com.azure.spring:spring-cloud-azure-dependencies:5.7.0")
+        mavenBom(libs.spring.azure.cloud.get().toString())
     }
 }
 group = "hu.bme.aut"
@@ -31,37 +31,37 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("com.azure.spring:spring-cloud-azure-starter-jdbc-mysql")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation(libs.spring.boot.starter.jpa)
+    implementation(libs.spring.azure.starter.mysql)
+    implementation(libs.spring.boot.starter.oauth2.resource)
+    implementation(libs.spring.boot.starter.security)
+    implementation(libs.spring.boot.starter.web)
+    implementation(libs.jackson.kotlin)
     //kotlin
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-    implementation("com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations")
-    implementation("io.hypersistence:hypersistence-utils-hibernate-62:3.5.0")
-    implementation("org.json:json:20230227")
+    implementation(libs.kotlin.reflect)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.reactive)
+    implementation(libs.kotlinx.coroutines.reactor)
+    implementation(libs.jackson.jakarta.xmlbind.annotations)
+    implementation(libs.hypersistence.hibernate62)
+    implementation(libs.json)
     //jep
-    implementation("black.ninia:jep:4.1.1")
+    implementation(libs.ninia.jep)
     //h2
-    runtimeOnly("com.h2database:h2")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    runtimeOnly(libs.h2)
+    implementation(libs.spring.boot.starter.webflux)
     //flyway
-    implementation ("org.flywaydb:flyway-core")
-    implementation ("org.flywaydb:flyway-mysql")
+    implementation (libs.flyway.core)
+    implementation (libs.flyway.mysql)
     //swagger
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
+    implementation(libs.openapi.starter.webmvc)
     //csv parser
-    implementation("org.apache.commons:commons-csv:1.8")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("io.rest-assured:rest-assured:5.3.1")
-    testImplementation("org.hamcrest:hamcrest:2.2")
+    implementation(libs.csv)
+    annotationProcessor(libs.spring.boot.configuration.processor)
+    testImplementation(libs.spring.boot.starter.test)
+    testImplementation(libs.spring.security.test)
+    testImplementation(libs.rest.assured)
+    testImplementation(libs.hamcrest)
 }
 
 tasks.withType<KotlinCompile> {

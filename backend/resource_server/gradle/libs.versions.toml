@@ -1,0 +1,54 @@
+[versions]
+kotlin = "1.8.22"
+springBootVersion = "3.2.2"
+springDependencyManagementVersion = "1.1.4"
+hypersistenceHibernateVersion = "3.5.0"
+jsonVersion = "20230227"
+jepVersion = "4.1.1"
+openapiwebmvcVersion = "2.2.0"
+csvVersion = "1.8"
+restAssuredVersion = "5.3.1"
+hamcrestVersion = "2.2"
+springAzureVersion = "5.7.0"
+
+[libraries]
+spring-boot-starter-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security" }
+spring-boot-starter-oauth2-resource = { module = "org.springframework.boot:spring-boot-starter-oauth2-resource-server" }
+spring-azure-starter-mysql = { module = "com.azure.spring:spring-cloud-azure-starter-jdbc-mysql" }
+jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
+spring-azure-cloud = { module = "com.azure.spring:spring-cloud-azure-dependencies", version.ref="springAzureVersion" }
+#kotlin
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core" }
+kotlinx-coroutines-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive" }
+kotlinx-coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactor" }
+jackson-jakarta-xmlbind-annotations = { module = "com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations" }
+hypersistence-hibernate62 = { module = "io.hypersistence:hypersistence-utils-hibernate-62", version.ref="hypersistenceHibernateVersion" }
+json = { module = "org.json:json", version.ref="jsonVersion" }
+#jep
+ninia-jep = { module = "black.ninia:jep", version.ref="jepVersion" }
+#h2
+h2 = { module = "com.h2database:h2" }
+spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
+#flyway
+flyway-core = { module = "org.flywaydb:flyway-core" }
+flyway-mysql = { module = "org.flywaydb:flyway-mysql" }
+#swagger
+openapi-starter-webmvc = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref="openapiwebmvcVersion" }
+#csv parser
+csv = { module = "org.apache.commons:commons-csv", version.ref="csvVersion" }
+spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+spring-security-test = { module = "org.springframework.security:spring-security-test" }
+rest-assured = { module = "io.rest-assured:rest-assured", version.ref="restAssuredVersion" }
+hamcrest = { module = "org.hamcrest:hamcrest", version.ref="hamcrestVersion" }
+
+
+[plugins]
+springframework-boot = { id = "org.springframework.boot", version.ref="springBootVersion" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref="springDependencyManagementVersion" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref="kotlin" }
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref="kotlin" }
+kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref="kotlin" }
