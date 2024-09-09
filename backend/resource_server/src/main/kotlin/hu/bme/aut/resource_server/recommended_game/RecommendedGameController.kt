@@ -45,10 +45,9 @@ class RecommendedGameController(
     @PostMapping("/recommend")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN') or hasRole('SCIENTIST') or hasRole('TEACHER')")
-    fun postRecommendedGameToUser(@RequestBody recommendedGame: RecommendationDto,
-                                  authentication: Authentication
-    ): RecommendedGameEntity {
-        return recommendedGameService.addRecommendation(recommendedGame, authentication.name)
+    fun postRecommendedGameToUser(@RequestBody recommendedGame: RecommendationDto, authentication: Authentication): Deferred<RecommendedGameEntity> = CoroutineScope(Dispatchers.Default).async {
+        authService.checkContactAndThrow(authentication, recommendedGame.recommendedTo)
+        return@async recommendedGameService.addRecommendation(recommendedGame, authentication.name)
     }
 
     /**

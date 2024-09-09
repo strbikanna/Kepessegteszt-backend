@@ -31,6 +31,9 @@ class RecommendedGameService(
             .map { it.toDto() }
     }
 
+    /**
+     * Retrieve the configuration of a recommended game. If the configuration is not yet available, it waits for it to be available.
+     */
     suspend fun getRecommendedGameConfig(id: Long): Map<String, Any> = withContext(Dispatchers.IO){
         var rGame = recommendedGameRepository.findById(id).orElseThrow()
         repeat(10){
@@ -45,15 +48,8 @@ class RecommendedGameService(
 
     fun addRecommendation(recommendation: RecommendationDto, recommenderUsername: String): RecommendedGameEntity {
         val recommender = userRepository.findByUsername(recommenderUsername).orElseThrow()
-        val recommendedTo = userRepository.findByUsername(recommendation.recommendedTo).orElse(
-            userRepository.save(UserEntity(
-                username = recommendation.recommendedTo,
-                firstName = "",
-                lastName = "",
-                roles = mutableSetOf(Role(RoleName.STUDENT)),
-            ))
-        )
-        val game = gameRepository.findById(recommendation.gameId).orElseThrow()
+        val recommendedTo = userRepository.findByUsername(recommendation.recommendedTo).orElseThrow { NoSuchElementException("User with username ${recommendation.recommendedTo} not found.") }
+        val game = gameRepository.findById(recommendation.gameId).orElseThrow{ NoSuchElementException("Game with id ${recommendation.gameId} not found.") }
         return recommendedGameRepository.save(RecommendedGameEntity(
             game = game,
             recommendedTo = recommendedTo,
