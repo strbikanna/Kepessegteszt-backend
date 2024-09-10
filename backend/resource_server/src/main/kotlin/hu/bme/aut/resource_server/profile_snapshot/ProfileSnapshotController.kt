@@ -59,10 +59,9 @@ class ProfileSnapshotController(
         @RequestParam(required = false) pageSize: Int?,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) startTime: LocalDateTime?,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) endTime: LocalDateTime?,
-    ): Deferred<List<ProfileSnapshotItem>> = CoroutineScope(Dispatchers.Default).async{
-        authService.checkContactAndThrow(authentication, username)
+    ): Deferred<List<ProfileSnapshotItem>> = authService.doIfIsContact(authentication, username) {
         val user = authService.getContactByUsername(username)
-        return@async getSnapshotsOfUserByRequestValues(user, pageIndex, pageSize, startTime, endTime)
+        return@doIfIsContact getSnapshotsOfUserByRequestValues(user, pageIndex, pageSize, startTime, endTime)
     }
 
     private fun getSnapshotsOfUserByRequestValues(

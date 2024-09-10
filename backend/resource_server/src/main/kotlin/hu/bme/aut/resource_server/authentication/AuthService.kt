@@ -8,8 +8,9 @@ import hu.bme.aut.resource_server.user.UserRepository
 import hu.bme.aut.resource_server.user_group.UserGroupRepository
 import hu.bme.aut.resource_server.user_group.group.Group
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
@@ -69,18 +70,25 @@ class AuthService(
         return userRepository.findByUsername(username).orElseThrow()
     }
 
+    fun <T> doIfIsContact(authentication: Authentication, contactUsername: String, action: () -> T): Deferred<T>  = CoroutineScope(Dispatchers.IO).async {
+        if (isContact(authentication, contactUsername)) {
+            return@async action()
+        } else {
+            throw AuthException().notContact()
+        }
+    }
     /**
      * Checks if the user is authorized to see the contact's data.
      * @throws IllegalAccessException if the user is not authorized to see the contact's data.
      */
-    suspend fun checkContactAndThrow(authentication: Authentication, contactUsername: String) {
+    suspend fun isContact(authentication: Authentication, contactUsername: String) : Boolean {
         if (webclient == null) {
             initWebClient()
         }
         val jwt = authentication.principal as Jwt
         val accessTokenOfUser = jwt.tokenValue
 
-        CoroutineScope(Dispatchers.IO).launch {
+        val isContact = CoroutineScope(Dispatchers.IO).async {
             val requestSpec = webclient!!
                     .get()
                     .uri("/user/impersonation_contacts")
@@ -89,12 +97,12 @@ class AuthService(
             val response: Mono<String> = requestSpec.retrieve().bodyToMono(String::class.java)
             response.block()?.let {
                 if (it.contains(contactUsername)) {
-                    return@launch
+                    return@async true
                 }
             }
-            throw IllegalAccessException("This user is not authorized to see this contact.")
+            return@async false
         }
-
+        return isContact.await()
     }
 
     @Transactional

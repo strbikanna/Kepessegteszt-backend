@@ -32,9 +32,8 @@ class UserController(
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_TEACHER', 'ROLE_PARENT')")
     fun getOtherUserProfile(authentication: Authentication, @RequestParam(required = true) username: String): Deferred<UserProfileDto>
-    = CoroutineScope(Dispatchers.Default).async{
-        authService.checkContactAndThrow(authentication, username)
-        return@async userService.getUserDtoWithProfileByUsername(username)
+    = authService.doIfIsContact(authentication, username) {
+        userService.getUserDtoWithProfileByUsername(username)
     }
 
     @GetMapping("/groups")

@@ -1,6 +1,7 @@
 package hu.bme.aut.resource_server.authentication
 
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.mockito.Mockito
@@ -22,8 +23,8 @@ class AuthServiceTest(
 ) {
 
     @Test
-    fun shouldNotThrowWhenContactExists(){
-        val testUsername= "test_user"
+    fun shouldReturnTrueIfContactExists() {
+        val testUsername = "test_user"
         val testToken = "mockToken"
         val response = "{\"contacts\": [\"$testUsername\"]}"
 
@@ -40,11 +41,13 @@ class AuthServiceTest(
         Mockito.`when`(mockWebClient.get()).thenReturn(mockRequestHeadersUriSpec)
         Mockito.`when`(mockRequestHeadersUriSpec.uri("/user/impersonation_contacts")).thenReturn(mockRequestHeadersSpec)
         Mockito.`when`(mockRequestHeadersSpec.accept(MediaType.APPLICATION_JSON)).thenReturn(mockRequestHeadersSpec)
-        Mockito.`when`(mockRequestHeadersSpec.header("Authorization", "Bearer $testToken")).thenReturn(mockRequestHeadersSpec)
+        Mockito.`when`(mockRequestHeadersSpec.header("Authorization", "Bearer $testToken"))
+            .thenReturn(mockRequestHeadersSpec)
         Mockito.`when`(mockRequestHeadersSpec.retrieve()).thenReturn(mockResponseSpec)
         Mockito.`when`(mockResponseSpec.bodyToMono(String::class.java)).thenReturn(Mono.just(response))
-        assertDoesNotThrow {
-           runBlocking { authService.checkContactAndThrow(mockAuthentication, testUsername) }
+        runBlocking {
+            val isContact = authService.isContact(mockAuthentication, testUsername)
+            assertTrue(isContact)
         }
     }
 }
