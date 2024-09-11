@@ -21,7 +21,7 @@ class GameController(
     @ResponseStatus(HttpStatus.OK)
     fun getAllGames(
         @RequestParam(required = false, defaultValue = "0") pageIndex: Int,
-        @RequestParam(required = false, defaultValue = "10") pageSize: Int
+        @RequestParam(required = false, defaultValue = "100") pageSize: Int
     ): List<GameEntity> {
         return gameService.getAllGamesPaged(pageIndex, pageSize)
     }
