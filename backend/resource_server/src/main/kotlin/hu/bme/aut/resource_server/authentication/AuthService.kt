@@ -106,19 +106,19 @@ class AuthService(
     }
 
     @Transactional
-    fun canAccessUserGroup(authentication: Authentication, userGroupId: Int) {
+    fun checkUserGroupWriteAndThrow(authentication: Authentication, userGroupId: Int) {
         val user = getAuthUser(authentication)
         val uGroup = userGroupRepository.findById(userGroupId).orElseThrow()
         if (uGroup.admins.contains(user) && authentication.authorities.stream().anyMatch { Role.canSeeUserGroupData(it.authority) }) {
             return
         }
-        throw IllegalAccessException("This user is not authorized to see this group.")
+        throw IllegalAccessException("This user is not authorized to change this group.")
     }
 
     @Transactional
     fun getGroupsToAccess(authentication: Authentication): List<Group> {
         if (authentication.authorities.stream().noneMatch { Role.canSeeUserGroupData(it.authority) }){
-            throw IllegalAccessException("This user is not authorized to see group data.")
+            throw IllegalAccessException("This user is not authorized to write group data.")
         }
         val user = getAuthUser(authentication)
         val groups = user.groups
@@ -128,9 +128,11 @@ class AuthService(
     }
 
     @Transactional
-    fun canSeeUserGroupData(authentication: Authentication, userGroupId: Int): Boolean {
+    fun checkGroupDataReadAndThrow(authentication: Authentication, userGroupId: Int) {
         val user = getAuthUser(authentication)
         val uGroup = userGroupRepository.findById(userGroupId).orElseThrow()
-        return uGroup.members.contains(user) || uGroup.admins.contains(user) || uGroup.getAllUserIds().contains(user.id)
+        if(!( uGroup.members.contains(user) || uGroup.admins.contains(user) || uGroup.getAllUserIds().contains(user.id))){
+            throw IllegalAccessException("This user is not authorized to see this group's data.")
+        }
     }
 }
