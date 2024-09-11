@@ -1,82 +1,96 @@
-import { Component } from '@angular/core';
-import {TEXTS} from "../utils/app.text_messages";
-import {UserInfo} from "../auth/userInfo";
-import {Observable} from "rxjs";
-import {LoginService} from "../login/login.service";
+import {Component} from "@angular/core";
 import {User} from "../model/user.model";
-import {RecommendedGameService} from "../game/game-services/recommended-game.service";
-import {RecommendedGame} from "../model/recommended_game.model";
-import {FormControl, FormGroup} from "@angular/forms";
 import {Game} from "../model/game.model";
+import {RecommendationService} from "./service/recommendation.service";
+import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
+import {ConfigItem} from "../model/config_item.model";
+import {TEXTS} from "../utils/app.text_messages";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {Recommendation} from "../model/recommendation.model";
+
 
 @Component({
-  selector: 'app-recommendation',
-  templateUrl: './recommendation.component.html',
-  styleUrls: ['./recommendation.component.scss']
+    selector: 'app-recommendation',
+    templateUrl: './recommendation.component.html',
+    styleUrls: ['./recommendation.component.scss']
 })
 export class RecommendationComponent {
-  user = UserInfo.currentUser
-  contacts: Observable<User[]> = this.loginService.getContacts()
-  text = TEXTS.recommendation_page;
-  userToEdit: User | undefined = undefined;
-  recommendedGameToEdit: RecommendedGame | undefined = undefined;
-  notYetRecommendedGameToEdit: Game | undefined = undefined;
-  games: Observable<RecommendedGame[]> = new Observable<RecommendedGame[]>()
+    protected readonly texts = TEXTS.recommendation_page
+    protected chosenUser: User | undefined;
+    protected chosenGame: Game | undefined;
+    protected configForm = this.fb.array<FormGroup>([]);
 
-  gamesToRecommend: Observable<Game[]> = new Observable<Game[]>()
 
-  constructor(private loginService: LoginService, private recommendationService: RecommendedGameService) {
-  }
+    constructor(private service: RecommendationService, private fb: FormBuilder, private _snackbar: MatSnackBar) {
+    }
 
-  recommendedGameDataForm = new FormGroup({
-    id: new FormControl<string>( ''),
-    timestamp: new FormControl<any>(''),
-    config: new FormControl<string>(''),
-    completed: new FormControl<string>(''),
-    game: new FormControl<any>(''),
-  });
+    onGameSelected(game: Game) {
+        this.chosenGame = game;
+        this.configForm = this.fb.array(
+            game.configItems.map(item =>
+                this.fb.group({
+                    config: [item],
+                    setting: [item.initialValue, [Validators.required,]],
+                }, {validators: this.isConfigValid})
+            )
+        );
+    }
 
-  notYetRecommendedGameDataForm = new FormGroup({
-    config: new FormControl<string>(''),
-    game: new FormControl<any>(''),
-  });
+    onUserSelected(user: User) {
+        this.chosenUser = user;
+    }
 
-  saveRecommendedGame(game: Game, recommendee: User) {
-    this.recommendationService.saveRecommendedGame(recommendee, game, this.notYetRecommendedGameDataForm.getRawValue().config!)
-    this.games = this.recommendationService.getRecommendedGamesToUser(recommendee)
-    this.gamesToRecommend = this.recommendationService.getNotYetRecommendedGamesToUser(recommendee)
-  }
+    isConfigValid: ValidatorFn = (control: AbstractControl) => {
+        const formGroup = control as FormGroup
+        let config = formGroup.controls['config'].value as ConfigItem
+        let value = formGroup.controls['setting'].value as number
+        if ((value >= config.easiestValue && value <= config.hardestValue) || (value <= config.easiestValue && value >= config.hardestValue)) return null;
+        formGroup.controls['setting'].setErrors({invalidConfigValue: true})
+        return {invalidConfigValue: true}
+    }
 
-  deleteRecommendedGame(recommendedGame: RecommendedGame, recommendee: User) {
-    this.games.subscribe(games => games.forEach( (game, index) => {
-      if (game === recommendedGame) {
-        games.splice(index, 1)
-      }
-    }))
-    this.recommendationService.deleteRecommendedGame(recommendedGame);
-    this.games = this.recommendationService.getRecommendedGamesToUser(recommendee)
-    this.gamesToRecommend = this.recommendationService.getNotYetRecommendedGamesToUser(recommendee)
-  }
+    convertDisplayValue(value: number, config: ConfigItem): string {
+        return value.toString()
+    }
 
-  setUserToEdit(user: User): void {
-    this.userToEdit = user
-    this.games = this.recommendationService.getRecommendedGamesToUser(user)
-    this.gamesToRecommend = this.recommendationService.getNotYetRecommendedGamesToUser(user)
-  }
+    labelOfControl(control: AbstractControl): string {
+        return (control as FormGroup).controls['config'].value.paramName
+    }
 
-  setRecommendedGameToEdit(rec_game: RecommendedGame) {
-    this.recommendedGameToEdit = rec_game;
-    this.recommendedGameDataForm.controls.id.setValue(rec_game.id)
-    this.recommendedGameDataForm.controls.timestamp.setValue(rec_game.recommendationDate)
-    this.recommendedGameDataForm.controls.config.setValue(rec_game.config.level)
-    rec_game.completed ? this.recommendedGameDataForm.controls.completed.setValue('Teljesítve') : this.recommendedGameDataForm.controls.completed.setValue('Még nincs teljesítve')
-    this.recommendedGameDataForm.controls.game.setValue(rec_game.game.name)
-  }
+    descriptionOfControl(control: AbstractControl): string {
+        return (control as FormGroup).controls['config'].value.description
+    }
 
-  setNotYetRecommendedGameToEdit(game: Game) {
-    this.notYetRecommendedGameToEdit = game
-    this.notYetRecommendedGameDataForm.controls.game.setValue(game.name)
-    this.notYetRecommendedGameDataForm.controls.config.setValue('0')
-  }
+    getSettingControl(formGroup: FormGroup): FormControl {
+        return formGroup.controls['setting'] as FormControl
+    }
+
+    getHint(control: AbstractControl): string {
+        const configItem = (control as FormGroup).controls['config'].value as ConfigItem
+        return `Legnehezebb: ${configItem.hardestValue}, Legkönnyebb: ${configItem.easiestValue}`
+    }
+
+    canSaveRecommendation() {
+        return this.configForm.valid && this.chosenGame !== undefined && this.chosenUser !== undefined
+    }
+
+    onSubmit() {
+        if (!this.canSaveRecommendation()) return;
+        const config: any ={}
+        this.configForm.controls.forEach(control => {
+            const configItem = (control as FormGroup).controls['config'].value as ConfigItem
+            config[`${configItem.paramName}`] = (control as FormGroup).controls['setting'].value as number
+        })
+        const recommendedGame: Recommendation = {
+            gameId: this.chosenGame!!.id!!,
+            config: config,
+            recommendedTo: this.chosenUser!!.username
+        }
+        console.log(recommendedGame)
+        this.service.saveRecommendation(recommendedGame).subscribe(() => {
+            this._snackbar.open(this.texts.saved, undefined, {duration: 3000})
+        })
+    }
+
 
 }

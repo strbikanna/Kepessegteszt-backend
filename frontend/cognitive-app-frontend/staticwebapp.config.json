@@ -1,0 +1,16 @@
+{
+  "routes": [
+    {
+      "route": "/*"
+    }
+  ],
+  "responseOverrides": {
+    "401": {
+      "redirect": "/"
+    }
+  },
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/assets/*"]
+  }
+}

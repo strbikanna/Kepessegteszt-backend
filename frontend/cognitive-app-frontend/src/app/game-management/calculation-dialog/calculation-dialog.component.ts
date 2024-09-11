@@ -49,14 +49,15 @@ export class CalculationDialogComponent implements OnInit {
      */
     onStartCalculation(game: Game) {
         this.inProgress = true;
-        this.service.startResultProcessing(game.id).subscribe(result => {
+        this.service.startResultProcessing(game.id!!).subscribe(result => {
             this.inProgress = false;
             this.feedback = result;
         })
     }
 
     canStartCalculation(){
-        return this.game !== undefined && !this.inProgress && this.feedback === undefined && this.resultCount && this.resultCount > 0;
+        return this.game !== undefined && !this.inProgress && this.feedback === undefined && this.resultCount && this.resultCount > 0
+            && this.game.affectedAbilities && this.game.affectedAbilities.length > 0;
     }
 
     getResultCount(gameId: number): Observable<number> {

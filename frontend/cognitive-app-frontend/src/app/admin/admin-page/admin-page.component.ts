@@ -34,12 +34,7 @@ export class AdminPageComponent implements OnInit {
         lastName: new FormControl<string>('', Validators.required),
         username: new FormControl<string>({value: '', disabled: true}),
         email: new FormControl<string>('', [Validators.required, Validators.email]),
-        contactAutocompleteForm : new FormControl<UserForAdmin | string>(''),
     });
-
-
-    contactOptions: UserForAdmin[] = [];
-    filteredContactOptions: UserForAdmin[] = [];
 
     constructor(private service: AdminService, private _snackbar: MatSnackBar) {}
 
@@ -51,7 +46,6 @@ export class AdminPageComponent implements OnInit {
         this.service.getNumberOfUsers().subscribe(numberOfUsers => {
             this.dataLength = numberOfUsers;
         });
-        this.initContactAutocomplete();
     }
 
     /**
@@ -67,68 +61,16 @@ export class AdminPageComponent implements OnInit {
         this.userDataForm.controls.lastName.setValue(user.lastName);
         this.userDataForm.controls.username.setValue(user.username);
         this.userDataForm.controls.email.setValue(user.email);
-        this.resetAutoComplete()
     }
-
-    /**
-     * Sets up autocomplete with users data, displaying name
-     */
-    initContactAutocomplete(): void {
-        this.service.getAllUsers().subscribe(contacts => {
-            this.contactOptions = contacts.sort((a, b) => a.firstName.localeCompare(b.firstName));
-            this.filteredContactOptions = this.contactOptions.filter((val, index) => index < 10);
-        });
-        this.userDataForm.controls.contactAutocompleteForm.valueChanges.subscribe(value => {
-            const name = typeof value === 'string' ? value : value?.firstName + ' ' + value?.lastName;
-            this.filteredContactOptions = this.filterContacts(name);
-        });
-    }
-
-    /**
-     * When autocomplete input changes, filter contacts
-     * @param value input value
-     */
-    filterContacts(value: string) : UserForAdmin[]{
-        if(value === '' || value === ' ') return this.contactOptions;
-        const filter = value.toLowerCase();
-        return this.contactOptions
-            .filter(option => option.firstName.toLowerCase().includes(filter) || option.lastName.toLowerCase().includes(filter))
-            .sort((a, b) => a.firstName.localeCompare(b.firstName))
-            .filter((val, index) => index < 10);
-    }
-
-    /**
-     * Converts user to display name string in autocomplete
-     * @param user
-     */
-    convertDisplay(user: UserForAdmin): string{
-        if(user.firstName === undefined || user.lastName === undefined) return '';
-        return user.firstName + ' ' + user.lastName;
-    }
-
     /**
      * Adds contact to userToEdit
      */
-    onAddContact(){
+    onAddContact(contact: UserForAdmin): void {
         if(this.userToEdit!!.contacts === undefined){
             this.userToEdit!!.contacts = [];
         }
-        let contact: UserForAdmin;
-        if(typeof this.userDataForm.controls.contactAutocompleteForm.value === 'string'){
-           const possibleContact = this.contactOptions.find(contact => contact.firstName + ' ' + contact.lastName === this.userDataForm.controls.contactAutocompleteForm.value);
-           if(possibleContact === undefined) return;
-           contact = possibleContact;
-        }else{
-            if(this.userDataForm.controls.contactAutocompleteForm.value === null) return;
-            contact = this.userDataForm.controls.contactAutocompleteForm.value;
-        }
         if(this.userToEdit!!.contacts.find(existing => existing.id === contact.id) !== undefined) return;
         this.userToEdit!!.contacts.push(contact);
-        this.resetAutoComplete();
-    }
-
-    resetAutoComplete(){
-        this.userDataForm.controls.contactAutocompleteForm.setValue('');
     }
 
     handlePageEvent(event: PageEvent): void {
@@ -143,7 +85,6 @@ export class AdminPageComponent implements OnInit {
 
     saveChangesOfUserToEdit(): void {
         if (this.userToEdit === undefined) return
-        console.log(this.userToEdit)
         this.userToEdit.firstName = this.userDataForm.controls.firstName.value!!
         this.userToEdit.lastName = this.userDataForm.controls.lastName.value!!
         this.userToEdit.username = this.userDataForm.controls.username.value!!

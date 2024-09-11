@@ -1,13 +1,14 @@
 package hu.bme.aut.resource_server.game
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
+import hu.bme.aut.resource_server.game.game_config.isSame
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
-import java.util.Optional
+import java.util.*
 
 @Service
 class GameService (
@@ -37,7 +38,7 @@ class GameService (
      */
     fun updateGame(updatedGame: GameEntity): GameEntity {
         val oldGame = gameRepository.findById(updatedGame.id!!).orElseThrow()
-        if(oldGame.url != updatedGame.url || !sameConfigDescription(oldGame, updatedGame)) {
+        if(!sameConfigDescription(oldGame, updatedGame)) {
             oldGame.active = false
             gameRepository.save(oldGame)
 
@@ -64,13 +65,11 @@ class GameService (
             fileName = "${game.id}_${System.currentTimeMillis()}"
             file = File("$thumbnailLocation/${fileName}.png")
         }
-
         file.outputStream().use {
             it.write(thumbnail.bytes)
         }
-        val updatedGame = copyGame(game).copy(
+        val updatedGame = game.copy(
             thumbnailPath = "$gameImageLocation/${fileName}.png",
-            version = game.version + 1
         )
         return gameRepository.save(updatedGame)
     }
@@ -83,16 +82,20 @@ class GameService (
             name = game.name,
             description = game.description,
             affectedAbilities = affectedAbilities,
-            url = game.url,
             active = game.active,
             configDescription = game.configDescription,
             thumbnailPath = game.thumbnailPath,
-            version = game.version
+            version = game.version,
+            configItems = game.configItems.map { it.copy(id=null) }.toMutableSet()
         )
     }
     private fun sameConfigDescription(game1: GameEntity, game2: GameEntity): Boolean{
-        game1.configDescription.entries.forEach { (key, value) ->
-            if(game2.configDescription[key] != value){
+        if(game1.configItems.size != game2.configItems.size){
+            return false
+        }
+        game1.configItems.forEach { item ->
+            val itemToCompare = game2.configItems.find{ it.paramName == item.paramName } ?: return false
+            if(!item.isSame(itemToCompare)){
                 return false
             }
         }

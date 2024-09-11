@@ -1,0 +1,50 @@
+:host {
+  width: 100%;
+  padding-top: 1em;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+div.cardsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 90%;
+  div{
+    width: 50em;
+  }
+}
+
+.pagerRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2em;
+  button{
+    margin-inline: 2em;
+  }
+}
+
+.toolsContainer {
+  margin: 1em;
+  display: flex;
+  width: 25em;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  div {
+    margin-right: 2em;
+  }
+
+}
+
+.drawerContainer {
+  width: 100%;
+  padding-inline: 2em;
+  height: 100%;
+  button{
+    margin-bottom: 1em;
+  }
+}

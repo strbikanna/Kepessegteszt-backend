@@ -13,13 +13,20 @@ data class EnumProfileItem(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
-    override var id: Long? = null,
+    var id: Long? = null,
 
     @ManyToOne(cascade=[CascadeType.REFRESH], fetch= FetchType.EAGER)
     @JoinColumn(name="ability_id", referencedColumnName = "code")
-    override val ability: AbilityEntity,
+    val ability: AbilityEntity,
 
     @Column
     @Enumerated(value= EnumType.STRING)
-    override var abilityValue: EnumAbilityValue
-): ProfileItem()
+    var abilityValue: EnumAbilityValue
+){
+    fun toProfileItem(): ProfileItem {
+        return ProfileItem(
+            ability = ability,
+            value = abilityValue
+        )
+    }
+}

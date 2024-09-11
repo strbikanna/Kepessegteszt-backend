@@ -3,13 +3,12 @@ package hu.bme.aut.resource_server.ability
 import hu.bme.aut.resource_server.TestUtilsService
 import hu.bme.aut.resource_server.utils.RoleName
 import io.restassured.RestAssured.given
-import io.restassured.matcher.RestAssuredMatchers.*
-import org.hamcrest.Matchers.*
 import io.restassured.builder.RequestSpecBuilder
 import io.restassured.filter.log.RequestLoggingFilter
 import io.restassured.filter.log.ResponseLoggingFilter
 import io.restassured.http.ContentType
 import io.restassured.specification.RequestSpecification
+import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -79,6 +78,7 @@ class AbilityControllerTest(
     @Test
     fun shouldUpdateAbility(){
         testService.saveAuthUserWithRights(RoleName.STUDENT, RoleName.ADMIN)
+        val abilityCount = testService.abilityRepository.count()
         val abilityEntity = AbilityEntity("Gf", "updated name", "testDescription")
         given(requestSpec)
             .header(testService.authHeaderName, testService.authUsername)
@@ -89,7 +89,7 @@ class AbilityControllerTest(
             .body("code", equalTo(abilityEntity.code))
             .body("name", equalTo(abilityEntity.name))
             .body("description", equalTo(abilityEntity.description))
-        assertEquals(5, testService.abilityRepository.count())
+        assertEquals(abilityCount, testService.abilityRepository.count())
     }
 
     @Test

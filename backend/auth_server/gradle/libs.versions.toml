@@ -1,0 +1,34 @@
+[versions]
+kotlin = "1.8.22"
+springBootVersion = "3.2.2"
+springDependencyManagementVersion = "1.1.4"
+flywayVersion = "9.22.1"
+openapiwebmvcVersion = "2.2.0"
+
+[libraries]
+spring-boot-starter-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security" }
+spring-boot-starter-oauth2-authorization = { module = "org.springframework.boot:spring-boot-starter-oauth2-authorization-server" }
+spring-boot-starter-mail = { module = "org.springframework.boot:spring-boot-starter-mail" }
+spring-boot-starter-thymeleaf = { module = "org.springframework.boot:spring-boot-starter-thymeleaf" }
+jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
+#flyway
+flyway-core = { module = "org.flywaydb:flyway-core" }
+flyway-mysql = { module = "org.flywaydb:flyway-mysql" }
+#swagger
+openapi-starter-webmvc = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref="openapiwebmvcVersion" }
+h2 = { module = "com.h2database:h2" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+spring-security-test = { module = "org.springframework.security:spring-security-test" }
+mysql-connector = { module = "com.mysql:mysql-connector-j" }
+lombok = { module = "org.projectlombok:lombok" }
+
+[plugins]
+springframework-boot = { id = "org.springframework.boot", version.ref="springBootVersion" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref="springDependencyManagementVersion" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref="kotlin" }
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref="kotlin" }
+kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref="kotlin" }
+flyway = { id = "org.flywaydb.flyway", version.ref="flywayVersion" }

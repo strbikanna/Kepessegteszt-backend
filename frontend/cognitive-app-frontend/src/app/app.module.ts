@@ -20,11 +20,10 @@ import { ImpersonationComponent } from './impersonation/impersonation.component'
 import {AuthInterceptor} from "./auth/auth.interceptor";
 import { RecommendedGamesComponent } from './game/recommended-games-page/recommended-games.component';
 import {MatTabsModule} from "@angular/material/tabs";
-import { PlaygroundComponent } from './game/playground/playground.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from "@angular/material/dialog";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatChipsModule} from "@angular/material/chips";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatCheckboxModule} from "@angular/material/checkbox";
@@ -51,30 +50,55 @@ import { CalculationDialogComponent } from './game-management/calculation-dialog
 import { RecommendationComponent } from './recommendation/recommendation.component';
 import {MatDividerModule} from "@angular/material/divider";
 import {environment} from "../environments/environment";
-
+import { ProfileDataComparisonComponent } from './profile-data-comparison/profile-data-comparison.component';
+import { ProfileRadarChartComponent } from './profile-data-comparison/profile-radar-chart/profile-radar-chart.component';
+import {MatRadioModule} from "@angular/material/radio";
+import { ConfigItemFormComponent } from './game-management/config-item-form/config-item-form.component';
+import { ResultInfoCardComponent } from './result/result-info-card/result-info-card.component';
+import { ResultPageComponent } from './result/result-page/result-page.component';
+import { ConfirmDialogComponent } from './common/confirm-dialog/confirm-dialog.component';
+import { CsvDownloadButtonComponent } from './common/csv-download-button/csv-download-button.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { SortControlComponent } from './common/sort-control/sort-control.component';
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import { FilterControlComponent } from './common/filter-control/filter-control.component';
+import {CdkFixedSizeVirtualScroll, CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import { GameSearchComponent } from './game-management/game-search/game-search.component';
+import { RecommendationDetailCardComponent } from './recommendation-detail-card/recommendation-detail-card.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    HomeComponent,
-    ProfileComponent,
-    RecommendedGamesComponent,
-    PlaygroundComponent,
-    HeaderComponent,
-    ImpersonationComponent,
-    AlertDialogComponent,
-    CognitiveProfileComponent,
-    ProfileChartComponent,
-    ProfileCardComponent,
-    NotFoundComponent,
-    GameManagementComponent,
-    FileUploadComponent,
-    EditGameFormComponent,
-    GameCardComponent,
-    CalculationDialogComponent,
-    RecommendationComponent,
-  ],
+    declarations: [
+        AppComponent,
+        LoginComponent,
+        HomeComponent,
+        ProfileComponent,
+        RecommendedGamesComponent,
+        HeaderComponent,
+        ImpersonationComponent,
+        AlertDialogComponent,
+        CognitiveProfileComponent,
+        ProfileChartComponent,
+        ProfileCardComponent,
+        NotFoundComponent,
+        GameManagementComponent,
+        FileUploadComponent,
+        EditGameFormComponent,
+        GameCardComponent,
+        CalculationDialogComponent,
+        RecommendationComponent,
+        ProfileDataComparisonComponent,
+        ProfileRadarChartComponent,
+        ConfigItemFormComponent,
+        ResultInfoCardComponent,
+        ResultPageComponent,
+        ConfirmDialogComponent,
+        CsvDownloadButtonComponent,
+        SortControlComponent,
+        FilterControlComponent,
+        GameSearchComponent,
+        RecommendationDetailCardComponent,
+    ],
     imports: [
         BrowserModule,
         RouterModule.forRoot(appRoutes),
@@ -114,27 +138,27 @@ import {environment} from "../environments/environment";
         NgxEchartsModule.forRoot({
             echarts
         }),
-        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule
+        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule
     ],
-  providers: [
-      {
-        provide: HTTP_INTERCEPTORS,
-        useClass: AuthInterceptor,
-        multi: true
-      },
-    {
-      provide: MAT_DIALOG_DEFAULT_OPTIONS,
-      useValue: {
-        disableClose: false,
-        hasBackdrop: true
-      }
-    },
-    {
-      provide: ErrorHandler,
-      useClass: GlobalErrorhandlerService,
-    },
-    provideRouter(appRoutes, withComponentInputBinding()),
-  ],
-  bootstrap: [AppComponent]
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true
+        },
+        {
+            provide: MAT_DIALOG_DEFAULT_OPTIONS,
+            useValue: {
+                disableClose: false,
+                hasBackdrop: true
+            }
+        },
+        {
+            provide: ErrorHandler,
+            useClass: GlobalErrorhandlerService,
+        },
+        provideRouter(appRoutes, withComponentInputBinding()),
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {catchError, map, Observable, retry,} from "rxjs";
+import {catchError, map, Observable, of, retry,} from "rxjs";
 import {CognitiveProfile} from "../../model/cognitive_profile.model";
 import {Ability} from "../../model/ability.model";
 import {AppConstants} from "../../utils/constants";
@@ -8,27 +8,28 @@ import {User} from "../../model/user.model";
 import {SimpleHttpService} from "../../utils/simple-http.service";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class CognitiveProfileService {
     snapshotEndpoint = '/profile_snapshot'
     profileEndpoint = '/user/profile'
     inspectPath = '/inspect'
 
-    constructor(private http: HttpClient, private helper: SimpleHttpService) { }
+    constructor(private http: HttpClient, private helper: SimpleHttpService) {
+    }
 
 
     /**
      * returns the last 10 profile snapshot by default
      */
-    getLatestProfiles(count: number = 10): Observable<CognitiveProfile[]>{
+    getLatestProfiles(count: number = 10): Observable<CognitiveProfile[]> {
         let params = new HttpParams()
         params = params.set('pageIndex', 0)
         params = params.set('pageSize', count)
         return this.http.get<CognitiveProfile[]>(`${this.helper.baseUrl}${this.snapshotEndpoint}`, {params: params}).pipe(
             retry(3),
             catchError(this.helper.handleHttpError),
-            map((res: any[]) => this.convertToCognitiveProfile(res) )
+            map((res: any[]) => this.convertToCognitiveProfile(res))
         )
 
     }
@@ -38,7 +39,7 @@ export class CognitiveProfileService {
      * @param username
      * @param count
      */
-    getLatestProfilesOfOtherUser(username: string, count: number = 10){
+    getLatestProfilesOfOtherUser(username: string, count: number = 10) {
         let params = new HttpParams()
         params = params.set('pageIndex', 0)
         params = params.set('pageSize', count)
@@ -46,48 +47,49 @@ export class CognitiveProfileService {
         return this.http.get<CognitiveProfile[]>(`${this.helper.baseUrl}${this.snapshotEndpoint}${this.inspectPath}`, {params: params}).pipe(
             retry(3),
             catchError(this.helper.handleHttpError),
-            map((res: any[]) => this.convertToCognitiveProfile(res) )
+            map((res: any[]) => this.convertToCognitiveProfile(res))
         )
     }
 
-  /**
-   * returns the actual cognitive profile of the user logged in
-   */
-  getCurrentProfile(): Observable<CognitiveProfile>{
+    /**
+     * returns the actual cognitive profile of the user logged in
+     */
+    getCurrentProfile(): Observable<CognitiveProfile> {
         return this.http.get<CognitiveProfile>(`${this.helper.baseUrl}${this.profileEndpoint}`).pipe(
             retry(3),
             catchError(this.helper.handleHttpError),
-            map((res: any) => this.convertToCognitiveProfile(res.profile)[0] )
+            map((res: any) => this.convertToCognitiveProfile(res)[0])
         )
-  }
+
+    }
 
     /**
      * returns the actual cognitive profile of the given user
      * @param username
      */
-  getCurrentProfileOfOtherUser(username: string): Observable<CognitiveProfile>{
+    getCurrentProfileOfOtherUser(username: string): Observable<CognitiveProfile> {
         let params = new HttpParams()
         params = params.set('username', username)
         return this.http.get<CognitiveProfile>(`${this.helper.baseUrl}${this.profileEndpoint}${this.inspectPath}`, {params: params}).pipe(
             retry(3),
             catchError(this.helper.handleHttpError),
-            map((res: any) => this.convertToCognitiveProfile(res.profile)[0] )
+            map((res: any) => this.convertToCognitiveProfile(res.profile)[0])
         )
-  }
+    }
 
-  /**
-   * returns all saved cognitive profiles of the user logged in between the given dates
-   */
-  getProfilesBetween(start: Date, end: Date): Observable<CognitiveProfile[]>{
-      let params = new HttpParams()
-      params = params.set('startTime', start.toISOString())
-      params = params.set('endTime', end.toISOString())
-      return this.http.get<CognitiveProfile[]>(`${this.helper.baseUrl}${this.snapshotEndpoint}`, {params: params}).pipe(
-          retry(3),
-          catchError(this.helper.handleHttpError),
-          map((res: any[]) => this.convertToCognitiveProfile(res) )
-      )
-  }
+    /**
+     * returns all saved cognitive profiles of the user logged in between the given dates
+     */
+    getProfilesBetween(start: Date, end: Date): Observable<CognitiveProfile[]> {
+        let params = new HttpParams()
+        params = params.set('startTime', start.toISOString())
+        params = params.set('endTime', end.toISOString())
+        return this.http.get<CognitiveProfile[]>(`${this.helper.baseUrl}${this.snapshotEndpoint}`, {params: params}).pipe(
+            retry(3),
+            catchError(this.helper.handleHttpError),
+            map((res: any[]) => this.convertToCognitiveProfile(res) )
+        )
+    }
 
     /**
      * returns all saved cognitive profiles of the given user between the given dates
@@ -95,7 +97,7 @@ export class CognitiveProfileService {
      * @param end
      * @param username
      */
-    getProfilesBetweenOfOtherUser(start: Date, end: Date, username: string): Observable<CognitiveProfile[]>{
+    getProfilesBetweenOfOtherUser(start: Date, end: Date, username: string): Observable<CognitiveProfile[]> {
         let params = new HttpParams()
         params = params.set('startTime', start.toISOString())
         params = params.set('endTime', end.toISOString())
@@ -103,7 +105,7 @@ export class CognitiveProfileService {
         return this.http.get<CognitiveProfile[]>(`${this.helper.baseUrl}${this.snapshotEndpoint}${this.inspectPath}`, {params: params}).pipe(
             retry(3),
             catchError(this.helper.handleHttpError),
-            map((res: any[]) => this.convertToCognitiveProfile(res) )
+            map((res: any[]) => this.convertToCognitiveProfile(res))
         )
     }
 
@@ -122,23 +124,26 @@ export class CognitiveProfileService {
      * @param profileItems
      * @private
      */
-  private convertToCognitiveProfile(profileItems: any[]): CognitiveProfile[]{
-      let model : CognitiveProfile[] = []
-      profileItems.forEach(item => {
-          item.timestamp = item.timestamp ? new Date(item.timestamp) : new Date()
-          let profileAtTime = model.find(profile =>
-              profile.timestamp.getFullYear() === item.timestamp.getFullYear()
-              && profile.timestamp.getMonth() === item.timestamp.getMonth()
-                && profile.timestamp.getDay() === item.timestamp.getDay()
-          )
-          if(profileAtTime){
-              profileAtTime.profileItems.set(item.ability, item.abilityValue)
-          }else{
-                let profile = {timestamp: item.timestamp, profileItems: new Map<Ability, any>()}
-                profile.profileItems.set(item.ability, item.abilityValue)
+    private convertToCognitiveProfile(profileItems: any[]): CognitiveProfile[] {
+        let model: CognitiveProfile[] = []
+        profileItems?.forEach(item => {
+            item.timestamp = item.timestamp ? new Date(item.timestamp) : new Date()
+            let profileAtTime = model.find(profile =>
+                profile.timestamp.getFullYear() === item.timestamp.getFullYear()
+                && profile.timestamp.getMonth() === item.timestamp.getMonth()
+                && profile.timestamp.getDate() === item.timestamp.getDate()
+            )
+            if (profileAtTime) {
+                profileAtTime.profileItems.set(item.ability, item.value)
+            } else {
+                let profile = {
+                    timestamp: new Date(item.timestamp),
+                    profileItems: new Map<Ability, any>()
+                }
+                profile.profileItems.set(item.ability, item.value)
                 model.push(profile)
-          }
-      })
-      return model
-  }
+            }
+        })
+        return model
+    }
 }

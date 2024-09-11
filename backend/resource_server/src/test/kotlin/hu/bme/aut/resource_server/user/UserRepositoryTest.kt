@@ -53,11 +53,21 @@ class UserRepositoryTest(
     }
 
     @Test
+    @Transactional
     fun shouldSaveMoreUsersCorrectly() {
         val user1 = saveAndTestUser1()
         val user2 = saveAndTestUser2()
 
         testSavedUsers(user1, user2)
+    }
+
+    @Test
+    @Transactional
+    fun shouldGetGroupAverage(){
+        val user1 = saveAndTestUser1()
+        val user2 = saveAndTestUser2()
+        val groupAverage = userRepository.getAverageOfAbilityValuesInUserGroup("Gsm", listOf(user1.id!!, user2.id!!))
+        assertEquals(4.0, groupAverage)
     }
 
     @Transactional

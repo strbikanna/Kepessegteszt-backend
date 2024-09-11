@@ -2,6 +2,7 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {UserInfo} from "../auth/userInfo";
 import {Role} from "../utils/constants";
 import {TEXTS} from "../utils/app.text_messages";
+import {imagePaths} from "../utils/app.image_resources";
 
 
 @Component({
@@ -19,7 +20,7 @@ export class HeaderComponent implements OnInit{
     isTeacher = false;
     isScientist = false;
     isStudent = false;
- 
+    protected readonly imagePaths = imagePaths;
 
     constructor(private changeDetectorRef: ChangeDetectorRef,) {  }
 

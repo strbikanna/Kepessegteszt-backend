@@ -1,0 +1,86 @@
+<form *ngIf="editable" [formGroup]="configItemForm" class="formContainer">
+    <h3>{{texts.title}}</h3>
+    <mat-form-field class="textField">
+        <mat-label>{{texts.param_name}}</mat-label>
+        <input matInput formControlName="paramName">
+    </mat-form-field>
+    <div class="formRow">
+        <mat-form-field >
+            <mat-label>{{texts.easiest_value}}</mat-label>
+            <input matInput type="number" formControlName="easiestValue">
+        </mat-form-field>
+        <mat-form-field >
+            <mat-label>{{texts.hardest_value}}</mat-label>
+            <input matInput type="number" formControlName="hardestValue">
+        </mat-form-field>
+        <mat-form-field >
+            <mat-label>{{texts.initial_value}}</mat-label>
+            <input matInput type="number" formControlName="initialValue">
+        </mat-form-field>
+    </div>
+    <div  class="formRow">
+        <mat-form-field >
+            <mat-label>{{texts.increment}}</mat-label>
+            <input matInput type="number" formControlName="increment">
+        </mat-form-field>
+        <mat-form-field class="paramOrderField">
+            <mat-label>{{texts.param_order}}</mat-label>
+            <input matInput type="number" formControlName="paramOrder">
+            <mat-hint>{{texts.param_order_description}}</mat-hint>
+            <mat-error *ngIf="configItemForm.controls.paramOrder.errors?.['invalidParamOrder']">
+                {{errorMessages.invalid_param_order}}
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="textField">
+            <mat-label>{{texts.description}}</mat-label>
+            <textarea matInput placeholder="{{texts.description_placeholder}}" formControlName="description"></textarea>
+        </mat-form-field>
+    </div>
+    <mat-error *ngIf="configItemForm.errors?.['invalidValues'] && (configItemForm.touched || configItemForm.dirty)">
+        {{errorMessages.invalid_values}}
+    </mat-error>
+    <button mat-stroked-button color="primary" (click)="onCancel()" type="button" class="cancelButton">{{actionTexts.cancel}}</button>
+    <button mat-raised-button color="primary" [disabled]="configItemForm.invalid" (click)="onSubmit()" type="submit">{{actionTexts.ok}}</button>
+</form>
+<div *ngIf="!editable && configItem">
+    <mat-card class="card">
+        <mat-card-header class="cardHeader">
+            <mat-card-title>{{configItem.paramName}}</mat-card-title>
+            <mat-card-actions>
+                <button mat-icon-button color="primary" (click)="onEdit()">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="onDelete()">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </mat-card-actions>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="cardContentItem">
+                <p class="cardLabel">{{texts.easiest_value}}: </p>
+                <mat-chip>{{configItem.easiestValue}}</mat-chip>
+            </div>
+            <div class="cardContentItem">
+                <p class="cardLabel">{{texts.hardest_value}}: </p>
+                <mat-chip>{{configItem.hardestValue}}</mat-chip>
+            </div>
+            <div class="cardContentItem">
+                <p class="cardLabel">{{texts.initial_value}}: </p>
+                <mat-chip>{{configItem.initialValue}}</mat-chip>
+            </div>
+            <div class="cardContentItem">
+                <p class="cardLabel">{{texts.increment}}: </p>
+                <mat-chip>{{configItem.increment}}</mat-chip>
+            </div>
+            <div class="cardContentItem">
+                <p class="cardLabel">{{texts.param_order}}: </p>
+                <mat-chip>{{configItem.paramOrder}}</mat-chip>
+            </div>
+            <p class="cardLabel">{{texts.description}}:</p>
+            <p>{{configItem.description}}</p>
+        </mat-card-content>
+    </mat-card>
+</div>
+

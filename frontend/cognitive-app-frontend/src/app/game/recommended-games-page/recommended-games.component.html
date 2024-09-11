@@ -5,8 +5,7 @@
                 <app-game-card
                         [game]="recommendedGame.game"
                         [otherTexts]="[recommendedGame.recommendationDate.toLocaleString('hu-HU')]"
-                        [buttonText]="text.game_card.play.toUpperCase()"
-                        (buttonClick)="onGameChosen(recommendedGame)">
+                        [buttonText]="text.game_card.play.toUpperCase()">
                 </app-game-card>
                 <br>
             </div>

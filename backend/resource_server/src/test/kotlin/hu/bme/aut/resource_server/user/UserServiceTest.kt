@@ -4,7 +4,11 @@ import hu.bme.aut.resource_server.TestUtilsService
 import hu.bme.aut.resource_server.profile.EnumProfileItem
 import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.profile.FloatProfileRepository
+import hu.bme.aut.resource_server.user_group.group.Group
+import hu.bme.aut.resource_server.user_group.organization.Address
+import hu.bme.aut.resource_server.user_group.organization.Organization
 import hu.bme.aut.resource_server.utils.EnumAbilityValue
+import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -88,7 +92,7 @@ class UserServiceTest(
         val updatedUser = userService.updateUserProfile(testUser1)
         assertEquals(2, updatedUser.profile.size)
         val updatedProfileItem = updatedUser.profile.find { it.ability.code == testService.abilityGq.code }!!
-        assertEquals(6.0, updatedProfileItem.abilityValue)
+        assertEquals(6.0, updatedProfileItem.value)
     }
 
     @Test
@@ -115,5 +119,27 @@ class UserServiceTest(
         )
         val updatedUser = userService.updateUserProfile(testUser1)
         assertEquals(4, updatedUser.profile.size)
+    }
+
+    @Test
+    @Transactional
+    fun shouldAddUserToGroup(){
+        val org = Organization(name = "TestOrg", address = Address("11", "TestStreet", "TestCity", "1123"))
+        val group = Group(name = "TestGroup", organization = org)
+        val user = testService.createUnsavedTestUser()
+        testService.saveUser(user)
+        testService.organizationRepository.save(org)
+        testService.groupRepository.save(group)
+        userService.addUserToGroup(user.username, group.id!!)
+        val userInDb = testService.userRepository.findByUsername(user.username).orElseThrow()
+        assertEquals(1, userInDb.groups.size)
+    }
+
+    @Test
+    fun testEmptyUserGroups(){
+        val user = testService.createUnsavedTestUser()
+        testService.saveUser(user)
+        val groups = userService.getGroupsOfUser(user.username)
+        assertEquals(0, groups.size)
     }
 }

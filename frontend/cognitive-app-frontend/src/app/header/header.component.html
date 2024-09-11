@@ -1,14 +1,16 @@
 <mat-toolbar class="navbar">
-    <div>
+    <div  class="logo">
         <button mat-icon-button>
-            <img src="../../assets/galaxy_logo.png">
+            <img src="{{imagePaths.logo}}">
         </button>
-        <button mat-button routerLink="/">Játék Galaxis</button>
+        <button mat-button routerLink="/">Coglica</button>
     </div>
     <div class="menubar">
         <a *ngIf="loginStatus && isStudent" mat-button color="primary" routerLink="/games" > {{text.games}}</a>
         <a *ngIf="loginStatus && !isAdmin" mat-button color="primary" routerLink="/cognitive-profile">{{text.cognitive_profile}}</a>
-        <a *ngIf="isAdmin" mat-button color="primary" routerLink="/admin">{{text.admin}}</a>
+        <a *ngIf="isAdmin" mat-button color="primary" routerLink="/admin">{{text.user_management}}</a>
+        <a *ngIf="loginStatus" mat-button color="primary" routerLink="/result">{{text.result_management}}</a>
+        <a *ngIf="loginStatus && isStudent" mat-button color="primary" routerLink="/profile-compare">{{text.profile_comparison}}</a>
         <a *ngIf="isAdminOrScientist" mat-button color="primary" routerLink="/game-management">{{text.game_management}}</a>
         <a *ngIf="isAdmin || isScientist || isTeacher" mat-button color="primary" routerLink="/recommendation">{{text.game_recommendation}}</a>
         <app-login></app-login>

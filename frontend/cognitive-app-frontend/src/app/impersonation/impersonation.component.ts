@@ -29,6 +29,8 @@ export class ImpersonationComponent implements OnInit {
         this.canImpersonate = true
         this.user = UserInfo.currentUser
         this.contacts = this.impersonationService.getContacts()
+      }else{
+        this.canImpersonate = false
       }
     });
   }

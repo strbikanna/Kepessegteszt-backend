@@ -1,11 +1,10 @@
 package hu.bme.aut.resource_server.profile_calculation.calculator
 
-import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
 import hu.bme.aut.resource_server.game.GameEntity
+import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
 import hu.bme.aut.resource_server.profile_calculation.error.CalculationException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.lang.RuntimeException
 import kotlin.math.roundToInt
 
 /**
@@ -34,78 +33,56 @@ object ScoreCalculator {
         results: List<ResultForCalculationEntity>,
         game: GameEntity
     ): List<ResultForCalculationEntity> {
-        setFieldNamesFromConfig(game)
-        return if (levelFieldName != null && pointsFieldName != null && maxPointsFieldName != null) {
-            calculateBasedOnPoints(results, game)
-        } else if (levelFieldName != null && winFieldName != null) {
-            calculateBasedOnWin(results, game)
+        if (game.configItems.isNotEmpty()) {
+            return calculateBasedOnWin(results, game)
         } else {
             throw CalculationException("Game cannot be processed, because the config is not set properly!")
         }
     }
 
+
     /**
      * calculates the normalized result value based on this equation:
-     * NR = (2*L/maxL + P/maxP + E/maxE)/4,
-     * where NR - normalized result, L - level, P - points, maxP - max possible points, E - extra points, maxE - max possible extra points
-     * For retrieving these values from the result and config JSON, the fieldNames can be set.
+     * NR = D * S,
+     * where NR - normalized result, D - difficulty, S - score and
+     * S, D, NR are in the range of [0, 1]
      */
-    private fun calculateBasedOnPoints(results: List<ResultForCalculationEntity>, game: GameEntity): List<ResultForCalculationEntity> {
-        var L: Double?
-        var maxL: Double?
-        var P: Double?
-        var maxP: Double?
-        var E: Double?
-        var maxE: Double?
+    private fun calculateBasedOnWin(results: List<ResultForCalculationEntity>, game: GameEntity): List<ResultForCalculationEntity> {
         val normalizedResults = mutableListOf<ResultForCalculationEntity>()
         results.forEach { result ->
             try {
-                L = (result.result[levelFieldName]?.toString())?.toDouble()
-                maxL = (game.configDescription[maxLevelFieldName]?.toString())?.toDouble()
-                P = (result.result[pointsFieldName]?.toString())?.toDouble()
-                maxP = (result.result[maxPointsFieldName]?.toString())?.toDouble() ?: (result.config[maxPointsFieldName]?.toString())?.toDouble()
-                E = (result.result[extraPointsFieldName]?.toString())?.toDouble()
-                maxE = (result.result[maxExtraPointsFieldName]?.toString())?.toDouble() ?: (result.config[maxExtraPointsFieldName]?.toString())?.toDouble()
-                if(E==null && maxE==null) {
-                    E = 0.0
-                    maxE = 1.0
-                }
-                if (L != null && maxL != null && P != null && maxP != null && E!= null && maxE != null  && maxE != 0.0 && maxP != 0.0) {
-                    result.normalizedResult = (L!!*levelMultiplicator/maxL!! + P!!/maxP!!  + E!!/maxE!!) / (levelMultiplicator + 2)
-                    normalizedResults.add(result)
-                }
+                val score = getScoreOfResult(result, game)
+                val difficulty = getDifficultyOfResult(result, game)
+                val normalizedScore = score * difficulty
+                result.normalizedResult = normalizedScore
+                normalizedResults.add(result)
             } catch (e: RuntimeException) {
                 log.error("Error while calculating normalized score: ${e.message}")
             }
-
         }
         return normalizedResults
     }
 
-    /**
-     * calculates the normalized result value based on this equation:
-     * NR = (L/maxL + 1)/2 if W else L/maxL,
-     * where NR - normalized result, L - level, W - win
-     */
-    private fun calculateBasedOnWin(results: List<ResultForCalculationEntity>, game: GameEntity): List<ResultForCalculationEntity> {
-        var L: Double?
-        var maxL: Double?
-        var W: Boolean?
-        val normalizedResults = mutableListOf<ResultForCalculationEntity>()
-        results.forEach { result ->
-            try {
-                L = (result.result[levelFieldName]?.toString())?.toDouble()
-                maxL = (game.configDescription[maxLevelFieldName]?.toString())?.toDouble()
-                W = (result.result[winFieldName]?.toString())?.toBoolean()
-                if (L != null && maxL!=null && W != null) {
-                    result.normalizedResult = if (W!!) (L!!/maxL!! + maxNormalizedNonLevelPoints)/2 else L!!/maxL!!
-                    normalizedResults.add(result)
-                }
-            } catch (e: RuntimeException) {
-                log.error("Error while calculating normalized score: ${e.message}")
+    private fun getScoreOfResult(result: ResultForCalculationEntity, game: GameEntity): Double {
+        return (result.result["passed"] as Boolean).let { if(it) 1.0 else 0.0 }
+    }
+
+    private fun getDifficultyOfResult(result: ResultForCalculationEntity, game: GameEntity): Double {
+        var difficulty = 0.0
+        var configItemCount = 0
+        game.configItems.forEach() { configItem ->
+            if(result.config.containsKey(configItem.paramName)) {
+                val configInResult =
+                    if(configItem.hardestValue > configItem.easiestValue) {
+                        (result.config[configItem.paramName] as Int)
+                    }else{
+                        configItem.easiestValue - (result.config[configItem.paramName] as Int) //distance from easiest value
+                    }
+                difficulty += configInResult / configItem.hardestValue
+                configItemCount++
             }
         }
-        return normalizedResults
+        return if(configItemCount > 0) difficulty / configItemCount else 0.0
     }
 
     private fun setFieldNamesFromConfig(game: GameEntity) {
