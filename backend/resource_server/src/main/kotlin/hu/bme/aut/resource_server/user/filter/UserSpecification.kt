@@ -33,22 +33,26 @@ class UserSpecification(
         filter.addressZip?.let {
             predicateList.add(criteriaBuilder.equal(root.get<Address>("address").get<String>("zip"), it))
         }
-        filter.abilityCode?.let {
+        filter.abilityFilter.forEach { abilityF ->
+        abilityF.code?.let {
             val profileItem: Join<UserEntity, FloatProfileItem> = root.join("profileFloat");
-            val ability : Join<FloatProfileItem, AbilityEntity> = profileItem.join("ability");
+            val ability: Join<FloatProfileItem, AbilityEntity> = profileItem.join("ability");
 
             val abilityPredicate = criteriaBuilder.equal(ability.get<String>("code"), it)
             predicateList.add(abilityPredicate)
-            filter.abilityValueMin?.let {
-                val abilityValueMin = filter.abilityValueMin - epsilon
-                val valuePredicateMin = criteriaBuilder.greaterThanOrEqualTo(profileItem.get<Double>("abilityValue"), abilityValueMin)
+            abilityF.valueMin?.let { minVal ->
+                val abilityValueMin = minVal - epsilon
+                val valuePredicateMin =
+                    criteriaBuilder.greaterThanOrEqualTo(profileItem.get<Double>("abilityValue"), abilityValueMin)
                 predicateList.add(valuePredicateMin)
             }
-            filter.abilityValueMax?.let {
-                val abilityValueMax = filter.abilityValueMax + epsilon
-                val valuePredicateMax = criteriaBuilder.lessThanOrEqualTo(profileItem.get<Double>("abilityValue"), abilityValueMax)
+            abilityF.valueMax?.let { maxVal ->
+                val abilityValueMax = maxVal + epsilon
+                val valuePredicateMax =
+                    criteriaBuilder.lessThanOrEqualTo(profileItem.get<Double>("abilityValue"), abilityValueMax)
                 predicateList.add(valuePredicateMax)
             }
+        }
         }
         return criteriaBuilder.and(*predicateList.toTypedArray())
     }

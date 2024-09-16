@@ -1,6 +1,7 @@
 package hu.bme.aut.resource_server.user
 
 import hu.bme.aut.resource_server.TestUtilsService
+import hu.bme.aut.resource_server.user.filter.AbilityFilterDto
 import hu.bme.aut.resource_server.user.filter.UserFilterDto
 import hu.bme.aut.resource_server.user_group.group.Group
 import hu.bme.aut.resource_server.user_group.organization.Address
@@ -70,20 +71,49 @@ class UserGroupDataServiceTest(
     fun `should filter users by ability correctly`() {
         var userIdsFound = userGroupDataService.getAllUserIdsByFilter(
             UserFilterDto(
-                abilityCode = "Gf",
-                abilityValueMin = 1.0,
-                abilityValueMax = 1.1
+                abilityFilter = listOf(
+                    AbilityFilterDto(
+                        code = "Gf",
+                        valueMin = 1.0,
+                        valueMax = 1.1
+                    )
+                )
             )
         )
         assertEquals(1, userIdsFound.size)
         userIdsFound = userGroupDataService.getAllUserIdsByFilter(
             UserFilterDto(
-                abilityCode = "Gf",
-                abilityValueMin = 0.8,
-                abilityValueMax = 1.0
+                abilityFilter = listOf(
+                    AbilityFilterDto(
+                        code = "Gf",
+                        valueMin = 0.8,
+                        valueMax = 1.0
+                    )
+                )
             )
         )
         assertEquals(2, userIdsFound.size)
+    }
+
+    @Test
+    fun `should filter by more abilities correctly`(){
+        val userIdsFound = userGroupDataService.getAllUserIdsByFilter(
+            UserFilterDto(
+                abilityFilter = listOf(
+                    AbilityFilterDto(
+                        code = "Gf",
+                        valueMin = 1.0,
+                        valueMax = 1.1
+                    ),
+                    AbilityFilterDto(
+                        code = "Gq",
+                        valueMin = 1.0,
+                        valueMax = 1.2
+                    )
+                )
+            )
+        )
+        assertEquals(1, userIdsFound.size)
     }
 
     @Test
@@ -106,9 +136,13 @@ class UserGroupDataServiceTest(
         val userIdsFound = userGroupDataService.getAllUserIdsByFilter(
             UserFilterDto(
                 addressCity = "Budapest",
-                abilityCode = "Gf",
-                abilityValueMin = 1.0,
-                abilityValueMax = 1.2
+                abilityFilter = listOf(
+                    AbilityFilterDto(
+                        code = "Gf",
+                        valueMin = 1.0,
+                        valueMax = 1.2
+                    )
+                )
             )
         )
         assertEquals(2, userIdsFound.size)

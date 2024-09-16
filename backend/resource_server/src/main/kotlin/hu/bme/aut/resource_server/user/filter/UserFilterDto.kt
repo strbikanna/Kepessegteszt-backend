@@ -6,7 +6,11 @@ data class UserFilterDto(
     val addressCity: String? = null,
     val addressZip: String? = null,
     val userGroupId: Int? = null,
-    val abilityCode: String? = null,
-    val abilityValueMin: Double? = null,
-    val abilityValueMax: Double? = null,
+    val abilityFilter: List<AbilityFilterDto> = emptyList(),
+)
+
+data class AbilityFilterDto(
+    val code: String? = null,
+    val valueMin: Double? = null,
+    val valueMax: Double? = null,
 )
