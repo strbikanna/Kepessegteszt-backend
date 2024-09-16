@@ -43,8 +43,7 @@ export class ProfileDataComparisonService {
     const params = new HttpParams()
         .set('groupId', groupId)
         .set('aggregationMode', aggregationType);
-    console.log('getting group data')
-    return this.http.get<ProfileData[]>(`${this.httpService.baseUrl}/user/group_profile/aggregate`, {params: params}).pipe(
+    return this.http.post<ProfileData[]>(`${this.httpService.baseUrl}/user/group_profile/aggregate`, {params: params}).pipe(
         retry(3),
     )
   }

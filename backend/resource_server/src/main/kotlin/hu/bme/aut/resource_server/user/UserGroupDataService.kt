@@ -62,30 +62,37 @@ class UserGroupDataService(
     }
 
     @Transactional
-    fun getAbilityToAverageValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): List<ProfileItem> {
-        return getAbilityToAggregateValuesInGroup(groupId, abilities, userRepository::getAverageOfAbilityValuesInUserGroup)
+    fun getAbilityToAverageValueInGroup(groupId: Int?, userFilterDto: UserFilterDto?, abilities: Set<AbilityEntity>): List<ProfileItem> {
+        return getAbilityToAggregateValuesInGroup(groupId, userFilterDto, abilities, userRepository::getAverageOfAbilityValuesInUserGroup)
     }
 
     @Transactional
-    fun getAbilityToSumValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): List<ProfileItem> {
-        return getAbilityToAggregateValuesInGroup(groupId, abilities, userRepository::getSumOfAbilityValuesInUserGroup)
+    fun getAbilityToSumValueInGroup(groupId: Int?, userFilterDto: UserFilterDto?, abilities: Set<AbilityEntity>): List<ProfileItem> {
+        return getAbilityToAggregateValuesInGroup(groupId, userFilterDto, abilities, userRepository::getSumOfAbilityValuesInUserGroup)
     }
 
     @Transactional
-    fun getAbilityToMaxValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): List<ProfileItem> {
-        return getAbilityToAggregateValuesInGroup(groupId, abilities, userRepository::getMaxOfAbilityValuesInUserGroup)
+    fun getAbilityToMaxValueInGroup(groupId: Int?, userFilterDto: UserFilterDto?, abilities: Set<AbilityEntity>): List<ProfileItem> {
+        return getAbilityToAggregateValuesInGroup(groupId, userFilterDto, abilities, userRepository::getMaxOfAbilityValuesInUserGroup)
     }
 
     @Transactional
-    fun getAbilityToMinValueInGroup(groupId: Int, abilities: Set<AbilityEntity>): List<ProfileItem> {
-        return getAbilityToAggregateValuesInGroup(groupId, abilities, userRepository::getMinOfAbilityValuesInUserGroup)
+    fun getAbilityToMinValueInGroup(groupId: Int?, userFilterDto: UserFilterDto?, abilities: Set<AbilityEntity>): List<ProfileItem> {
+        return getAbilityToAggregateValuesInGroup(groupId, userFilterDto, abilities, userRepository::getMinOfAbilityValuesInUserGroup)
     }
 
-    private fun getAbilityToAggregateValuesInGroup(groupId: Int,
+    private fun getAbilityToAggregateValuesInGroup(groupId: Int?,
+                                                   userFilterDto: UserFilterDto?,
                                                    abilities: Set<AbilityEntity>,
                                                    aggregationSupplier: (abilityCode: String, userIds: List<Int>) -> Double?
     ): List<ProfileItem> {
-        val userIds = getUserIdsInGroup(groupId)
+        val userIds : MutableList<Int> = mutableListOf()
+        groupId?.let {
+            userIds.addAll(getUserIdsInGroup(it))
+        }
+        userFilterDto?.let {
+            userIds.addAll(getAllUserIdsByFilter(it))
+        }
         val abilityToAggregate = mutableMapOf<AbilityEntity, Double>()
         abilities.forEach {
             val aggregateValue = aggregationSupplier(it.code, userIds)

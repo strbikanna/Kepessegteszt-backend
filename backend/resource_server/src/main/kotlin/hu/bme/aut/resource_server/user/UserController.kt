@@ -3,6 +3,7 @@ package hu.bme.aut.resource_server.user
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.profile.ProfileItem
+import hu.bme.aut.resource_server.user.filter.UserFilterDto
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
 import hu.bme.aut.resource_server.user_group.UserGroupDto
 import kotlinx.coroutines.Deferred
@@ -52,21 +53,22 @@ class UserController(
     /**
      * @param aggregationMode: "average" | "sum" | "max" | "min"
      */
-    @GetMapping("/group_profile/aggregate")
+    @PostMapping("/group_profile/aggregate")
     @ResponseStatus(HttpStatus.OK)
     fun compareProfileToGroupData(
             authentication: Authentication,
-            @RequestParam(required = true) groupId: Int,
-            @RequestParam(required = false) aggregationMode: String = "average"
+            @RequestParam(required = false) groupId: Int?,
+            @RequestParam(required = false) aggregationMode: String = "average",
+            @RequestBody(required = false) filterDto: UserFilterDto?
     ): List<ProfileItem>{
-        authService.checkGroupDataReadAndThrow(authentication, groupId)
+        groupId?.let{authService.checkGroupDataReadAndThrow(authentication, groupId)}
         val user = userService.getUserEntityWithProfileByUsername(authentication.name)
         val abilities = user.profileFloat.map { it.ability }.toSet()
         return when(aggregationMode){
-            "average" -> userGroupService.getAbilityToAverageValueInGroup(groupId, abilities)
-            "sum" -> userGroupService.getAbilityToSumValueInGroup(groupId, abilities)
-            "max" -> userGroupService.getAbilityToMaxValueInGroup(groupId, abilities)
-            "min" -> userGroupService.getAbilityToMinValueInGroup(groupId, abilities)
+            "average" -> userGroupService.getAbilityToAverageValueInGroup(groupId, filterDto, abilities)
+            "sum" -> userGroupService.getAbilityToSumValueInGroup(groupId, filterDto, abilities)
+            "max" -> userGroupService.getAbilityToMaxValueInGroup(groupId, filterDto, abilities)
+            "min" -> userGroupService.getAbilityToMinValueInGroup(groupId, filterDto, abilities)
             else -> throw IllegalArgumentException("Invalid aggregation mode, supported modes: average, sum, max, min")
         }
     }
