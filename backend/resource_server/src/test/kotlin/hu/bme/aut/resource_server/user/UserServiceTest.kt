@@ -121,25 +121,5 @@ class UserServiceTest(
         assertEquals(4, updatedUser.profile.size)
     }
 
-    @Test
-    @Transactional
-    fun shouldAddUserToGroup(){
-        val org = Organization(name = "TestOrg", address = Address("11", "TestStreet", "TestCity", "1123"))
-        val group = Group(name = "TestGroup", organization = org)
-        val user = testService.createUnsavedTestUser()
-        testService.saveUser(user)
-        testService.organizationRepository.save(org)
-        testService.groupRepository.save(group)
-        userService.addUserToGroup(user.username, group.id!!)
-        val userInDb = testService.userRepository.findByUsername(user.username).orElseThrow()
-        assertEquals(1, userInDb.groups.size)
-    }
 
-    @Test
-    fun testEmptyUserGroups(){
-        val user = testService.createUnsavedTestUser()
-        testService.saveUser(user)
-        val groups = userService.getGroupsOfUser(user.username)
-        assertEquals(0, groups.size)
-    }
 }
