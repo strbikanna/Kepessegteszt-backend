@@ -3,8 +3,9 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {SimpleHttpService} from "../utils/simple-http.service";
 import {filter, map, Observable, retry} from "rxjs";
 import {ProfileData} from "../model/profile_data.model";
-import {AbilityType} from "../model/ability.model";
+import {Ability, AbilityType} from "../model/ability.model";
 import {UserGroup} from "../model/user_group.model";
+import {UserFilter} from "../common/user-filter/user-filter.model";
 
 @Injectable({
   providedIn: 'root'
@@ -39,14 +40,25 @@ export class ProfileDataComparisonService {
     return this.http.get<UserGroup[]>(this.httpService.baseUrl + '/user/groups');
   }
 
-  getProfileDataOfGroup(groupId: number, aggregationType: 'average'| 'min' | 'max' | 'sum'): Observable<ProfileData[]> {
-    const params = new HttpParams()
-        .set('groupId', groupId)
+  getProfileDataOfGroup(filter: UserFilter | undefined, aggregationType: 'average'| 'min' | 'max' | 'sum'): Observable<ProfileData[]> {
+    let params = new HttpParams()
         .set('aggregationMode', aggregationType);
-    return this.http.post<ProfileData[]>(`${this.httpService.baseUrl}/user/group_profile/aggregate`, {params: params}).pipe(
+    if(filter?.userGroupId){
+        params = params.set('userGroupId', filter.userGroupId);
+    }
+    let userFilter = null;
+    if(filter){
+      userFilter ={
+        ageMin: filter.ageMin,
+        ageMax: filter.ageMax,
+        addressCity: filter.addressCity,
+        addressZip: filter.addressZip,
+        abilityFilter: filter.abilityFilter
+      }
+    }
+    return this.http.post<ProfileData[]>(`${this.httpService.baseUrl}/user/group_profile/aggregate`, userFilter, {params: params}).pipe(
         retry(3),
     )
   }
-
 
 }

@@ -1,9 +1,8 @@
-
 :host {
   display: block;
-  margin-top: 2em;
+  margin-top: 1em;
   height: 6em;
-  width: 15em;
+  width: 20em;
 }
 
 .scale-whole {
@@ -18,7 +17,7 @@
 
 .scale-group {
   height: 100%;
-  background-color: #C3ACD0;
+  background-color:#C3ACD0;
   position: absolute;
   top: 0;
   left: 0;
@@ -31,7 +30,7 @@
 
 .scale-own {
   height: 100%;
-  background-color: #ffa33c;
+  background-color:  #ffa33c;
   position: absolute;
   top: 0;
   left: 0;
@@ -45,22 +44,22 @@
 .chip-own, .chip-group {
   position: relative;
   z-index: 4;
-  top: 1.1em;
+  top: 1.2em;
   display: inline-block;
   border-radius: 50%;
-  width: 1.6em;
-  height: 1.6em;
+  width: 1.8em;
+  height: 1.8em;
   padding: 0.2em;
-  font-size: smaller;
+  font-size: 0.8em;
   text-align: center;
-  line-height: 1.5em;
+  line-height: 1.8em;
 }
 .chip-own{
-  left: calc(60% - 0.8em);
+  left: calc(60% - 0.9em);
   background: #ffa33c;
 }
 .chip-group {
-  left: calc(80% - 3em);
+  left: calc(80% - 3.6em);
   background: #C3ACD0;
 }
 

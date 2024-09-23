@@ -1,52 +1,47 @@
-import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {Observable} from "rxjs";
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+    ViewChild
+} from '@angular/core';
 
 @Component({
     selector: 'app-ratio-scale',
     templateUrl: './ratio-scale.component.html',
     styleUrls: ['./ratio-scale.component.scss']
 })
-export class RatioScaleComponent implements OnInit, AfterViewInit {
+export class RatioScaleComponent implements AfterViewInit, OnChanges {
 
-    @Input({required:true}) ownValue!: Observable<number>
-    @Input({required:true}) groupValue!: Observable<number>
-    @Input({required:true}) wholeValue!: Observable<number>
+    @Input({required:true}) ownValue!: number
+    @Input({required:true}) groupValue!: number
+    @Input({required:true}) wholeValue!: number
 
-    protected dataOwn: number | undefined;
-    protected dataGroup: number | undefined;
-    private dataWhole: number | undefined;
 
     @ViewChild('chipOwn') chipOwn?: ElementRef;
     @ViewChild('scaleOwn') scaleOwn?: ElementRef;
     @ViewChild('chipGroup') chipGroup?: ElementRef;
     @ViewChild('scaleGroup') scaleGroup?: ElementRef;
 
-    ngOnInit() {
-        this.ownValue.subscribe(value => {
-            this.dataOwn = value
-
-            this.groupValue.subscribe(value => {
-                this.dataGroup = value
-
-                this.wholeValue.subscribe(value => {
-                    this.dataWhole = value
-                })
-            })
-        })
-    }
 
     ngAfterViewInit(): void {
         this.initRatios()
     }
+    ngOnChanges(changes: SimpleChanges): void {
+        this.initRatios();
+    }
 
     initRatios(){
         if(
-            this.dataOwn && this.dataGroup && this.dataWhole
+            this.ownValue && this.groupValue && this.wholeValue
             && this.scaleOwn && this.scaleGroup && this.chipOwn && this.chipGroup
         ) {
-            console.log("setting ratios")
-            const ratioOwn = (this.dataOwn / this.dataWhole) * 100
-            const ratioGroup = (this.dataGroup / this.dataWhole) * 100
+            const ratioOwn = (this.ownValue / this.wholeValue) * 100
+            const ratioGroup = (this.groupValue / this.wholeValue) * 100
 
             this.scaleOwn!.nativeElement.style.width = ratioOwn + '%'
             this.scaleGroup!.nativeElement.style.width = ratioGroup + '%'
@@ -58,9 +53,13 @@ export class RatioScaleComponent implements OnInit, AfterViewInit {
                 this.scaleGroup!.nativeElement.style.zIndex = '1'
             }
 
-            this.chipOwn!.nativeElement.style.left = 'calc(' + ratioOwn + '% - 0.8em)'
-            this.chipGroup!.nativeElement.style.left = 'calc(' + ratioGroup + '% - 3em)'
+            this.chipOwn!.nativeElement.style.left = 'calc(' + ratioOwn + '% - 1em)'
+            this.chipGroup!.nativeElement.style.left = 'calc(' + ratioGroup + '% - 3.4em)'
         }
 
     }
+    roundDataValues(data: number){
+        return Math.round(data * 100) / 100
+    }
+
 }

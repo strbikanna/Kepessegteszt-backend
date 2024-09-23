@@ -1,6 +1,11 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {UserFilter} from "./user.filter";
-import {FormArray, FormBuilder, FormControl} from "@angular/forms";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AbilityFilter, UserFilter} from "./user-filter.model";
+import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {ProfileData} from "../../model/profile_data.model";
+import {UserGroup} from "../../model/user_group.model";
+import {Observable} from "rxjs";
+import {TEXTS} from "../../utils/app.text_messages";
+import {Ability} from "../../model/ability.model";
 
 @Component({
     selector: 'app-user-filter',
@@ -8,28 +13,49 @@ import {FormArray, FormBuilder, FormControl} from "@angular/forms";
     styleUrls: ['./user-filter.component.scss']
 })
 export class UserFilterComponent implements OnInit {
+    @Input() ageMin: number = 0;
+    @Input() ageMax: number = 20;
+    @Input() abilityValueMin: number = 0.0;
+    @Input() abilityValueMax: number = 2.0;
+    @Input({required: true}) availableGroups: Observable<UserGroup[]> = new Observable<UserGroup[]>();
+    @Input({required: true}) availableAbilities: Observable<Ability[]> = new Observable<Ability[]>();
+
     @Output() filterChange: EventEmitter<UserFilter> = new EventEmitter;
 
     constructor(private fb: FormBuilder) {
     }
 
     ngOnInit() {
-        this.addAbilityFilter();
+        this.availableAbilities.subscribe(
+            (abilities) => {
+                this.allAbilities = abilities;
+            });
     }
+
+    protected text = TEXTS.cognitive_profile.user_filter
+    private allAbilities: Ability[] = [];
 
     protected userFilterForm = this.fb.group({
         ageMin: [new FormControl<number | undefined>(undefined)],
         ageMax: [new FormControl<number | undefined>(undefined)],
-        addressCity: [new FormControl<string | undefined>(undefined)],
-        addressZip: [new FormControl<string | undefined>(undefined)],
+        addressCity: [''],
+        addressZip: ['', Validators.pattern('^[0-9]{4}$')],
         userGroupId: [new FormControl<number | undefined>(undefined)],
-        abilityFilter: this.fb.array<UserFilter>([])
+        abilityFilter: this.fb.array<AbilityFilter>([])
     });
 
-    addAbilityFilter() {
+    isAbilityInForm(ability: Ability){
         let abilityFilters = this.userFilterForm.get('abilityFilter') as FormArray;
+        return abilityFilters?.value.find((filter: AbilityFilter) => filter.code === ability.code);
+    }
+
+    addAbilityFilter(ability: Ability) {
+        let abilityFilters = this.userFilterForm.get('abilityFilter') as FormArray;
+        if(this.isAbilityInForm(ability)){
+            return;
+        }
         abilityFilters.push(this.fb.group({
-            code: [new FormControl<string | undefined>(undefined)],
+            code: [ability.code],
             valueMin: [new FormControl<number | undefined>(undefined)],
             valueMax: [new FormControl<number | undefined>(undefined)]
         }));
@@ -50,7 +76,23 @@ export class UserFilterComponent implements OnInit {
             userGroupId: this.userFilterForm.get('userGroupId')?.value ?? undefined,
             abilityFilter: abilityFilters.value
         }
+        if(filter.addressCity === ''){
+            filter.addressCity = undefined;
+        }
+        if(filter.addressZip === ''){
+            filter.addressZip = undefined;
+        }
         this.filterChange.emit(filter);
     }
+
+    getAbilityNameOfControl(formControl: AbstractControl){
+        let formGroup = formControl as FormGroup;
+        let abilityCode = formGroup.controls['code'].value;
+        return this.allAbilities.find((ability) => ability.code === abilityCode)?.name;
+    }
+    getAbilityFilterGroup(formControl: AbstractControl){
+        return formControl as FormGroup;
+    }
+
 
 }

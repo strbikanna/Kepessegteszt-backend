@@ -66,6 +66,10 @@ import {CdkFixedSizeVirtualScroll, CdkVirtualScrollViewport} from "@angular/cdk/
 import {MatSidenavModule} from "@angular/material/sidenav";
 import { GameSearchComponent } from './game-management/game-search/game-search.component';
 import { RecommendationDetailCardComponent } from './recommendation-detail-card/recommendation-detail-card.component';
+import { UserFilterComponent } from './common/user-filter/user-filter.component';
+import { ProfileLineChartComponent } from './profile-data-comparison/profile-line-chart/profile-line-chart.component';
+import { RatioScaleComponent } from './profile-data-comparison/ratio-scale/ratio-scale.component';
+import {MatSliderModule} from "@angular/material/slider";
 
 @NgModule({
     declarations: [
@@ -98,6 +102,9 @@ import { RecommendationDetailCardComponent } from './recommendation-detail-card/
         FilterControlComponent,
         GameSearchComponent,
         RecommendationDetailCardComponent,
+        UserFilterComponent,
+        ProfileLineChartComponent,
+        RatioScaleComponent,
     ],
     imports: [
         BrowserModule,
@@ -138,7 +145,7 @@ import { RecommendationDetailCardComponent } from './recommendation-detail-card/
         NgxEchartsModule.forRoot({
             echarts
         }),
-        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule
+        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule, MatSliderModule
     ],
     providers: [
         {

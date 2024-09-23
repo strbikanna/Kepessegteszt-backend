@@ -1,4 +1,18 @@
-:host{
+:host {
   display: block;
   width: max-content;
+}
+
+.groupData {
+  color: #C3ACD0;
+}
+
+.ownData {
+  color: #ffa33c;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 1em;
 }
