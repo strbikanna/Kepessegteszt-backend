@@ -87,11 +87,19 @@ class UserGroupDataService(
                                                    aggregationSupplier: (abilityCode: String, userIds: List<Int>) -> Double?
     ): List<ProfileItem> {
         val userIds : MutableList<Int> = mutableListOf()
+        if(groupId == null && userFilterDto == null){
+            userIds.addAll(userRepository.findAll().map { it.id!! })
+        }
         groupId?.let {
             userIds.addAll(getUserIdsInGroup(it))
         }
         userFilterDto?.let {
-            userIds.addAll(getAllUserIdsByFilter(it))
+            if(userIds.isEmpty()){
+                userIds.addAll(getAllUserIdsByFilter(it))
+            }
+            else {
+                userIds.retainAll(getAllUserIdsByFilter(it))
+            }
         }
         val abilityToAggregate = mutableMapOf<AbilityEntity, Double>()
         abilities.forEach {
