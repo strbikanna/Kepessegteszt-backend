@@ -46,11 +46,13 @@ class ResultController(
         if(!game.active){
             throw IllegalArgumentException("Game is not active");
         }
-        val existingNextRecommendation = resultService.getNextRecommendationForGameIfExists(savedResult.recommendedGame.id!!, username)
-        if(existingNextRecommendation != null){
-            return existingNextRecommendation.id!!
+        var nextRecommendation = resultService.getNextRecommendationForGameIfExists(savedResult.recommendedGame.id!!, username)
+        if(nextRecommendation != null && nextRecommendation.config.isNotEmpty()){
+            return nextRecommendation.id!!
         }
-        val nextRecommendation = recommenderService.createEmptyRecommendation(username, game.id!!)
+        if(nextRecommendation == null) {
+            nextRecommendation = recommenderService.createEmptyRecommendation(username, game.id!!)
+        }
         CoroutineScope(Dispatchers.Default).async {
             val config = recommenderService.createNextRecommendationByResult(savedResult)
             nextRecommendation.config = config

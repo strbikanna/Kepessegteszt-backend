@@ -58,7 +58,7 @@ class AutoRecommendationService(
             val result = dataService.getResultById(resultId)
             val user = result.user
             val game = dataService.getGameWithConfigItems(result.recommendedGame.game.id!!)
-            log.trace("Creating next recommendation based on result for user: ${user.username}")
+            log.trace("Creating next recommendation based on result for user: ${user.username}; for game: ${game.name}")
             if(game.configItems.isEmpty()){
                 log.warn("No config items found for game ${game.name}")
                 return@withContext emptyMap()
@@ -86,7 +86,7 @@ class AutoRecommendationService(
                 val easierRecommendationParam = recommendEasier(nextParamToChange!!, currValue)
                 nextRecommendation[easierRecommendationParam.first] = easierRecommendationParam.second
             }
-            log.info("Next recommendation created based on result for user: ${user.username}")
+            log.info("Next recommendation created based on result for user: ${user.username}; for game: ${game.name}. Config: $nextRecommendation")
             return@withContext nextRecommendation
         }
 
