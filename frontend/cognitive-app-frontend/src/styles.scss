@@ -1,10 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
 @import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import url('https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700');
+@import "../node_modules/primeflex/primeflex.css";
 
 html,body{
   height: 100%;
   margin: 0;
+}
+p.description{
+  font-size: medium;
+  color: dimgrey;
+}
+p.title{
+  font-size: larger;
 }
 app-root{
   display: block;

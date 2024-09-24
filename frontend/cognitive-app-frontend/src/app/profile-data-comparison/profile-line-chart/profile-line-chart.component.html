@@ -1,0 +1,13 @@
+<div class="container">
+    <div *ngFor="let uData of userData" class="mr-4">
+        <div *ngIf="getGroupDataToAbility(uData.ability) && !loading">
+            <p>{{ uData.ability.name }}</p>
+            <p class="ownData">{{ text.data_own }}: {{ uData.value }}</p>
+            <p class="groupData">{{ text.data_group }}: {{ getGroupDataToAbility(uData.ability)!.value }}</p>
+            <app-ratio-scale
+                    [ownValue]="uData.value" [groupValue]="getGroupDataToAbility(uData.ability)!.value"
+                    [wholeValue]="valueMax"/>
+        </div>
+
+    </div>
+</div>

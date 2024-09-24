@@ -3,12 +3,10 @@ package hu.bme.aut.resource_server.user
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.profile.ProfileItem
+import hu.bme.aut.resource_server.user.filter.UserFilterDto
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
 import hu.bme.aut.resource_server.user_group.UserGroupDto
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
@@ -19,6 +17,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/user")
 class UserController(
     @Autowired private var userService: UserService,
+    @Autowired private var userGroupService: UserGroupDataService,
     @Autowired private var authService: AuthService
 ) {
     @GetMapping("/profile")
@@ -40,48 +39,50 @@ class UserController(
     @ResponseStatus(HttpStatus.OK)
     fun getGroupsOfUser(authentication: Authentication): List<UserGroupDto>{
         val username = authentication.name
-        return userService.getGroupsOfUser(username)
+        return userGroupService.getGroupsOfUser(username)
     }
 
     @PutMapping("/group")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
     fun addUserToGroup(authentication: Authentication, @RequestParam(required = true) username: String, @RequestParam(required = true) groupId: Int){
-        authService.canAccessUserGroup(authentication, groupId)
-        userService.addUserToGroup(username, groupId)
+        authService.checkUserGroupWriteAndThrow(authentication, groupId)
+        userGroupService.addUserToGroup(username, groupId)
     }
 
     /**
      * @param aggregationMode: "average" | "sum" | "max" | "min"
      */
-    @GetMapping("/group_profile/aggregate")
+    @PostMapping("/group_profile/aggregate")
     @ResponseStatus(HttpStatus.OK)
     fun compareProfileToGroupData(
             authentication: Authentication,
-            @RequestParam(required = true) groupId: Int,
-            @RequestParam(required = false) aggregationMode: String = "average"
+            @RequestParam(required = false) groupId: Int?,
+            @RequestParam(required = false) aggregationMode: String = "average",
+            @RequestBody(required = false) filterDto: UserFilterDto?
     ): List<ProfileItem>{
-        authService.canSeeUserGroupData(authentication, groupId)
+        groupId?.let{authService.checkGroupDataReadAndThrow(authentication, groupId)}
         val user = userService.getUserEntityWithProfileByUsername(authentication.name)
         val abilities = user.profileFloat.map { it.ability }.toSet()
         return when(aggregationMode){
-            "average" -> userService.getAbilityToAverageValueInGroup(groupId, abilities)
-            "sum" -> userService.getAbilityToSumValueInGroup(groupId, abilities)
-            "max" -> userService.getAbilityToMaxValueInGroup(groupId, abilities)
-            "min" -> userService.getAbilityToMinValueInGroup(groupId, abilities)
+            "average" -> userGroupService.getAbilityToAverageValueInGroup(groupId, filterDto, abilities)
+            "sum" -> userGroupService.getAbilityToSumValueInGroup(groupId, filterDto, abilities)
+            "max" -> userGroupService.getAbilityToMaxValueInGroup(groupId, filterDto, abilities)
+            "min" -> userGroupService.getAbilityToMinValueInGroup(groupId, filterDto, abilities)
             else -> throw IllegalArgumentException("Invalid aggregation mode, supported modes: average, sum, max, min")
         }
     }
 
     @GetMapping("/group_profile/all")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_ADMIN')")
     fun getGroupProfile(authentication: Authentication, @RequestParam(required = true) groupId: Int): List<ProfileItem>{
-        authService.canSeeUserGroupData(authentication, groupId)
+        authService.checkGroupDataReadAndThrow(authentication, groupId)
         val user = userService.getUserEntityWithProfileByUsername(authentication.name)
         val abilities = user.profileFloat.map { it.ability }
         val abilityToValues = mutableMapOf<AbilityEntity, List<Double>>()
         abilities.forEach {
-            val values = userService.getAbilityValuesInUserGroupAscending(groupId, it.code)
+            val values = userGroupService.getAbilityValuesInUserGroupAscending(groupId, it.code)
             abilityToValues[it] = values
         }
         return abilityToValues.map { ProfileItem( it.key, it.value) }

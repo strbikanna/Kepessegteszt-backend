@@ -1,12 +1,13 @@
 package hu.bme.aut.resource_server.user
 
 import jakarta.transaction.Transactional
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import java.util.*
 
-interface UserRepository: CrudRepository<UserEntity, Int> {
+interface UserRepository: CrudRepository<UserEntity, Int>, JpaSpecificationExecutor<UserEntity> {
     fun findByUsername(username: String): Optional<UserEntity>
 
     fun findAllByUsernameIn(username: List<String>): List<UserEntity>
