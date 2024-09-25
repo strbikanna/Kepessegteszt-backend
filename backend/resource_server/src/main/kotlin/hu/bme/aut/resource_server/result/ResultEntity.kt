@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.gameplayresult
+package hu.bme.aut.resource_server.result
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity

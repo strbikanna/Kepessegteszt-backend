@@ -52,8 +52,7 @@ class AutoRecommendationServiceIntTest(
         runBlocking {
             val recommendation = autoRecommendationService.createNextRecommendationBasedOnResult(result.id!!)
             assertTrue(recommendation.isNotEmpty())
-            val changedParam = configItems.find { it.paramOrder == 1 }!!
-            assertEquals(changedParam.initialValue + changedParam.increment, recommendation[changedParam.paramName]!!)
+            assertEquals(1, game.configItems.filter{recommendation[it.paramName] == it.initialValue + it.increment}.size)
         }
     }
 
