@@ -36,11 +36,11 @@ export class UserFilterComponent implements OnInit {
     private allAbilities: Ability[] = [];
 
     protected userFilterForm = this.fb.group({
-        ageMin: [new FormControl<number | undefined>(undefined)],
-        ageMax: [new FormControl<number | undefined>(undefined)],
+        ageMin: [undefined],
+        ageMax: [undefined],
         addressCity: [''],
         addressZip: ['', Validators.pattern('^[0-9]{4}$')],
-        userGroupId: [new FormControl<number | undefined>(undefined)],
+        userGroupId: [undefined],
         abilityFilter: this.fb.array<AbilityFilter>([])
     });
 
@@ -56,8 +56,8 @@ export class UserFilterComponent implements OnInit {
         }
         abilityFilters.push(this.fb.group({
             code: [ability.code],
-            valueMin: [new FormControl<number | undefined>(undefined)],
-            valueMax: [new FormControl<number | undefined>(undefined)]
+            valueMin: [undefined],
+            valueMax: [undefined]
         }));
     }
 
