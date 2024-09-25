@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.user_group.group
 
+import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user_group.UserGroup
 import hu.bme.aut.resource_server.user_group.UserGroupDto
 import hu.bme.aut.resource_server.user_group.organization.Organization
@@ -8,18 +9,27 @@ import jakarta.persistence.*
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorValue("group")
-class Group (
-        name: String,
+class Group(
+    name: String,
 
-        @ManyToOne(cascade = [CascadeType.REFRESH, CascadeType.MERGE])
-        @JoinColumn(name = "organization_id", referencedColumnName = "id")
-        val organization: Organization,
+    @ManyToOne(cascade = [CascadeType.REFRESH, CascadeType.MERGE])
+    @JoinColumn(name = "organization_id", referencedColumnName = "id")
+    val organization: Organization,
 
-        @OneToMany(cascade = [CascadeType.ALL])
-        @JoinColumn(name = "parent_group_id", referencedColumnName = "id")
-        var childGroups: MutableList<Group> = mutableListOf(),
 
-): UserGroup(name = name) {
+    @ManyToMany
+    @JoinTable(
+        name = "group_member",
+        joinColumns = [JoinColumn(name = "group_id")],
+        inverseJoinColumns = [JoinColumn(name = "user_id")]
+    )
+    override val members: MutableList<UserEntity> = mutableListOf(),
+
+    @OneToMany(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "parent_group_id", referencedColumnName = "id")
+    var childGroups: MutableList<Group> = mutableListOf(),
+
+    ) : UserGroup(name = name) {
     override fun getAllGroups(): List<Group> {
         val allGroupsInGroup = childGroups.toMutableList()
         childGroups.forEach { allGroupsInGroup.addAll(it.getAllGroups()) }
@@ -40,15 +50,16 @@ class Group (
 
         return true
     }
+
     override fun hashCode(): Int {
         return organization.hashCode() + name.hashCode() + id.hashCode()
     }
 
     override fun toDto(): UserGroupDto {
         return GroupDto(
-                id = id!!,
-                name = name,
-                organizationDto = organization.toDto()
+            id = id!!,
+            name = name,
+            organizationDto = organization.toDto()
         )
     }
 
