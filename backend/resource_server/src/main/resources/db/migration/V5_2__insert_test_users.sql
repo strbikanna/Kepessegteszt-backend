@@ -1,4 +1,4 @@
-INSERT INTO USER (id, first_name, last_name, username, birth_date, address_city)
+INSERT INTO user (id, first_name, last_name, username, birth_date, address_city)
 VALUES (100, 'Bence', 'Szabó', 'bence.szabó100', '2010-09-30', 'Budapest'),
        (101, 'András', 'Nagy', 'andrás.nagy101', '2015-09-24', 'Szeged'),
        (102, 'Tamás', 'Varga', 'tamás.varga102', '2017-09-28', 'Debrecen'),

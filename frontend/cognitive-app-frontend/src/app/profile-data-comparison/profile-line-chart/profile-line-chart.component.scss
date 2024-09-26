@@ -1,6 +1,7 @@
 :host {
-  display: block;
-  width: max-content;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .groupData {
@@ -13,6 +14,14 @@
 
 .container {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  @media screen and (max-width: 800px) {
+    grid-template-columns: 1fr 1fr ;
+  }
+  @media screen and (min-width: 800px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @media screen and (min-width: 1400px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
   padding: 1em;
 }
