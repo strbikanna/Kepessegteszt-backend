@@ -56,19 +56,19 @@ class UserController(
     @PostMapping("/group_profile/aggregate")
     @ResponseStatus(HttpStatus.OK)
     fun compareProfileToGroupData(
-            authentication: Authentication,
-            @RequestParam(required = false) groupId: Int?,
-            @RequestParam(required = false) aggregationMode: String = "average",
-            @RequestBody(required = false) filterDto: UserFilterDto?
+        authentication: Authentication,
+        @RequestParam(required = false) userGroupId: Int?,
+        @RequestParam(required = false) aggregationMode: String = "average",
+        @RequestBody(required = false) filterDto: UserFilterDto?
     ): List<ProfileItem>{
-        groupId?.let{authService.checkGroupDataReadAndThrow(authentication, groupId)}
+        userGroupId?.let{authService.checkGroupDataReadAndThrow(authentication, userGroupId)}
         val user = userService.getUserEntityWithProfileByUsername(authentication.name)
         val abilities = user.profileFloat.map { it.ability }.toSet()
         return when(aggregationMode){
-            "average" -> userGroupService.getAbilityToAverageValueInGroup(groupId, filterDto, abilities)
-            "sum" -> userGroupService.getAbilityToSumValueInGroup(groupId, filterDto, abilities)
-            "max" -> userGroupService.getAbilityToMaxValueInGroup(groupId, filterDto, abilities)
-            "min" -> userGroupService.getAbilityToMinValueInGroup(groupId, filterDto, abilities)
+            "average" -> userGroupService.getAbilityToAverageValueInGroup(userGroupId, filterDto, abilities)
+            "sum" -> userGroupService.getAbilityToSumValueInGroup(userGroupId, filterDto, abilities)
+            "max" -> userGroupService.getAbilityToMaxValueInGroup(userGroupId, filterDto, abilities)
+            "min" -> userGroupService.getAbilityToMinValueInGroup(userGroupId, filterDto, abilities)
             else -> throw IllegalArgumentException("Invalid aggregation mode, supported modes: average, sum, max, min")
         }
     }
