@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.user_group.organization
 
+import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user_group.UserGroup
 import hu.bme.aut.resource_server.user_group.UserGroupDto
 import hu.bme.aut.resource_server.user_group.group.Group
@@ -9,21 +10,29 @@ import jakarta.persistence.*
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorValue("org")
 class Organization(
-        name: String,
+    name: String,
 
-        @Embedded
-        @AttributeOverrides(
-                AttributeOverride(name = "houseNumber", column = Column(name = "address_house_number")),
-                AttributeOverride(name = "street", column = Column(name = "address_street")),
-                AttributeOverride(name = "city", column = Column(name = "address_city")),
-                AttributeOverride(name = "zip", column = Column(name = "address_zip"))
-        )
-        val address: Address,
+    @Embedded
+    @AttributeOverrides(
+        AttributeOverride(name = "houseNumber", column = Column(name = "address_house_number")),
+        AttributeOverride(name = "street", column = Column(name = "address_street")),
+        AttributeOverride(name = "city", column = Column(name = "address_city")),
+        AttributeOverride(name = "zip", column = Column(name = "address_zip"))
+    )
+    val address: Address,
 
-        @OneToMany(mappedBy = "organization")
-        val groups: MutableList<Group> = mutableListOf(),
+    @ManyToMany
+    @JoinTable(
+        name = "org_member",
+        joinColumns = [JoinColumn(name = "org_id")],
+        inverseJoinColumns = [JoinColumn(name = "user_id")]
+    )
+    override val members: MutableList<UserEntity> = mutableListOf(),
 
-) : UserGroup(name = name) {
+    @OneToMany(mappedBy = "organization")
+    val groups: MutableList<Group> = mutableListOf(),
+
+    ) : UserGroup(name = name) {
     override fun getAllGroups(): List<Group> {
         val allGroupsInOrg = groups.toMutableList()
         groups.forEach { allGroupsInOrg.addAll(it.getAllGroups()) }
@@ -53,9 +62,9 @@ class Organization(
 
     override fun toDto(): UserGroupDto {
         return OrganizationDto(
-                id = id!!,
-                name = name,
-                address = address
+            id = id!!,
+            name = name,
+            address = address
         )
     }
 }
