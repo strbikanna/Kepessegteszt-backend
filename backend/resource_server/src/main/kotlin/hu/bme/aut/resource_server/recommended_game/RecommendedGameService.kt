@@ -28,6 +28,13 @@ class RecommendedGameService(
             .map { it.toDto() }
     }
 
+    @Transactional
+    fun getNextChoiceForUser(username: String): List<RecommendedGameDto> {
+        val user = userRepository.findByUsername(username).orElseThrow()
+        val oldestNotCompleted = recommendedGameRepository.findOldestNotCompleted(user).subList(0,2)
+        return oldestNotCompleted.map { it.toDto() }
+    }
+
     /**
      * Retrieve the configuration of a recommended game. If the configuration is not yet available, it waits for it to be available.
      */

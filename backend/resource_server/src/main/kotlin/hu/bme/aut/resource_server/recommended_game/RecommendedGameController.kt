@@ -44,6 +44,12 @@ class RecommendedGameController(
             return@async recommendedGameService.getRecommendedGameConfig(id)
         }
 
+    @GetMapping("/next_choice")
+    @ResponseStatus(HttpStatus.OK)
+    fun getNextChoiceForUser(authentication: Authentication): List<RecommendedGameDto> {
+        return recommendedGameService.getNextChoiceForUser(authentication.name)
+    }
+
     @PostMapping("/recommend")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN') or hasRole('SCIENTIST') or hasRole('TEACHER')")

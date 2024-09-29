@@ -4,6 +4,7 @@ import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.user.UserEntity
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.PagingAndSortingRepository
 import java.time.LocalDateTime
@@ -20,4 +21,10 @@ interface RecommendedGameRepository: CrudRepository<RecommendedGameEntity, Long>
     fun findTopByTimestampBeforeAndRecommendedToAndGameOrderByTimestamp(timestamp: LocalDateTime, recommendedTo: UserEntity, game: GameEntity): RecommendedGameEntity?
 
     fun findByRecommendedToAndGameAndCompletedAndRecommender(user: UserEntity, game: GameEntity, completed: Boolean, recommender: UserEntity?): List<RecommendedGameEntity>
+
+    @Query(
+        "select rg from RecommendedGameEntity rg where rg.recommendedTo = :user and rg.completed = false " +
+                "group by rg.game order by min(rg.timestamp) asc"
+    )
+    fun findOldestNotCompleted(user: UserEntity): List<RecommendedGameEntity>
 }
