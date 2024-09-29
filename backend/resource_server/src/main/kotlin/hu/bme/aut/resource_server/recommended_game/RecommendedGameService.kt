@@ -31,8 +31,11 @@ class RecommendedGameService(
     @Transactional
     fun getNextChoiceForUser(username: String): List<RecommendedGameDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
-        val oldestNotCompleted = recommendedGameRepository.findOldestNotCompleted(user).subList(0,2)
-        return oldestNotCompleted.map { it.toDto() }
+        val latestCompleted = recommendedGameRepository.findLatestCompleted(user).subList(0, 2)
+        return listOf(
+            recommendedGameRepository.findAllByRecommendedToAndGameAndCompleted(user, latestCompleted[0].game, false).first().toDto(),
+            recommendedGameRepository.findAllByRecommendedToAndGameAndCompleted(user, latestCompleted[1].game, false).first().toDto()
+        )
     }
 
     /**
