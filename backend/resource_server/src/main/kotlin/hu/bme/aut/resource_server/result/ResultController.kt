@@ -3,6 +3,7 @@ package hu.bme.aut.resource_server.result
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
 import hu.bme.aut.resource_server.recommendation.RecommenderService
+import hu.bme.aut.resource_server.recommended_game.RecommendedGameService
 import jakarta.servlet.http.HttpServletResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +27,8 @@ class ResultController(
     @Autowired private var resultService: ResultService,
     @Autowired private var profileSnapshotService: ProfileSnapshotService,
     @Autowired private var authService: AuthService,
-    @Autowired private var recommenderService: RecommenderService
+    @Autowired private var recommenderService: RecommenderService,
+    @Autowired private var recommendationService: RecommendedGameService
 ) {
 
     /**
@@ -56,7 +58,7 @@ class ResultController(
         CoroutineScope(Dispatchers.Default).async {
             val config = recommenderService.createNextRecommendationByResult(savedResult)
             nextRecommendation.config = config
-            recommenderService.save(nextRecommendation)
+            recommendationService.save(nextRecommendation)
         }
         return nextRecommendation.id!!
     }
