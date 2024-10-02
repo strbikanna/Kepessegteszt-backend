@@ -24,14 +24,14 @@ import org.springframework.stereotype.Service
  * It uses the [ModelManager] to get the recommendation model for the game.
  */
 @Service
-class AutoRecommendationService(
+class AutoRecommenderService(
     @Autowired private var dataService: ResultForCalculationDataService,
     @Autowired private var calculatorService: AbilityRateCalculatorService,
     @Autowired private var modelManager: ModelManager,
 ) {
     val motivationRate = 0.7
 
-    var log: Logger = LoggerFactory.getLogger(AutoRecommendationService::class.java)
+    var log: Logger = LoggerFactory.getLogger(AutoRecommenderService::class.java)
 
     suspend fun createRecommendationModel(gameId: Int) {
         log.trace("Creating recommendation model for game with id: $gameId")

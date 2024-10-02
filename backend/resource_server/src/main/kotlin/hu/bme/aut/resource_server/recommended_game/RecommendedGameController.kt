@@ -1,10 +1,7 @@
 package hu.bme.aut.resource_server.recommended_game
 
-import hu.bme.aut.resource_server.authentication.AuthException
 import hu.bme.aut.resource_server.authentication.AuthService
-import hu.bme.aut.resource_server.authentication.notContact
-import hu.bme.aut.resource_server.utils.CoroutineException
-import hu.bme.aut.resource_server.utils.defaultCoroutineExceptionHandler
+import hu.bme.aut.resource_server.recommendation.RecommenderService
 import kotlinx.coroutines.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/recommended_game")
 class RecommendedGameController(
     @Autowired private var recommendedGameService: RecommendedGameService,
-    @Autowired private var gameplayRecommenderService: RecommenderService,
     @Autowired private var recommenderService: RecommenderService,
     @Autowired private var authService: AuthService
 ) {
@@ -73,9 +69,9 @@ class RecommendedGameController(
     @PreAuthorize("hasRole('STUDENT')")
     fun getAllSystemRecommended(authentication: Authentication): List<RecommendedGameDto> {
         val systemRecommendedGames =
-            gameplayRecommenderService.getAllRecommendationToUser(authentication.name).toMutableList()
+            recommendedGameService.getAllRecommendationToUser(authentication.name).toMutableList()
         if (systemRecommendedGames.size < 1) {
-            systemRecommendedGames.addAll(gameplayRecommenderService.createNewRecommendations(authentication.name))
+            systemRecommendedGames.addAll(recommenderService.createNewRecommendations(authentication.name))
         }
         return systemRecommendedGames.map { it.toDto() }
     }
@@ -87,8 +83,8 @@ class RecommendedGameController(
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('STUDENT')")
     fun generateNewRecommendations(authentication: Authentication): List<RecommendedGameDto> {
-        val currentActiveRecommendations = gameplayRecommenderService.getAllRecommendationToUser(authentication.name)
-        gameplayRecommenderService.deleteRecommendations(currentActiveRecommendations)
-        return gameplayRecommenderService.createNewRecommendations(authentication.name).map { it.toDto() }
+        val currentActiveRecommendations = recommendedGameService.getAllRecommendationToUser(authentication.name)
+        recommendedGameService.deleteRecommendations(currentActiveRecommendations)
+        return recommenderService.createNewRecommendations(authentication.name).map { it.toDto() }
     }
 }

@@ -2,7 +2,7 @@ package hu.bme.aut.resource_server.result
 
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
-import hu.bme.aut.resource_server.recommended_game.RecommenderService
+import hu.bme.aut.resource_server.recommendation.RecommenderService
 import jakarta.servlet.http.HttpServletResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

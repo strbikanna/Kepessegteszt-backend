@@ -64,4 +64,27 @@ class RecommendedGameService(
             config = recommendation.config
         ))
     }
+
+    fun deleteRecommendations(recommendations: List<RecommendedGameEntity>) {
+        recommendedGameRepository.deleteAll(recommendations)
+    }
+
+    fun save(recommendation: RecommendedGameEntity): RecommendedGameEntity {
+        val saved = recommendedGameRepository.save(recommendation)
+        return saved
+    }
+
+
+    /**
+     * Get all recommendations to user which are not yet completed and the game is active.
+     * If the user has no recommendation for a game, a default recommendation is created.
+     */
+    @Transactional
+    fun getAllRecommendationToUser(username: String): List<RecommendedGameEntity> {
+        val user = userRepository.findByUsername(username).orElseThrow()
+        return recommendedGameRepository
+            .findAllByRecommendedToAndCompleted(user, false)
+            .filter { it.game.active }
+    }
+
 }

@@ -14,8 +14,8 @@ import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest
 @ActiveProfiles("test")
-class AutoRecommendationServiceIntTest(
-    @Autowired val autoRecommendationService: AutoRecommendationService,
+class AutoRecommenderServiceIntTest(
+    @Autowired val autoRecommendationService: AutoRecommenderService,
     @Autowired val testService: TestUtilsService
 ) {
     @BeforeEach
