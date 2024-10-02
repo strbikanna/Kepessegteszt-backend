@@ -182,10 +182,6 @@ class TestUtilsService(
     }
 
     fun saveUser(user: UserEntity): UserEntity {
-//        if(userRepository.existsByUsername(user.username) && user.id == null){
-//            val conflictingUser = userRepository.findByUsername(user.username).orElseThrow()
-//            userRepository.delete(conflictingUser)
-//        }
         return userRepository.save(user)
     }
 
