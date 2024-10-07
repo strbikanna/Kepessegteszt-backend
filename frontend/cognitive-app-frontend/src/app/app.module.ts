@@ -18,7 +18,6 @@ import {MatCardModule} from "@angular/material/card";
 import {MatListModule} from "@angular/material/list";
 import { ImpersonationComponent } from './impersonation/impersonation.component';
 import {AuthInterceptor} from "./auth/auth.interceptor";
-import { RecommendedGamesComponent } from './game/recommended-games-page/recommended-games.component';
 import {MatTabsModule} from "@angular/material/tabs";
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from "@angular/material/dialog";
 import {MatPaginatorModule} from "@angular/material/paginator";
@@ -77,7 +76,6 @@ import {MatSliderModule} from "@angular/material/slider";
         LoginComponent,
         HomeComponent,
         ProfileComponent,
-        RecommendedGamesComponent,
         HeaderComponent,
         ImpersonationComponent,
         AlertDialogComponent,
