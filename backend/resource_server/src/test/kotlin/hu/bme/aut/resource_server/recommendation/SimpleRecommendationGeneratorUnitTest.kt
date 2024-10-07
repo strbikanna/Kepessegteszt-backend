@@ -21,18 +21,11 @@ import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDateTime
 
 @ExtendWith(MockitoExtension::class)
-class AutoRecommenderServiceUnitTest {
+class SimpleRecommendationGeneratorUnitTest {
 @Mock
 private lateinit var mockDataService: ResultForCalculationDataService
 
-@Mock
-private lateinit var mockCalculatorService: AbilityRateCalculatorService
-
-@Mock
-private lateinit var mockModelManager: ModelManager
-
-
-private lateinit var autoRecommenderService : AutoRecommenderService
+private lateinit var simpleRecommendationGenerator : SimpleRecommendationGenerator
 
     private lateinit var game: GameEntity
     private lateinit var user: UserEntity
@@ -40,7 +33,7 @@ private lateinit var autoRecommenderService : AutoRecommenderService
     private lateinit var latestResult : ResultForCalculationEntity
     @BeforeEach
     fun init(){
-        autoRecommenderService = AutoRecommenderService(mockDataService, mockCalculatorService, mockModelManager)
+        simpleRecommendationGenerator = SimpleRecommendationGenerator(mockDataService)
         game = TestDataSource.createGameForTest()
         game.id = 1
         user = TestDataSource.createUsersForTestWithEmptyProfile(1)[0]
@@ -65,55 +58,6 @@ private lateinit var autoRecommenderService : AutoRecommenderService
     }
 
     @Test
-    fun shouldRecommendBasedOnResult_WhenModelNotExists(){
-        Mockito.`when`(mockModelManager.existsModel(game.id!!)).thenReturn(false)
-        Mockito.`when`(mockDataService.getBestResultOfUser(game, user)).thenReturn(bestResult)
-        //levelPoints based on normalized result = 0.7 - 0.5 * 0.7 = 0.35
-        //recommendedLevel = 0.35 * 10 * 2 = 7
-        val recommendation = autoRecommenderService.generateRecommendationForUser(user, game)
-        assertEquals(7, recommendation.config["level"])
-        assertEquals(game, recommendation.game)
-        assertEquals(user, recommendation.recommendedTo)
-    }
-    @Test
-    fun shouldRecommendBasedOnModel_WhenModelExists(){
-        Mockito.`when`(mockModelManager.existsModel(game.id!!)).thenReturn(true)
-        Mockito.`when`(mockModelManager.getEstimationForResult(game.id!!, listOf(0.5))).thenReturn(0.3)
-        //levelPoints based on normalized result = 0.3 - 0.7 * 0.5 = -0.05
-        //recommendedLevel = 1
-        val recommendation = autoRecommenderService.generateRecommendationForUser(user, game)
-        assertEquals(1, recommendation.config["level"])
-        assertEquals(game, recommendation.game)
-        assertEquals(user, recommendation.recommendedTo)
-    }
-
-    @Test
-    fun shouldRecommendBasedOnLatestResult_WhenBestResultAndModelNotExists(){
-        Mockito.`when`(mockModelManager.existsModel(game.id!!)).thenReturn(false)
-        Mockito.`when`(mockDataService.getBestResultOfUser(game, user)).thenReturn(null)
-        Mockito.`when`(mockDataService.getLatestResultOfUser(game, user)).thenReturn(latestResult)
-        //max score of level = 10+9 = 19
-        //score = 8+8 = 16
-        //successRatio = 16/19 = 0.84
-        //successRation is exceeding 0.7 motivation value, so recommendedLevel = 3
-        val recommendation = autoRecommenderService.generateRecommendationForUser(user, game)
-        assertEquals(3, recommendation.config["level"])
-        assertEquals(game, recommendation.game)
-        assertEquals(user, recommendation.recommendedTo)
-    }
-
-    @Test
-    fun shouldRecommendLevel1_WhenNothingExists(){
-        Mockito.`when`(mockModelManager.existsModel(game.id!!)).thenReturn(false)
-        Mockito.`when`(mockDataService.getBestResultOfUser(game, user)).thenReturn(null)
-        Mockito.`when`(mockDataService.getLatestResultOfUser(game, user)).thenReturn(null)
-        val recommendation = autoRecommenderService.generateRecommendationForUser(user, game)
-        assertEquals(1, recommendation.config["level"])
-        assertEquals(game, recommendation.game)
-        assertEquals(user, recommendation.recommendedTo)
-    }
-
-    @Test
     fun `Should Recommend Harder When Result Is Success`(){
         val latestRecommendation = TestDataSource.createRecommendationForUser(user, game).copy(timestamp = LocalDateTime.now())
         val modifiedConfig = latestRecommendation.config.toMutableMap()
@@ -122,7 +66,7 @@ private lateinit var autoRecommenderService : AutoRecommenderService
         `when`(mockDataService.getResultById(1)).thenReturn(result)
         `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
         runBlocking {
-            val nextRecommendation =  autoRecommenderService.createNextRecommendationBasedOnResult(1)
+            val nextRecommendation =  simpleRecommendationGenerator.createNextRecommendationBasedOnResult(1, listOf())
             assertEquals(1,
                 game.configItems.filter{nextRecommendation.get(it.paramName) == it.initialValue + it.increment}.size
             )
@@ -142,7 +86,7 @@ private lateinit var autoRecommenderService : AutoRecommenderService
         `when`(mockDataService.getResultById(1)).thenReturn(result)
         `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
         runBlocking {
-            val nextRecommendation =  autoRecommenderService.createNextRecommendationBasedOnResult(1)
+            val nextRecommendation =  simpleRecommendationGenerator.createNextRecommendationBasedOnResult(1, emptyList())
             assertEquals(firstOrderParam.hardestValue, nextRecommendation[firstOrderParam.paramName])
             assertEquals(secondOrderParam.initialValue + secondOrderParam.increment, nextRecommendation[secondOrderParam.paramName])
             assertEquals(2, nextRecommendation.size)
@@ -166,7 +110,7 @@ private lateinit var autoRecommenderService : AutoRecommenderService
         `when`(mockDataService.getResultById(1)).thenReturn(result)
         `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
         runBlocking {
-            val nextRecommendation =  autoRecommenderService.createNextRecommendationBasedOnResult(1)
+            val nextRecommendation =  simpleRecommendationGenerator.createNextRecommendationBasedOnResult(1, emptyList())
             assertTrue(
                 nextRecommendation[firstParam.paramName] == firstParam.hardestValue - firstParam.increment
                         && nextRecommendation[secondParam.paramName] == secondParam.initialValue
@@ -186,7 +130,7 @@ private lateinit var autoRecommenderService : AutoRecommenderService
         `when`(mockDataService.getResultById(1)).thenReturn(result)
         `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
         runBlocking {
-            val nextRecommendation =  autoRecommenderService.createNextRecommendationBasedOnResult(1)
+            val nextRecommendation =  simpleRecommendationGenerator.createNextRecommendationBasedOnResult(1, emptyList())
             assertEquals(2, nextRecommendation.size)
             assertEquals(
                 1,
@@ -209,7 +153,7 @@ private lateinit var autoRecommenderService : AutoRecommenderService
         `when`(mockDataService.getResultById(1)).thenReturn(result)
         `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
         runBlocking {
-            val nextRecommendation =  autoRecommenderService.createNextRecommendationBasedOnResult(1)
+            val nextRecommendation =  simpleRecommendationGenerator.createNextRecommendationBasedOnResult(1, emptyList())
             assertEquals(2, nextRecommendation.size)
             assertEquals(firstOrderParam.initialValue, nextRecommendation[firstOrderParam.paramName])
             assertEquals(secondOrderParam.initialValue, nextRecommendation[secondOrderParam.paramName])
@@ -258,7 +202,7 @@ private lateinit var autoRecommenderService : AutoRecommenderService
         `when`(mockDataService.getResultById(1)).thenReturn(result)
         `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(negyszogBlokkok)
         runBlocking {
-            val nextRecommendation =  autoRecommenderService.createNextRecommendationBasedOnResult(1)
+            val nextRecommendation =  simpleRecommendationGenerator.createNextRecommendationBasedOnResult(1, emptyList())
             assertEquals(3, nextRecommendation.size)
             assertEquals(1, negyszogBlokkok.configItems.filter{ nextRecommendation[it.paramName] == it.initialValue + it.increment}.size)
         }

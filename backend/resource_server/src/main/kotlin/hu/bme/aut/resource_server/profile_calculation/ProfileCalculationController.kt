@@ -4,7 +4,7 @@ import hu.bme.aut.resource_server.profile_calculation.data.CalculationInfoDto
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
 import hu.bme.aut.resource_server.profile_calculation.service.GameResultProcessingService
 import hu.bme.aut.resource_server.profile_calculation.service.UserProfileUpdaterService
-import hu.bme.aut.resource_server.recommendation.AutoRecommenderService
+import hu.bme.aut.resource_server.recommendation.AiRecommendationGenerator
 import kotlinx.coroutines.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 class ProfileCalculationController(
     @Autowired private var profileUpdaterService: UserProfileUpdaterService,
     @Autowired private var resultProcessingService: GameResultProcessingService,
-    @Autowired private var autoRecommenderService: AutoRecommenderService,
+    @Autowired private var recommendationGenerator: AiRecommendationGenerator,
     @Autowired private var dataService: ResultForCalculationDataService
 ) {
 
@@ -44,7 +44,7 @@ class ProfileCalculationController(
             val meanAndDeviation = resultProcessingService.processGameResults(gameId)
             val countOfUpdatedProfiles = dataService.getCountOfRecentCalculation(gameId)
             profileUpdaterService.updateUserProfileByResultsOfGame(gameId, meanAndDeviation)
-            autoRecommenderService.createRecommendationModel(gameId)
+            recommendationGenerator.createRecommendationModel(gameId)
             return@async CalculationInfoDto(meanAndDeviation, countOfUpdatedProfiles)
         }
 }

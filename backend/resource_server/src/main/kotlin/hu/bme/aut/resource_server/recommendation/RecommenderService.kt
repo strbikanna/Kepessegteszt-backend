@@ -14,7 +14,8 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class RecommenderService(
     @Autowired private var gameRepository: GameRepository,
-    @Autowired private var autoRecommender: AutoRecommenderService,
+    @Autowired private var simpleGenerator: SimpleRecommendationGenerator,
+    @Autowired private var aiGenerator: AiRecommendationGenerator,
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
     @Autowired private var userRepository: UserRepository
 ) {
@@ -36,7 +37,7 @@ class RecommenderService(
     }
 
     suspend fun createNextRecommendationByResult(gameResult: ResultEntity): Map<String, Any> {
-        return autoRecommender.createNextRecommendationBasedOnResult(gameResult.id!!)
+        return simpleGenerator.createNextRecommendationBasedOnResult(gameResult.id!!, listOf(aiGenerator, simpleGenerator))
     }
 
     /**
@@ -106,7 +107,7 @@ class RecommenderService(
         val recommendations = mutableListOf<RecommendedGameEntity>()
         try {
             games.forEach { game ->
-                recommendations.add(autoRecommender.generateRecommendationForUser(user, game))
+                recommendations.add(aiGenerator.generateRecommendationForUser(user, game))
             }
             recommendedGameRepository.saveAll(recommendations)
         } catch (e: RuntimeException) {
