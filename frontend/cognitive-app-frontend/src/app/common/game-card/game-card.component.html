@@ -1,11 +1,18 @@
 <mat-card>
     <mat-card-content>
         <img src="{{game.thumbnail}}">
-        <div class="text-content">
-            <mat-card-title>{{game.name}}</mat-card-title>
-            <mat-card-subtitle>ID: {{game.id}}</mat-card-subtitle>
-            <p>{{game.description}}</p>
-            <p *ngFor="let text of otherTexts">{{text}}</p>
+        <div class="content">
+            <div class="flex align-items-center justify-content-between">
+                <div class="flex align-items-baseline">
+                    <mat-card-title class="mr-3 my-0">{{game.name}}</mat-card-title>
+                    <mat-card-subtitle >ID: {{game.id}}</mat-card-subtitle>
+                    <mat-icon *ngIf="game.active" class="mx-3" color="primary">check_circle</mat-icon>
+                    <mat-icon *ngIf="!game.active" class="mx-3" color="warn">cancel</mat-icon>
+                </div>
+                <mat-chip>V_{{game.version}}</mat-chip>
+            </div>
+            <p class="text">{{game.description}}</p>
+            <p *ngFor="let text of otherTexts" class="text">{{text}}</p>
         </div>
     </mat-card-content>
     <mat-divider></mat-divider>

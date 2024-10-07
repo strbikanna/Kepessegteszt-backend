@@ -19,8 +19,8 @@ import {PaginatorTranslator} from "../common/paginator/paginator-translator";
 export class GameManagementComponent implements OnInit {
     actionText = TEXTS.actions
     dataLength = 100;
-    pageSizeOptions = [10, 25, 100];
-    defaultPageSize = 10;
+    pageSizeOptions = [10, 25, 50, 100];
+    defaultPageSize = 50;
     lastPageEvent: PageEvent | undefined = undefined;
     games!: Observable<Game[]>
 
@@ -59,8 +59,6 @@ export class GameManagementComponent implements OnInit {
     getCardTexts(game: Game): string[] {
         let appTexts = TEXTS.game_management.edit_form
         let texts: string[] = [];
-        texts.push(appTexts.version + game.version);
-        game.active ? texts.push(appTexts.active) : texts.push(appTexts.non_active);
         texts.push(`${appTexts.affected_abilities}: ${this.transformAffectedAbilities(game.affectedAbilities)}`);
         return texts;
     }
