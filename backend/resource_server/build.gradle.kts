@@ -6,6 +6,9 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.spring)
     alias(libs.plugins.kotlin.jpa)
+
+    // For Mistral API
+    alias(libs.plugins.kotlinx.serialization)
 }
 dependencyManagement {
     imports {
@@ -62,6 +65,22 @@ dependencies {
     testImplementation(libs.spring.security.test)
     testImplementation(libs.rest.assured)
     testImplementation(libs.hamcrest)
+
+    // OpenAI
+    implementation(platform(libs.openai.bom))
+    implementation(libs.openai)
+    //runtimeOnly(libs.ktor.apache5)
+
+    // Gemini
+    implementation(libs.kmp.generativeai.client)
+
+    // Ktor for Mistral API
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.content.negociation)
+    implementation(libs.ktor.client.resources)
 }
 
 tasks.withType<KotlinCompile> {
