@@ -69,6 +69,7 @@ import { UserFilterComponent } from './common/user-filter/user-filter.component'
 import { ProfileLineChartComponent } from './profile-data-comparison/profile-line-chart/profile-line-chart.component';
 import { RatioScaleComponent } from './profile-data-comparison/ratio-scale/ratio-scale.component';
 import {MatSliderModule} from "@angular/material/slider";
+import { UserAutocompleteComponent } from './common/user-autocomplete/user-autocomplete.component';
 
 @NgModule({
     declarations: [
@@ -103,6 +104,7 @@ import {MatSliderModule} from "@angular/material/slider";
         UserFilterComponent,
         ProfileLineChartComponent,
         RatioScaleComponent,
+        UserAutocompleteComponent,
     ],
     imports: [
         BrowserModule,
