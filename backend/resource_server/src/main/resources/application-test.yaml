@@ -13,7 +13,7 @@ spring:
 
 cognititve-app:
   resource-server:
-    secutity:
+    security:
       bypass: true
 
 app:
