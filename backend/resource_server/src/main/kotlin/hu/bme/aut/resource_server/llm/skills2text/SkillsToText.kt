@@ -34,5 +34,21 @@ abstract class SkillsToText(
         return generateFromPrompt(callPrompt)
     }
 
+    open suspend fun generateFromSkillsComparedToGroup(
+        skills: List<ProfileItem>,
+        groupSkills: List<ProfileItem>,
+        prompt: String = ""
+    ): String {
+        var callPrompt = prompt.ifBlank { promptTemplate }
+        for (skill in skills) {
+            callPrompt += "${skill.ability.name}, description: ${skill.ability.description}, value: ${skill.value}\n"
+        }
+        callPrompt += "The group's average values are:\n"
+        for (skill in groupSkills) {
+            callPrompt += "${skill.ability.name}, description: ${skill.ability.description}, value: ${skill.value}\n"
+        }
+        return generateFromPrompt(callPrompt)
+    }
+
     abstract suspend fun generateFromPrompt(prompt: String): String
 }
