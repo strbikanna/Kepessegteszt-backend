@@ -32,6 +32,14 @@ springdoc:
   api-docs:
     path: /api-docs
 
+api-keys:
+  mistral:
+    api-key:
+  openai:
+    api-key:
+  gemini:
+    api-key:
+
 app:
   python:
     # Indicates if Python environment is present
