@@ -4,6 +4,7 @@ import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.config.ApiKeysConfig
 import hu.bme.aut.resource_server.llm.skills2text.MistralSkillsToText
+import hu.bme.aut.resource_server.llm.skills2text.SkillsToText
 import hu.bme.aut.resource_server.profile.ProfileItem
 import hu.bme.aut.resource_server.user.filter.UserFilterDto
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
@@ -26,7 +27,7 @@ class UserController(
 ) {
     // This should be injected as a dependency
     private final val apiKeysConfig = ApiKeysConfig()
-    private val skillsToText = MistralSkillsToText(key = apiKeysConfig.mistral.apiKey)
+    private val skillsToText : SkillsToText = MistralSkillsToText(key = apiKeysConfig.mistral.apiKey)
 
 
     @GetMapping("/profile")
