@@ -4,14 +4,16 @@ import hu.bme.aut.resource_server.llm.mistral_kmp.MistralClient
 import hu.bme.aut.resource_server.llm.mistral_kmp.domain.Message
 import hu.bme.aut.resource_server.llm.mistral_kmp.domain.ModelParams
 
-class MistralSkillsToText : SkillsToText() {
-    private val apiKey: String = ""
-    private val mistral = MistralClient(apiKey = apiKey)
+class MistralSkillsToText(
+    key: String,
+    private val model: String = "open-mistral-7b"
+) : SkillsToText(key) {
+    private val mistral by lazy { MistralClient(apiKey = apiKey) }
 
     override suspend fun generateFromPrompt(prompt: String): String {
 
         val chatResult = mistral.chat(
-            model = "open-mistral-7b",
+            model = model,
             messages = listOf(Message(content = prompt)),
             params = ModelParams(safePrompt = false),
         )

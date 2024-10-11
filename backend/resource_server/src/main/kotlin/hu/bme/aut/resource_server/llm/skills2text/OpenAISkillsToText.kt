@@ -7,19 +7,19 @@ import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
 
-class OpenAISkillsToText : SkillsToText() {
-    private val apiKey: String = ""
+class OpenAISkillsToText(
+    key: String,
+    private val model: String = "gpt-4o-mini"
+) : SkillsToText(key) {
     private val systemMessage = ChatMessage(
         role = ChatRole.System,
         content = "You are a helpful assistant!"
     )
-    private val openai = OpenAI(
-        token = apiKey
-    )
+    private val openai by lazy { OpenAI(token = apiKey) }
 
     override suspend fun generateFromPrompt(prompt: String): String {
         val chatCompletionRequest = ChatCompletionRequest(
-            model = ModelId("gpt-4o-mini"),
+            model = ModelId(model),
             messages = listOf(
                 systemMessage,
                 ChatMessage(
