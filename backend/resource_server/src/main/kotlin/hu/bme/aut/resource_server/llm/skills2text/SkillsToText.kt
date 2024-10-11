@@ -2,7 +2,9 @@ package hu.bme.aut.resource_server.llm.skills2text
 
 import hu.bme.aut.resource_server.profile.ProfileItem
 
-abstract class SkillsToText {
+abstract class SkillsToText(
+    protected val apiKey: String = ""
+) {
     protected open val promptTemplate = "Convert the following Cattell–Horn–Carroll (CHC) theory abilities' " +
                 "values into a small summary about the person's cognitive skills.\n" +
                 "For every skill, the average value is 1.0. The levels change with 0.15 sized gaps.\n" +
