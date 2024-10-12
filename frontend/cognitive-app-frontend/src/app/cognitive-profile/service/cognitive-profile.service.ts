@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {catchError, map, Observable, of, retry,} from "rxjs";
+import {catchError, map, Observable, of, retry, tap,} from "rxjs";
 import {CognitiveProfile} from "../../model/cognitive_profile.model";
 import {Ability} from "../../model/ability.model";
 import {AppConstants} from "../../utils/constants";
@@ -32,6 +32,14 @@ export class CognitiveProfileService {
             map((res: any[]) => this.convertToCognitiveProfile(res))
         )
 
+    }
+
+    getProfileDescription(): Observable<string>{
+        return this.http.get<string>(`${this.helper.baseUrl}${this.profileEndpoint}/skills-as-text`, {responseType: 'text' as 'json'}).pipe(
+            catchError(this.helper.handleHttpError),
+            //log
+            tap(res => console.log(res))
+        )
     }
 
     /**

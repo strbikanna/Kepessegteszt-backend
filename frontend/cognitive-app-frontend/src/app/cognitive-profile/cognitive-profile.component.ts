@@ -16,6 +16,7 @@ import {User} from "../model/user.model";
 export class CognitiveProfileComponent implements OnInit {
 
     currentProfileData!: CognitiveProfile
+    profileText!: Observable<string>
     profileDataHistory: BehaviorSubject<CognitiveProfile[]> = new BehaviorSubject<CognitiveProfile[]>([])
     errorText = TEXTS.error
     text = TEXTS.cognitive_profile
@@ -49,6 +50,7 @@ export class CognitiveProfileComponent implements OnInit {
             this.profileDataHistory.next(profiles)
             this.loading = false
         })
+        this.profileText = this.service.getProfileDescription();
     }
 
     onDownClicked() {
