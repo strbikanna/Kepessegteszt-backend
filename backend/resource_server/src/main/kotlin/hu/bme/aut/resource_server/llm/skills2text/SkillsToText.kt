@@ -5,10 +5,14 @@ import hu.bme.aut.resource_server.profile.ProfileItem
 abstract class SkillsToText(
     protected val apiKey: String = ""
 ) {
-    protected open val promptTemplate = "Convert the following Cattell–Horn–Carroll (CHC) theory abilities' " +
-                "values into a small summary about the person's cognitive skills.\n" +
-                "For every skill, the average value is 1.0. The levels change with 0.15 sized gaps.\n" +
-                "This person's skills adn values are:\n"
+    protected open val promptTemplate = "Alakítsd át a következő Cattell–Horn–Carroll (CHC) teória képességértékeit " +
+            "egy rövid összefoglalóvá a személy kognitív adottságairól!\n" +
+            "Minden képesség átlagos értéke 1,0. A szintek 0,15-ös léptékekkel változnak.\n" +
+            "Ennek a személynek a képességei és azok értékei a következők:\n"
+    protected open val promptTemplateWithGroup = "Alakítsd át a következő Cattell–Horn–Carroll (CHC) teória képességértékeit " +
+            "egy rövid összefoglalóvá a személy kognitív adottságairól az adott társadalmi csoportjához képest!\n" +
+            "Minden képesség átlagos értéke 1,0. A szintek 0,15-ös léptékekkel változnak.\n" +
+            "Ennek a személynek a képességei és azok értékei a következők:\n"
     private var islLoggingEnabled = false
     private var logger: (prompt: String, response: String) -> Unit
             = { prompt, response -> println("Prompt:\n$prompt\nResponse:\n$response\n\n") }
@@ -26,27 +30,30 @@ abstract class SkillsToText(
         }
     }
 
+    protected open fun putSkillsIntoPrompt(skills: List<ProfileItem>, prompt: String): String {
+        var callPrompt = prompt
+        for (skill in skills) {
+            callPrompt += "${skill.ability.name}, leírás: ${skill.ability.description}, érték: ${skill.value}\n"
+        }
+        return callPrompt
+    }
+
     open suspend fun generateFromSkills(skills: List<ProfileItem>, prompt: String = ""): String {
         var callPrompt = prompt.ifBlank { promptTemplate }
-        for (skill in skills) {
-            callPrompt += "${skill.ability.name}, description: ${skill.ability.description}, value: ${skill.value}\n"
-        }
+        callPrompt = putSkillsIntoPrompt(skills, callPrompt)
         return generateFromPrompt(callPrompt)
     }
 
     open suspend fun generateFromSkillsComparedToGroup(
         skills: List<ProfileItem>,
         groupSkills: List<ProfileItem>,
+        groupName: String,
         prompt: String = ""
     ): String {
-        var callPrompt = prompt.ifBlank { promptTemplate }
-        for (skill in skills) {
-            callPrompt += "${skill.ability.name}, description: ${skill.ability.description}, value: ${skill.value}\n"
-        }
-        callPrompt += "The group's average values are:\n"
-        for (skill in groupSkills) {
-            callPrompt += "${skill.ability.name}, description: ${skill.ability.description}, value: ${skill.value}\n"
-        }
+        var callPrompt = prompt.ifBlank { promptTemplateWithGroup }
+        callPrompt = putSkillsIntoPrompt(skills, callPrompt)
+        callPrompt += "A $groupName csoport átlagos értékei:\n"
+        callPrompt = putSkillsIntoPrompt(groupSkills, callPrompt)
         return generateFromPrompt(callPrompt)
     }
 
