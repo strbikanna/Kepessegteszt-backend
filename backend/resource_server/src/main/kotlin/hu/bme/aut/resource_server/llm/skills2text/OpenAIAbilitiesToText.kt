@@ -7,10 +7,10 @@ import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
 
-class OpenAISkillsToText(
+class OpenAIAbilitiesToText(
     key: String,
     private val model: String = "gpt-4o-mini"
-) : SkillsToText(key) {
+) : AbilitiesToText(key) {
     private val systemMessage = ChatMessage(
         role = ChatRole.System,
         content = "You are a helpful assistant!"

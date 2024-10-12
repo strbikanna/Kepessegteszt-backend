@@ -2,7 +2,7 @@ package hu.bme.aut.resource_server.llm.skills2text
 
 import hu.bme.aut.resource_server.profile.ProfileItem
 
-abstract class SkillsToText(
+abstract class AbilitiesToText(
     protected val apiKey: String = ""
 ) {
     protected open val promptTemplate = "Alakítsd át a következő Cattell–Horn–Carroll (CHC) teória képességértékeit " +
@@ -30,30 +30,30 @@ abstract class SkillsToText(
         }
     }
 
-    protected open fun putSkillsIntoPrompt(skills: List<ProfileItem>, prompt: String): String {
+    protected open fun putAbilitiesIntoPrompt(abilities: List<ProfileItem>, prompt: String): String {
         var callPrompt = prompt
-        for (skill in skills) {
-            callPrompt += "${skill.ability.name}, leírás: ${skill.ability.description}, érték: ${skill.value}\n"
+        for (ability in abilities) {
+            callPrompt += "${ability.ability.name}, leírás: ${ability.ability.description}, érték: ${ability.value}\n"
         }
         return callPrompt
     }
 
-    open suspend fun generateFromSkills(skills: List<ProfileItem>, prompt: String = ""): String {
+    open suspend fun generateFromAbilities(abilities: List<ProfileItem>, prompt: String = ""): String {
         var callPrompt = prompt.ifBlank { promptTemplate }
-        callPrompt = putSkillsIntoPrompt(skills, callPrompt)
+        callPrompt = putAbilitiesIntoPrompt(abilities, callPrompt)
         return generateFromPrompt(callPrompt)
     }
 
-    open suspend fun generateFromSkillsComparedToGroup(
-        skills: List<ProfileItem>,
-        groupSkills: List<ProfileItem>,
+    open suspend fun generateFromAbilitiesComparedToGroup(
+        abilities: List<ProfileItem>,
+        groupAbilities: List<ProfileItem>,
         groupName: String,
         prompt: String = ""
     ): String {
         var callPrompt = prompt.ifBlank { promptTemplateWithGroup }
-        callPrompt = putSkillsIntoPrompt(skills, callPrompt)
+        callPrompt = putAbilitiesIntoPrompt(abilities, callPrompt)
         callPrompt += "A $groupName csoport átlagos értékei:\n"
-        callPrompt = putSkillsIntoPrompt(groupSkills, callPrompt)
+        callPrompt = putAbilitiesIntoPrompt(groupAbilities, callPrompt)
         return generateFromPrompt(callPrompt)
     }
 

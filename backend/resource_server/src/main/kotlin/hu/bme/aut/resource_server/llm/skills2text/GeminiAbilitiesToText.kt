@@ -2,10 +2,10 @@ package hu.bme.aut.resource_server.llm.skills2text
 
 import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
 
-class GeminiSkillsToText(
+class GeminiAbilitiesToText(
     key: String,
-    private val model: String = "gemini-1.5-flash"
-) : SkillsToText(key) {
+    model: String = "gemini-1.5-flash"
+) : AbilitiesToText(key) {
     private val generativeModel = GenerativeModel(
         modelName = model,
         apiKey = apiKey
