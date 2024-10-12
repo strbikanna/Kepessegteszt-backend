@@ -69,7 +69,7 @@ export class ResultPageComponent implements OnInit {
     }
 
     onUserNamesChosen(userNames: string[] | undefined) {
-        this.chosenUserNames = userNames?.map(name => name.split(' ')[2].slice(1,-1)) ?? [];
+        this.chosenUserNames = userNames ?? [];
     }
 
     onGameNamesChosen(gameNames: string[] | undefined) {

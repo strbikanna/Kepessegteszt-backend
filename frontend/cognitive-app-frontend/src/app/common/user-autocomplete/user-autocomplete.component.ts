@@ -3,6 +3,8 @@ import {TEXTS} from "../../utils/app.text_messages";
 import {UserForAdmin} from "../../admin/model/user-contacts.model";
 import {FormControl} from "@angular/forms";
 import {ContactService} from "../../admin/common/user_contact_autocomplete/contact_service/contact.service";
+import {Observable} from "rxjs";
+import {AdminService} from "../../admin/service/admin.service";
 
 @Component({
   selector: 'app-user-autocomplete',
@@ -11,56 +13,66 @@ import {ContactService} from "../../admin/common/user_contact_autocomplete/conta
 })
 export class UserAutocompleteComponent implements OnInit{
   @Input() text = TEXTS.contact_autocomplete;
-  @Input() users: UserForAdmin[] = [];
-  @Input() userToExclude: UserForAdmin | undefined
-  @Output() onContactSelected: EventEmitter<UserForAdmin> = new EventEmitter<UserForAdmin>();
+  /**
+   * emits the actually selected users username
+   */
+  @Output() onUserSelectionChanged: EventEmitter<string[]> = new EventEmitter<string[]>();
 
-  protected contactOptions: UserForAdmin[] = [];
-  protected filteredContactOptions: UserForAdmin[] = [];
-  contactAutocompleteForm = new FormControl<UserForAdmin | string>('')
+  protected userOptions: UserForAdmin[] = [];
+  protected defaultUserOptions: UserForAdmin[] = [];
+  protected selectedUsers: UserForAdmin[] = [];
+  autocompleteForm = new FormControl<UserForAdmin | string>('')
 
-  constructor(private service: ContactService) { }
+  constructor(private service: AdminService) { }
 
-  ngOnInit(): void {
-    this.service.getCurrUser().subscribe(user => {
-      this.service.getContactsToShow(user, this.showOnlyContacts).subscribe(contacts => {
-        this.contactOptions = contacts.sort((a, b) => a.firstName.localeCompare(b.firstName));
-        if(!this.displayCurrentUser) this.contactOptions = this.contactOptions.filter(contact => contact.id !== user.id);
-        if(this.userToExclude) this.contactOptions = this.contactOptions.filter(contact => contact.id !== this.userToExclude?.id)
-        this.filteredContactOptions = this.contactOptions.filter((val, index) => index < 10);
-      });
+  ngOnInit() {
+    this.service.getAllUsers(0, 30).subscribe(users => {
+        this.userOptions = users;
+        this.defaultUserOptions = users;
     });
-    this.contactAutocompleteForm.valueChanges.subscribe(value => {
+    this.autocompleteForm.valueChanges.subscribe(value => {
       const name = typeof value === 'string' ? value : value?.firstName + ' ' + value?.lastName;
-      this.filteredContactOptions = this.filterContacts(name);
+      if(name.length > 2){
+        this.searchUsers(name);
+      }
+      if(name.length === 0){
+        this.userOptions = this.defaultUserOptions;
+      }
     });
   }
-  filterContacts(value: string) : UserForAdmin[]{
-    if(value === '' || value === ' ') return this.contactOptions;
+  searchUsers(value: string){
+    if(value === '' || value === ' ') return;
     const filter = value.toLowerCase();
-    return this.contactOptions
-        .filter(option => option.firstName.toLowerCase().includes(filter) || option.lastName.toLowerCase().includes(filter))
-        .sort((a, b) => a.firstName.localeCompare(b.firstName))
-        .filter((val, index) => index < 10);
+    this.service.searchUsersByName(filter)?.subscribe(users => {
+        this.userOptions = users;
+    });
   }
   resetAutoComplete(){
-    this.contactAutocompleteForm.setValue('');
+    this.autocompleteForm.setValue('');
+    this.userOptions = this.defaultUserOptions;
   }
-  onAddContact(){
-    let contact: UserForAdmin;
-    if(typeof this.contactAutocompleteForm.value === 'string'){
-      const possibleContact = this.contactOptions.find(contact => contact.firstName + ' ' + contact.lastName === this.contactAutocompleteForm.value);
-      if(possibleContact === undefined) return;
-      contact = possibleContact;
+  onUserSelected(){
+    let user: UserForAdmin;
+    if(typeof this.autocompleteForm.value === 'string'){
+      const selectedUser = this.userOptions.find(contact => contact.firstName + ' ' + contact.lastName === this.autocompleteForm.value);
+      if(selectedUser === undefined) return;
+      user = selectedUser;
     }else{
-      if(this.contactAutocompleteForm.value === null) return;
-      contact = this.contactAutocompleteForm.value;
+      if(this.autocompleteForm.value === null) return;
+      user = this.autocompleteForm.value;
     }
-    this.onContactSelected.emit(contact);
+    if(!this.selectedUsers.includes(user)) {
+      this.selectedUsers.push(user);
+      this.onUserSelectionChanged.emit(this.selectedUsers.map(u => u.username));
+    }
     this.resetAutoComplete();
   }
   convertDisplay(user: UserForAdmin): string{
     if(user.firstName === undefined || user.lastName === undefined) return '';
     return user.firstName + ' ' + user.lastName;
+  }
+  onUserRemoved(user: UserForAdmin){
+    this.selectedUsers = this.selectedUsers.filter(u => u !== user);
+    this.onUserSelectionChanged.emit(this.selectedUsers.map(u => u.username));
   }
 }

@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {AppConstants} from "../../utils/constants";
 import {Observable, retry} from "rxjs";
 import {UserForAdmin} from "../model/user-contacts.model";
+import {UserInfo} from "../../auth/userInfo";
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,23 @@ import {UserForAdmin} from "../model/user-contacts.model";
 export class AdminService {
 
   constructor(private http: HttpClient) { }
+
+  /**
+   * Search users by name
+   * only for admins
+   * @param name
+   */
+  searchUsersByName(name: string): Observable<UserForAdmin[]> | undefined {
+    if (UserInfo.isAdmin()) {
+      let params = new HttpParams();
+      params = params.append('nameText', name);
+      return this.http.get<UserForAdmin[]>(`${AppConstants.authServerUrl}/user/search`, {params: params})
+          .pipe(
+              retry(3)
+          );
+    }
+    return undefined;
+  }
 
   getAllUsers(pageNumber?: number, pageSize?: number):Observable<UserForAdmin[]>{
     let params = new HttpParams();

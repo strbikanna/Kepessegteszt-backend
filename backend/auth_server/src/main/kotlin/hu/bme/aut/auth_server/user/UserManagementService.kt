@@ -65,6 +65,10 @@ class UserManagementService(
         }
         return users.map { entity -> convertUserDto(entity) }
     }
+    fun getUsersWithoutContactByName(nameString: String): List<UserDto> {
+        val users = userRepository.findByFirstNameLikeOrLastNameLike("%${nameString}%", "%${nameString}%")
+        return users.map { entity -> convertUserDto(entity) }
+    }
     fun getUsersCount(): Long {
         return userRepository.count()
     }

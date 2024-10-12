@@ -21,8 +21,7 @@
             <div class="filter">
                 <h4>{{text.filter}}</h4>
                 <p *ngIf="UserInfo.isAdmin()">{{text.username}}</p>
-                <app-filter-control [filterElements]="userNameOptions"
-                                    (onFilter)="onUserNamesChosen($event)"></app-filter-control>
+                <app-user-autocomplete (onUserSelectionChanged)="onUserNamesChosen($event)"></app-user-autocomplete>
                 <mat-divider></mat-divider>
                 <p>{{text.game}}</p>
 

@@ -33,6 +33,13 @@ class UserManagementController(
         return userService.getUsersWithoutContact(pageNumber, pageSize)
     }
 
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
+    fun getByName(@RequestParam nameText: String): List<UserDto> {
+        return userService.getUsersWithoutContactByName(nameText)
+    }
+
     @GetMapping("/count")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
