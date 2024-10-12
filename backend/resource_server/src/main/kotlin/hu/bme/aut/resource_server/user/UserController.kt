@@ -4,7 +4,7 @@ import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.config.ApiKeysConfig
 import hu.bme.aut.resource_server.llm.skills2text.MistralAbilitiesToText
-import hu.bme.aut.resource_server.llm.skills2text.AbilitiesToText
+import hu.bme.aut.resource_server.llm.skills2text.AbilitiesToTextService
 import hu.bme.aut.resource_server.profile.ProfileItem
 import hu.bme.aut.resource_server.user.filter.UserFilterDto
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
@@ -27,7 +27,7 @@ class UserController(
 ) {
     // This should be injected as a dependency
     private final val apiKeysConfig = ApiKeysConfig()
-    private val abilitiesToText : AbilitiesToText = MistralAbilitiesToText(key = apiKeysConfig.mistral.apiKey)
+    private val abilitiesToTextService : AbilitiesToTextService = MistralAbilitiesToText(key = apiKeysConfig.mistral.apiKey)
 
 
     @GetMapping("/profile")
@@ -90,7 +90,7 @@ class UserController(
         val userAbilities = userService.getUserDtoWithProfileByUsername(username).profile.toList()
 
         // Should be called in a coroutine or a suspend function
-        return abilitiesToText.generateFromAbilities(userAbilities)
+        return abilitiesToTextService.generateFromAbilities(userAbilities)
     }
 
     @GetMapping("/profile/skills-as-text-to-group")
@@ -112,7 +112,7 @@ class UserController(
         val groupName = userGroupId?.let { userGroupService.getGroupById(it).name } ?: "csoport"
 
         // Should be called in a coroutine or a suspend function
-        return abilitiesToText.generateFromAbilitiesComparedToGroup(userAbilities, groupAbilities, groupName)
+        return abilitiesToTextService.generateFromAbilitiesComparedToGroup(userAbilities, groupAbilities, groupName)
     }
 
     @GetMapping("/group_profile/all")

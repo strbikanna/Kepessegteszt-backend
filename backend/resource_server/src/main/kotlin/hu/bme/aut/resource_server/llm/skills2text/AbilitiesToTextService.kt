@@ -2,7 +2,7 @@ package hu.bme.aut.resource_server.llm.skills2text
 
 import hu.bme.aut.resource_server.profile.ProfileItem
 
-abstract class AbilitiesToText(
+abstract class AbilitiesToTextService(
     protected val apiKey: String = ""
 ) {
     protected open val promptTemplate = "Alakítsd át a következő Cattell–Horn–Carroll (CHC) teória képességértékeit " +

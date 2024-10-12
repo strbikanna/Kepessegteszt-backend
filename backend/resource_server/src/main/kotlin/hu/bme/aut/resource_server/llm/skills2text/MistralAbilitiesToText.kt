@@ -7,7 +7,7 @@ import hu.bme.aut.resource_server.llm.mistral_kmp.domain.ModelParams
 class MistralAbilitiesToText(
     key: String,
     private val model: String = "open-mistral-7b"
-) : AbilitiesToText(key) {
+) : AbilitiesToTextService(key) {
     private val mistral by lazy { MistralClient(apiKey = apiKey) }
 
     override suspend fun generateFromPrompt(prompt: String): String {
