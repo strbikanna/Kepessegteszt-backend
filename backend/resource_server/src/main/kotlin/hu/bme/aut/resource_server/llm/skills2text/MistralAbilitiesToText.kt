@@ -4,10 +4,10 @@ import hu.bme.aut.resource_server.llm.mistral_kmp.MistralClient
 import hu.bme.aut.resource_server.llm.mistral_kmp.domain.Message
 import hu.bme.aut.resource_server.llm.mistral_kmp.domain.ModelParams
 
-class MistralSkillsToText(
+class MistralAbilitiesToText(
     key: String,
     private val model: String = "open-mistral-7b"
-) : SkillsToText(key) {
+) : AbilitiesToText(key) {
     private val mistral by lazy { MistralClient(apiKey = apiKey) }
 
     override suspend fun generateFromPrompt(prompt: String): String {
