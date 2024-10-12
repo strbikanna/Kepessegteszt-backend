@@ -34,6 +34,8 @@
     </div>
 </div>
 <mat-divider></mat-divider>
+<p class="description p-6">{{profileText |async}}</p>
+<mat-divider></mat-divider>
 
 <button *ngIf="isExpandMoreButtonVisible" mat-icon-button class="expand-button" (click)="onDownClicked()">
     <mat-icon>expand_more</mat-icon>

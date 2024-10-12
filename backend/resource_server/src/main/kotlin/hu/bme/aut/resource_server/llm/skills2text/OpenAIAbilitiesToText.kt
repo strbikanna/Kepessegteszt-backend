@@ -6,9 +6,10 @@ import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
+import org.springframework.beans.factory.annotation.Value
 
 class OpenAIAbilitiesToText(
-    key: String,
+    @Value("\${api-keys.openai.api-key}")key: String,
     private val model: String = "gpt-4o-mini"
 ) : AbilitiesToTextService(key) {
     private val systemMessage = ChatMessage(

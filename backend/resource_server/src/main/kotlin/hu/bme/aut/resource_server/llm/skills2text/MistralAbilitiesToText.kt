@@ -3,11 +3,14 @@ package hu.bme.aut.resource_server.llm.skills2text
 import hu.bme.aut.resource_server.llm.mistral_kmp.MistralClient
 import hu.bme.aut.resource_server.llm.mistral_kmp.domain.Message
 import hu.bme.aut.resource_server.llm.mistral_kmp.domain.ModelParams
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Service
 
+@Service
 class MistralAbilitiesToText(
-    key: String,
-    private val model: String = "open-mistral-7b"
+    @Value("\${api-keys.mistral.api-key}") key: String,
 ) : AbilitiesToTextService(key) {
+    private val model: String = "open-mistral-7b"
     private val mistral by lazy { MistralClient(apiKey = apiKey) }
 
     override suspend fun generateFromPrompt(prompt: String): String {

@@ -23,12 +23,9 @@ import org.springframework.web.bind.annotation.*
 class UserController(
     @Autowired private var userService: UserService,
     @Autowired private var userGroupService: UserGroupDataService,
-    @Autowired private var authService: AuthService
+    @Autowired private var authService: AuthService,
+    @Autowired private var abilitiesToTextService : AbilitiesToTextService
 ) {
-    // This should be injected as a dependency
-    private final val apiKeysConfig = ApiKeysConfig()
-    private val abilitiesToTextService : AbilitiesToTextService = MistralAbilitiesToText(key = apiKeysConfig.mistral.apiKey)
-
 
     @GetMapping("/profile")
     @ResponseStatus(HttpStatus.OK)
