@@ -5,7 +5,7 @@ import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
 class GeminiAbilitiesToText(
     key: String,
     model: String = "gemini-1.5-flash"
-) : AbilitiesToText(key) {
+) : AbilitiesToTextService(key) {
     private val generativeModel = GenerativeModel(
         modelName = model,
         apiKey = apiKey
