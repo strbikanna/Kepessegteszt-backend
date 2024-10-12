@@ -109,9 +109,10 @@ class UserController(
         val groupAbilities = withContext(Dispatchers.IO) {
             userGroupService.getAbilityToAverageValueInGroup(userGroupId, filterDto, abilities)
         }
+        val groupName = userGroupId?.let { userGroupService.getGroupById(it).name } ?: "csoport"
 
         // Should be called in a coroutine or a suspend function
-        return skillsToText.generateFromSkillsComparedToGroup(userAbilities, groupAbilities)
+        return skillsToText.generateFromSkillsComparedToGroup(userAbilities, groupAbilities, groupName)
     }
 
     @GetMapping("/group_profile/all")
