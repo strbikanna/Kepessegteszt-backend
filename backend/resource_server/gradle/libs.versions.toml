@@ -13,6 +13,7 @@ springAzureVersion = "5.7.0"
 openaiVersion = "3.8.2"
 generativeAIVersion = "0.5.0-1.0.0"
 ktor = "2.3.11"
+langchain4jVersion = "0.35.0"
 
 [libraries]
 spring-boot-starter-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
@@ -48,6 +49,11 @@ spring-security-test = { module = "org.springframework.security:spring-security-
 rest-assured = { module = "io.rest-assured:rest-assured", version.ref="restAssuredVersion" }
 hamcrest = { module = "org.hamcrest:hamcrest", version.ref="hamcrestVersion" }
 # llm libraries
+langchain4j = { module = "dev.langchain4j:langchain4j", version.ref = "langchain4jVersion" }
+langchain4j-openai = { module = "dev.langchain4j:langchain4j-open-ai", version.ref = "langchain4jVersion" }
+langchain4j-gemini = { module = "dev.langchain4j:langchain4j-google-ai-gemini", version.ref = "langchain4jVersion" }
+langchain4j-mistral = { module = "dev.langchain4j:langchain4j-mistral-ai", version.ref = "langchain4jVersion" }
+
 openai-bom = { module = "com.aallam.openai:openai-client-bom", version.ref = "openaiVersion" }
 openai = { module = "com.aallam.openai:openai-client" }
 kmp-generativeai-client = { module = "dev.shreyaspatil.generativeai:generativeai-google", version.ref = "generativeAIVersion" }
