@@ -4,8 +4,8 @@ import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
 import org.springframework.beans.factory.annotation.Value
 
 class GeminiAbilitiesToText(
-    @Value("\${api-keys.gemini.api-key}") key: String,
-    model: String = "gemini-1.5-flash"
+    @Value("\${llms.gemini.api-key}") key: String,
+    @Value("\${llms.gemini.model-name}") model: String
 ) : AbilitiesToTextService(key) {
     private val generativeModel = GenerativeModel(
         modelName = model,

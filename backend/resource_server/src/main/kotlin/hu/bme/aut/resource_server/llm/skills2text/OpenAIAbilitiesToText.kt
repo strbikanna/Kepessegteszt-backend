@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value
 
 class OpenAIAbilitiesToText(
     @Value("\${api-keys.openai.api-key}")key: String,
-    private val model: String = "gpt-4o-mini"
+    @Value("\${llms.openai.model-name}") private val model: String
 ) : AbilitiesToTextService(key) {
     private val systemMessage = ChatMessage(
         role = ChatRole.System,

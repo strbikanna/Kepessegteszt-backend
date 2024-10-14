@@ -32,13 +32,16 @@ springdoc:
   api-docs:
     path: /api-docs
 
-api-keys:
+llms:
   mistral:
     api-key:
+    model-name: open-mistral-7b
   openai:
     api-key:
+    model-name: gpt-4o-mini
   gemini:
     api-key:
+    model-name: gemini-1.5-flash
 
 app:
   python:
