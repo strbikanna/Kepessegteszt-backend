@@ -10,9 +10,6 @@ csvVersion = "1.8"
 restAssuredVersion = "5.3.1"
 hamcrestVersion = "2.2"
 springAzureVersion = "5.7.0"
-openaiVersion = "3.8.2"
-generativeAIVersion = "0.5.0-1.0.0"
-ktor = "2.3.11"
 langchain4jVersion = "0.35.0"
 
 [libraries]
@@ -48,22 +45,11 @@ spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-star
 spring-security-test = { module = "org.springframework.security:spring-security-test" }
 rest-assured = { module = "io.rest-assured:rest-assured", version.ref="restAssuredVersion" }
 hamcrest = { module = "org.hamcrest:hamcrest", version.ref="hamcrestVersion" }
-# llm libraries
+#langchain4j
 langchain4j = { module = "dev.langchain4j:langchain4j", version.ref = "langchain4jVersion" }
 langchain4j-openai = { module = "dev.langchain4j:langchain4j-open-ai", version.ref = "langchain4jVersion" }
 langchain4j-gemini = { module = "dev.langchain4j:langchain4j-google-ai-gemini", version.ref = "langchain4jVersion" }
 langchain4j-mistral = { module = "dev.langchain4j:langchain4j-mistral-ai", version.ref = "langchain4jVersion" }
-
-openai-bom = { module = "com.aallam.openai:openai-client-bom", version.ref = "openaiVersion" }
-openai = { module = "com.aallam.openai:openai-client" }
-kmp-generativeai-client = { module = "dev.shreyaspatil.generativeai:generativeai-google", version.ref = "generativeAIVersion" }
-# mistral should be added if it releases on Maven Central: https://github.com/Oleur/mistral-ai-kmp
-# Now this is needed for it
-# Ktor for Mistral API
-ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
-ktor-client-content-negociation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
-ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
-ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 [plugins]
 springframework-boot = { id = "org.springframework.boot", version.ref="springBootVersion" }
@@ -71,6 +57,3 @@ spring-dependency-management = { id = "io.spring.dependency-management", version
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref="kotlin" }
 kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref="kotlin" }
 kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref="kotlin" }
-
-# for Mistral API
-kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
