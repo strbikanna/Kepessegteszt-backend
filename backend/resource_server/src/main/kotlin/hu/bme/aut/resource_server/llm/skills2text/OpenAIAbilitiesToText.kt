@@ -4,7 +4,7 @@ import dev.langchain4j.model.openai.OpenAiChatModel
 import org.springframework.beans.factory.annotation.Value
 
 class OpenAIAbilitiesToText(
-    @Value("\${api-keys.openai.api-key}")apiKey: String,
+    @Value("\${llms.openai.api-key}")apiKey: String,
     @Value("\${llms.openai.model-name}") modelName: String
 ) : AbilitiesToTextService() {
     override val model: OpenAiChatModel = OpenAiChatModel.builder()
