@@ -1,10 +1,11 @@
 package hu.bme.aut.resource_server.llm.skills2text
 
+import dev.langchain4j.data.message.SystemMessage
+import dev.langchain4j.data.message.UserMessage
+import dev.langchain4j.model.chat.ChatLanguageModel
 import hu.bme.aut.resource_server.profile.ProfileItem
 
-abstract class AbilitiesToTextService(
-    protected val apiKey: String = ""
-) {
+abstract class AbilitiesToTextService {
     protected open val promptTemplate = "Alakítsd át a következő Cattell–Horn–Carroll (CHC) teória képességértékeit " +
             "egy rövid összefoglalóvá a személy kognitív adottságairól!\n" +
             "Minden képesség átlagos értéke 1,0. A szintek 0,15-ös léptékekkel változnak.\n" +
@@ -13,6 +14,11 @@ abstract class AbilitiesToTextService(
             "egy rövid összefoglalóvá a személy kognitív adottságairól az adott társadalmi csoportjához képest!\n" +
             "Minden képesség átlagos értéke 1,0. A szintek 0,15-ös léptékekkel változnak.\n" +
             "Ennek a személynek a képességei és azok értékei a következők:\n"
+    protected open val systemMessage: SystemMessage = SystemMessage
+        .from("Egy gyerek képességeit a szűlőnek értékekről értelmezhető szöveggé alakító asszisztens vagy!")
+
+
+    protected abstract val model: ChatLanguageModel
     private var islLoggingEnabled = false
     private var logger: (prompt: String, response: String) -> Unit
             = { prompt, response -> println("Prompt:\n$prompt\nResponse:\n$response\n\n") }
@@ -57,5 +63,15 @@ abstract class AbilitiesToTextService(
         return generateFromPrompt(callPrompt)
     }
 
-    abstract suspend fun generateFromPrompt(prompt: String): String
+    open suspend fun generateFromPrompt(prompt: String): String {
+        val messages = listOf(
+            systemMessage,
+            UserMessage.from(prompt)
+        )
+        val response = model.generate(messages)
+        val result = response.content().text()
+
+        log(prompt = prompt, response = result)
+        return result
+    }
 }
