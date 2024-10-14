@@ -79,6 +79,12 @@ dependencies {
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.client.content.negociation)
+
+    // LangChain
+    implementation(libs.langchain4j)
+    implementation(libs.langchain4j.openai)
+    implementation(libs.langchain4j.gemini)
+    implementation(libs.langchain4j.mistral)
 }
 
 tasks.withType<KotlinCompile> {
