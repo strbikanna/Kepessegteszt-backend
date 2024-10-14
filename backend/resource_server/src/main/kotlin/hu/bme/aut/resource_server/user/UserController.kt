@@ -2,8 +2,6 @@ package hu.bme.aut.resource_server.user
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.authentication.AuthService
-import hu.bme.aut.resource_server.config.ApiKeysConfig
-import hu.bme.aut.resource_server.llm.skills2text.MistralAbilitiesToText
 import hu.bme.aut.resource_server.llm.skills2text.AbilitiesToTextService
 import hu.bme.aut.resource_server.profile.ProfileItem
 import hu.bme.aut.resource_server.user.filter.UserFilterDto

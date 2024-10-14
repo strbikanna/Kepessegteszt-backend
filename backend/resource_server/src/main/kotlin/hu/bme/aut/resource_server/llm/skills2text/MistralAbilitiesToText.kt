@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class MistralAbilitiesToText(
-    @Value("\${api-keys.mistral.api-key}") key: String,
+    @Value("\${llms.mistral.api-key}") key: String,
+    @Value("\${llms.mistral.model-name}") private val model: String
 ) : AbilitiesToTextService(key) {
-    private val model: String = "open-mistral-7b"
     private val mistral by lazy { MistralClient(apiKey = apiKey) }
 
     override suspend fun generateFromPrompt(prompt: String): String {
