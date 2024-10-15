@@ -30,6 +30,9 @@ class GameService (
     fun getGameById(id: Int): Optional<GameEntity> {
         return gameRepository.findById(id)
     }
+    fun getGamesByName(name: String): List<GameEntity> {
+        return gameRepository.searchByName(name)
+    }
 
     /**
      * Updates game to have the same fields as param game.

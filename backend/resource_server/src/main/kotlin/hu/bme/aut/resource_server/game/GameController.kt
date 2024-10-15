@@ -38,6 +38,12 @@ class GameController(
         return gameService.getGameById(gameId).orElseThrow()
     }
 
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    fun getGamesByName(@RequestParam name: String): List<GameEntity> {
+        return gameService.getGamesByName(name)
+    }
+
 
     @PutMapping("/{gameId}")
     @ResponseStatus(HttpStatus.OK)
