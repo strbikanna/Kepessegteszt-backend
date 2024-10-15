@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {SimpleHttpService} from "../../utils/simple-http.service";
 import {RecommendedGame} from "../../model/recommended_game.model";
 import {Observable} from "rxjs";
@@ -14,5 +14,9 @@ export class RecommendationService {
 
   saveRecommendation(recommendation: Recommendation): Observable<RecommendedGame>{
     return this.http.post<RecommendedGame>(`${this.httpService.baseUrl}/recommended_game/recommend`, recommendation);
+  }
+  getRecommendationsToUserAndGame(username: string, gameId: number): Observable<RecommendedGame[]>{
+    let params = new HttpParams().set('username', username).set('gameId', gameId);
+    return this.http.get<RecommendedGame[]>(`${this.httpService.baseUrl}/recommended_game/by_game`, {params: params});
   }
 }

@@ -8,6 +8,8 @@ import {TEXTS} from "../utils/app.text_messages";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Recommendation} from "../model/recommendation.model";
 import {UserForAdmin} from "../admin/model/user-contacts.model";
+import {Observable, of} from "rxjs";
+import {mockRecommendedGame, RecommendedGame} from "../model/recommended_game.model";
 
 
 @Component({
@@ -20,9 +22,11 @@ export class RecommendationComponent {
     protected chosenUser: User | undefined;
     protected chosenGame: Game | undefined;
     protected configForm = this.fb.array<FormGroup>([]);
+    protected existingRecommendations: Observable<RecommendedGame[]> = new Observable<RecommendedGame[]>();
 
 
     constructor(private service: RecommendationService, private fb: FormBuilder, private _snackbar: MatSnackBar) {
+        this.loadExistingRecommendations('Student Simon', 1)
     }
 
     onGameSelected(game: Game) {
@@ -35,10 +39,16 @@ export class RecommendationComponent {
                 }, {validators: this.isConfigValid})
             )
         );
+        if(this.chosenUser !== undefined) {
+            this.loadExistingRecommendations(this.chosenUser.username, game.id!!)
+        }
     }
 
     onUserSelected(user: UserForAdmin) {
         this.chosenUser = user;
+        if(this.chosenGame !== undefined){
+            this.loadExistingRecommendations(user.username, this.chosenGame.id!!)
+        }
     }
 
     isConfigValid: ValidatorFn = (control: AbstractControl) => {
@@ -87,12 +97,17 @@ export class RecommendationComponent {
             config: config,
             recommendedTo: this.chosenUser!!.username
         }
-        console.log(recommendedGame)
         this.service.saveRecommendation(recommendedGame).subscribe(() => {
             this._snackbar.open(this.texts.saved, undefined, {duration: 3000})
         })
     }
     filterGamesByActive: (game: Game) => boolean = game => game.active;
+    existingRecommendationsEnabled(){
+        return this.chosenGame !== undefined && this.chosenUser !== undefined;
+    }
 
+    private loadExistingRecommendations(username: string, gameId: number){
+        this.existingRecommendations = this.service.getRecommendationsToUserAndGame(username, gameId);
+    }
 
 }

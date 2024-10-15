@@ -20,6 +20,7 @@ interface RecommendedGameRepository: CrudRepository<RecommendedGameEntity, Long>
     fun findTopByTimestampBeforeAndRecommendedToAndGameOrderByTimestamp(timestamp: LocalDateTime, recommendedTo: UserEntity, game: GameEntity): RecommendedGameEntity?
 
     fun findByRecommendedToAndGameAndCompletedAndRecommender(user: UserEntity, game: GameEntity, completed: Boolean, recommender: UserEntity?): List<RecommendedGameEntity>
+    fun findByRecommendedToAndGameAndRecommender(user: UserEntity, game: GameEntity, recommender: UserEntity?): List<RecommendedGameEntity>
 
     @Query(
         "select rg from RecommendedGameEntity rg where rg.recommendedTo = :user and rg.completed = true " +

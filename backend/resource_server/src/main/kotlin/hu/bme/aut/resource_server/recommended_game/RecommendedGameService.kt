@@ -64,4 +64,11 @@ class RecommendedGameService(
             config = recommendation.config
         ))
     }
+
+    fun getRecommendationsToUserAndGame(username: String, recommenderUsername: String, gameId: Int): List<RecommendedGameDto> {
+        val user = userRepository.findByUsername(username).orElseThrow()
+        val recommender = userRepository.findByUsername(recommenderUsername).orElseThrow()
+        val game = gameRepository.findById(gameId).orElseThrow()
+        return recommendedGameRepository.findByRecommendedToAndGameAndRecommender(user, game, recommender).map { it.toDto() }
+    }
 }

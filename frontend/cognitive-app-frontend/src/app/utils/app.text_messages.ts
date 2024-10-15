@@ -262,6 +262,7 @@ export const TEXTS = {
         chosenUser: 'Kiválasztott játékos',
         chosenGame: 'Kiválasztott játék',
         saved: 'Ajánlás mentve',
+        existing_recommendations: 'Meglévő ajánlások',
     },
     result: {
         result_info: {
