@@ -70,6 +70,7 @@ import { ProfileLineChartComponent } from './profile-data-comparison/profile-lin
 import { RatioScaleComponent } from './profile-data-comparison/ratio-scale/ratio-scale.component';
 import {MatSliderModule} from "@angular/material/slider";
 import { UserAutocompleteComponent } from './common/user-autocomplete/user-autocomplete.component';
+import { CandlestickChartComponent } from './common/candlestick-chart/candlestick-chart.component';
 
 @NgModule({
     declarations: [
@@ -105,6 +106,7 @@ import { UserAutocompleteComponent } from './common/user-autocomplete/user-autoc
         ProfileLineChartComponent,
         RatioScaleComponent,
         UserAutocompleteComponent,
+        CandlestickChartComponent,
     ],
     imports: [
         BrowserModule,
