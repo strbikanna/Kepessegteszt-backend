@@ -15,9 +15,12 @@
         </mat-autocomplete>
     </mat-form-field>
 </div>
-<mat-chip *ngFor="let user of selectedUsers" removable (removed)="onUserRemoved(user)">
-    {{ user.firstName }} {{ user.lastName }}
-    <button matChipRemove>
-        <mat-icon>cancel</mat-icon>
-    </button>
-</mat-chip>
+<div *ngIf="multiple">
+    <mat-chip *ngFor="let user of selectedUsers" removable (removed)="onUserRemoved(user)">
+        {{ user.firstName }} {{ user.lastName }}
+        <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </mat-chip>
+</div>
+

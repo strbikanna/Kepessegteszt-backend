@@ -13,6 +13,7 @@ import {AdminService} from "../../admin/service/admin.service";
 })
 export class UserAutocompleteComponent implements OnInit{
   @Input() text = TEXTS.user_autocomplete;
+  @Input() multiple = true;
   /**
    * emits the actually selected users username
    */
@@ -60,6 +61,11 @@ export class UserAutocompleteComponent implements OnInit{
     }else{
       if(this.autocompleteForm.value === null) return;
       user = this.autocompleteForm.value;
+    }
+    if(!this.multiple){
+        this.selectedUsers = [user];
+        this.onUserSelectionChanged.emit(this.selectedUsers.map(u => u.username));
+        return;
     }
     if(!this.selectedUsers.includes(user)) {
       this.selectedUsers.push(user);
