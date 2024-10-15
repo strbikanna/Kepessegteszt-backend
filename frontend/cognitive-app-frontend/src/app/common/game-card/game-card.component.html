@@ -1,28 +1,31 @@
-<mat-card>
+<mat-card class="{{game.active ? '': 'inactiveGameCard'}}">
     <mat-card-content>
         <img src="{{game.thumbnail}}">
         <div class="content">
             <div class="flex align-items-center justify-content-between">
                 <div class="flex align-items-baseline">
-                    <mat-card-title class="mr-3 my-0">{{game.name}}</mat-card-title>
-                    <mat-card-subtitle >ID: {{game.id}}</mat-card-subtitle>
+                    <mat-card-title class="mr-3 my-0">{{ game.name }}</mat-card-title>
+                    <mat-card-subtitle>ID: {{ game.id }}</mat-card-subtitle>
                     <mat-icon *ngIf="game.active" class="mx-3" color="primary">check_circle</mat-icon>
                     <mat-icon *ngIf="!game.active" class="mx-3" color="warn">cancel</mat-icon>
                 </div>
-                <mat-chip>V_{{game.version}}</mat-chip>
+                <mat-chip>V_{{ game.version }}</mat-chip>
             </div>
-            <p class="text">{{game.description}}</p>
-            <p *ngFor="let text of otherTexts" class="text">{{text}}</p>
+            <p class="text">{{ game.description }}</p>
+            <div class="flex align-items-center">
+                <mat-icon *ngIf="game.affectedAbilities.length > 0" class="mr-2">psychology</mat-icon>
+                <p *ngFor="let ability of game.affectedAbilities" class="description m-0 text">{{ ability.name }}</p>
+            </div>
         </div>
     </mat-card-content>
     <mat-divider></mat-divider>
     <mat-card-actions *ngIf="buttonText" align="end">
         <button *ngIf="extraButtonText" mat-button color="warn" (click)="raiseExtraClickEvent(game)"
                 [disabled]="!game.active">
-            {{extraButtonText}}
+            {{ extraButtonText }}
         </button>
         <button mat-button color="primary" (click)="raiseClickEvent(game)" [disabled]="!game.active">
-            {{buttonText}}
+            {{ buttonText }}
         </button>
     </mat-card-actions>
 </mat-card>
