@@ -84,5 +84,6 @@ export class UserAutocompleteComponent implements OnInit{
   onUserRemoved(user: UserForAdmin){
     this.selectedUsers = this.selectedUsers.filter(u => u !== user);
     this.userSelectionChanged.emit(this.selectedUsers);
+    this.autocompleteForm.setValue('');
   }
 }

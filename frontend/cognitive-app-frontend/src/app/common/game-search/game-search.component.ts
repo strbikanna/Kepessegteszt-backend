@@ -4,7 +4,7 @@ import {UserForAdmin} from "../../admin/model/user-contacts.model";
 import {FormControl} from "@angular/forms";
 import {ContactService} from "../../admin/common/user_contact_autocomplete/contact_service/contact.service";
 import {Game} from "../../model/game.model";
-import {GameManagementService} from "../service/game-management.service";
+import {GameManagementService} from "../../game-management/service/game-management.service";
 import {max} from "rxjs";
 
 @Component({
@@ -36,7 +36,10 @@ export class GameSearchComponent implements OnInit {
             this.filteredGameOptions = this.defaultGameOptions.slice(0, 10);
         });
         this.gameAutocompleteForm.valueChanges.subscribe(value => {
-            if (!value) return;
+            if (!value) {
+                this.resetAutoComplete();
+                return;
+            }
             const name = typeof value === 'string' ? value : value?.name;
             this.filterGames(name);
         });
@@ -44,15 +47,14 @@ export class GameSearchComponent implements OnInit {
 
     filterGames(value: string) {
         const filter = value.replaceAll(' ', '').toLowerCase();
-        if(filter.length === 0) {
+        if (filter.length === 0) {
             this.filteredGameOptions = this.defaultGameOptions.slice(0, 10);
-        }
-        else if(filter.length < 3) {
+        } else if (filter.length < 3) {
             this.filteredGameOptions = this.defaultGameOptions
                 .filter(option => option.name.toLowerCase().includes(filter))
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .filter((val, index) => index < 10);
-        }else{
+        } else {
             this.service.getGamesByName(filter).subscribe(games => {
                 this.filteredGameOptions = games;
             });
@@ -73,9 +75,9 @@ export class GameSearchComponent implements OnInit {
             if (this.gameAutocompleteForm.value === null) return;
             game = this.gameAutocompleteForm.value;
         }
-        if(!this.multiple) {
+        if (!this.multiple) {
             this.onGameSelected.emit(game);
-        }else{
+        } else {
             this.chosenGames.push(game);
             this.onMultipleGameSelected.emit(this.chosenGames);
         }
@@ -89,5 +91,6 @@ export class GameSearchComponent implements OnInit {
     onGameRemoved(game: Game) {
         this.chosenGames = this.chosenGames.filter(g => g.id !== game.id);
         this.onMultipleGameSelected.emit(this.chosenGames);
+        this.gameAutocompleteForm.setValue('');
     }
 }

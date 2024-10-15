@@ -63,7 +63,7 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import { FilterControlComponent } from './common/filter-control/filter-control.component';
 import {CdkFixedSizeVirtualScroll, CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
 import {MatSidenavModule} from "@angular/material/sidenav";
-import { GameSearchComponent } from './game-management/game-search/game-search.component';
+import { GameSearchComponent } from './common/game-search/game-search.component';
 import { RecommendationDetailCardComponent } from './recommendation-detail-card/recommendation-detail-card.component';
 import { UserFilterComponent } from './common/user-filter/user-filter.component';
 import { ProfileLineChartComponent } from './profile-data-comparison/profile-line-chart/profile-line-chart.component';
