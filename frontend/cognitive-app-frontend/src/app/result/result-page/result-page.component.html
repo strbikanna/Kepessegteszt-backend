@@ -1,6 +1,6 @@
 <div class="pagerRow">
     <button mat-button color="primary" (click)="drawer.toggle()">
-        {{text.filter_and_sort}}
+        {{ text.filter_and_sort }}
     </button>
     <app-csv-download-button [csvLink]="resultService.csvPath"></app-csv-download-button>
     <mat-paginator #paginator [length]="dataLength"
@@ -14,21 +14,25 @@
     <mat-drawer mode="side" #drawer>
         <div class="toolsContainer">
             <div>
-                <h4>{{text.sort}}</h4>
+                <h4>{{ text.sort }}</h4>
                 <app-sort-control [sortElements]="sortOptions"
                                   (onSort)="onSortElementChosen($event)"></app-sort-control>
             </div>
             <div class="filter">
-                <h4>{{text.filter}}</h4>
-                <p *ngIf="UserInfo.isAdmin()">{{text.username}}</p>
-                <app-user-autocomplete (onUserSelectionChanged)="onUserNamesChosen($event)"></app-user-autocomplete>
-                <mat-divider></mat-divider>
-                <p>{{text.game}}</p>
+                <h4>{{ text.filter }}</h4>
+                <p *ngIf="UserInfo.isAdmin()">{{ text.username }}</p>
+                <div class="w-full flex mb-2">
+                <app-user-autocomplete (userSelectionChanged)="onUserNamesChosen($event)"></app-user-autocomplete>
+                </div>
 
-                <app-filter-control [filterElements]="gameNameOptions"
-                                    (onFilter)="onGameNamesChosen($event)"></app-filter-control>
                 <mat-divider></mat-divider>
-                <p>{{text.passed}}</p>
+                <p>{{ text.game }}</p>
+                <div class="w-full flex mb-2">
+                    <app-game-search [multiple]="true"
+                                     (onMultipleGameSelected)="onGamesChosen($event)"></app-game-search>
+                </div>
+                <mat-divider></mat-divider>
+                <p>{{ text.passed }}</p>
                 <app-filter-control [filterElements]="of([text.result_info.passed, text.result_info.failed])"
                                     (onFilter)="onPassedChosen($event)"
                 >
@@ -38,10 +42,10 @@
 
         <button mat-flat-button color="primary" (click)="onApplyFilters()">
             <mat-icon>refresh</mat-icon>
-            {{text.apply}}
+            {{ text.apply }}
         </button>
     </mat-drawer>
-    <div class="cardsContainer" (click)="drawer.close()" >
+    <div class="cardsContainer" (click)="drawer.close()">
         <div *ngIf="loading">
             <mat-progress-bar></mat-progress-bar>
         </div>

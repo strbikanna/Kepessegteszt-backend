@@ -5,6 +5,7 @@ import {FormControl} from "@angular/forms";
 import {ContactService} from "../../admin/common/user_contact_autocomplete/contact_service/contact.service";
 import {Observable} from "rxjs";
 import {AdminService} from "../../admin/service/admin.service";
+import {UserFilter} from "../user-filter/user-filter.model";
 
 @Component({
   selector: 'app-user-autocomplete',
@@ -15,9 +16,10 @@ export class UserAutocompleteComponent implements OnInit{
   @Input() text = TEXTS.user_autocomplete;
   @Input() multiple = true;
   /**
-   * emits the actually selected users username
+   * emits the actually selected users
    */
-  @Output() onUserSelectionChanged: EventEmitter<string[]> = new EventEmitter<string[]>();
+  @Output() userSelectionChanged: EventEmitter<UserForAdmin[]> = new EventEmitter<UserForAdmin[]>();
+  @Output() userSelected: EventEmitter<UserForAdmin> = new EventEmitter<UserForAdmin>();
 
   protected userOptions: UserForAdmin[] = [];
   protected defaultUserOptions: UserForAdmin[] = [];
@@ -35,9 +37,12 @@ export class UserAutocompleteComponent implements OnInit{
       const name = typeof value === 'string' ? value : value?.firstName + ' ' + value?.lastName;
       if(name.length > 2){
         this.searchUsers(name);
-      }
-      if(name.length === 0){
+      }else if(name.length === 0){
         this.userOptions = this.defaultUserOptions;
+      }else{
+        this.userOptions = this.userOptions
+            .filter(user => user.firstName.toLowerCase().includes(name.toLowerCase()) || user.lastName.toLowerCase().includes(name.toLowerCase()))
+            .sort((a, b) => a.firstName.localeCompare(b.firstName));
       }
     });
   }
@@ -49,7 +54,6 @@ export class UserAutocompleteComponent implements OnInit{
     });
   }
   resetAutoComplete(){
-    this.autocompleteForm.setValue('');
     this.userOptions = this.defaultUserOptions;
   }
   onUserSelected(){
@@ -64,12 +68,12 @@ export class UserAutocompleteComponent implements OnInit{
     }
     if(!this.multiple){
         this.selectedUsers = [user];
-        this.onUserSelectionChanged.emit(this.selectedUsers.map(u => u.username));
+        this.userSelected.emit(user);
         return;
     }
     if(!this.selectedUsers.includes(user)) {
       this.selectedUsers.push(user);
-      this.onUserSelectionChanged.emit(this.selectedUsers.map(u => u.username));
+      this.userSelectionChanged.emit(this.selectedUsers);
     }
     this.resetAutoComplete();
   }
@@ -79,6 +83,6 @@ export class UserAutocompleteComponent implements OnInit{
   }
   onUserRemoved(user: UserForAdmin){
     this.selectedUsers = this.selectedUsers.filter(u => u !== user);
-    this.onUserSelectionChanged.emit(this.selectedUsers.map(u => u.username));
+    this.userSelectionChanged.emit(this.selectedUsers);
   }
 }

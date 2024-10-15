@@ -7,6 +7,7 @@ import {ConfigItem} from "../model/config_item.model";
 import {TEXTS} from "../utils/app.text_messages";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Recommendation} from "../model/recommendation.model";
+import {UserForAdmin} from "../admin/model/user-contacts.model";
 
 
 @Component({
@@ -36,7 +37,7 @@ export class RecommendationComponent {
         );
     }
 
-    onUserSelected(user: User) {
+    onUserSelected(user: UserForAdmin) {
         this.chosenUser = user;
     }
 
@@ -91,6 +92,7 @@ export class RecommendationComponent {
             this._snackbar.open(this.texts.saved, undefined, {duration: 3000})
         })
     }
+    filterGamesByActive: (game: Game) => boolean = game => game.active;
 
 
 }

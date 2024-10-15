@@ -36,6 +36,15 @@ export class GameManagementService {
     )
   }
 
+  getGamesByName(name: string): Observable<Game[]> {
+    let params = new HttpParams()
+        .set('name', name);
+    return this.http.get<Game[]>(`${this.helper.baseUrl}${this.path}/search`, {params: params}).pipe(
+        retry(3),
+        catchError(this.helper.handleHttpError)
+    )
+  }
+
   editGame(game: Game): Observable<Game> {
     if(!game.id) return this.createGame(game);
 

@@ -11,6 +11,7 @@ import {UserService} from "angular-auth-oidc-client/lib/user-data/user.service";
 import {AdminService} from "../../admin/service/admin.service";
 import {TEXTS} from "../../utils/app.text_messages";
 import {UserInfo} from "../../auth/userInfo";
+import {UserForAdmin} from "../../admin/model/user-contacts.model";
 
 @Component({
     selector: 'app-result-page',
@@ -68,12 +69,12 @@ export class ResultPageComponent implements OnInit {
         this.chosenSortElement = sortElement;
     }
 
-    onUserNamesChosen(userNames: string[] | undefined) {
-        this.chosenUserNames = userNames ?? [];
+    onUserNamesChosen(users: UserForAdmin[] | undefined) {
+        this.chosenUserNames = users?.map(u => u.username) ?? [];
     }
 
-    onGameNamesChosen(gameNames: string[] | undefined) {
-        this.chosenGameIds = gameNames?.map(name => parseInt(name.split('(')[1].slice(0, -1))) ?? []
+    onGamesChosen(games: Game[]) {
+        this.chosenGameIds = games.filter(g => g.id).map(g => g.id!!) ?? []
     }
 
     onPassedChosen(passed: string[] | undefined) {
