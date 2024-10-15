@@ -12,7 +12,7 @@ import {AdminService} from "../../admin/service/admin.service";
   styleUrls: ['./user-autocomplete.component.scss']
 })
 export class UserAutocompleteComponent implements OnInit{
-  @Input() text = TEXTS.contact_autocomplete;
+  @Input() text = TEXTS.user_autocomplete;
   /**
    * emits the actually selected users username
    */
