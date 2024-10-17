@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TEXTS} from "../../utils/app.text_messages";
-import {UserForAdmin} from "../../admin/model/user-contacts.model";
+import {UserForAdmin} from "../../model/user-contacts.model";
 import {FormControl} from "@angular/forms";
-import {ContactService} from "../../admin/common/user_contact_autocomplete/contact_service/contact.service";
+import {ContactService} from "../../service/contact_service/contact.service";
 import {Observable} from "rxjs";
-import {AdminService} from "../../admin/service/admin.service";
+import {AdminService} from "../../service/admin/admin.service";
 import {UserFilter} from "../user-filter/user-filter.model";
 
 @Component({

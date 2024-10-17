@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TEXTS} from "../../utils/app.text_messages";
-import {UserForAdmin} from "../../admin/model/user-contacts.model";
+import {UserForAdmin} from "../../model/user-contacts.model";
 import {FormControl} from "@angular/forms";
-import {ContactService} from "../../admin/common/user_contact_autocomplete/contact_service/contact.service";
+import {ContactService} from "../../service/contact_service/contact.service";
 import {Game} from "../../model/game.model";
-import {GameManagementService} from "../../game-management/service/game-management.service";
+import {GameManagementService} from "../../service/game-management/game-management.service";
 import {max} from "rxjs";
 
 @Component({
