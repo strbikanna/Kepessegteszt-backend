@@ -12,7 +12,7 @@ abstract class AbilitiesToTextService {
             "Minden képesség átlagos értéke 1,0. A szintek 0,15-ös léptékekkel változnak.\n" +
             "Ennek a személynek a képességei és azok értékei a következők:\n"
     protected open val promptTemplateWithGroup = "Alakítsd át a következő Cattell–Horn–Carroll (CHC) teória képességértékeket " +
-            "egy rövid összefoglalóvá a személy kognitív adottságairól az adott társadalmi csoportjához képest!\n" +
+            "egy rövid összefoglalóvá a játékos kognitív adottságairól az adott társadalmi csoportjához képest!\n" +
             "A szintek 0,15-ös léptékekkel változnak.\n" +
             "Ennek a személynek a képességei és azok értékei a következők:\n"
     protected open val systemMessage: SystemMessage = SystemMessage
