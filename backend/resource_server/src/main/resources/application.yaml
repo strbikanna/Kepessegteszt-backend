@@ -35,7 +35,7 @@ springdoc:
 llms:
   mistral:
     api-key:
-    model-name: open-mistral-7b
+    model-name: mistral-large-latest
   openai:
     api-key:
     model-name: gpt-4o-mini
