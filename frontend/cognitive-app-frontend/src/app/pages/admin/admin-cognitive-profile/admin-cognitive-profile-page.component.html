@@ -1,0 +1,23 @@
+<div id="user-picker-container">
+    <h4>{{text.user_picker.choose_contact}}</h4>
+    <p>{{text.user_picker.choose_contact_description}}</p>
+    <app-user-autocomplete (userSelected)="userSelected($event)" [multiple]="false"></app-user-autocomplete>
+</div>
+<mat-divider></mat-divider>
+<div class="profile-container" *ngIf="chosenUsername">
+    <app-profile-card *ngIf="!loadingProfile" [profileData]="currProfileData!!" id="card"></app-profile-card>
+    <mat-progress-bar *ngIf="loadingProfile" mode="buffer"></mat-progress-bar>
+    <div class="w-min">
+        <app-date-picker (dateChosen)="onDatesChosen($event)"></app-date-picker>
+    </div>
+</div>
+<mat-divider></mat-divider>
+
+<app-up-and-down-button elementId="chart"></app-up-and-down-button>
+<div id="chart">
+    <div *ngIf="chosenUsername">
+        <app-profile-chart *ngIf="!loadingHistory" [profileDataObservable]="profileHistoryData"></app-profile-chart>
+        <mat-progress-bar *ngIf="loadingHistory" mode="buffer"></mat-progress-bar>
+    </div>
+</div>
+
