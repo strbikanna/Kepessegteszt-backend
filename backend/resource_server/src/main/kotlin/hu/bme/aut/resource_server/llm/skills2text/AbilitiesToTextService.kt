@@ -6,13 +6,14 @@ import dev.langchain4j.model.chat.ChatLanguageModel
 import hu.bme.aut.resource_server.profile.ProfileItem
 
 abstract class AbilitiesToTextService {
-    protected open val promptTemplate = "Alakítsd át a következő Cattell–Horn–Carroll (CHC) teória képességértékeit " +
-            "egy rövid összefoglalóvá a személy kognitív adottságairól!\n" +
+    protected open val promptTemplate = "Alakítsd át a következő Cattell–Horn–Carroll (CHC) teória képességértékeket " +
+            "egy rövid szöveges összefoglalóvá a játékos kognitív adottságairól, " +
+            "úgy hogy ne a számértékeket add vissza, hanem fogalmazz mondatokat! " +
             "Minden képesség átlagos értéke 1,0. A szintek 0,15-ös léptékekkel változnak.\n" +
             "Ennek a személynek a képességei és azok értékei a következők:\n"
-    protected open val promptTemplateWithGroup = "Alakítsd át a következő Cattell–Horn–Carroll (CHC) teória képességértékeit " +
+    protected open val promptTemplateWithGroup = "Alakítsd át a következő Cattell–Horn–Carroll (CHC) teória képességértékeket " +
             "egy rövid összefoglalóvá a személy kognitív adottságairól az adott társadalmi csoportjához képest!\n" +
-            "Minden képesség átlagos értéke 1,0. A szintek 0,15-ös léptékekkel változnak.\n" +
+            "A szintek 0,15-ös léptékekkel változnak.\n" +
             "Ennek a személynek a képességei és azok értékei a következők:\n"
     protected open val systemMessage: SystemMessage = SystemMessage
         .from("Egy gyerek képességeit a szűlőnek értékekről értelmezhető szöveggé alakító asszisztens vagy!")
