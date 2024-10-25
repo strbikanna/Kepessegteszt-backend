@@ -2,7 +2,7 @@ package hu.bme.aut.resource_server.user
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.authentication.AuthService
-import hu.bme.aut.resource_server.llm.skills2text.AbilitiesToTextService
+import hu.bme.aut.resource_server.llm.abilities2text.AbilitiesToTextService
 import hu.bme.aut.resource_server.profile.ProfileItem
 import hu.bme.aut.resource_server.user.filter.UserFilterDto
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
@@ -78,21 +78,25 @@ class UserController(
         }
     }
 
-    @GetMapping("/profile/skills-as-text")
+    @GetMapping("/profile/abilities-as-text")
     @ResponseStatus(HttpStatus.OK)
-    suspend fun getSkillsAsText(authentication: Authentication): String {
+    suspend fun getAbilitiesAsText(
+        authentication: Authentication,
+        @RequestParam(required = false) prompt: String = "",
+    ): String {
         val username = authentication.name
         val userAbilities = userService.getUserDtoWithProfileByUsername(username).profile.toList()
 
         // Should be called in a coroutine or a suspend function
-        return abilitiesToTextService.generateFromAbilities(userAbilities)
+        return abilitiesToTextService.generateFromAbilities(userAbilities, prompt)
     }
 
-    @GetMapping("/profile/skills-as-text-to-group")
+    @GetMapping("/profile/abilities-as-text-to-group")
     @ResponseStatus(HttpStatus.OK)
-    suspend fun getSkillsAsTextToGroup(
+    suspend fun getAbilitiesAsTextToGroup(
         authentication: Authentication,
         @RequestParam(required = false) userGroupId: Int?,
+        @RequestParam(required = false) prompt: String = "",
         @RequestBody(required = false) filterDto: UserFilterDto?
     ): String {
         val username = authentication.name
@@ -107,7 +111,7 @@ class UserController(
         val groupName = userGroupId?.let { userGroupService.getGroupById(it).name } ?: "csoport"
 
         // Should be called in a coroutine or a suspend function
-        return abilitiesToTextService.generateFromAbilitiesComparedToGroup(userAbilities, groupAbilities, groupName)
+        return abilitiesToTextService.generateFromAbilitiesComparedToGroup(userAbilities, groupAbilities, groupName, prompt)
     }
 
     @GetMapping("/group_profile/all")

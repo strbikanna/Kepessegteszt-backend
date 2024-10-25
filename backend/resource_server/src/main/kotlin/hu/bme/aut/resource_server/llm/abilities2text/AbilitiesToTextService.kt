@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.llm.skills2text
+package hu.bme.aut.resource_server.llm.abilities2text
 
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
