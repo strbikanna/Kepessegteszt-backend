@@ -46,10 +46,13 @@ abstract class AbilitiesToTextService {
         return callPrompt
     }
 
-    open suspend fun generateFromAbilities(abilities: List<ProfileItem>, prompt: String = ""): String {
+    open suspend fun generateFromAbilities(abilities: List<ProfileItem>, prompt: String = ""): AbiltityToTextDto {
         var callPrompt = prompt.ifBlank { promptTemplate }
         callPrompt = putAbilitiesIntoPrompt(abilities, callPrompt)
-        return generateFromPrompt(callPrompt)
+        return AbiltityToTextDto(
+            prompt = callPrompt,
+            abilitiesAsText = generateFromPrompt(callPrompt)
+        )
     }
 
     open suspend fun generateFromAbilitiesComparedToGroup(
@@ -57,12 +60,15 @@ abstract class AbilitiesToTextService {
         groupAbilities: List<ProfileItem>,
         groupName: String,
         prompt: String = ""
-    ): String {
+    ): AbiltityToTextDto {
         var callPrompt = prompt.ifBlank { promptTemplateWithGroup }
         callPrompt = putAbilitiesIntoPrompt(abilities, callPrompt)
         callPrompt += "A $groupName csoport átlagos értékei:\n"
         callPrompt = putAbilitiesIntoPrompt(groupAbilities, callPrompt)
-        return generateFromPrompt(callPrompt)
+        return AbiltityToTextDto(
+            prompt = callPrompt,
+            abilitiesAsText = generateFromPrompt(callPrompt)
+        )
     }
 
     open suspend fun generateFromPrompt(prompt: String): String {

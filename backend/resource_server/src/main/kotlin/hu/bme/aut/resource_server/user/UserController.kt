@@ -3,6 +3,7 @@ package hu.bme.aut.resource_server.user
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.llm.abilities2text.AbilitiesToTextService
+import hu.bme.aut.resource_server.llm.abilities2text.AbiltityToTextDto
 import hu.bme.aut.resource_server.profile.ProfileItem
 import hu.bme.aut.resource_server.user.filter.UserFilterDto
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
@@ -83,7 +84,7 @@ class UserController(
     suspend fun getAbilitiesAsText(
         authentication: Authentication,
         @RequestParam(required = false) prompt: String = "",
-    ): String {
+    ): AbiltityToTextDto {
         val username = authentication.name
         val userAbilities = userService.getUserDtoWithProfileByUsername(username).profile.toList()
 
@@ -98,7 +99,7 @@ class UserController(
         @RequestParam(required = false) userGroupId: Int?,
         @RequestParam(required = false) prompt: String = "",
         @RequestBody(required = false) filterDto: UserFilterDto?
-    ): String {
+    ): AbiltityToTextDto {
         val username = authentication.name
         val userAbilities = userService.getUserDtoWithProfileByUsername(username).profile.toList()
 
