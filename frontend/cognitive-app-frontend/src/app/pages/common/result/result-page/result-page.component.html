@@ -1,23 +1,23 @@
 <div class="pagerRow">
     <button mat-button color="primary" (click)="drawer.toggle()">
-        {{ text.filter_and_sort }}
+        <mat-icon>filter_alt</mat-icon>{{ text.filter}}
     </button>
-    <app-csv-download-button [csvLink]="resultService.csvPath"></app-csv-download-button>
     <mat-paginator #paginator [length]="dataLength"
                    [pageSize]="defaultPageSize"
                    [pageSizeOptions]="pageSizeOptions"
                    aria-label="Select page"
                    (page)="handlePageEvent($event)">
     </mat-paginator>
+    <app-csv-download-button [csvLink]="resultService.csvPath"></app-csv-download-button>
+</div>
+<div class="flex align-items-center lg:w-4 sm:w-6 justify-content-evenly mb-2">
+    <mat-icon color="primary">swap_vert</mat-icon>
+    <app-sort-control [sortElements]="sortOptions"
+                      (onSort)="onSortElementChosen($event)"></app-sort-control>
 </div>
 <mat-drawer-container autosize class="drawerContainer">
     <mat-drawer mode="side" #drawer>
         <div class="toolsContainer">
-            <div>
-                <h4>{{ text.sort }}</h4>
-                <app-sort-control [sortElements]="sortOptions"
-                                  (onSort)="onSortElementChosen($event)"></app-sort-control>
-            </div>
             <div class="filter">
                 <h4>{{ text.filter }}</h4>
                 <p *ngIf="UserInfo.isAdmin()">{{ text.username }}</p>

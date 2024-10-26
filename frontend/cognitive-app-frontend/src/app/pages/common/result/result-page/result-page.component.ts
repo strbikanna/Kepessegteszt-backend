@@ -67,6 +67,7 @@ export class ResultPageComponent implements OnInit {
 
     onSortElementChosen(sortElement: SortElement) {
         this.chosenSortElement = sortElement;
+        this.onApplyFilters();
     }
 
     onUserNamesChosen(users: AuthUser[] | undefined) {

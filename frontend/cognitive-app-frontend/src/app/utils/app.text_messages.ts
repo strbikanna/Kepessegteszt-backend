@@ -280,10 +280,10 @@ export const TEXTS = {
         sort: "Rendezés",
         filter: "Szűrés",
         filter_and_sort: "Szűrés és rendezés",
-        username: "Felhasználónév alapján",
-        game: "Játék alapján",
-        passed: "Játékeredmény alapján",
-        timestamp: "Időpont alapján",
+        username: "Felhasználónév",
+        game: "Játék név",
+        passed: "Játékeredmény",
+        timestamp: "Időpont",
         apply: "Kiválasztás alkalmazása",
 
     }

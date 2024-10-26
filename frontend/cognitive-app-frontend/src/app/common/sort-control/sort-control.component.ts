@@ -14,19 +14,41 @@ export class SortControlComponent {
     @Input() sortElements: string[] = [];
     @Output() onSort = new EventEmitter<SortElement>();
 
-    sortModeForm = new FormGroup({
-        sortElement: new FormControl(''),
-        sortDirection: new FormControl<'ASC' | 'DESC' | undefined>(undefined)
-    });
+    currentSortElement: string | undefined = undefined;
+    currentSortDirection: 'ASC' | 'DESC' | undefined = undefined;
 
-    sortChosen() {
-        let sortElement = this.sortModeForm.get('sortElement')?.value;
-        let sortDirection = this.sortModeForm.get('sortDirection')?.value;
-        if (sortElement == null || sortDirection == null) {
-            sortDirection = undefined
-            sortElement = undefined
+    sortChosen(sortElement: string) {
+        this.currentSortDirection = this.getNextSortDirection(sortElement);
+        if(this.currentSortDirection === undefined){
+            this.currentSortElement = undefined;
         }
-        this.onSort.emit({sortElement, sortDirection});
+        this.currentSortElement = sortElement;
+        this.onSort.emit({sortElement: this.currentSortElement, sortDirection: this.currentSortDirection});
+    }
+
+    getSortDirectionIconName(){
+        switch(this.currentSortDirection){
+            case 'ASC':
+                return 'arrow_upward';
+            case 'DESC':
+                return 'arrow_downward';
+            default:
+                return undefined;
+        }
+    }
+
+    private getNextSortDirection(chosenSortElement: string): 'ASC' | 'DESC' | undefined {
+        if (this.currentSortElement === chosenSortElement) {
+            switch (this.currentSortDirection) {
+                case 'ASC':
+                    return 'DESC';
+                case 'DESC':
+                    return undefined;
+                default:
+                   return 'ASC';
+            }
+        }
+        return 'ASC';
     }
 }
 
