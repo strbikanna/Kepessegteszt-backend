@@ -1,6 +1,7 @@
 <div class="pagerRow">
     <button mat-button color="primary" (click)="drawer.toggle()">
-        <mat-icon>filter_alt</mat-icon>{{ text.filter}}
+        <mat-icon>filter_alt</mat-icon>
+        {{ text.filter }}
     </button>
     <mat-paginator #paginator [length]="dataLength"
                    [pageSize]="defaultPageSize"
@@ -20,11 +21,10 @@
         <div class="toolsContainer">
             <div class="filter">
                 <h4>{{ text.filter }}</h4>
-                <p *ngIf="UserInfo.isAdmin()">{{ text.username }}</p>
+                <p *ngIf="isAdmin()">{{ text.username }}</p>
                 <div class="w-full flex mb-2">
-                <app-user-autocomplete (userSelectionChanged)="onUserNamesChosen($event)"></app-user-autocomplete>
+                    <app-user-autocomplete (userSelectionChanged)="onUserNamesChosen($event)"></app-user-autocomplete>
                 </div>
-
                 <mat-divider></mat-divider>
                 <p>{{ text.game }}</p>
                 <div class="w-full flex mb-2">
@@ -33,7 +33,7 @@
                 </div>
                 <mat-divider></mat-divider>
                 <p>{{ text.passed }}</p>
-                <app-filter-control [filterElements]="of([text.result_info.passed, text.result_info.failed])"
+                <app-filter-control [filterElements]="passedFilterElements()"
                                     (onFilter)="onPassedChosen($event)"
                 >
                 </app-filter-control>
