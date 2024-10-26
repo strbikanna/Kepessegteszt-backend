@@ -38,19 +38,20 @@ class ResultController(
     fun saveResult(@RequestBody gameplayData: ResultDto, authentication: Authentication): Long {
         authService.checkGameAccessAndThrow(authentication, gameplayData)
         val username = authentication.name
-        if(!profileSnapshotService.existsSnapshotToday(username)){
+        if (!profileSnapshotService.existsSnapshotToday(username)) {
             profileSnapshotService.saveSnapshotOfUser(username)
         }
         val savedResult = resultService.save(gameplayData)
         val game = resultService.getGameOfResult(savedResult.id!!)
-        if(!game.active){
+        if (!game.active) {
             throw IllegalArgumentException("Game is not active");
         }
-        var nextRecommendation = resultService.getNextRecommendationForGameIfExists(savedResult.recommendedGame.id!!, username)
-        if(nextRecommendation != null && nextRecommendation.config.isNotEmpty()){
+        var nextRecommendation =
+            resultService.getNextRecommendationForGameIfExists(savedResult.recommendedGame.id!!, username)
+        if (nextRecommendation != null && nextRecommendation.config.isNotEmpty()) {
             return nextRecommendation.id!!
         }
-        if(nextRecommendation == null) {
+        if (nextRecommendation == null) {
             nextRecommendation = recommenderService.createEmptyRecommendation(username, game.id!!)
         }
         CoroutineScope(Dispatchers.Default).async {
@@ -66,40 +67,43 @@ class ResultController(
     @ResponseStatus(HttpStatus.OK)
     fun getResultsByUser(
         authentication: Authentication,
-        @RequestParam sortBy: String= "timestamp",
+        @RequestParam sortBy: String = "timestamp",
         @RequestParam sortOrder: String = "DESC",
         @RequestParam pageSize: Int = 10,
         @RequestParam pageIndex: Int = 0,
         @RequestParam gameIds: List<Int>? = null,
         @RequestParam resultWin: Boolean? = null
-    ): List<ResultDetailsDto >{
+    ): List<ResultDetailsDto> {
         val username = authentication.name
-        if(!gameIds.isNullOrEmpty() || resultWin != null){
-            return resultService.getAllFiltered(listOf(username), PageRequest.of(pageIndex, pageSize, resultService.convertSortBy(sortBy, sortOrder)), gameIds, resultWin)
+        if (!gameIds.isNullOrEmpty() || resultWin != null) {
+            return resultService.getAllFiltered(
+                listOf(username),
+                gameIds,
+                resultWin,
+                PageRequest.of(pageIndex, pageSize, resultService.convertSortBy(sortBy, sortOrder))
+            )
         }
-        return resultService.getAllByUser(username, PageRequest.of(pageIndex, pageSize, resultService.convertSortBy(sortBy, sortOrder)))
+        return resultService.getAllByUser(
+            username,
+            PageRequest.of(pageIndex, pageSize, resultService.convertSortBy(sortBy, sortOrder))
+        )
     }
+
     @Transactional
     @GetMapping("/results/all")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
-    fun getAllResults(@RequestParam sortBy: String = "timestamp",
-                      @RequestParam sortOrder: String = "DESC",
-                      @RequestParam pageSize: Int = 10,
-                      @RequestParam pageIndex: Int = 0,
-                      @RequestParam gameIds: List<Int>? = null,
-                      @RequestParam resultWin: Boolean? = null,
-                      @RequestParam usernames: List<String>? = null
-                      ): List<ResultDetailsDto >{
+    fun getAllResults(
+        @RequestParam sortBy: String = "timestamp",
+        @RequestParam sortOrder: String = "DESC",
+        @RequestParam pageSize: Int = 10,
+        @RequestParam pageIndex: Int = 0,
+        @RequestParam gameIds: List<Int>? = null,
+        @RequestParam resultWin: Boolean? = null,
+        @RequestParam usernames: List<String>? = null
+    ): List<ResultDetailsDto> {
         val sort = resultService.convertSortBy(sortBy, sortOrder)
-        if(!usernames.isNullOrEmpty()){
-            return resultService.getAllFiltered(usernames, PageRequest.of(pageIndex, pageSize, sort), gameIds, resultWin)
-        }
-        if(!gameIds.isNullOrEmpty() || resultWin != null){
-            return resultService.getAllFiltered(PageRequest.of(pageIndex, pageSize, sort), gameIds, resultWin)
-        }
-        val res = resultService.getAll(PageRequest.of(pageIndex, pageSize, sort))
-        return res
+        return resultService.getAllFiltered(usernames, gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort))
     }
 
     @GetMapping("/count")

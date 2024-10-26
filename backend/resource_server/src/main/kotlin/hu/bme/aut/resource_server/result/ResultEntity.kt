@@ -26,6 +26,9 @@ data class ResultEntity(
     @Type(JsonType::class)
     val result: Map<String, Any>,
 
+    @Column(name = "passed")
+    val passed: Boolean? = null,
+
     @JsonIgnore
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "user_id")
