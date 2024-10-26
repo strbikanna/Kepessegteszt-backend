@@ -19,10 +19,10 @@ export class SortControlComponent {
 
     sortChosen(sortElement: string) {
         this.currentSortDirection = this.getNextSortDirection(sortElement);
+        this.currentSortElement = sortElement;
         if(this.currentSortDirection === undefined){
             this.currentSortElement = undefined;
         }
-        this.currentSortElement = sortElement;
         this.onSort.emit({sortElement: this.currentSortElement, sortDirection: this.currentSortDirection});
     }
 
