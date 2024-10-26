@@ -138,18 +138,15 @@ export const TEXTS = {
             abilities: 'Kognitív képességek',
             values: 'Becsült értékek',
         },
-        date_picker: {
-            show_profile_history: 'Kognitív profil előzmények megtekintése',
-            time_interval: 'Időintervallum',
-            see_history: 'Megtekintés korábbi időpontban',
-            see_history_description: 'Válassz egy kezdő és egy végdátumot, hogy megtekinthesd a kognitív profilodat az adott időpontban.',
-            see_history_action: 'Kognitív profil megtekintése',
-            back_to_current_action: 'Vissza az aktuális kognitív profilhoz',
-        },
         user_picker: {
             choose_contact: 'Kognitív profil megtekintése',
             choose_contact_description: 'Válaszd ki, kinek a kognitív profilját szeretnéd megtekinteni',
             select: 'Megtekintés',
+        },
+        date_picker: {
+            see_history: 'Megtekintés korábbi időpontban',
+            see_history_description: 'Válassz egy kezdő és egy végdátumot, hogy megtekinthesd a kognitív profilodat az adott időpontban.',
+            see_history_action: 'Kognitív profil megtekintése',
         },
         comparison: {
             title: 'Kognitív profil elemzése',
@@ -186,7 +183,12 @@ export const TEXTS = {
             submit: 'Szűrés',
         },
     },
-
+    date_picker: {
+        time_interval: 'Időintervallum',
+        title: 'Megtekintés korábbi időpontban',
+        description: 'Válassz egy kezdő és egy végdátumot, hogy megtekinthesd a kognitív profilodat az adott időpontban.',
+        action: 'Kognitív profil megtekintése',
+    },
     wildcard: {
         title: 'Hupsz, ez az oldal nem található!',
         description: 'A keresett oldal nem található. Ellenőrizd a címet és próbáld újra.',

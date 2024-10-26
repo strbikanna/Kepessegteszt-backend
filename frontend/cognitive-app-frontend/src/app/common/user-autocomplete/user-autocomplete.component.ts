@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TEXTS} from "../../utils/app.text_messages";
-import {UserForAdmin} from "../../model/user-contacts.model";
+import {AuthUser} from "../../model/user-contacts.model";
 import {FormControl} from "@angular/forms";
 import {ContactService} from "../../service/contact_service/contact.service";
 import {Observable} from "rxjs";
@@ -18,13 +18,13 @@ export class UserAutocompleteComponent implements OnInit{
   /**
    * emits the actually selected users
    */
-  @Output() userSelectionChanged: EventEmitter<UserForAdmin[]> = new EventEmitter<UserForAdmin[]>();
-  @Output() userSelected: EventEmitter<UserForAdmin> = new EventEmitter<UserForAdmin>();
+  @Output() userSelectionChanged: EventEmitter<AuthUser[]> = new EventEmitter<AuthUser[]>();
+  @Output() userSelected: EventEmitter<AuthUser> = new EventEmitter<AuthUser>();
 
-  protected userOptions: UserForAdmin[] = [];
-  protected defaultUserOptions: UserForAdmin[] = [];
-  protected selectedUsers: UserForAdmin[] = [];
-  autocompleteForm = new FormControl<UserForAdmin | string>('')
+  protected userOptions: AuthUser[] = [];
+  protected defaultUserOptions: AuthUser[] = [];
+  protected selectedUsers: AuthUser[] = [];
+  autocompleteForm = new FormControl<AuthUser | string>('')
 
   constructor(private service: AdminService) { }
 
@@ -57,7 +57,7 @@ export class UserAutocompleteComponent implements OnInit{
     this.userOptions = this.defaultUserOptions;
   }
   onUserSelected(){
-    let user: UserForAdmin;
+    let user: AuthUser;
     if(typeof this.autocompleteForm.value === 'string'){
       const selectedUser = this.userOptions.find(contact => contact.firstName + ' ' + contact.lastName === this.autocompleteForm.value);
       if(selectedUser === undefined) return;
@@ -77,11 +77,11 @@ export class UserAutocompleteComponent implements OnInit{
     }
     this.resetAutoComplete();
   }
-  convertDisplay(user: UserForAdmin): string{
+  convertDisplay(user: AuthUser): string{
     if(user.firstName === undefined || user.lastName === undefined) return '';
     return user.firstName + ' ' + user.lastName;
   }
-  onUserRemoved(user: UserForAdmin){
+  onUserRemoved(user: AuthUser){
     this.selectedUsers = this.selectedUsers.filter(u => u !== user);
     this.userSelectionChanged.emit(this.selectedUsers);
     this.autocompleteForm.setValue('');

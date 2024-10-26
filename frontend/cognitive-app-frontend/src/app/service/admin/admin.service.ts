@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {AppConstants} from "../../utils/constants";
 import {Observable, retry} from "rxjs";
-import {UserForAdmin} from "../../model/user-contacts.model";
+import {AuthUser} from "../../model/user-contacts.model";
 import {UserInfo} from "../../auth/userInfo";
 
 @Injectable({
@@ -17,11 +17,11 @@ export class AdminService {
    * only for admins
    * @param name
    */
-  searchUsersByName(name: string): Observable<UserForAdmin[]> | undefined {
+  searchUsersByName(name: string): Observable<AuthUser[]> | undefined {
     if (UserInfo.isAdmin()) {
       let params = new HttpParams();
       params = params.append('nameText', name);
-      return this.http.get<UserForAdmin[]>(`${AppConstants.authServerUrl}/user/search`, {params: params})
+      return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/user/search`, {params: params})
           .pipe(
               retry(3)
           );
@@ -29,19 +29,19 @@ export class AdminService {
     return undefined;
   }
 
-  getAllUsers(pageNumber?: number, pageSize?: number):Observable<UserForAdmin[]>{
+  getAllUsers(pageNumber?: number, pageSize?: number):Observable<AuthUser[]>{
     let params = new HttpParams();
     if(pageNumber !== undefined && pageSize !== undefined){
       params = params.append('pageNumber', pageNumber);
       params = params.append('pageSize', pageSize);
     }
-    return this.http.get<UserForAdmin[]>(`${AppConstants.authServerUrl}/user/all`, {params: params})
+    return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/user/all`, {params: params})
         .pipe(
             retry(3)
         );
   }
-  getContactsOfUser(user: UserForAdmin):Observable<UserForAdmin[]>{
-    return this.http.get<UserForAdmin[]>(`${AppConstants.authServerUrl}/user/${user.id}/contacts`)
+  getContactsOfUser(user: AuthUser):Observable<AuthUser[]>{
+    return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/user/${user.id}/contacts`)
         .pipe(
             retry(3)
         );
@@ -52,8 +52,8 @@ export class AdminService {
             retry(3)
         );
   }
-  updateUserData(user: UserForAdmin): Observable<UserForAdmin>{
-    return this.http.put<UserForAdmin>(`${AppConstants.authServerUrl}/user/${user.id}`, user)
+  updateUserData(user: AuthUser): Observable<AuthUser>{
+    return this.http.put<AuthUser>(`${AppConstants.authServerUrl}/user/${user.id}`, user)
         .pipe(
             retry(3)
         );

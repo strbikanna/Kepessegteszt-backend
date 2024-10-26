@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ContactService} from "../../service/contact_service/contact.service";
-import {UserForAdmin} from "../../model/user-contacts.model";
+import {AuthUser} from "../../model/user-contacts.model";
 import {FormControl} from "@angular/forms";
 import {TEXTS} from "../../utils/app.text_messages";
 
@@ -14,12 +14,12 @@ export class UserSearchComponent implements OnInit {
   @Input() text = TEXTS.contact_autocomplete;
   @Input() displayCurrentUser: boolean = false;
   @Input() showOnlyContacts: boolean = false;
-  @Input() userToExclude: UserForAdmin | undefined
-  @Output() onContactSelected: EventEmitter<UserForAdmin> = new EventEmitter<UserForAdmin>();
+  @Input() userToExclude: AuthUser | undefined
+  @Output() onContactSelected: EventEmitter<AuthUser> = new EventEmitter<AuthUser>();
 
-  protected contactOptions: UserForAdmin[] = [];
-  protected filteredContactOptions: UserForAdmin[] = [];
-  contactAutocompleteForm = new FormControl<UserForAdmin | string>('')
+  protected contactOptions: AuthUser[] = [];
+  protected filteredContactOptions: AuthUser[] = [];
+  contactAutocompleteForm = new FormControl<AuthUser | string>('')
 
   constructor(private service: ContactService) { }
 
@@ -37,7 +37,7 @@ export class UserSearchComponent implements OnInit {
       this.filteredContactOptions = this.filterContacts(name);
     });
   }
-  filterContacts(value: string) : UserForAdmin[]{
+  filterContacts(value: string) : AuthUser[]{
     if(value === '' || value === ' ') return this.contactOptions;
     const filter = value.toLowerCase();
     return this.contactOptions
@@ -49,7 +49,7 @@ export class UserSearchComponent implements OnInit {
     this.contactAutocompleteForm.setValue('');
   }
   onAddContact(){
-    let contact: UserForAdmin;
+    let contact: AuthUser;
     if(typeof this.contactAutocompleteForm.value === 'string'){
       const possibleContact = this.contactOptions.find(contact => contact.firstName + ' ' + contact.lastName === this.contactAutocompleteForm.value);
       if(possibleContact === undefined) return;
@@ -61,7 +61,7 @@ export class UserSearchComponent implements OnInit {
     this.onContactSelected.emit(contact);
     this.resetAutoComplete();
   }
-  convertDisplay(user: UserForAdmin): string{
+  convertDisplay(user: AuthUser): string{
     if(user.firstName === undefined || user.lastName === undefined) return '';
     return user.firstName + ' ' + user.lastName;
   }

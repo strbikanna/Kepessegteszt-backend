@@ -7,7 +7,7 @@ import {ConfigItem} from "../../../model/config_item.model";
 import {TEXTS} from "../../../utils/app.text_messages";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Recommendation} from "../../../model/recommendation.model";
-import {UserForAdmin} from "../../../model/user-contacts.model";
+import {AuthUser} from "../../../model/user-contacts.model";
 import {Observable, of} from "rxjs";
 import {mockRecommendedGame, RecommendedGame} from "../../../model/recommended_game.model";
 
@@ -44,7 +44,7 @@ export class RecommendationPageComponent {
         }
     }
 
-    onUserSelected(user: UserForAdmin) {
+    onUserSelected(user: AuthUser) {
         this.chosenUser = user;
         if(this.chosenGame !== undefined){
             this.loadExistingRecommendations(user.username, this.chosenGame.id!!)

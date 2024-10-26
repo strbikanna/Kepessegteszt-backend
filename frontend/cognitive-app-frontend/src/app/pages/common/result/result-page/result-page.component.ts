@@ -11,7 +11,7 @@ import {UserService} from "angular-auth-oidc-client/lib/user-data/user.service";
 import {AdminService} from "../../../../service/admin/admin.service";
 import {TEXTS} from "../../../../utils/app.text_messages";
 import {UserInfo} from "../../../../auth/userInfo";
-import {UserForAdmin} from "../../../../model/user-contacts.model";
+import {AuthUser} from "../../../../model/user-contacts.model";
 
 @Component({
     selector: 'app-result-page',
@@ -69,7 +69,7 @@ export class ResultPageComponent implements OnInit {
         this.chosenSortElement = sortElement;
     }
 
-    onUserNamesChosen(users: UserForAdmin[] | undefined) {
+    onUserNamesChosen(users: AuthUser[] | undefined) {
         this.chosenUserNames = users?.map(u => u.username) ?? [];
     }
 

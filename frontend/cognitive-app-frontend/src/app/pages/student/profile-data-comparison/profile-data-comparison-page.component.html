@@ -1,4 +1,3 @@
-
 <form [formGroup]="profileQueryForm" (ngSubmit)="onSubmit()" class="form-container">
     <mat-radio-group formControlName="calculationType" class="radio-container">
         <mat-label class="title">{{text.comparison_type}}</mat-label>
@@ -10,7 +9,6 @@
             {{text.error_type_required}}
         </mat-error>
     </mat-radio-group>
-
     <button mat-flat-button type="submit" [disabled]="profileQueryForm.invalid" >{{text.submit}}</button>
 </form>
 <div  class="chart">

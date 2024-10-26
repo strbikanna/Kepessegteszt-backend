@@ -8,7 +8,7 @@ import {GameManagementPageComponent} from "../pages/admin/game-management/game-m
 import {EditGameFormComponent} from "../pages/admin/game-management/edit-game-form/edit-game-form.component";
 import {editorGuard} from "../auth/editor.guard";
 import {RecommendationPageComponent} from "../pages/admin/recommendation/recommendation-page.component";
-import {ProfileDataComparisonPageComponent} from "../pages/common/profile-data-comparison/profile-data-comparison-page.component";
+import {ProfileDataComparisonPageComponent} from "../pages/student/profile-data-comparison/profile-data-comparison-page.component";
 import {ResultPageComponent} from "../pages/common/result/result-page/result-page.component";
 import {AdminPageComponent} from "../pages/admin/admin-page/admin-page.component";
 import {adminAuthGuard} from "../auth/admin-auth.guard";

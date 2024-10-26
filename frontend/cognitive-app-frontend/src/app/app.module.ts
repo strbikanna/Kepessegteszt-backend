@@ -48,7 +48,7 @@ import { CalculationDialogComponent } from './pages/admin/game-management/calcul
 import { RecommendationPageComponent } from './pages/admin/recommendation/recommendation-page.component';
 import {MatDividerModule} from "@angular/material/divider";
 import {environment} from "../environments/environment";
-import { ProfileDataComparisonPageComponent } from './pages/common/profile-data-comparison/profile-data-comparison-page.component';
+import { ProfileDataComparisonPageComponent } from './pages/student/profile-data-comparison/profile-data-comparison-page.component';
 import { ProfileRadarChartComponent } from './charts/profile-radar-chart/profile-radar-chart.component';
 import {MatRadioModule} from "@angular/material/radio";
 import { ConfigItemFormComponent } from './pages/admin/game-management/config-item-form/config-item-form.component';
@@ -73,6 +73,9 @@ import { CandlestickChartComponent } from './charts/candlestick-chart/candlestic
 import {AdminPageComponent} from "./pages/admin/admin-page/admin-page.component";
 import {UserSearchComponent} from "./common/user-search/user-search.component";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import { AdminCognitiveProfilePageComponent } from './pages/admin/admin-cognitive-profile/admin-cognitive-profile-page.component';
+import { DatePickerComponent } from './common/date-picker/date-picker.component';
+import { UpAndDownButtonComponent } from './common/up-and-down-button/up-and-down-button.component';
 
 @NgModule({
     declarations: [
@@ -110,7 +113,10 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
         UserAutocompleteComponent,
         CandlestickChartComponent,
         AdminPageComponent,
-        UserSearchComponent
+        UserSearchComponent,
+        AdminCognitiveProfilePageComponent,
+        DatePickerComponent,
+        UpAndDownButtonComponent
     ],
     imports: [
         BrowserModule,

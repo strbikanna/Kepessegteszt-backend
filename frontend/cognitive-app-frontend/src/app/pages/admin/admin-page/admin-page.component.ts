@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AdminService} from "../../../service/admin/admin.service";
 import {map, Observable} from "rxjs";
-import {UserForAdmin} from "../../../model/user-contacts.model";
+import {AuthUser} from "../../../model/user-contacts.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatPaginatorIntl, PageEvent} from "@angular/material/paginator";
 import {Role} from "../../../utils/constants";
@@ -25,9 +25,9 @@ export class AdminPageComponent implements OnInit {
 
     text = TEXTS.admin_page;
 
-    users: Observable<UserForAdmin[]> = new Observable<UserForAdmin[]>();
+    users: Observable<AuthUser[]> = new Observable<AuthUser[]>();
 
-    userToEdit: UserForAdmin | undefined = undefined;
+    userToEdit: AuthUser | undefined = undefined;
 
     userDataForm = new FormGroup({
         firstName: new FormControl<string>( '', Validators.required ),
@@ -52,7 +52,7 @@ export class AdminPageComponent implements OnInit {
      * When user chosen, fill userdataForm with user data
      * @param user chosen user
      */
-    setUpUserToEdit(user: UserForAdmin): void {
+    setUpUserToEdit(user: AuthUser): void {
         this.userToEdit = user;
         this.service.getContactsOfUser(user).subscribe(contacts => {
             this.userToEdit!!.contacts = contacts;
@@ -65,7 +65,7 @@ export class AdminPageComponent implements OnInit {
     /**
      * Adds contact to userToEdit
      */
-    onAddContact(contact: UserForAdmin): void {
+    onAddContact(contact: AuthUser): void {
         if(this.userToEdit!!.contacts === undefined){
             this.userToEdit!!.contacts = [];
         }
@@ -79,7 +79,7 @@ export class AdminPageComponent implements OnInit {
         this.users = this.service.getAllUsers(event.pageIndex, event.pageSize);
     }
 
-    hasRequestedRole(user: UserForAdmin) {
+    hasRequestedRole(user: AuthUser) {
         return user.roles.some(role => role.includes('REQUEST'));
     }
 
@@ -102,14 +102,14 @@ export class AdminPageComponent implements OnInit {
         });
         this.userToEdit = undefined;
     }
-    notRolesOfUser(user: UserForAdmin): string[] {
+    notRolesOfUser(user: AuthUser): string[] {
         let allRoles = [Role.ADMIN, Role.PARENT, Role.TEACHER, Role.STUDENT, Role.SCIENTIST];
         return allRoles.filter(role => !user.roles.includes(role));
     }
-    actualRolesOfUser(user: UserForAdmin): string[] {
+    actualRolesOfUser(user: AuthUser): string[] {
         return user.roles.filter(role => !role.includes('REQUEST'));
     }
-    requestedRolesOfUser(user: UserForAdmin): string[] {
+    requestedRolesOfUser(user: AuthUser): string[] {
         return user.roles.filter(role => role.includes('REQUEST'));
     }
 
@@ -129,7 +129,7 @@ export class AdminPageComponent implements OnInit {
             this.userToEdit?.roles.splice(this.userToEdit?.roles.indexOf(role), 1);
         }
     }
-    onContactDeleted(contact: UserForAdmin){
+    onContactDeleted(contact: AuthUser){
         this.userToEdit?.contacts?.splice(this.userToEdit?.contacts?.indexOf(contact), 1);
     }
     private showSuccessSnackbar() {
