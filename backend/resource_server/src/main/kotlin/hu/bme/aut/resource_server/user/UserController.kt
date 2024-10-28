@@ -30,15 +30,22 @@ class UserController(
     @GetMapping("/profile/inspect")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_TEACHER', 'ROLE_PARENT', 'ROLE_ADMIN')")
-    fun getOtherUserProfile(authentication: Authentication, @RequestParam(required = true) username: String): Deferred<UserProfileDto>
+    fun getOtherUserProfile(authentication: Authentication, @RequestParam username: String): Deferred<List<ProfileItem>>
     = authService.doIfIsContact(authentication, username) {
-        userService.getUserDtoWithProfileByUsername(username)
+        userService.getUserDtoWithProfileByUsername(username).profile.toList()
     }
 
     @GetMapping("/groups")
     @ResponseStatus(HttpStatus.OK)
     fun getGroupsOfUser(authentication: Authentication): List<UserGroupDto>{
         val username = authentication.name
+        return userGroupService.getGroupsOfUser(username)
+    }
+
+    @GetMapping("/groups/inspect")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_TEACHER', 'ROLE_PARENT', 'ROLE_ADMIN')")
+    fun getGroupsOfOtherUser(authentication: Authentication, @RequestParam username: String): List<UserGroupDto>{
         return userGroupService.getGroupsOfUser(username)
     }
 
@@ -63,8 +70,32 @@ class UserController(
     ): List<ProfileItem>{
         userGroupId?.let{authService.checkGroupDataReadAndThrow(authentication, userGroupId)}
         val user = userService.getUserEntityWithProfileByUsername(authentication.name)
+        return getAggregateProfileOfGroup(user, aggregationMode, userGroupId, filterDto)
+    }
+    /**
+     * @param aggregationMode: "average" | "sum" | "max" | "min"
+     */
+    @PostMapping("/group_profile/aggregate/inspect")
+    @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_TEACHER', 'ROLE_PARENT', 'ROLE_ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    fun compareOtherUsersProfileToGroupData(
+        @RequestParam username: String,
+        @RequestParam(required = false) userGroupId: Int?,
+        @RequestParam(required = false) aggregationMode: String = "average",
+        @RequestBody(required = false) filterDto: UserFilterDto?
+    ): List<ProfileItem>{
+        val user = userService.getUserEntityWithProfileByUsername(username)
+        return getAggregateProfileOfGroup(user, aggregationMode, userGroupId, filterDto)
+    }
+
+    private fun getAggregateProfileOfGroup(
+        user: UserEntity,
+        aggregationMode: String,
+        userGroupId: Int?,
+        filterDto: UserFilterDto?
+    ): List<ProfileItem> {
         val abilities = user.profileFloat.map { it.ability }.toSet()
-        return when(aggregationMode){
+        return when (aggregationMode) {
             "average" -> userGroupService.getAbilityToAverageValueInGroup(userGroupId, filterDto, abilities)
             "sum" -> userGroupService.getAbilityToSumValueInGroup(userGroupId, filterDto, abilities)
             "max" -> userGroupService.getAbilityToMaxValueInGroup(userGroupId, filterDto, abilities)
