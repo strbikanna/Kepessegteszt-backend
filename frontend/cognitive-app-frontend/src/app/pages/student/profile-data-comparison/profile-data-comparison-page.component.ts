@@ -15,7 +15,7 @@ import {UserFilter} from "../../../common/user-filter/user-filter.model";
     styleUrls: ['./profile-data-comparison-page.component.scss']
 })
 export class ProfileDataComparisonPageComponent implements OnInit {
-    constructor(private service: ProfileDataComparisonService, private formBuilder: FormBuilder, private abilityService: AbilityService) {
+    constructor(protected service: ProfileDataComparisonService, protected formBuilder: FormBuilder, protected abilityService: AbilityService) {
     }
 
     text = TEXTS.cognitive_profile.comparison
@@ -29,7 +29,7 @@ export class ProfileDataComparisonPageComponent implements OnInit {
         calculationType: new FormControl<'average' | 'min' | 'max'>('average', Validators.required)
     })
 
-    private userFilter?: UserFilter
+    protected userFilter?: UserFilter
     filterExpanded: boolean = false
 
     ngOnInit(): void {
@@ -56,7 +56,7 @@ export class ProfileDataComparisonPageComponent implements OnInit {
         )
     }
 
-    private setComparisonTitle(title: 'average' | 'max' | 'min') {
+    protected setComparisonTitle(title: 'average' | 'max' | 'min') {
         if(title==='average')  {
             this.comparisonTitle = 'avg'
         }else{

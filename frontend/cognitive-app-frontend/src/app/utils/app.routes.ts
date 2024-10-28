@@ -15,6 +15,9 @@ import {adminAuthGuard} from "../auth/admin-auth.guard";
 import {
     AdminCognitiveProfilePageComponent
 } from "../pages/admin/admin-cognitive-profile/admin-cognitive-profile-page.component";
+import {
+    AdminProfileDataComparisonPageComponent
+} from "../pages/admin/admin-profile-data-comparison/admin-profile-data-comparison-page.component";
 
 
 export const appRoutes: Routes = [
@@ -25,8 +28,9 @@ export const appRoutes: Routes = [
     {path: '', component: HomeComponent, title: 'Cognitive App'},
     {path: 'profile', component: ProfilePageComponent, canActivate: [loggedInGuard], title: 'Profil'},
     {path: 'profile-compare', component: ProfileDataComparisonPageComponent, canActivate: [loggedInGuard], title: 'Profil összehasonlítás'},
+    {path: 'profile-compare-admin', component: AdminProfileDataComparisonPageComponent, canActivate: [loggedInGuard, editorGuard], title: 'Profil összehasonlítás'},
     {path: 'cognitive-profile', component: CognitiveProfilePageComponent, canActivate: [loggedInGuard], title: 'Kognitív profil'},
-    {path: 'cognitive-profile-admin', component: AdminCognitiveProfilePageComponent, canActivate: [loggedInGuard, adminAuthGuard], title: 'Kognitív profil'},
+    {path: 'cognitive-profile-admin', component: AdminCognitiveProfilePageComponent, canActivate: [loggedInGuard, editorGuard], title: 'Kognitív profil'},
     {path: 'recommendation', component: RecommendationPageComponent, canActivate: [loggedInGuard], title: 'Játékok ajánlása'},
     {path: 'result', component: ResultPageComponent, canActivate: [loggedInGuard], title: 'Eredmények megtekintése'},
     {path: '**', component: NotFoundComponent}

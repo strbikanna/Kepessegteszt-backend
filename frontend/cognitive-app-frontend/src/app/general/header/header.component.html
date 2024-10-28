@@ -22,7 +22,11 @@
             <span>{{ text.result_management }}</span>
         </button>
         <button mat-menu-item *ngIf="loginStatus && isStudent" routerLink="/profile-compare">
-            <mat-icon>monitoring</mat-icon>
+            <mat-icon>analytics</mat-icon>
+            <span>{{ text.profile_comparison }}</span>
+        </button>
+        <button mat-menu-item *ngIf="loginStatus && isAdminOrScientist" routerLink="/profile-compare-admin">
+            <mat-icon>query_stats</mat-icon>
             <span>{{ text.profile_comparison }}</span>
         </button>
         <button mat-menu-item *ngIf="isAdminOrScientist" routerLink="/game-management">

@@ -126,9 +126,9 @@ export const TEXTS = {
         radar_chart: {
             chart_title: 'Kognitív profil összehasonlítása',
             profile: 'Saját profil',
-            avg_in_group: 'Átlagos értékek a csoportban',
-            max_in_group: 'Maximumális értékek a csoportban',
-            min_in_group: 'Minimum értékek a csoportban',
+            avg_in_group: 'Átlagos értékek',
+            max_in_group: 'Maximum értékek',
+            min_in_group: 'Minimum értékek',
         },
         card: {
             current_profile: 'Legfrissebb kognitív profil',
@@ -155,7 +155,7 @@ export const TEXTS = {
             min: 'Minimum',
             max: 'Maximum',
             comparison_type: 'Összehasonlítás típusa',
-            comparison_type_description: 'Válaszd ki, milyen módon legyenek megjelenítve a csoport adatai',
+            comparison_type_description: 'Válaszd ki, milyen módon legyen összehasonlítva a kognitív profil adatok a többi felhasználó adataival.',
             group_selection: 'Csoport kiválasztása',
             submit: 'Összehasonlítás',
             error_group_required: 'Válassz ki egy csoportot az összehasonlításhoz',

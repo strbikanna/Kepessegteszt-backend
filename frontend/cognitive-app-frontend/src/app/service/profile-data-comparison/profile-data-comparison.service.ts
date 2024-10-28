@@ -14,9 +14,12 @@ export class ProfileDataComparisonService {
 
   constructor(private http: HttpClient, private httpService: SimpleHttpService) { }
   
-  getProfileData(): Observable<ProfileData[]> {
-    return this.http.get(this.httpService.baseUrl + '/user/profile').pipe(
+  getProfileData(userName?: string): Observable<ProfileData[]> {
+    const route = userName ? '/user/profile/inspect' : '/user/profile';
+    const params = userName ? new HttpParams().set('username', userName) : new HttpParams();
+    return this.http.get(this.httpService.baseUrl + route, {params: params}).pipe(
         map((response: any) =>{
+          console.log(response);
             return response.filter(
                 (item: any) => item.ability.type === AbilityType.FLOAT.valueOf()
             )
@@ -40,11 +43,19 @@ export class ProfileDataComparisonService {
     return this.http.get<UserGroup[]>(this.httpService.baseUrl + '/user/groups');
   }
 
-  getProfileDataOfGroup(filter: UserFilter | undefined, aggregationType: 'average'| 'min' | 'max' | 'sum'): Observable<ProfileData[]> {
+  getGroupsOfOtherUser(username: string){
+    const params = new HttpParams().set('username', username);
+    return this.http.get<UserGroup[]>(this.httpService.baseUrl + '/user/groups/inspect', {params: params});
+  }
+
+  getProfileDataOfGroup(filter: UserFilter | undefined, aggregationType: 'average'| 'min' | 'max' | 'sum', username?: string): Observable<ProfileData[]> {
     let params = new HttpParams()
         .set('aggregationMode', aggregationType);
     if(filter?.userGroupId){
         params = params.set('userGroupId', filter.userGroupId);
+    }
+    if(username){
+        params = params.set('username', username);
     }
     let userFilter = null;
     if(filter){
@@ -56,7 +67,8 @@ export class ProfileDataComparisonService {
         abilityFilter: filter.abilityFilter
       }
     }
-    return this.http.post<ProfileData[]>(`${this.httpService.baseUrl}/user/group_profile/aggregate`, userFilter, {params: params}).pipe(
+    const route = username ? '/user/group_profile/aggregate/inspect' : '/user/group_profile/aggregate';
+    return this.http.post<ProfileData[]>(`${this.httpService.baseUrl}${route}`, userFilter, {params: params}).pipe(
         retry(3),
     )
   }

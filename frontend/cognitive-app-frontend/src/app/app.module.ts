@@ -76,6 +76,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import { AdminCognitiveProfilePageComponent } from './pages/admin/admin-cognitive-profile/admin-cognitive-profile-page.component';
 import { DatePickerComponent } from './common/date-picker/date-picker.component';
 import { UpAndDownButtonComponent } from './common/up-and-down-button/up-and-down-button.component';
+import { AdminProfileDataComparisonPageComponent } from './pages/admin/admin-profile-data-comparison/admin-profile-data-comparison-page.component';
 
 @NgModule({
     declarations: [
@@ -116,7 +117,8 @@ import { UpAndDownButtonComponent } from './common/up-and-down-button/up-and-dow
         UserSearchComponent,
         AdminCognitiveProfilePageComponent,
         DatePickerComponent,
-        UpAndDownButtonComponent
+        UpAndDownButtonComponent,
+        AdminProfileDataComparisonPageComponent
     ],
     imports: [
         BrowserModule,

@@ -14,7 +14,7 @@ import {Ability} from "../../model/ability.model";
 })
 export class UserFilterComponent implements OnInit {
     @Input() ageMin: number = 0;
-    @Input() ageMax: number = 20;
+    @Input() ageMax: number = 60;
     @Input() abilityValueMin: number = 0.0;
     @Input() abilityValueMax: number = 2.0;
     @Input({required: true}) availableGroups: Observable<UserGroup[]> = new Observable<UserGroup[]>();
