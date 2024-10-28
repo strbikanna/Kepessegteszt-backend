@@ -1,13 +1,18 @@
-<div id="user-picker-container">
-    <h4>{{text.user_picker.choose_contact}}</h4>
-    <p>{{text.user_picker.choose_contact_description}}</p>
-    <app-user-autocomplete (userSelected)="userSelected($event)" [multiple]="false"></app-user-autocomplete>
+<div class="flex w-full justify-content-start mx-5">
+    <div>
+        <h4>{{ text.user_picker.choose_contact }}</h4>
+        <p>{{ text.user_picker.choose_contact_description }}</p>
+        <app-user-autocomplete (userSelected)="userSelected($event)" [multiple]="false"
+                               [searchOnlyContacts]="true"></app-user-autocomplete>
+    </div>
 </div>
 <mat-divider></mat-divider>
-<div class="profile-container" *ngIf="chosenUsername">
-    <app-profile-card *ngIf="!loadingProfile" [profileData]="currProfileData!!" id="card"></app-profile-card>
+<div class="flex m-4 align-items-center" *ngIf="chosenUsername">
+    <div class="w-7">
+        <app-profile-card *ngIf="!loadingProfile" [profileData]="currProfileData!!" id="card"></app-profile-card>
+    </div>
     <mat-progress-bar *ngIf="loadingProfile" mode="buffer"></mat-progress-bar>
-    <div class="w-min">
+    <div class="flex w-5 align-items-center flex-column">
         <app-date-picker (dateChosen)="onDatesChosen($event)"></app-date-picker>
     </div>
 </div>

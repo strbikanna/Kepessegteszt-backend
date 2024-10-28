@@ -1,7 +1,7 @@
 import {Routes} from '@angular/router';
 import {HomeComponent} from "../general/home/home.component";
 import {ProfilePageComponent} from "../pages/common/profile/profile-page.component";
-import {CognitiveProfilePageComponent} from "../pages/common/cognitive-profile/cognitive-profile-page.component";
+import {CognitiveProfilePageComponent} from "../pages/student/cognitive-profile/cognitive-profile-page.component";
 import {loggedInGuard} from "../auth/logged-in.guard";
 import {NotFoundComponent} from "../general/not-found/not-found.component";
 import {GameManagementPageComponent} from "../pages/admin/game-management/game-management-page.component";
@@ -12,6 +12,9 @@ import {ProfileDataComparisonPageComponent} from "../pages/student/profile-data-
 import {ResultPageComponent} from "../pages/common/result/result-page/result-page.component";
 import {AdminPageComponent} from "../pages/admin/admin-page/admin-page.component";
 import {adminAuthGuard} from "../auth/admin-auth.guard";
+import {
+    AdminCognitiveProfilePageComponent
+} from "../pages/admin/admin-cognitive-profile/admin-cognitive-profile-page.component";
 
 
 export const appRoutes: Routes = [
@@ -23,6 +26,7 @@ export const appRoutes: Routes = [
     {path: 'profile', component: ProfilePageComponent, canActivate: [loggedInGuard], title: 'Profil'},
     {path: 'profile-compare', component: ProfileDataComparisonPageComponent, canActivate: [loggedInGuard], title: 'Profil összehasonlítás'},
     {path: 'cognitive-profile', component: CognitiveProfilePageComponent, canActivate: [loggedInGuard], title: 'Kognitív profil'},
+    {path: 'cognitive-profile-admin', component: AdminCognitiveProfilePageComponent, canActivate: [loggedInGuard, adminAuthGuard], title: 'Kognitív profil'},
     {path: 'recommendation', component: RecommendationPageComponent, canActivate: [loggedInGuard], title: 'Játékok ajánlása'},
     {path: 'result', component: ResultPageComponent, canActivate: [loggedInGuard], title: 'Eredmények megtekintése'},
     {path: '**', component: NotFoundComponent}

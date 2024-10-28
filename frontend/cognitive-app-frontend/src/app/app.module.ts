@@ -31,7 +31,7 @@ import { HeaderComponent } from './general/header/header.component';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import { AlertDialogComponent } from './common/alert-dialog/alert-dialog.component';
 import {GlobalErrorhandlerService} from "./utils/global-errorhandler.service";
-import { CognitiveProfilePageComponent } from './pages/common/cognitive-profile/cognitive-profile-page.component';
+import { CognitiveProfilePageComponent } from './pages/student/cognitive-profile/cognitive-profile-page.component';
 import * as echarts from 'echarts';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { ProfileChartComponent } from './charts/profile-chart/profile-chart.component';

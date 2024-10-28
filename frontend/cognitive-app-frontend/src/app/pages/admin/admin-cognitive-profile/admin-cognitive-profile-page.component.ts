@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {CognitiveProfileService} from "../../../service/cognitive-profile/cognitive-profile.service";
 import {CognitiveProfile} from "../../../model/cognitive_profile.model";
 import {DateRange} from "../../../common/date-picker/date-picker.component";
 import {TEXTS} from "../../../utils/app.text_messages";
 import {User} from "../../../model/user.model";
 import {BehaviorSubject} from "rxjs";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-admin-cognitive-profile',
@@ -20,12 +21,15 @@ export class AdminCognitiveProfilePageComponent implements  OnInit{
   protected loadingProfile = true;
   protected loadingHistory = true;
 
-  constructor(private route: ActivatedRoute, private service: CognitiveProfileService) {}
+  constructor(
+      private router: Router,
+      private location: Location,
+      private route: ActivatedRoute,
+      private service: CognitiveProfileService
+  ) {}
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
-        this.chosenUsername = params.get('username') ?? undefined;
-    });
+    this.chosenUsername = this.route.snapshot.queryParams['username'];
     this.loadProfileData();
   }
 
@@ -33,6 +37,7 @@ export class AdminCognitiveProfilePageComponent implements  OnInit{
     this.chosenUsername = user.username;
     this.loadingProfile = true;
     this.loadProfileData();
+    this.updateUrlParams();
   }
 
   loadProfileData() {
@@ -40,6 +45,10 @@ export class AdminCognitiveProfilePageComponent implements  OnInit{
       this.service.getCurrentProfileOfOtherUser(this.chosenUsername).subscribe(profile => {
         this.currProfileData = profile;
         this.loadingProfile = false;
+      });
+      this.service.getLatestProfilesOfOtherUser(this.chosenUsername).subscribe(profiles => {
+        this.profileHistoryData?.next(profiles);
+        this.loadingHistory = false
       });
     }
   }
@@ -52,6 +61,18 @@ export class AdminCognitiveProfilePageComponent implements  OnInit{
         this.loadingHistory = false;
       });
     }
+  }
+
+  updateUrlParams() {
+    const params = {
+        username: this.chosenUsername
+    };
+    const urlTree = this.router.createUrlTree(['/cognitive-profile-admin'], {
+      relativeTo: this.route,
+      queryParams: params,
+      queryParamsHandling: 'merge',
+    });
+    this.location.go(urlTree.toString());
   }
 
 
