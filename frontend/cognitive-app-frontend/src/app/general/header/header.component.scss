@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 4em;
+  height: 2.5em;
   padding: 1.5em;
 }
 div.menubar{
@@ -18,6 +18,12 @@ button{
 .logo{
   display: flex;
   align-items: center;
+  img{
+    width: 2em;
+    height: 2em;
+    object-fit: contain;
+    cursor: pointer;
+  }
 }
 a{
   display: block;
