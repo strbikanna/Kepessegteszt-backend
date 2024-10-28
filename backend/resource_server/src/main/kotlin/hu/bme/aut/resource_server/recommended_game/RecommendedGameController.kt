@@ -32,11 +32,11 @@ class RecommendedGameController(
             recommendedGameService.getAllRecommendedToUser(authentication.name, pageIndex, pageSize)
     }
 
-    @GetMapping("/by_game")
-        @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'SCIENTIST')")
+    @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'SCIENTIST')")
     @ResponseStatus(HttpStatus.OK)
     fun getRecommendationsByGame(
-        @RequestParam gameId: Int,
+        @RequestParam(required = false) gameId: Int?,
         @RequestParam username: String,
         authentication: Authentication
     ): List<RecommendedGameDto> {
