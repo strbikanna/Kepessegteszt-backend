@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.json)
     //jep
     implementation(libs.ninia.jep)
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
     //h2
     runtimeOnly(libs.h2)
     implementation(libs.spring.boot.starter.webflux)
