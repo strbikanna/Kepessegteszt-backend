@@ -20,7 +20,6 @@ export class CognitiveProfilePageComponent implements OnInit {
     profileDataHistory: BehaviorSubject<CognitiveProfile[]> = new BehaviorSubject<CognitiveProfile[]>([])
     text = TEXTS.cognitive_profile
     contacts!: Observable<User[]>
-    isExpandMoreButtonVisible = true
     loading = true
     loadingProfile = true
 
@@ -35,21 +34,6 @@ export class CognitiveProfilePageComponent implements OnInit {
             this.profileDataHistory.next(profiles)
             this.loading = false
         })
-    }
-
-    onDownClicked() {
-        const chartPosition = document.getElementById('chart')?.offsetTop
-        window.scroll({top: chartPosition, behavior: 'smooth'})
-    }
-
-    onTopClicked() {
-        window.scroll({top: 0, behavior: 'smooth'})
-    }
-
-    @HostListener('window:scroll', ['$event'])
-    onScroll($event: Event) {
-        const chartPosition = document.getElementById('chart')?.offsetTop! - document.getElementById('chart')!.offsetHeight * 0.5
-        this.isExpandMoreButtonVisible = chartPosition >= window.scrollY;
     }
 
     onDateChosen(dateRange: DateRange) {

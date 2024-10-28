@@ -186,7 +186,7 @@ export const TEXTS = {
     date_picker: {
         time_interval: 'Időintervallum',
         title: 'Megtekintés korábbi időpontban',
-        description: 'Válassz egy kezdő és egy végdátumot, hogy megtekinthesd a kognitív profilodat az adott időpontban.',
+        description: 'Válassz egy kezdő és egy végdátumot, hogy megtekinthesd a kognitív profilt az adott időpontban.',
         action: 'Kognitív profil megtekintése',
     },
     wildcard: {
