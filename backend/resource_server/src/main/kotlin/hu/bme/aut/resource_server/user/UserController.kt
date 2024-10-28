@@ -29,7 +29,7 @@ class UserController(
 
     @GetMapping("/profile/inspect")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_TEACHER', 'ROLE_PARENT')")
+    @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_TEACHER', 'ROLE_PARENT', 'ROLE_ADMIN')")
     fun getOtherUserProfile(authentication: Authentication, @RequestParam(required = true) username: String): Deferred<UserProfileDto>
     = authService.doIfIsContact(authentication, username) {
         userService.getUserDtoWithProfileByUsername(username)

@@ -40,6 +40,13 @@ class UserManagementController(
         return userService.getUsersWithoutContactByName(nameText)
     }
 
+    @GetMapping("/contacts/search")
+    @ResponseStatus(HttpStatus.OK)
+    fun getContactsByName(authentication: Authentication, @RequestParam nameText: String): List<UserDto> {
+        val username = authentication.name
+        return userService.getContactDtosByName(username, nameText)
+    }
+
     @GetMapping("/count")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
