@@ -1,9 +1,17 @@
-<app-user-autocomplete (userSelected)="onUserChosen($event)" [multiple]="false"></app-user-autocomplete>
+<div class="flex align-items-center">
+    <div class="w-5">
+        <h1 class="mt-0">{{ userPickerText.choose_contact }}</h1>
+        <p class="description">{{ userPickerText.choose_contact_description }}</p>
+        <app-user-autocomplete (userSelected)="onUserChosen($event)" [multiple]="false"></app-user-autocomplete>
+    </div>
+    <img *ngIf="!chosenUser" src="assets/logos/research.jpg" alt="loading" class="researchImg">
+</div>
+
 <div *ngIf="chosenUser">
     <div class="flex justify-content-between">
         <form [formGroup]="profileQueryForm" (ngSubmit)="onSubmit()" class="flex flex-column align-items-start mt-3">
             <mat-radio-group formControlName="calculationType" class="flex flex-column">
-                <mat-label class="title">{{ text.comparison_type }}</mat-label>
+                <h3 class="mb-2">{{ text.comparison_type }}</h3>
                 <p class="description">{{ text.comparison_type_description }}</p>
                 <mat-radio-button [value]="calculationTypeOptions[0]">{{ text.avg }}</mat-radio-button>
                 <mat-radio-button [value]="calculationTypeOptions[1]">{{ text.min }}</mat-radio-button>
@@ -12,12 +20,12 @@
                     {{ text.error_type_required }}
                 </mat-error>
             </mat-radio-group>
-            <button mat-flat-button color="primary" type="submit"
+            <button mat-flat-button color="primary" type="submit" class="mt-3"
                     (click)="onSubmit()"
                     [disabled]="profileQueryForm.invalid">{{ text.submit }}
             </button>
         </form>
-        <div class="w-6">
+        <div class="w-7 m-2">
             <app-profile-radar-chart
                     [profileDataObservable]="userProfileData"
                     [comparisonDataObservable]="dataToCompare"

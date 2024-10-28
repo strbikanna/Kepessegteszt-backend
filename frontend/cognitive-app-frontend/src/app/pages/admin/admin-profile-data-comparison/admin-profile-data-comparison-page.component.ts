@@ -6,6 +6,7 @@ import {ProfileDataComparisonService} from "../../../service/profile-data-compar
 import {FormBuilder} from "@angular/forms";
 import {AbilityService} from "../../../service/ability/ability.service";
 import {User} from "../../../model/user.model";
+import {TEXTS} from "../../../utils/app.text_messages";
 
 @Component({
   selector: 'app-admin-profile-data-comparison-page',
@@ -17,6 +18,8 @@ export class AdminProfileDataComparisonPageComponent extends ProfileDataComparis
     super(service, formBuilder, abilityService);
   }
   protected chosenUser?: User;
+
+  userPickerText = TEXTS.cognitive_profile.user_picker
 
   override ngOnInit() {
     this.allAbilities = this.abilityService.getAllAbilities();
