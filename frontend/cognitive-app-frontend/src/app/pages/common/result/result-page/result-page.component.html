@@ -23,12 +23,17 @@
                 <h4>{{ text.filter }}</h4>
                 <p *ngIf="isAdmin()">{{ text.username }}</p>
                 <div class="w-full flex mb-2">
-                    <app-user-autocomplete (userSelectionChanged)="onUserNamesChosen($event)"></app-user-autocomplete>
+                    <app-user-autocomplete
+                            (userSelectionChanged)="onUserNamesChosen($event)"
+                            [selectedUserNames]="[getSelectedUserName() ?? '']"
+                            [searchOnlyContacts]="!isAdmin()"
+                    ></app-user-autocomplete>
                 </div>
                 <mat-divider></mat-divider>
                 <p>{{ text.game }}</p>
                 <div class="w-full flex mb-2">
                     <app-game-search [multiple]="true"
+                                     [selectedGameIds]="getSelectedGameIds()"
                                      (onMultipleGameSelected)="onGamesChosen($event)"></app-game-search>
                 </div>
                 <mat-divider></mat-divider>

@@ -179,6 +179,13 @@ export class ResultPageComponent implements OnInit {
         this.location.go(urlTree.toString());
     }
 
+    getSelectedUserName(){
+        return this.route.snapshot.queryParamMap.get('name') ?? undefined;
+    }
+    getSelectedGameIds(){
+        return (this.route.snapshot.queryParamMap.get('chosenGameIds')?.split(',') ?? []).map(Number);
+    }
+
     private loadStateFromUrlParams(){
         this.lastPageEvent.pageIndex = (this.route.snapshot.queryParamMap.get('pageIndex') ?? 0) as number;
         this.lastPageEvent.pageSize = (this.route.snapshot.queryParamMap.get('pageSize') ?? this.defaultPageSize) as number;

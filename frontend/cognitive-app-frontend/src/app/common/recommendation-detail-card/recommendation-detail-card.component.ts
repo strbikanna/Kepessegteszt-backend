@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {RecommendedGame} from "../../model/recommended_game.model";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-recommendation-detail-card',

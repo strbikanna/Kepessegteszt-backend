@@ -10,6 +10,7 @@ import {Recommendation} from "../../../model/recommendation.model";
 import {AuthUser} from "../../../model/user-contacts.model";
 import {Observable, of} from "rxjs";
 import {mockRecommendedGame, RecommendedGame} from "../../../model/recommended_game.model";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -25,7 +26,10 @@ export class RecommendationPageComponent {
     protected existingRecommendations: Observable<RecommendedGame[]> = new Observable<RecommendedGame[]>();
 
 
-    constructor(private service: RecommendationService, private fb: FormBuilder, private _snackbar: MatSnackBar) {
+    constructor(
+        private service: RecommendationService, private fb: FormBuilder,
+        private _snackbar: MatSnackBar, private router: Router
+    ) {
         this.loadExistingRecommendations('Student Simon', 1)
     }
 
@@ -39,16 +43,14 @@ export class RecommendationPageComponent {
                 }, {validators: this.isConfigValid})
             )
         );
-        if(this.chosenUser !== undefined) {
-            this.loadExistingRecommendations(this.chosenUser.username, game.id!!)
+        if (this.chosenUser !== undefined) {
+            this.loadExistingRecommendations(this.chosenUser.username, game.id)
         }
     }
 
     onUserSelected(user: AuthUser) {
         this.chosenUser = user;
-        if(this.chosenGame !== undefined){
-            this.loadExistingRecommendations(user.username, this.chosenGame.id!!)
-        }
+        this.loadExistingRecommendations(user.username, this.chosenGame?.id);
     }
 
     isConfigValid: ValidatorFn = (control: AbstractControl) => {
@@ -87,7 +89,7 @@ export class RecommendationPageComponent {
 
     onSubmit() {
         if (!this.canSaveRecommendation()) return;
-        const config: any ={}
+        const config: any = {}
         this.configForm.controls.forEach(control => {
             const configItem = (control as FormGroup).controls['config'].value as ConfigItem
             config[`${configItem.paramName}`] = (control as FormGroup).controls['setting'].value as number
@@ -101,12 +103,27 @@ export class RecommendationPageComponent {
             this._snackbar.open(this.texts.saved, undefined, {duration: 3000})
         })
     }
+
     filterGamesByActive: (game: Game) => boolean = game => game.active;
-    existingRecommendationsEnabled(){
-        return this.chosenGame !== undefined && this.chosenUser !== undefined;
+
+    existingRecommendationsEnabled() {
+        return this.chosenUser !== undefined;
     }
 
-    private loadExistingRecommendations(username: string, gameId: number){
+    onUserClicked() {
+        if (this.chosenUser) {
+            const params = {username: this.chosenUser.username, name: this.chosenUser.firstName + ' ' + this.chosenUser.lastName}
+            this.router.navigate(['/cognitive-profile-admin'], {queryParams: params})
+        }
+    }
+    onGameClicked(){
+        if(this.chosenGame){
+            const params = {chosenGameIds: this.chosenGame.id, chosenUsernames: this.chosenUser?.username, name: this.chosenUser?.firstName + ' ' + this.chosenUser?.lastName}
+            this.router.navigate(['/result'], {queryParams: params})
+        }
+    }
+
+    private loadExistingRecommendations(username: string, gameId?: number) {
         this.existingRecommendations = this.service.getRecommendationsToUserAndGame(username, gameId);
     }
 

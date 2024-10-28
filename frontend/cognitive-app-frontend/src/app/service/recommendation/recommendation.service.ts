@@ -15,8 +15,11 @@ export class RecommendationService {
   saveRecommendation(recommendation: Recommendation): Observable<RecommendedGame>{
     return this.http.post<RecommendedGame>(`${this.httpService.baseUrl}/recommended_game/recommend`, recommendation);
   }
-  getRecommendationsToUserAndGame(username: string, gameId: number): Observable<RecommendedGame[]>{
-    let params = new HttpParams().set('username', username).set('gameId', gameId);
-    return this.http.get<RecommendedGame[]>(`${this.httpService.baseUrl}/recommended_game/by_game`, {params: params});
+  getRecommendationsToUserAndGame(username: string, gameId?: number): Observable<RecommendedGame[]>{
+    let params = new HttpParams().set('username', username);
+    if(gameId){
+      params = params.set('gameId', gameId.toString());
+    }
+    return this.http.get<RecommendedGame[]>(`${this.httpService.baseUrl}/recommended_game/search`, {params: params});
   }
 }
