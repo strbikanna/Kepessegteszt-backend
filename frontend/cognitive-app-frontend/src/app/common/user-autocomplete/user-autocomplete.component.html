@@ -7,6 +7,9 @@
                matInput
                [formControl]="autocompleteForm"
                [matAutocomplete]="auto">
+        <button *ngIf="autocompleteForm.value" matSuffix mat-icon-button (click)="resetAutoComplete()">
+          <mat-icon>close</mat-icon>
+        </button>
         <mat-hint>{{ text.hint }}</mat-hint>
         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="convertDisplay" (optionSelected)="onUserSelected()">
             <mat-option *ngFor="let option of userOptions" [value]="option">

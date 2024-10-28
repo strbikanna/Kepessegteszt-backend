@@ -17,6 +17,7 @@ export class GameSearchComponent implements OnInit {
     @Input() text = TEXTS.game_auto_complete;
     @Input() multiple = false;
     @Input() filterGamesBy: (game: Game) => boolean = () => true;
+    @Input() selectedGameIds: number[] = [];
     @Output() onGameSelected: EventEmitter<Game> = new EventEmitter<Game>();
     @Output() onMultipleGameSelected: EventEmitter<Game[]> = new EventEmitter<Game[]>();
 
@@ -29,6 +30,9 @@ export class GameSearchComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        if(this.selectedGameIds.length > 0){
+            this.loadSelectedGames();
+        }
         this.service.getExistingGamesPaged(0, 100).subscribe(games => {
             this.defaultGameOptions = games
                 .filter(this.filterGamesBy)
@@ -37,7 +41,7 @@ export class GameSearchComponent implements OnInit {
         });
         this.gameAutocompleteForm.valueChanges.subscribe(value => {
             if (!value) {
-                this.resetAutoComplete();
+                this.filteredGameOptions = this.defaultGameOptions.slice(0, 10);
                 return;
             }
             const name = typeof value === 'string' ? value : value?.name;
@@ -62,6 +66,7 @@ export class GameSearchComponent implements OnInit {
     }
 
     resetAutoComplete() {
+        this.gameAutocompleteForm.setValue('');
         this.filteredGameOptions = this.defaultGameOptions.slice(0, 10);
     }
 
@@ -81,7 +86,6 @@ export class GameSearchComponent implements OnInit {
             this.chosenGames.push(game);
             this.onMultipleGameSelected.emit(this.chosenGames);
         }
-        this.resetAutoComplete();
     }
 
     convertDisplay(game: Game): string {
@@ -92,5 +96,12 @@ export class GameSearchComponent implements OnInit {
         this.chosenGames = this.chosenGames.filter(g => g.id !== game.id);
         this.onMultipleGameSelected.emit(this.chosenGames);
         this.gameAutocompleteForm.setValue('');
+    }
+    private loadSelectedGames() {
+        this.selectedGameIds.forEach(id =>{
+            this.service.getGameById(id).subscribe(game => {
+                this.chosenGames.push(game);
+            })
+        })
     }
 }
