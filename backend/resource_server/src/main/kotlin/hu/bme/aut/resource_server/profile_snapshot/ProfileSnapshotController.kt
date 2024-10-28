@@ -51,7 +51,7 @@ class ProfileSnapshotController(
      */
     @GetMapping("/inspect")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_TEACHER', 'ROLE_PARENT')")
+    @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_TEACHER', 'ROLE_PARENT', 'ROLE_ADMIN')")
     fun getSnapshotsOfOtherUsers(
         authentication: Authentication,
         @RequestParam(required = true) username: String,
