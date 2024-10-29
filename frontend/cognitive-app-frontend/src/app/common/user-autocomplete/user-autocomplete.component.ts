@@ -44,7 +44,9 @@ export class UserAutocompleteComponent implements OnInit {
                 this.defaultUserOptions = users;
             });
         }
+        this.selectedUserNames = this.selectedUserNames.filter(name => name && name.trim() !== '');
         if(this.selectedUserNames.length > 0){
+            console.log(this.selectedUserNames);
             this.loadUsersByName(this.selectedUserNames);
         }
         this.autocompleteForm.valueChanges.subscribe(value => {
