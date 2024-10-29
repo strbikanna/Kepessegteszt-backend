@@ -1,0 +1,18 @@
+<div class="w-min">
+    <h4>{{title ?? text.title}}</h4>
+    <p>{{subtitle ?? text.description}}</p>
+    <mat-form-field>
+        <mat-label>{{text.time_interval}}</mat-label>
+        <mat-date-range-input [formGroup]="dateForm" [rangePicker]="picker">
+            <input matStartDate formControlName="start">
+            <input matEndDate formControlName="end">
+        </mat-date-range-input>
+        <mat-hint>HH/NN/ÉÉÉÉ – HH/NN/ÉÉÉÉ</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+
+        <mat-error *ngIf="dateForm.controls.start.hasError('matStartDateInvalid')">{{errorText.invalide_start_date}}</mat-error>
+        <mat-error *ngIf="dateForm.controls.end.hasError('matEndDateInvalid')">{{errorText.invalide_end_date}}</mat-error>
+    </mat-form-field>
+    <button mat-flat-button (click)="onDateChosen()" class="block mt-2" >{{buttonText ?? text.action}}</button>
+</div>

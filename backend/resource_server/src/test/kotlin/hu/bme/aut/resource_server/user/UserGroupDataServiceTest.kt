@@ -30,11 +30,6 @@ class UserGroupDataServiceTest(
         saveUsers()
     }
 
-    @AfterEach
-    fun clearDb() {
-        testService.emptyRepositories()
-    }
-
     @Test
     @Transactional
     fun shouldAddUserToGroup() {

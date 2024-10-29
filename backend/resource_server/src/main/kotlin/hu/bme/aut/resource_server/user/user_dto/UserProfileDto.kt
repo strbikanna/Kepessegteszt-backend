@@ -1,6 +1,6 @@
 package hu.bme.aut.resource_server.user.user_dto
 
-import hu.bme.aut.resource_server.profile.ProfileItem
+import hu.bme.aut.resource_server.profile.dto.ProfileItem
 import hu.bme.aut.resource_server.user.UserEntity
 
 class UserProfileDto(

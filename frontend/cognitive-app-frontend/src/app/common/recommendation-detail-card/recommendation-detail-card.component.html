@@ -1,0 +1,25 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title class="flex align-items-center">
+            {{ recommendation.name }}
+            <mat-icon *ngIf="recommendation.completed" color="primary" class="ml-3">check_circle</mat-icon>
+        </mat-card-title>
+        <mat-card-subtitle>
+            {{ recommendation.recommendationDate }}
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="flex align-items-center my-2 cursor-pointer">
+            <mat-icon class="p-0 mr-3 ">person</mat-icon>
+            {{ recommendation.recommendedTo }}
+        </div>
+        <div class="flex">
+            <mat-icon class="mr-3">settings</mat-icon>
+            <div>
+                <p *ngFor="let key of getConfigKeys()" class="description mt-0 mb-1">{{ key }}: {{ recommendation.config[key] }}
+                </p>
+            </div>
+        </div>
+
+    </mat-card-content>
+</mat-card>

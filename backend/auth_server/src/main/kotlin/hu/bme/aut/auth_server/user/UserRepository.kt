@@ -1,5 +1,8 @@
 package hu.bme.aut.auth_server.user
 
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.PagingAndSortingRepository
@@ -10,7 +13,19 @@ import java.util.*
  */
 interface UserRepository : CrudRepository<UserEntity, Int>, PagingAndSortingRepository<UserEntity, Int> {
     fun findByUsername(username: String): Optional<UserEntity>
+    fun findByUsernameIn(username: List<String>): List<UserEntity>
     fun existsByUsername(userName: String): Boolean
+    fun findByFirstNameLikeOrLastNameLike(
+        firstName: String,
+        lastName: String,
+        pageable: Pageable,
+    ): Page<UserEntity>
+
+    fun findByFirstNameLikeAndLastNameLike(
+        firstName: String,
+        lastName: String,
+        pageable: Pageable,
+    ): Page<UserEntity>
 
     @Query(
         value = "select distinct u1.id, u1.username, u1.email, u1.password, u1.first_name, u1.last_name, u1.enabled " +

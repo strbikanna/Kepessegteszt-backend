@@ -7,6 +7,7 @@
             <mat-form-field>
                 <mat-label>{{ text.group_selection }}</mat-label>
                 <mat-select formControlName="userGroupId">
+                    <mat-option value="{{undefined}}">{{ '' }}</mat-option>
                     <mat-option *ngFor="let group of availableGroups | async" [value]="group.id">{{ group.name }}
                     </mat-option>
                 </mat-select>

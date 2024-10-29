@@ -18,8 +18,9 @@ interface RecommendedGameRepository: CrudRepository<RecommendedGameEntity, Long>
     fun findAllPagedByRecommendedTo(recommendedTo: UserEntity, page: Pageable): List<RecommendedGameEntity>
     fun findAllSortedByRecommendedTo(recommendedTo: UserEntity, sort: Sort): List<RecommendedGameEntity>
     fun findTopByTimestampBeforeAndRecommendedToAndGameOrderByTimestamp(timestamp: LocalDateTime, recommendedTo: UserEntity, game: GameEntity): RecommendedGameEntity?
-
+    fun findAllByRecommenderAndRecommendedTo(recommender: UserEntity, recommendedTo: UserEntity): List<RecommendedGameEntity>
     fun findByRecommendedToAndGameAndCompletedAndRecommender(user: UserEntity, game: GameEntity, completed: Boolean, recommender: UserEntity?): List<RecommendedGameEntity>
+    fun findByRecommendedToAndGameAndRecommender(user: UserEntity, game: GameEntity, recommender: UserEntity?): List<RecommendedGameEntity>
 
     @Query(
         "select rg from RecommendedGameEntity rg where rg.recommendedTo = :user and rg.completed = true " +
