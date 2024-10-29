@@ -7,6 +7,6 @@ export const colorSet = [
 ]
 
 export const candleStickChartColors = {
-    colorGreen: '#63a863',
-    colorRed: '#833030',
+    colorGreen: '#337357',
+    colorRed: '#DF826C',
 }

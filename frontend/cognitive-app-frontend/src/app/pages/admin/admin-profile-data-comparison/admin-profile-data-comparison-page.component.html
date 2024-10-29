@@ -1,13 +1,13 @@
 <div class="flex align-items-center">
     <div class="w-5">
-        <h1 class="mt-0">{{ userPickerText.choose_contact }}</h1>
+        <h1 class="mt-0">{{ userPickerText.choose_contact }} {{nameOfUser ? ' - '+nameOfUser : ''}}</h1>
         <p class="description">{{ userPickerText.choose_contact_description }}</p>
         <app-user-autocomplete (userSelected)="onUserChosen($event)" [multiple]="false"></app-user-autocomplete>
     </div>
-    <img *ngIf="!chosenUser" src="assets/logos/research.jpg" alt="loading" class="researchImg">
+    <img *ngIf="!chosenUsername" src="assets/logos/research.jpg" alt="loading" class="researchImg">
 </div>
 
-<div *ngIf="chosenUser">
+<div *ngIf="chosenUsername">
     <div class="flex justify-content-between">
         <form [formGroup]="profileQueryForm" (ngSubmit)="onSubmit()" class="flex flex-column align-items-start mt-3">
             <mat-radio-group formControlName="calculationType" class="flex flex-column">
@@ -42,8 +42,8 @@
             <app-user-filter [availableGroups]="groups" [availableAbilities]="allAbilities"
                              (filterChange)="setUserFilter($event)"/>
         </mat-expansion-panel>
-        <div class="chart">
-            <app-candlestick-chart [data]="[]"></app-candlestick-chart>
+        <div class="w-full h-30rem">
+            <app-candlestick-chart [data]="getCandleStickData()"></app-candlestick-chart>
         </div>
     </div>
 </div>

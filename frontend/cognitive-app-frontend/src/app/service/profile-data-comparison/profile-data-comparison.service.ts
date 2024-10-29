@@ -6,6 +6,7 @@ import {ProfileData} from "../../model/profile_data.model";
 import {Ability, AbilityType} from "../../model/ability.model";
 import {UserGroup} from "../../model/user_group.model";
 import {UserFilter} from "../../common/user-filter/user-filter.model";
+import {ProfileStatistics} from "../../model/profile-statistics.model";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,6 @@ export class ProfileDataComparisonService {
     const params = userName ? new HttpParams().set('username', userName) : new HttpParams();
     return this.http.get(this.httpService.baseUrl + route, {params: params}).pipe(
         map((response: any) =>{
-          console.log(response);
             return response.filter(
                 (item: any) => item.ability.type === AbilityType.FLOAT.valueOf()
             )
@@ -69,6 +69,27 @@ export class ProfileDataComparisonService {
     }
     const route = username ? '/user/group_profile/aggregate/inspect' : '/user/group_profile/aggregate';
     return this.http.post<ProfileData[]>(`${this.httpService.baseUrl}${route}`, userFilter, {params: params}).pipe(
+        retry(3),
+    )
+  }
+
+  getProfileStatisticsOfGroup(filter: UserFilter | undefined, username: string): Observable<ProfileStatistics[]> {
+    let params = new HttpParams();
+    if(filter?.userGroupId){
+        params = params.set('userGroupId', filter.userGroupId);
+    }
+    params = params.set('username', username);
+    let userFilter = null;
+    if(filter){
+      userFilter ={
+        ageMin: filter.ageMin,
+        ageMax: filter.ageMax,
+        addressCity: filter.addressCity,
+        addressZip: filter.addressZip,
+        abilityFilter: filter.abilityFilter
+      }
+    }
+    return this.http.post<ProfileStatistics[]>(`${this.httpService.baseUrl}/user/group_profile/statistics`, userFilter, {params: params}).pipe(
         retry(3),
     )
   }
