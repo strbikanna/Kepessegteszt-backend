@@ -1,23 +1,13 @@
 package hu.bme.aut.resource_server.user
 
-import hu.bme.aut.resource_server.ability.AbilityEntity
-import hu.bme.aut.resource_server.profile.ProfileItem
 import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
-import hu.bme.aut.resource_server.user_group.UserGroupDto
-import hu.bme.aut.resource_server.user_group.UserGroupRepository
-import hu.bme.aut.resource_server.user_group.group.GroupRepository
-import hu.bme.aut.resource_server.user_group.organization.OrganizationRepository
-import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
 class UserService(
         @Autowired private var userRepository: UserRepository,
-        @Autowired private var groupRepository: GroupRepository,
-        @Autowired private var orgRepository: OrganizationRepository,
-        @Autowired private var uGroupRepository: UserGroupRepository,
 ){
     fun getAllUsers(): List<PlainUserDto>{
         return userRepository.findAll().map { PlainUserDto(it) }
