@@ -46,8 +46,6 @@
     <h2 class="text-left" *ngIf="!descriptionLoading">{{llmText.llm_text}}</h2>
     <p class="description">{{comparisonDescription?.abilitiesAsText}}</p>
     <mat-progress-bar *ngIf="descriptionLoading" mode="buffer"></mat-progress-bar>
-    <mat-progress-bar *ngIf="descriptionLoading" mode="indeterminate"></mat-progress-bar>
-    <p>{{comparisonDescription}}</p>
     <div class="w-10">
         <mat-expansion-panel class="w-full" [expanded]="filterExpanded" (opened)="filterExpanded=true">
             <mat-expansion-panel-header>
