@@ -2,6 +2,9 @@
     <app-profile-card *ngIf="!loadingProfile" [profileData]="currentProfileData" id="card"></app-profile-card>
     <mat-progress-bar *ngIf="loadingProfile" mode="buffer"></mat-progress-bar>
     <div class="w-min" *ngIf="!loading">
+        <h3 >{{text.llm.llm_text}}</h3>
+        <p class="description">{{profileDescription}}</p>
+        <mat-progress-bar *ngIf="loadingDescription" mode="buffer"></mat-progress-bar>
         <app-date-picker (dateChosen)="onDateChosen($event)"></app-date-picker>
     </div>
 </div>

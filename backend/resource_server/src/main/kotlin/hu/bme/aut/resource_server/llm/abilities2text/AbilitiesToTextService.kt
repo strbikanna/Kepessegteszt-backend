@@ -3,7 +3,7 @@ package hu.bme.aut.resource_server.llm.abilities2text
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.model.chat.ChatLanguageModel
-import hu.bme.aut.resource_server.profile.ProfileItem
+import hu.bme.aut.resource_server.profile.dto.ProfileItem
 
 abstract class AbilitiesToTextService {
     protected open val promptTemplate = "Alakítsd át a következő Cattell–Horn–Carroll (CHC) elmélet képességértékeket " +

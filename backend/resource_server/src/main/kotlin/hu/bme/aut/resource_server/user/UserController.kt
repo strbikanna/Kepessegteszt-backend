@@ -120,27 +120,28 @@ class UserController(
     @ResponseStatus(HttpStatus.OK)
     suspend fun getAbilitiesAsText(
         authentication: Authentication,
+        @RequestParam(required = false) requestedUsername: String?,
         @RequestParam(required = false) prompt: String = "",
     ): AbiltityToTextDto {
-        val username = authentication.name
+        val username = requestedUsername ?: authentication.name
         val userAbilities = userService.getUserDtoWithProfileByUsername(username).profile.toList()
-
         // Should be called in a coroutine or a suspend function
         return abilitiesToTextService.generateFromAbilities(userAbilities, prompt)
     }
 
-    @GetMapping("/profile/abilities-as-text-to-group")
+    @PostMapping("/profile/abilities-as-text-to-group")
     @ResponseStatus(HttpStatus.OK)
     suspend fun getAbilitiesAsTextToGroup(
         authentication: Authentication,
+        @RequestParam(required = false) requestedUsername: String?,
         @RequestParam(required = false) userGroupId: Int?,
         @RequestParam(required = false) prompt: String = "",
         @RequestBody(required = false) filterDto: UserFilterDto?
     ): AbiltityToTextDto {
-        val username = authentication.name
+        val username = requestedUsername ?: authentication.name
         val userAbilities = userService.getUserDtoWithProfileByUsername(username).profile.toList()
 
-        val user = userService.getUserEntityWithProfileByUsername(authentication.name)
+        val user = userService.getUserEntityWithProfileByUsername(username)
         val abilities = user.profileFloat.map { it.ability }.toSet()
         // IntelliJ IDEA suggests to put it in withContext(Dispatchers.IO) when called in a suspend function
         val groupAbilities = withContext(Dispatchers.IO) {
