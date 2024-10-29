@@ -32,6 +32,17 @@ springdoc:
   api-docs:
     path: /api-docs
 
+llms:
+  mistral:
+    api-key:
+    model-name: mistral-large-latest
+  openai:
+    api-key:
+    model-name: gpt-4o-mini
+  gemini:
+    api-key:
+    model-name: gemini-1.5-flash
+
 app:
   python:
     # Indicates if Python environment is present

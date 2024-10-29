@@ -27,6 +27,11 @@ class UserGroupDataService(
     }
 
     @Transactional
+    fun getGroupById(groupId: Int): UserGroupDto {
+        return groupRepository.findById(groupId).orElseThrow().toDto()
+    }
+
+    @Transactional
     fun addUserToGroup(username: String, groupId: Int){
         val user = userRepository.findByUsername(username).orElseThrow()
         val group = groupRepository.findById(groupId).orElseThrow()

@@ -7,6 +7,7 @@ import {Ability, AbilityType} from "../../model/ability.model";
 import {UserGroup} from "../../model/user_group.model";
 import {UserFilter} from "../../common/user-filter/user-filter.model";
 import {ProfileStatistics} from "../../model/profile-statistics.model";
+import {ProfileDescription} from "../../model/ProfileDescription";
 
 @Injectable({
   providedIn: 'root'
@@ -92,6 +93,30 @@ export class ProfileDataComparisonService {
     return this.http.post<ProfileStatistics[]>(`${this.httpService.baseUrl}/user/group_profile/statistics`, userFilter, {params: params}).pipe(
         retry(3),
     )
+  }
+
+  getComparisonDescription(filter?: UserFilter, prompt?: string, username?: string): Observable<ProfileDescription> {
+    let params = new HttpParams();
+    if(prompt){
+      params = params.set('prompt', prompt);
+    }
+    if(username){
+      params = params.set('requestedUsername', username);
+    }
+    if(filter?.userGroupId){
+      params = params.set('userGroupId', filter.userGroupId);
+    }
+    let userFilter = null;
+    if(filter){
+      userFilter ={
+        ageMin: filter.ageMin,
+        ageMax: filter.ageMax,
+        addressCity: filter.addressCity,
+        addressZip: filter.addressZip,
+        abilityFilter: filter.abilityFilter
+      }
+    }
+    return this.http.post<ProfileDescription>(this.httpService.baseUrl + '/user/profile/abilities-as-text-to-group',userFilter, {params: params});
   }
 
 }

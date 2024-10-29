@@ -7,6 +7,7 @@ import {TEXTS} from "../../../utils/app.text_messages";
 import {User} from "../../../model/user.model";
 import {BehaviorSubject} from "rxjs";
 import {Location} from "@angular/common";
+import {ProfileDescription} from "../../../model/ProfileDescription";
 
 @Component({
   selector: 'app-admin-cognitive-profile',
@@ -17,9 +18,12 @@ export class AdminCognitiveProfilePageComponent implements  OnInit{
   text = TEXTS.cognitive_profile
   protected chosenUsername?: string;
   protected currProfileData?: CognitiveProfile;
+  protected profileDescription?: ProfileDescription;
   protected profileHistoryData: BehaviorSubject<CognitiveProfile[]> = new BehaviorSubject<CognitiveProfile[]>([]);
   protected loadingProfile = true;
   protected loadingHistory = true;
+  protected loadingDescription = true;
+  protected prompt = '';
 
   constructor(
       private router: Router,
@@ -50,7 +54,19 @@ export class AdminCognitiveProfilePageComponent implements  OnInit{
         this.profileHistoryData?.next(profiles);
         this.loadingHistory = false
       });
+      this.service.getProfileDescription(undefined, this.chosenUsername).subscribe(description => {
+        this.profileDescription = description;
+        this.loadingDescription = false
+      });
     }
+  }
+
+  onSubmitPrompt() {
+    this.loadingDescription = true;
+    this.service.getProfileDescription(this.prompt, this.chosenUsername).subscribe(description => {
+        this.profileDescription = description;
+        this.loadingDescription = false;
+    });
   }
 
   onDatesChosen(dateRange: DateRange) {
@@ -74,6 +90,5 @@ export class AdminCognitiveProfilePageComponent implements  OnInit{
     });
     this.location.go(urlTree.toString());
   }
-
-
 }
+
