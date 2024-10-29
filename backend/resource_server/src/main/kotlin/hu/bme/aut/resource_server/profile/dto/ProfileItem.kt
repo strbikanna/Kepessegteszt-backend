@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.profile
+package hu.bme.aut.resource_server.profile.dto
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
 
