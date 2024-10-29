@@ -36,7 +36,7 @@ export class ResultPageComponent implements OnInit {
     @ViewChild('paginator') paginator!: MatPaginator
 
     private chosenSortElement: SortElement = {sortElement: undefined, sortDirection: undefined};
-    private chosenUserNames: string[] = [];
+    private chosenUsernames: string[] = [];
     private chosenGameIds: number[] = [];
     private chosenPassed: boolean | undefined = undefined;
 
@@ -68,7 +68,7 @@ export class ResultPageComponent implements OnInit {
     }
 
     onUserNamesChosen(users: AuthUser[] | undefined) {
-        this.chosenUserNames = users?.map(u => u.username) ?? [];
+        this.chosenUsernames = users?.map(u => u.username) ?? [];
         this.updateUrlParams();
     }
 
@@ -139,8 +139,8 @@ export class ResultPageComponent implements OnInit {
         if (this.chosenGameIds.length > 0) {
             options.gameIds = this.chosenGameIds;
         }
-        if (this.chosenUserNames.length > 0) {
-            options.usernames = this.chosenUserNames;
+        if (this.chosenUsernames.length > 0) {
+            options.usernames = this.chosenUsernames;
         }
         if (this.chosenPassed !== undefined) {
             options.passed = this.chosenPassed;
@@ -167,7 +167,7 @@ export class ResultPageComponent implements OnInit {
             pageSize : this.lastPageEvent.pageSize,
             sortBy: this.chosenSortElement.sortElement,
             sortOrder: this.chosenSortElement.sortDirection,
-            chosenUserNames : this.chosenUserNames,
+            chosenUserNames : this.chosenUsernames,
             chosenGameIds : this.chosenGameIds,
             chosenPassed : this.chosenPassed,
         }
@@ -180,7 +180,7 @@ export class ResultPageComponent implements OnInit {
     }
 
     getSelectedUserName(){
-        return this.route.snapshot.queryParamMap.get('name') ?? undefined;
+        return this.route.snapshot.queryParamMap.get('chosenUserNames') ?? undefined;
     }
     getSelectedGameIds(){
         return (this.route.snapshot.queryParamMap.get('chosenGameIds')?.split(',') ?? []).map(Number);
@@ -193,7 +193,7 @@ export class ResultPageComponent implements OnInit {
             sortElement: this.route.snapshot.queryParamMap.get('sortBy') ?? undefined,
             sortDirection: (this.route.snapshot.queryParamMap.get('sortOrder') ?? undefined) as 'ASC' | 'DESC' | undefined,
         }
-        this.chosenUserNames = this.route.snapshot.queryParamMap.get('chosenUserNames')?.split(',') ?? [];
+        this.chosenUsernames = this.route.snapshot.queryParamMap.get('chosenUserNames')?.split(',') ?? [];
         this.chosenGameIds = (this.route.snapshot.queryParamMap.get('chosenGameIds')?.split(',') ?? []).map(Number);
         if(this.route.snapshot.queryParamMap.get('chosenPassed')) {
             this.chosenPassed = this.route.snapshot.queryParamMap.get('chosenPassed') === 'true';

@@ -29,7 +29,10 @@ class UserManagementController(
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
-    fun getAll(@RequestParam pageNumber: Int?, @RequestParam pageSize: Int?): List<UserDto> {
+    fun getAll(@RequestParam pageNumber: Int?, @RequestParam pageSize: Int?, @RequestParam(required = false) usernames: List<String>?): List<UserDto> {
+        if(usernames!=null){
+            return userService.getAllByUsernames(usernames)
+        }
         return userService.getUsersWithoutContact(pageNumber, pageSize)
     }
 

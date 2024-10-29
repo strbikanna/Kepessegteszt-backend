@@ -13,6 +13,7 @@ import java.util.*
  */
 interface UserRepository : CrudRepository<UserEntity, Int>, PagingAndSortingRepository<UserEntity, Int> {
     fun findByUsername(username: String): Optional<UserEntity>
+    fun findByUsernameIn(username: List<String>): List<UserEntity>
     fun existsByUsername(userName: String): Boolean
     fun findByFirstNameLikeOrLastNameLike(
         firstName: String,

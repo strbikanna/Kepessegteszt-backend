@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {CognitiveProfileService} from "../../../service/cognitive-profile/cognitive-profile.service";
 import {CognitiveProfile} from "../../../model/cognitive_profile.model";
@@ -25,7 +25,7 @@ export class AdminCognitiveProfilePageComponent implements  OnInit{
       private router: Router,
       private location: Location,
       private route: ActivatedRoute,
-      private service: CognitiveProfileService
+      private service: CognitiveProfileService,
   ) {}
 
   ngOnInit() {

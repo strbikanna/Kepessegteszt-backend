@@ -9,7 +9,7 @@
                    aria-label="Select page"
                    (page)="handlePageEvent($event)">
     </mat-paginator>
-    <app-csv-download-button [csvLink]="resultService.csvPath"></app-csv-download-button>
+    <app-csv-download-button *ngIf="isAdmin()" [csvLink]="resultService.csvPath"></app-csv-download-button>
 </div>
 <div class="flex align-items-center lg:w-4 sm:w-6 justify-content-evenly mb-2">
     <mat-icon color="primary">swap_vert</mat-icon>
@@ -22,10 +22,10 @@
             <div class="filter">
                 <h4>{{ text.filter }}</h4>
                 <p *ngIf="isAdmin()">{{ text.username }}</p>
-                <div class="w-full flex mb-2">
+                <div *ngIf="isAdmin()" class="w-full flex mb-2">
                     <app-user-autocomplete
                             (userSelectionChanged)="onUserNamesChosen($event)"
-                            [selectedUserNames]="[getSelectedUserName() ?? '']"
+                            [selectedUsernames]="[getSelectedUserName() ?? '']"
                             [searchOnlyContacts]="!isAdmin()"
                     ></app-user-autocomplete>
                 </div>

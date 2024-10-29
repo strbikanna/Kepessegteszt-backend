@@ -17,7 +17,7 @@ export class UserAutocompleteComponent implements OnInit {
     @Input() text = TEXTS.user_autocomplete;
     @Input() multiple = true;
     @Input() searchOnlyContacts = true;
-    @Input() selectedUserNames: string[] = [];
+    @Input() selectedUsernames: string[] = [];
     /**
      * emits the actually selected users
      */
@@ -44,10 +44,9 @@ export class UserAutocompleteComponent implements OnInit {
                 this.defaultUserOptions = users;
             });
         }
-        this.selectedUserNames = this.selectedUserNames.filter(name => name && name.trim() !== '');
-        if(this.selectedUserNames.length > 0){
-            console.log(this.selectedUserNames);
-            this.loadUsersByName(this.selectedUserNames);
+        this.selectedUsernames = this.selectedUsernames.filter(name => name && name.trim() !== '');
+        if(this.selectedUsernames.length > 0){
+            this.loadUsersByUsername(this.selectedUsernames);
         }
         this.autocompleteForm.valueChanges.subscribe(value => {
             const name = typeof value === 'string' ? value : value?.firstName + ' ' + value?.lastName;
@@ -115,19 +114,10 @@ export class UserAutocompleteComponent implements OnInit {
         this.autocompleteForm.setValue('');
     }
 
-    private loadUsersByName(usersNames: string[]) {
+    private loadUsersByUsername(usernames: string[]) {
         this.selectedUsers = [];
-        usersNames.forEach(name => {
-            if(this.searchOnlyContacts){
-                this.service.searchContactsByName(name)?.subscribe(users => {
-                    this.selectedUsers.push(...users)
-                });
-            }else{
-                this.service.searchUsersByName(name)?.subscribe(users => {
-                    this.selectedUsers.push(...users)
-                });
-            }
+        this.service.getAllByUsernames(usernames).subscribe(users => {
+          this.selectedUsers = users;
         });
-
     }
 }

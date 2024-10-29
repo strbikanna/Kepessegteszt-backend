@@ -83,6 +83,9 @@ class UserManagementService(
         return users.map { entity -> convertUserDto(entity) }
     }
 
+    @Transactional
+    fun getAllByUsernames(usernames: List<String>): List<UserDto> = userRepository.findByUsernameIn(usernames).map { convertUserDto(it) }
+
     fun getUsersWithoutContactByName(nameString: String): List<UserDto> {
         val names = nameString.split(" ")
         if (names.size > 1) {

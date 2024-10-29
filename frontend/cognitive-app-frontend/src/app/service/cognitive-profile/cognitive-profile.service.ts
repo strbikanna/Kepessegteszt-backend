@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {catchError, map, Observable, of, retry,} from "rxjs";
+import {catchError, map, Observable, of, retry, tap,} from "rxjs";
 import {CognitiveProfile} from "../../model/cognitive_profile.model";
 import {Ability} from "../../model/ability.model";
 import {AppConstants} from "../../utils/constants";
@@ -73,7 +73,7 @@ export class CognitiveProfileService {
         return this.http.get<CognitiveProfile>(`${this.helper.baseUrl}${this.profileEndpoint}${this.inspectPath}`, {params: params}).pipe(
             retry(3),
             catchError(this.helper.handleHttpError),
-            map((res: any) => this.convertToCognitiveProfile(res.profile)[0])
+            map((res: any) => this.convertToCurrentProfile(res))
         )
     }
 
@@ -109,15 +109,6 @@ export class CognitiveProfileService {
         )
     }
 
-    /**
-     * returns all contacts of user logged in
-     */
-    getContacts(): Observable<User[]> {
-        return this.http.get<User[]>(`${AppConstants.authServerUrl}/user/impersonation_contacts`).pipe(
-            retry(3),
-            catchError(this.helper.handleHttpError),
-        )
-    }
 
     /**
      * converts server data to client side model
@@ -145,5 +136,16 @@ export class CognitiveProfileService {
             }
         })
         return model
+    }
+
+    private convertToCurrentProfile(items: any[]): CognitiveProfile {
+        let profileItems = new Map<Ability, any>()
+        items.forEach(item => {
+            profileItems.set(item.ability, item.value)
+        })
+        return {
+            timestamp: new Date(),
+            profileItems: profileItems
+        }
     }
 }

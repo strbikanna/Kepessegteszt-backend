@@ -118,7 +118,7 @@ export class RecommendationPageComponent {
     }
     onGameClicked(){
         if(this.chosenGame){
-            const params = {chosenGameIds: this.chosenGame.id, chosenUsernames: this.chosenUser?.username, name: this.chosenUser?.firstName + ' ' + this.chosenUser?.lastName}
+            const params = {chosenGameIds: this.chosenGame.id, chosenUserNames: this.chosenUser?.username}
             this.router.navigate(['/result'], {queryParams: params})
         }
     }

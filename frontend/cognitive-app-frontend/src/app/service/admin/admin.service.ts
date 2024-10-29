@@ -50,6 +50,14 @@ export class AdminService {
             );
     }
 
+    getAllByUsernames(usernames: string[]): Observable<AuthUser[]> {
+        let params = new HttpParams().set('usernames', usernames.join(','));
+        return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/user/all`, {params: params})
+            .pipe(
+                retry(3)
+            );
+    }
+
     getContactsOfUser(user: AuthUser): Observable<AuthUser[]> {
         return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/user/${user.id}/contacts`)
             .pipe(

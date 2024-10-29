@@ -15,7 +15,8 @@ div{
   align-items: center;
   justify-content: space-evenly;
   padding-top: 3em;
-  padding-bottom: 7em;
+  padding-bottom: 4em;
+  margin-right: 3em;
   p{
     font-size: small;
     color: dimgrey;
@@ -28,16 +29,9 @@ div{
 }
 
 #chart{
-  padding-top: 7em;
+  padding-top: 2em;
   padding-bottom: 7em;
 }
 #card{
   width: 50%;
-}
-#user-chooser{
-  margin-left: 1em;
-  background-color: #C3ACD0;
-}
-#user-picker-container{
-  padding-left: 5%;
 }
