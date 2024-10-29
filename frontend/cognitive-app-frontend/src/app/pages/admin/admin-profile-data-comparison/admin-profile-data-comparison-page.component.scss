@@ -1,0 +1,12 @@
+:host{
+  width: 100%;
+  padding: 3em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.researchImg{
+  width: 70%;
+  object-fit: cover;
+  margin-left: 5em;
+}

@@ -1,7 +1,7 @@
 package hu.bme.aut.resource_server.user
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
-import hu.bme.aut.resource_server.profile.ProfileItem
+import hu.bme.aut.resource_server.profile.dto.ProfileItem
 import hu.bme.aut.resource_server.user.filter.UserFilterDto
 import hu.bme.aut.resource_server.user.filter.UserSpecification
 import hu.bme.aut.resource_server.user_group.UserGroupDto
@@ -59,6 +59,10 @@ class UserGroupDataService(
         return userRepository.findAll(UserSpecification(filter)).map { it.id!! }
     }
 
+    fun getAllValuesOfAbility(abilityCode: String): List<Double> {
+        return userRepository.getAllAbilityValues(abilityCode)
+    }
+
     @Transactional
     fun getAbilityValuesInUserGroupAscending(groupId: Int, abilityCode: String): List<Double> {
         val group = uGroupRepository.findById(groupId).orElseThrow()
@@ -113,7 +117,7 @@ class UserGroupDataService(
                 abilityToAggregate[it] = aggregateValue
             }
         }
-        return abilityToAggregate.map { ProfileItem(it.key, it.value)}
+        return abilityToAggregate.map { ProfileItem(it.key, it.value) }
     }
 
     private fun getUserIdsInGroup(groupId: Int): List<Int> {

@@ -18,13 +18,15 @@ interface RecommendedGameRepository: CrudRepository<RecommendedGameEntity, Long>
     fun findAllPagedByRecommendedTo(recommendedTo: UserEntity, page: Pageable): List<RecommendedGameEntity>
     fun findAllSortedByRecommendedTo(recommendedTo: UserEntity, sort: Sort): List<RecommendedGameEntity>
     fun findTopByTimestampBeforeAndRecommendedToAndGameOrderByTimestamp(timestamp: LocalDateTime, recommendedTo: UserEntity, game: GameEntity): RecommendedGameEntity?
-
+    fun findAllByRecommenderAndRecommendedTo(recommender: UserEntity, recommendedTo: UserEntity): List<RecommendedGameEntity>
     fun findByRecommendedToAndGameAndCompletedAndRecommender(user: UserEntity, game: GameEntity, completed: Boolean, recommender: UserEntity?): List<RecommendedGameEntity>
+    fun findByRecommendedToAndGameAndRecommender(user: UserEntity, game: GameEntity, recommender: UserEntity?): List<RecommendedGameEntity>
 
     @Query(
         "select rg from RecommendedGameEntity rg where rg.recommendedTo = :user and rg.completed = true " +
-                "and rg.game.active = true " +
-                "group by rg.game order by min(rg.timestamp) asc"
+                "and rg.game.active = true and rg.timestamp = (" +
+                "select min(rg2.timestamp) from RecommendedGameEntity rg2 where rg2.game = rg.game and rg2.recommendedTo = :user and rg2.completed = true and rg2.game.active = true" +
+                ") order by rg.timestamp asc"
     )
     fun findLatestCompleted(user: UserEntity): List<RecommendedGameEntity>
 }

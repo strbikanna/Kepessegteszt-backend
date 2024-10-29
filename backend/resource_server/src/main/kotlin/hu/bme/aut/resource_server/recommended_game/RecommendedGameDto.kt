@@ -18,5 +18,11 @@ data class RecommendedGameDto(
         val recommendationDate: LocalDateTime,
 
         val recommender: String,
+
+        val recommendedTo: String,
+
+        val completed: Boolean,
+
+        val config: Map<String, Any>
 ) {
 }

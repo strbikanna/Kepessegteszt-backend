@@ -1,0 +1,29 @@
+<div class="mb-2">
+    <mat-form-field>
+        <mat-label>{{ text.label }}</mat-label>
+        <input type="text"
+               placeholder="{{text.placeholder}}"
+               aria-label="Text"
+               matInput
+               [formControl]="autocompleteForm"
+               [matAutocomplete]="auto">
+        <button *ngIf="autocompleteForm.value" matSuffix mat-icon-button (click)="resetAutoComplete()">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-hint>{{ text.hint }}</mat-hint>
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="convertDisplay" (optionSelected)="onUserSelected()">
+            <mat-option *ngFor="let option of userOptions" [value]="option">
+                {{ option.firstName }} {{ option.lastName }}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+</div>
+<div *ngIf="multiple">
+    <mat-chip *ngFor="let user of selectedUsers" removable (removed)="onUserRemoved(user)">
+        {{ user.firstName }} {{ user.lastName }}
+        <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </mat-chip>
+</div>
+

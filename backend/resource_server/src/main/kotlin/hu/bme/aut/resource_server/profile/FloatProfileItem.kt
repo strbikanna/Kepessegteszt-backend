@@ -2,6 +2,7 @@ package hu.bme.aut.resource_server.profile
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import hu.bme.aut.resource_server.ability.AbilityEntity
+import hu.bme.aut.resource_server.profile.dto.ProfileItem
 import jakarta.persistence.*
 
 /**

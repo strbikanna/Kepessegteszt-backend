@@ -48,6 +48,7 @@ data class RecommendedGameEntity(
 
 fun RecommendedGameEntity.toDto(): RecommendedGameDto{
         val recommenderName = if(this.recommender != null ) this.recommender.firstName + " " + this.recommender.lastName else ""
+        val recommendedToName = this.recommendedTo.firstName + " " + this.recommendedTo.lastName
         return RecommendedGameDto(
                 id = this.id!!,
                 gameId = this.game.id!!,
@@ -55,6 +56,9 @@ fun RecommendedGameEntity.toDto(): RecommendedGameDto{
                 description = this.game.description,
                 thumbnail = this.game.thumbnailPath,
                 recommendationDate = this.timestamp ?: LocalDateTime.now(),
-                recommender = recommenderName
+                recommender = recommenderName,
+                recommendedTo = recommendedToName,
+                completed = this.completed,
+                config = this.config
         )
 }

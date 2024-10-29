@@ -36,7 +36,7 @@ export class AuthInterceptor implements HttpInterceptor {
                             const responseBody = response.body as any
                             if(responseBody.scope === 'openid') {
                                 this.accessToken = (response.body as any).access_token ?? (response.body as any).accessToken
-                                console.log("Access token refreshed: " + this.accessToken)
+                                console.log("Access token refreshed ")
                             }
                         }
                     })

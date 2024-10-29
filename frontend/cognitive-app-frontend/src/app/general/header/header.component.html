@@ -1,0 +1,46 @@
+<mat-toolbar class="navbar">
+    <div class="flex">
+        <button *ngIf="loginStatus" mat-icon-button [matMenuTriggerFor]="menu" color="primary">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <div class="logo ml-4">
+            <img src="{{imagePaths.logo}}" routerLink="/">
+            <button mat-button routerLink="/">Coglica</button>
+        </div>
+    </div>
+    <mat-menu #menu="matMenu" class="w-12">
+        <button mat-menu-item *ngIf="loginStatus && !isAdmin" routerLink="/cognitive-profile">
+            <mat-icon>psychology</mat-icon>
+            <span>{{ text.cognitive_profile }}</span>
+        </button>
+        <button mat-menu-item *ngIf="isAdmin" routerLink="/admin">
+            <mat-icon>group</mat-icon>
+            <span>{{ text.user_management }}</span>
+        </button>
+        <button mat-menu-item *ngIf="loginStatus" routerLink="/result">
+            <mat-icon>fact_check</mat-icon>
+            <span>{{ text.result_management }}</span>
+        </button>
+        <button mat-menu-item *ngIf="loginStatus && isStudent" routerLink="/profile-compare">
+            <mat-icon>analytics</mat-icon>
+            <span>{{ text.profile_comparison }}</span>
+        </button>
+        <button mat-menu-item *ngIf="loginStatus && isAdminOrScientist" routerLink="/profile-compare-admin">
+            <mat-icon>query_stats</mat-icon>
+            <span>{{ text.profile_comparison }}</span>
+        </button>
+        <button mat-menu-item *ngIf="isAdminOrScientist" routerLink="/game-management">
+            <mat-icon>sports_esports</mat-icon>
+            <span>{{ text.game_management }}</span>
+        </button>
+        <button mat-menu-item *ngIf="isAdmin || isScientist || isTeacher" routerLink="/recommendation">
+            <mat-icon>reviews</mat-icon>
+            <span>{{ text.game_recommendation }}</span>
+        </button>
+        <button mat-menu-item *ngIf="isAdmin || isScientist || isTeacher" routerLink="/cognitive-profile-admin">
+            <mat-icon>psychology</mat-icon>
+            <span>{{  text.cognitive_profile  }}</span>
+        </button>
+    </mat-menu>
+    <app-login></app-login>
+</mat-toolbar>

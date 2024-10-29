@@ -60,4 +60,9 @@ interface UserRepository: CrudRepository<UserEntity, Int>, JpaSpecificationExecu
             "AND u.id IN :userIds " +
             "ORDER BY p.abilityValue ASC" )
     fun getAbilityValuesInUserGroupAscending(abilityCode: String, userIds: List<Int>): List<Double>
+
+    @Query("SELECT p.abilityValue FROM UserEntity u JOIN u.profileFloat p " +
+            "WHERE p.ability.code = :abilityCode " +
+            "AND p.abilityValue is not null")
+    fun getAllAbilityValues(abilityCode: String): List<Double>
 }
