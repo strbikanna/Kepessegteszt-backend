@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.llm.skills2text
+package hu.bme.aut.resource_server.llm.abilities2text
 
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
@@ -12,8 +12,8 @@ abstract class AbilitiesToTextService {
             "Minden képesség átlagos értéke 1,0. A szintek 0,15-ös léptékekkel változnak. Legyen változatos a szöveg megfogalmazása, " +
             "ne csak az átlaghoz hasonlításról szóljon, hanem személyre szabott legyen!\n" +
             "Ennek a személynek a képességei és azok értékei a következők:\n"
-    protected open val promptTemplateWithGroup = "Alakítsd át a következő Cattell–Horn–Carroll (CHC) elmélet képességértékeket " +
-            "egy rövid összefoglalóvá a játékos kognitív adottságairól az adott társadalmi csoportjához képest!\n" +
+    protected open val promptTemplateWithGroup = "Alakítsd át a következős Cattell–Horn–Carroll (CHC) elmélet képességértékeket " +
+            "egy rövid összefoglalóvá a játékos kognitív adottságairól az adott csoporthoz képest!\n" +
             "A szintek 0,15-ös léptékekkel változnak.\n" +
             "Ennek a személynek a képességei és azok értékei a következők:\n"
     protected open val systemMessage: SystemMessage = SystemMessage
@@ -46,10 +46,13 @@ abstract class AbilitiesToTextService {
         return callPrompt
     }
 
-    open suspend fun generateFromAbilities(abilities: List<ProfileItem>, prompt: String = ""): String {
+    open suspend fun generateFromAbilities(abilities: List<ProfileItem>, prompt: String = ""): AbiltityToTextDto {
         var callPrompt = prompt.ifBlank { promptTemplate }
         callPrompt = putAbilitiesIntoPrompt(abilities, callPrompt)
-        return generateFromPrompt(callPrompt)
+        return AbiltityToTextDto(
+            prompt = callPrompt,
+            abilitiesAsText = generateFromPrompt(callPrompt)
+        )
     }
 
     open suspend fun generateFromAbilitiesComparedToGroup(
@@ -57,12 +60,15 @@ abstract class AbilitiesToTextService {
         groupAbilities: List<ProfileItem>,
         groupName: String,
         prompt: String = ""
-    ): String {
+    ): AbiltityToTextDto {
         var callPrompt = prompt.ifBlank { promptTemplateWithGroup }
         callPrompt = putAbilitiesIntoPrompt(abilities, callPrompt)
         callPrompt += "A $groupName csoport átlagos értékei:\n"
         callPrompt = putAbilitiesIntoPrompt(groupAbilities, callPrompt)
-        return generateFromPrompt(callPrompt)
+        return AbiltityToTextDto(
+            prompt = callPrompt,
+            abilitiesAsText = generateFromPrompt(callPrompt)
+        )
     }
 
     open suspend fun generateFromPrompt(prompt: String): String {

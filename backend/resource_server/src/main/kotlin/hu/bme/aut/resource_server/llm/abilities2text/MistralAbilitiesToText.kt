@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.llm.skills2text
+package hu.bme.aut.resource_server.llm.abilities2text
 
 import dev.langchain4j.model.mistralai.MistralAiChatModel
 import org.springframework.beans.factory.annotation.Value
