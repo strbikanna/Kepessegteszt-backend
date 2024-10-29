@@ -13,6 +13,7 @@ import {CandlestickChartDataModel} from "../../../charts/candlestick-chart/candl
 import {ActivatedRoute, Router} from "@angular/router";
 import {Location} from "@angular/common";
 import {ProfileDescription} from "../../../model/ProfileDescription";
+import {imagePaths} from "../../../utils/app.image_resources";
 
 @Component({
     selector: 'app-admin-profile-data-comparison-page',
@@ -119,4 +120,5 @@ export class AdminProfileDataComparisonPageComponent extends ProfileDataComparis
     }
 
 
+    protected readonly imagePaths = imagePaths;
 }

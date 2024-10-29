@@ -4,7 +4,7 @@
         <p class="description">{{ userPickerText.choose_contact_description }}</p>
         <app-user-autocomplete (userSelected)="onUserChosen($event)" [multiple]="false"></app-user-autocomplete>
     </div>
-    <img *ngIf="!chosenUsername" src="assets/logos/research.jpg" alt="loading" class="researchImg">
+    <img *ngIf="!chosenUsername" src="{{imagePaths.research}}" alt="loading" class="researchImg">
 </div>
 
 <div *ngIf="chosenUsername">
