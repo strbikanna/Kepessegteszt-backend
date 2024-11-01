@@ -37,10 +37,13 @@ class RecommendedGameController(
     @ResponseStatus(HttpStatus.OK)
     fun getRecommendationsByGame(
         @RequestParam(required = false) gameId: Int?,
+        @RequestParam(required= false) completed: Boolean?,
         @RequestParam username: String,
         authentication: Authentication
     ): List<RecommendedGameDto> {
-        return recommendedGameService.getRecommendationsToUserAndGame(username, authentication.name, gameId)
+        return recommendedGameService.getRecommendationsToUserAndGame(username, authentication.name, gameId).filter{
+            if(completed != null) it.completed == completed else true
+        }
     }
 
     @GetMapping("/config/{id}")
