@@ -120,6 +120,7 @@ export const TEXTS = {
         check_all: 'Összes kijelölése',
     },
     cognitive_profile: {
+        title_user: 'kognitív profilja',
         chart: {
             chart_title: 'Kognitív profil az elmúlt időszakban',
         },
