@@ -124,13 +124,6 @@ class ResultController(
         return resultService.getCountByFilters(listOf(authentication.name), gameIds, resultWin)
     }
 
-    @GetMapping("/count/all")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN')")
-    fun countAllResults(): Long {
-        return resultService.getCountOfResults()
-    }
-
     @GetMapping("/csv")
     @ResponseStatus(HttpStatus.OK)
     @Transactional

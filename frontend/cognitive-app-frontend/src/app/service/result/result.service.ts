@@ -40,9 +40,18 @@ export class ResultService {
         )
     }
 
-    getCountOfResults(): Observable<number> {
-        let path = UserInfo.isAdmin() ? '/gameplay/count/all' : '/gameplay/count'
-        return this.http.get<number>(this.httpService.baseUrl + path).pipe(
+    getCountOfResults(usernames?: string[], gameIds?: number[], passed?: boolean): Observable<number> {
+        let params =  new HttpParams()
+        if (gameIds) {
+            params = params.set('gameIds', gameIds.join(','))
+        }
+        if (usernames && UserInfo.isAdmin()) {
+            params = params.set('usernames', usernames.join(','))
+        }
+        if (passed != null) {
+            params = params.set('resultWin', passed.toString())
+        }
+        return this.http.get<number>(this.httpService.baseUrl + '/gameplay/count', {params: params}).pipe(
             retry(3),
             catchError(this.httpService.handleHttpError)
         )
