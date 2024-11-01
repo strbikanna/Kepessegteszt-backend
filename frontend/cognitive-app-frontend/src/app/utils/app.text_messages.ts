@@ -238,7 +238,8 @@ export const TEXTS = {
             param_order_description: 'Azt fejezi ki, hogy mennyire befolyásolja a játékbeállítást, minél kisebb a szám, annál relevánsabb a paraméter.',
             description: 'Leírás',
             description_placeholder: 'Opcionális leírás a paraméterről',
-        }
+        },
+        active_filter: "Aktív játékok",
     },
     file_upload: {
         no_content: 'Nincs kiválasztott fájl',
