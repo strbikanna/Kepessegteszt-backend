@@ -144,6 +144,13 @@ export const TEXTS = {
             choose_contact_description: 'Válaszd ki, kinek a kognitív profilját szeretnéd megtekinteni',
             select: 'Megtekintés',
         },
+        llm: {
+            prompt: 'Prompt',
+            prompt_description: 'Próbáld ki egyedi kérdés megadásával a kognitív profil elemzését.',
+            prompt_action: 'Profil kiértékelés a megadott kérdés alapján',
+            used_prompt: 'Használt prompt',
+            llm_text: 'Elemzés'
+        },
         date_picker: {
             see_history: 'Megtekintés korábbi időpontban',
             see_history_description: 'Válassz egy kezdő és egy végdátumot, hogy megtekinthesd a kognitív profilodat az adott időpontban.',

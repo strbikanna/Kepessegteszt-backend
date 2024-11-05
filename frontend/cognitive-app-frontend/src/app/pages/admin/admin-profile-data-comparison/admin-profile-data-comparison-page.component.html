@@ -4,7 +4,7 @@
         <p class="description">{{ userPickerText.choose_contact_description }}</p>
         <app-user-autocomplete (userSelected)="onUserChosen($event)" [multiple]="false"></app-user-autocomplete>
     </div>
-    <img *ngIf="!chosenUsername" src="assets/logos/research.jpg" alt="loading" class="researchImg">
+    <img *ngIf="!chosenUsername" src="{{imagePaths.research}}" alt="loading" class="researchImg">
 </div>
 
 <div *ngIf="chosenUsername">
@@ -33,6 +33,19 @@
             ></app-profile-radar-chart>
         </div>
     </div>
+    <h2 class="text-left my-1">{{llmText.prompt}}</h2>
+    <p class="title text-left">{{llmText.used_prompt}}</p>
+    <p class="description">{{comparisonDescription?.prompt}}</p>
+    <mat-progress-bar *ngIf="descriptionLoading" mode="buffer"></mat-progress-bar>
+    <h3>{{llmText.prompt_description}}</h3>
+    <mat-form-field class="w-full">
+        <mat-label>{{llmText.prompt}}</mat-label>
+        <textarea matInput [(ngModel)]="prompt"></textarea>
+    </mat-form-field>
+    <button mat-button (click)="onSubmitPrompt()" color="primary">{{llmText.prompt_action}}</button>
+    <h2 class="text-left" *ngIf="!descriptionLoading">{{llmText.llm_text}}</h2>
+    <p class="description">{{comparisonDescription?.abilitiesAsText}}</p>
+    <mat-progress-bar *ngIf="descriptionLoading" mode="buffer"></mat-progress-bar>
     <div class="w-10">
         <mat-expansion-panel class="w-full" [expanded]="filterExpanded" (opened)="filterExpanded=true">
             <mat-expansion-panel-header>

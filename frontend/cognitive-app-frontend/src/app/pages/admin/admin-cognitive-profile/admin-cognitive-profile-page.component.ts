@@ -7,6 +7,7 @@ import {TEXTS} from "../../../utils/app.text_messages";
 import {User} from "../../../model/user.model";
 import {BehaviorSubject} from "rxjs";
 import {Location} from "@angular/common";
+import {ProfileDescription} from "../../../model/ProfileDescription";
 
 @Component({
     selector: 'app-admin-cognitive-profile',
@@ -18,17 +19,19 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
     protected chosenUsername?: string;
     protected name?: string;
     protected currProfileData?: CognitiveProfile;
-    protected profileHistoryData: BehaviorSubject<CognitiveProfile[]> = new BehaviorSubject<CognitiveProfile[]>([]);
+    protected profileDescription?: ProfileDescription;
+  protected profileHistoryData: BehaviorSubject<CognitiveProfile[]> = new BehaviorSubject<CognitiveProfile[]>([]);
     protected loadingProfile = true;
     protected loadingHistory = true;
+  protected loadingDescription = true;
+  protected prompt = '';
 
-    constructor(
-        private router: Router,
-        private location: Location,
-        private route: ActivatedRoute,
-        private service: CognitiveProfileService,
-    ) {
-    }
+  constructor(
+      private router: Router,
+      private location: Location,
+      private route: ActivatedRoute,
+      private service: CognitiveProfileService,
+  ) {}
 
     ngOnInit() {
         this.chosenUsername = this.route.snapshot.queryParams['username'];
@@ -54,18 +57,30 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
                 this.profileHistoryData?.next(profiles);
                 this.loadingHistory = false
             });
-        }
+        this.service.getProfileDescription(undefined, this.chosenUsername).subscribe(description => {
+        this.profileDescription = description;
+        this.loadingDescription = false
+      });
+    }
+  }
+
+  onSubmitPrompt() {
+    this.loadingDescription = true;
+    this.service.getProfileDescription(this.prompt, this.chosenUsername).subscribe(description => {
+        this.profileDescription = description;
+        this.loadingDescription = false;
+    });
     }
 
-    onDatesChosen(dateRange: DateRange) {
-        this.loadingHistory = true;
-        if (this.chosenUsername !== undefined) {
-            this.service.getProfilesBetweenOfOtherUser(dateRange.start, dateRange.end, this.chosenUsername).subscribe(profiles => {
-                this.profileHistoryData?.next(profiles);
-                this.loadingHistory = false;
-            });
-        }
+  onDatesChosen(dateRange: DateRange) {
+    this.loadingHistory = true;
+    if (this.chosenUsername !== undefined) {
+      this.service.getProfilesBetweenOfOtherUser(dateRange.start, dateRange.end, this.chosenUsername).subscribe(profiles => {
+        this.profileHistoryData?.next(profiles);
+        this.loadingHistory = false;
+      });
     }
+  }
 
     updateUrlParams() {
         const params = {
@@ -79,6 +94,5 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
         });
         this.location.go(urlTree.toString());
     }
-
-
 }
+

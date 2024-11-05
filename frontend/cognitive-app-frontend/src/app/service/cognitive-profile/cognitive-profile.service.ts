@@ -6,6 +6,7 @@ import {Ability} from "../../model/ability.model";
 import {AppConstants} from "../../utils/constants";
 import {User} from "../../model/user.model";
 import {SimpleHttpService} from "../../utils/simple-http.service";
+import {ProfileDescription} from "../../model/ProfileDescription";
 
 @Injectable({
     providedIn: 'root'
@@ -32,6 +33,19 @@ export class CognitiveProfileService {
             map((res: any[]) => this.convertToCognitiveProfile(res))
         )
 
+    }
+
+    getProfileDescription(prompt?: string, username?: string): Observable<ProfileDescription>{
+        let params = new HttpParams();
+        if(prompt){
+            params = params.set('prompt', prompt);
+        }
+        if(username){
+            params = params.set('requestedUsername', username);
+        }
+        return this.http.get<ProfileDescription>(`${this.helper.baseUrl}${this.profileEndpoint}/abilities-as-text`, {params: params}).pipe(
+            catchError(this.helper.handleHttpError)
+        )
     }
 
     /**

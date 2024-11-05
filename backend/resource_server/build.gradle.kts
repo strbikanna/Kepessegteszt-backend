@@ -63,6 +63,12 @@ dependencies {
     testImplementation(libs.spring.security.test)
     testImplementation(libs.rest.assured)
     testImplementation(libs.hamcrest)
+
+    // LangChain
+    implementation(libs.langchain4j)
+    implementation(libs.langchain4j.openai)
+    implementation(libs.langchain4j.gemini)
+    implementation(libs.langchain4j.mistral)
 }
 
 tasks.withType<KotlinCompile> {

@@ -2,12 +2,15 @@ package hu.bme.aut.resource_server.user
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.authentication.AuthService
+import hu.bme.aut.resource_server.llm.abilities2text.AbiltityToTextDto
 import hu.bme.aut.resource_server.profile.dto.ProfileItem
 import hu.bme.aut.resource_server.profile.dto.ProfileItemStatisticsDto
 import hu.bme.aut.resource_server.profile_calculation.calculator.CalculationHelper
 import hu.bme.aut.resource_server.user.filter.UserFilterDto
 import hu.bme.aut.resource_server.user_group.UserGroupDto
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
@@ -19,7 +22,8 @@ import org.springframework.web.bind.annotation.*
 class UserController(
     @Autowired private var userService: UserService,
     @Autowired private var userGroupService: UserGroupDataService,
-    @Autowired private var authService: AuthService
+    @Autowired private var authService: AuthService,
+    @Autowired private var abilitiesToTextService : hu.bme.aut.resource_server.llm.abilities2text.AbilitiesToTextService
 ) {
     @GetMapping("/profile")
     @ResponseStatus(HttpStatus.OK)
@@ -110,6 +114,43 @@ class UserController(
             "min" -> userGroupService.getAbilityToMinValueInGroup(userGroupId, filterDto, abilities)
             else -> throw IllegalArgumentException("Invalid aggregation mode, supported modes: average, sum, max, min")
         }
+    }
+
+    @GetMapping("/profile/abilities-as-text")
+    @ResponseStatus(HttpStatus.OK)
+    suspend fun getAbilitiesAsText(
+        authentication: Authentication,
+        @RequestParam(required = false) requestedUsername: String?,
+        @RequestParam(required = false) prompt: String = "",
+    ): AbiltityToTextDto {
+        val username = requestedUsername ?: authentication.name
+        val userAbilities = userService.getUserDtoWithProfileByUsername(username).profile.toList()
+        // Should be called in a coroutine or a suspend function
+        return abilitiesToTextService.generateFromAbilities(userAbilities, prompt)
+    }
+
+    @PostMapping("/profile/abilities-as-text-to-group")
+    @ResponseStatus(HttpStatus.OK)
+    suspend fun getAbilitiesAsTextToGroup(
+        authentication: Authentication,
+        @RequestParam(required = false) requestedUsername: String?,
+        @RequestParam(required = false) userGroupId: Int?,
+        @RequestParam(required = false) prompt: String = "",
+        @RequestBody(required = false) filterDto: UserFilterDto?
+    ): AbiltityToTextDto {
+        val username = requestedUsername ?: authentication.name
+        val userAbilities = userService.getUserDtoWithProfileByUsername(username).profile.toList()
+
+        val user = userService.getUserEntityWithProfileByUsername(username)
+        val abilities = user.profileFloat.map { it.ability }.toSet()
+        // IntelliJ IDEA suggests to put it in withContext(Dispatchers.IO) when called in a suspend function
+        val groupAbilities = withContext(Dispatchers.IO) {
+            userGroupService.getAbilityToAverageValueInGroup(userGroupId, filterDto, abilities)
+        }
+        val groupName = userGroupId?.let { userGroupService.getGroupById(it).name } ?: "csoport"
+
+        // Should be called in a coroutine or a suspend function
+        return abilitiesToTextService.generateFromAbilitiesComparedToGroup(userAbilities, groupAbilities, groupName, prompt)
     }
 
     @GetMapping("/group_profile/all")
