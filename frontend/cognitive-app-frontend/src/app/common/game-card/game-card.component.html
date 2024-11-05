@@ -3,13 +3,13 @@
         <img src="{{game.thumbnail}}">
         <div class="content">
             <div class="flex align-items-center justify-content-between">
-                <div class="flex align-items-baseline">
-                    <mat-card-title class="mr-3 my-0">{{ game.name }}</mat-card-title>
-                    <mat-card-subtitle>ID: {{ game.id }}</mat-card-subtitle>
-                    <mat-icon *ngIf="game.active" class="mx-3" color="primary">check_circle</mat-icon>
-                    <mat-icon *ngIf="!game.active" class="mx-3" color="warn">cancel</mat-icon>
+                <div class="flex align-items-baseline w-9">
+                    <mat-card-title class="mr-1 my-0 w-7">{{ game.name }}</mat-card-title>
+                    <mat-card-subtitle class="mx-2 w-2">ID: {{ game.id }}</mat-card-subtitle>
+                    <mat-icon *ngIf="game.active" color="primary">check_circle</mat-icon>
+                    <mat-icon *ngIf="!game.active" color="warn">cancel</mat-icon>
                 </div>
-                <mat-chip>V_{{ game.version }}</mat-chip>
+                <mat-chip class="mx-2">V_{{ game.version }}</mat-chip>
             </div>
             <p class="text">{{ game.description }}</p>
             <div class="flex align-items-center">

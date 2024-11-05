@@ -3,6 +3,8 @@ package hu.bme.aut.resource_server.result
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
 import hu.bme.aut.resource_server.recommended_game.RecommenderService
+import hu.bme.aut.resource_server.role.Role
+import hu.bme.aut.resource_server.utils.RoleName
 import jakarta.servlet.http.HttpServletResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -108,16 +110,18 @@ class ResultController(
 
     @GetMapping("/count")
     @ResponseStatus(HttpStatus.OK)
-    fun countResults(authentication: Authentication): Long {
-        val username = authentication.name
-        return resultService.getCountOfResultsByUser(username)
-    }
-
-    @GetMapping("/count/all")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN')")
-    fun countAllResults(): Long {
-        return resultService.getCountOfResults()
+    @Transactional
+    fun countResults(
+        authentication: Authentication,
+        @RequestParam gameIds: List<Int>? = null,
+        @RequestParam resultWin: Boolean? = null,
+        @RequestParam usernames: List<String>? = null
+    ): Long {
+        val user = authService.getAuthUser(authentication)
+        if(user.roles.find { it.roleName == RoleName.ADMIN } != null){
+            return resultService.getCountByFilters(usernames, gameIds, resultWin)
+        }
+        return resultService.getCountByFilters(listOf(authentication.name), gameIds, resultWin)
     }
 
     @GetMapping("/csv")

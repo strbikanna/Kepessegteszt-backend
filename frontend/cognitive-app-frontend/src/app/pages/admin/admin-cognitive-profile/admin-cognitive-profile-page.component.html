@@ -7,7 +7,8 @@
     </div>
 </div>
 <mat-divider></mat-divider>
-<div class="flex m-4 align-items-center" *ngIf="chosenUsername">
+<h2 *ngIf="name" class="mx-4 mb-0">{{name +' '+ text.title_user}}</h2>
+<div class="flex m-4 align-items-start" *ngIf="chosenUsername">
     <div class="w-7">
         <app-profile-card *ngIf="!loadingProfile" [profileData]="currProfileData!!" id="card"></app-profile-card>
     </div>

@@ -15,8 +15,11 @@ interface GameRepository : JpaRepository<GameEntity, Int> {
 
     override fun findAll(): List<GameEntity>
     override fun findAll(pageable: Pageable): Page<GameEntity>
+    fun findByActive(active: Boolean, pageable: Pageable): Page<GameEntity>
     fun findGameByName(name: String): Optional<GameEntity>
     fun existsByName(name: String): Boolean
+
+    fun countByActive(active: Boolean): Long
 
     @Query("SELECT g FROM GameEntity g WHERE LOWER(g.name) LIKE LOWER(CONCAT('%', :name, '%'))")
     fun searchByName(name: String): List<GameEntity>

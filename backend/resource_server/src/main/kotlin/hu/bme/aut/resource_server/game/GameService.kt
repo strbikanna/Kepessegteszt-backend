@@ -20,11 +20,8 @@ class GameService (
     @Value("\${app.image-path}")
     private lateinit var gameImageLocation: String
 
-    fun getAllGamesPaged(pageIndex: Int, pageSize: Int): List<GameEntity> {
+    fun getAllGames(pageIndex: Int, pageSize: Int): List<GameEntity> {
         return gameRepository.findAll(PageRequest.of(pageIndex, pageSize)).toList()
-    }
-    fun getAllGames(): List<GameEntity> {
-        return gameRepository.findAll()
     }
 
     fun getGameById(id: Int): Optional<GameEntity> {
@@ -32,6 +29,25 @@ class GameService (
     }
     fun getGamesByName(name: String): List<GameEntity> {
         return gameRepository.searchByName(name)
+    }
+    fun getGamesByActive(active: Boolean, pageIndex: Int, pageSize: Int): List<GameEntity> {
+        return gameRepository.findByActive(active, PageRequest.of(pageIndex, pageSize)).toList()
+    }
+
+    fun getCountOfGames(active: Boolean?): Long {
+        return if(active!= null) gameRepository.countByActive(active) else gameRepository.count()
+    }
+
+    fun saveGame(game: GameEntity): GameEntity {
+        return gameRepository.save(game)
+    }
+
+    fun deleteGame(id: Int) {
+        if(gameRepository.existsById(id)) {
+            gameRepository.deleteById(id)
+        } else{
+            throw IllegalArgumentException("Game ids do not match.")
+        }
     }
 
     /**

@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile
 @RestController
 @RequestMapping("/game")
 class GameController(
-    @Autowired private var gameRepository: GameRepository,
     @Autowired private var gameService: GameService,
     @Autowired private var recommenderService: RecommenderService
 ) {
@@ -21,15 +20,19 @@ class GameController(
     @ResponseStatus(HttpStatus.OK)
     fun getAllGames(
         @RequestParam(required = false, defaultValue = "0") pageIndex: Int,
-        @RequestParam(required = false, defaultValue = "100") pageSize: Int
+        @RequestParam(required = false, defaultValue = "100") pageSize: Int,
+        @RequestParam(required = false) active: Boolean?
     ): List<GameEntity> {
-        return gameService.getAllGamesPaged(pageIndex, pageSize)
+        return if(active != null) gameService.getGamesByActive(active, pageIndex, pageSize)
+        else gameService.getAllGames(pageIndex, pageSize)
     }
 
-    @GetMapping("/all/count")
+    @GetMapping("/count")
     @ResponseStatus(HttpStatus.OK)
-    fun getAllGamesCount(): Long {
-        return gameRepository.count()
+    fun getAllGamesCount(
+        @RequestParam(required = false) active: Boolean?
+    ): Long {
+        return gameService.getCountOfGames(active)
     }
 
     @GetMapping("/{gameId}")
@@ -64,7 +67,7 @@ class GameController(
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
     fun createGame(@RequestBody gameEntity: GameEntity): GameEntity {
-        val game = gameRepository.save(gameEntity)
+        val game = gameService.saveGame(gameEntity)
         recommenderService.createDefaultRecommendationsForGame(game.id!!)
         return game
     }
@@ -83,10 +86,6 @@ class GameController(
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
     fun deleteGame(@PathVariable gameId: Int) {
-        if(gameRepository.existsById(gameId)) {
-            gameRepository.deleteById(gameId)
-        } else{
-            throw IllegalArgumentException("Game ids do not match.")
-        }
+        gameService.deleteGame(gameId)
     }
 }

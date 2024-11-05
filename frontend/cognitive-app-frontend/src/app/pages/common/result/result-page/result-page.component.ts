@@ -89,7 +89,7 @@ export class ResultPageComponent implements OnInit {
     onApplyFilters() {
         this.paginator.firstPage();
         this.loading = true;
-        this.resultService.getCountOfResults().subscribe(count => this.dataLength = count);
+        this.resultService.getCountOfResults(this.chosenUsernames, this.chosenGameIds, this.chosenPassed).subscribe(count => this.dataLength = count);
         this.getResults();
     }
 

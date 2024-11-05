@@ -18,11 +18,13 @@ import {PaginatorTranslator} from "../../../common/paginator/paginator-translato
 })
 export class GameManagementPageComponent implements OnInit {
     actionText = TEXTS.actions
+    activeFilterText = TEXTS.game_management.active_filter
     dataLength = 100;
     pageSizeOptions = [10, 25, 50, 100];
     defaultPageSize = 50;
     lastPageEvent: PageEvent | undefined = undefined;
     games!: Observable<Game[]>
+    activeFilter?: boolean
 
     @ViewChild('paginatorTop') paginatorTop!: MatPaginator
     @ViewChild('paginatorBottom') paginatorBottom!: MatPaginator
@@ -45,7 +47,13 @@ export class GameManagementPageComponent implements OnInit {
         this.paginatorBottom.pageIndex = event.pageIndex;
         this.lastPageEvent = event;
         this.defaultPageSize = event.pageSize;
-        this.games = this.service.getExistingGamesPaged(event.pageIndex, event.pageSize);
+        this.games = this.service.getExistingGamesPaged(event.pageIndex, event.pageSize, this.activeFilter);
+    }
+
+    onActiveFilterSelected(){
+        this.activeFilter = this.getActiveFilterNextValue();
+        this.service.getGamesCount(this.activeFilter).subscribe( count => this.dataLength = count)
+        this.games = this.service.getExistingGamesPaged(0, this.lastPageEvent?.pageSize ?? this.defaultPageSize, this.activeFilter);
     }
 
     navigateToEdit(game: Game) {
@@ -68,6 +76,11 @@ export class GameManagementPageComponent implements OnInit {
             return abilitiesNames.join(', ');
         }
         else return '';
+    }
+    private getActiveFilterNextValue(){
+        if(this.activeFilter === undefined) return true;
+        if(this.activeFilter) return false;
+        return undefined;
     }
 
     /**

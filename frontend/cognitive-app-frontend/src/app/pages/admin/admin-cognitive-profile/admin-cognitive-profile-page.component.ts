@@ -10,18 +10,19 @@ import {Location} from "@angular/common";
 import {ProfileDescription} from "../../../model/ProfileDescription";
 
 @Component({
-  selector: 'app-admin-cognitive-profile',
-  templateUrl: './admin-cognitive-profile-page.component.html',
-  styleUrls: ['./admin-cognitive-profile-page.component.scss']
+    selector: 'app-admin-cognitive-profile',
+    templateUrl: './admin-cognitive-profile-page.component.html',
+    styleUrls: ['./admin-cognitive-profile-page.component.scss']
 })
-export class AdminCognitiveProfilePageComponent implements  OnInit{
-  text = TEXTS.cognitive_profile
-  protected chosenUsername?: string;
-  protected currProfileData?: CognitiveProfile;
-  protected profileDescription?: ProfileDescription;
+export class AdminCognitiveProfilePageComponent implements OnInit {
+    text = TEXTS.cognitive_profile
+    protected chosenUsername?: string;
+    protected name?: string;
+    protected currProfileData?: CognitiveProfile;
+    protected profileDescription?: ProfileDescription;
   protected profileHistoryData: BehaviorSubject<CognitiveProfile[]> = new BehaviorSubject<CognitiveProfile[]>([]);
-  protected loadingProfile = true;
-  protected loadingHistory = true;
+    protected loadingProfile = true;
+    protected loadingHistory = true;
   protected loadingDescription = true;
   protected prompt = '';
 
@@ -32,29 +33,31 @@ export class AdminCognitiveProfilePageComponent implements  OnInit{
       private service: CognitiveProfileService,
   ) {}
 
-  ngOnInit() {
-    this.chosenUsername = this.route.snapshot.queryParams['username'];
-    this.loadProfileData();
-  }
+    ngOnInit() {
+        this.chosenUsername = this.route.snapshot.queryParams['username'];
+        this.name = this.route.snapshot.queryParams['name'];
+        this.loadProfileData();
+    }
 
-  userSelected(user: User) {
-    this.chosenUsername = user.username;
-    this.loadingProfile = true;
-    this.loadProfileData();
-    this.updateUrlParams();
-  }
+    userSelected(user: User) {
+        this.chosenUsername = user.username;
+        this.name = user.firstName + ' ' + user.lastName;
+        this.loadingProfile = true;
+        this.loadProfileData();
+        this.updateUrlParams();
+    }
 
-  loadProfileData() {
-    if (this.chosenUsername !== undefined) {
-      this.service.getCurrentProfileOfOtherUser(this.chosenUsername).subscribe(profile => {
-        this.currProfileData = profile;
-        this.loadingProfile = false;
-      });
-      this.service.getLatestProfilesOfOtherUser(this.chosenUsername).subscribe(profiles => {
-        this.profileHistoryData?.next(profiles);
-        this.loadingHistory = false
-      });
-      this.service.getProfileDescription(undefined, this.chosenUsername).subscribe(description => {
+    loadProfileData() {
+        if (this.chosenUsername !== undefined) {
+            this.service.getCurrentProfileOfOtherUser(this.chosenUsername).subscribe(profile => {
+                this.currProfileData = profile;
+                this.loadingProfile = false;
+            });
+            this.service.getLatestProfilesOfOtherUser(this.chosenUsername).subscribe(profiles => {
+                this.profileHistoryData?.next(profiles);
+                this.loadingHistory = false
+            });
+        this.service.getProfileDescription(undefined, this.chosenUsername).subscribe(description => {
         this.profileDescription = description;
         this.loadingDescription = false
       });
@@ -67,7 +70,7 @@ export class AdminCognitiveProfilePageComponent implements  OnInit{
         this.profileDescription = description;
         this.loadingDescription = false;
     });
-  }
+    }
 
   onDatesChosen(dateRange: DateRange) {
     this.loadingHistory = true;
@@ -79,16 +82,17 @@ export class AdminCognitiveProfilePageComponent implements  OnInit{
     }
   }
 
-  updateUrlParams() {
-    const params = {
-        username: this.chosenUsername
-    };
-    const urlTree = this.router.createUrlTree(['/cognitive-profile-admin'], {
-      relativeTo: this.route,
-      queryParams: params,
-      queryParamsHandling: 'merge',
-    });
-    this.location.go(urlTree.toString());
-  }
+    updateUrlParams() {
+        const params = {
+            username: this.chosenUsername,
+            name: this.name
+        };
+        const urlTree = this.router.createUrlTree(['/cognitive-profile-admin'], {
+            relativeTo: this.route,
+            queryParams: params,
+            queryParamsHandling: 'merge',
+        });
+        this.location.go(urlTree.toString());
+    }
 }
 

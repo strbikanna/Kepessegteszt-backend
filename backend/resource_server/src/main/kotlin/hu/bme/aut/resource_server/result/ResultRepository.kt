@@ -37,6 +37,13 @@ interface ResultRepository : JpaRepository<ResultEntity, Long> {
     ): Page<ResultEntity>
 
     fun countByUser(user: UserEntity): Long
+    fun countByUserInAndRecommendedGameGameIdInAndPassed(user: List<UserEntity>, gameIds: List<Int>, passed: Boolean): Long
+    fun countByUserInAndRecommendedGameGameIdIn(user:  List<UserEntity>, gameIds: List<Int>): Long
+    fun countByUserInAndPassed(user:  List<UserEntity>, passed: Boolean): Long
+    fun countByRecommendedGameGameIdInAndPassed(gameIds: List<Int>, passed: Boolean): Long
+    fun countByRecommendedGameGameIdIn(gameIds: List<Int>): Long
+    fun countByPassed(passed: Boolean): Long
+    fun countByUserIn(user: List<UserEntity>): Long
     override fun findAll(page: Pageable): Page<ResultEntity>
 
 }

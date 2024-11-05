@@ -13,17 +13,20 @@ export class GameManagementService {
   private calcPath = "/profile-calculation";
 
   constructor(private helper: SimpleHttpService, private http: HttpClient) { }
-  getExistingGamesPaged(pageIndex?: number, pageSize?: number): Observable<Game[]> {
+  getExistingGamesPaged(pageIndex?: number, pageSize?: number, active?: boolean): Observable<Game[]> {
     let params = new HttpParams()
     if(pageIndex) params = params.set('pageIndex', pageIndex.toString())
     if(pageSize) params = params.set('pageSize', pageSize.toString())
+    if(active!==undefined && active!==null) params = params.set('active', active.toString())
     return this.http.get<Game[]>(`${this.helper.baseUrl}${this.path}/all`, {params: params}).pipe(
         retry(3),
         catchError(this.helper.handleHttpError)
     )
   }
-  getGamesCount(): Observable<number> {
-    return this.http.get<number>(`${this.helper.baseUrl}${this.path}/all/count`).pipe(
+  getGamesCount(active?: boolean): Observable<number> {
+    let params = new HttpParams()
+    if(active) params = params.set('active', active.toString())
+    return this.http.get<number>(`${this.helper.baseUrl}${this.path}/count`, {params: params}).pipe(
         retry(3),
         catchError(this.helper.handleHttpError)
     )
