@@ -24,7 +24,13 @@ class UserService(
 
     fun updateUser(user: PlainUserDto){
         val userEntity = userRepository.findByUsername(user.username).orElseThrow()
-        userRepository.updateUserData(user.firstName, user.lastName, userEntity.id!!)
+        userRepository.updateUserData(
+            user.firstName,
+            user.lastName,
+            user.address ?: userEntity.address,
+            user.birthDate ?: userEntity.birthDate,
+            user.gender ?: userEntity.gender,
+            userEntity.id!!)
     }
     fun updateUserProfile(user: UserEntity): UserProfileDto {
         val userEntity = userRepository.findByUsernameWithProfile(user.username).orElseThrow()

@@ -1,10 +1,13 @@
 package hu.bme.aut.resource_server.user
 
+import hu.bme.aut.resource_server.user_group.organization.Address
+import hu.bme.aut.resource_server.utils.Gender
 import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
+import java.time.LocalDate
 import java.util.*
 
 interface UserRepository: CrudRepository<UserEntity, Int>, JpaSpecificationExecutor<UserEntity> {
@@ -27,8 +30,10 @@ interface UserRepository: CrudRepository<UserEntity, Int>, JpaSpecificationExecu
 
     @Modifying
     @Transactional
-    @Query("UPDATE UserEntity u SET u.firstName = :firstName, u.lastName = :lastName WHERE u.id = :id")
-    fun updateUserData(firstName: String, lastName: String, id: Int): Int
+    @Query("UPDATE UserEntity u SET u.firstName = :firstName, u.lastName = :lastName, " +
+            "u.address = :address, u.birthDate = :birthDate, u.gender = :gender" +
+            " WHERE u.id = :id")
+    fun updateUserData(firstName: String, lastName: String, address: Address?, birthDate: LocalDate?, gender: Gender?, id: Int): Int
 
     @Query("SELECT SUM(p.abilityValue) FROM UserEntity u JOIN u.profileFloat p " +
             "WHERE p.ability.code = :abilityCode " +
