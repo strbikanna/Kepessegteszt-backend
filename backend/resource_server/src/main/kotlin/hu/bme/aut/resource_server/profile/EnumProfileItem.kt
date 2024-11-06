@@ -22,7 +22,7 @@ data class EnumProfileItem(
 
     @Column
     @Enumerated(value= EnumType.STRING)
-    var abilityValue: EnumAbilityValue
+    var abilityValue: EnumAbilityValue = EnumAbilityValue.UNKNOWN
 ){
     fun toProfileItem(): ProfileItem {
         return ProfileItem(
