@@ -3,6 +3,7 @@ import {User} from "../../model/user.model";
 import {LoginService} from "./login.service";
 import {TEXTS} from "../../utils/app.text_messages";
 import {UserInfo} from "../../auth/userInfo";
+import {AuthUser} from "../../model/user-contacts.model";
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,7 @@ import {UserInfo} from "../../auth/userInfo";
 })
 export class LoginComponent implements OnInit {
   public isLoggedIn = false
-  public user: User | undefined = undefined
+  public user: AuthUser | undefined = undefined
   text = TEXTS.menu
   constructor(private loginService: LoginService) {}
 

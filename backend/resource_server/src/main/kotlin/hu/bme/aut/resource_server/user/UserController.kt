@@ -206,6 +206,13 @@ class UserController(
         return groupStatistics
     }
 
+    @GetMapping("/personal_data")
+    @ResponseStatus(HttpStatus.OK)
+    fun getUserData(authentication: Authentication): PlainUserDto {
+        val username = authentication.name
+        return userService.getUserDtoByUsername(username)
+    }
+
     @PutMapping("/personal_data")
     @ResponseStatus(HttpStatus.OK)
     fun updateUserData(

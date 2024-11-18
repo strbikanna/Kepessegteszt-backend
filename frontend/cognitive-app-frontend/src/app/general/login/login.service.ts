@@ -5,6 +5,7 @@ import { Observable} from "rxjs";
 import {UserInfo} from "../../auth/userInfo";
 import {HttpClient} from "@angular/common/http";
 import {AppConstants, Role} from "../../utils/constants";
+import {AuthUser} from "../../model/user-contacts.model";
 
 
 @Injectable({
@@ -29,9 +30,6 @@ export class LoginService {
     }
 
     private handleAuthCallback(configId: string) {
-        if(window.location.href.includes('game')){
-            return
-        }
         this.oidcSecurityService
             .checkAuth(undefined, configId)
             .subscribe((loginResponse: LoginResponse) => {
@@ -87,16 +85,18 @@ export class LoginService {
         return impersonationRoles.length > 0
     }
 
-    private convertUserData(userInfoResponse: any): User {
+    private convertUserData(userInfoResponse: any): AuthUser {
         console.log('Parsing userinfo: ')
         console.log(userInfoResponse)
 
-        const user: User = {
+        const user: AuthUser = {
+            id: userInfoResponse.id,
             username: userInfoResponse.sub,
             firstName: userInfoResponse.family_name,
             lastName: userInfoResponse.given_name,
             email: userInfoResponse.email,
             roles: userInfoResponse.roles.map((role: string) => role.toUpperCase()),
+            contacts: userInfoResponse.contacts
         };
 
         user.roles = user.roles.map(role => {
