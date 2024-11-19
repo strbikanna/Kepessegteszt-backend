@@ -1,6 +1,7 @@
 package hu.bme.aut.auth_server.user
 
 import hu.bme.aut.auth_server.role.Role
+import hu.bme.aut.auth_server.role.RoleEntity
 import hu.bme.aut.auth_server.role.RoleRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
@@ -74,17 +75,30 @@ class UserManagementService(
             .map { convertUserDto(it) }
     }
 
-    fun getUsersWithoutContact(pageNumber: Int?, pageSize: Int?): List<UserDto> {
-        val users = if (pageNumber == null || pageSize == null) {
-            userRepository.findAll()
-        } else {
-            userRepository.findAll(PageRequest.of(pageNumber, pageSize)).content
+    fun getUsersWithoutContact(pageNumber: Int, pageSize: Int, roles: List<Role>?): List<UserDto> {
+        val users : MutableSet<UserDto> = mutableSetOf()
+        if(roles.isNullOrEmpty()) return userRepository.findAll(PageRequest.of(pageNumber, pageSize, defaultSortOfUsers)).content.map { convertUserDto(it) }
+        roles.forEach { role ->
+            users.addAll(
+                userRepository.findByRolesContaining(PageRequest.of(pageNumber, pageSize, defaultSortOfUsers), RoleEntity(role),).content
+                    .map { convertUserDto(it) }
+            )
         }
-        return users.map { entity -> convertUserDto(entity) }
+        return users.toList()
     }
 
     @Transactional
-    fun getAllByUsernames(usernames: List<String>): List<UserDto> = userRepository.findByUsernameIn(usernames).map { convertUserDto(it) }
+    fun getAllByUsernames(usernames: List<String>, roles: List<Role>?): List<UserDto> {
+        val users: MutableSet<UserDto> = mutableSetOf()
+        if(roles.isNullOrEmpty()) return userRepository.findByUsernameIn(usernames).map { convertUserDto(it) }
+        roles.forEach {  role ->
+            users.addAll(
+                userRepository.findByUsernameInAndRolesContaining(usernames, RoleEntity(role))
+                    .map { convertUserDto(it) }
+            )
+        }
+        return users.toList()
+    }
 
     fun getUsersWithoutContactByName(nameString: String): List<UserDto> {
         val names = nameString.split(" ")
@@ -133,6 +147,18 @@ class UserManagementService(
         return convertUserDto(savedUserEntity)
     }
 
+    @Transactional
+    fun updatePersonalData(userDto: UserDto): UserDto {
+        val userEntity = userRepository.findByUsername(userDto.username).orElseThrow()
+        val updatedUserEntity = userEntity.copy(
+            email = userDto.email,
+            firstName = userDto.firstName,
+            lastName = userDto.lastName,
+        )
+        val savedUserEntity = userRepository.save(updatedUserEntity)
+        return convertUserDto(savedUserEntity)
+    }
+
     /**
      * Updates the contacts of the user and the contacts' contacts.
      */
@@ -161,4 +187,7 @@ class UserManagementService(
             roles = userEntity.roles.map { entity -> entity.roleName }.toMutableSet(),
         )
     }
+
+    private val defaultSortOfUsers = Sort.by("firstName").ascending().and(Sort.by("lastName").ascending())
+
 }

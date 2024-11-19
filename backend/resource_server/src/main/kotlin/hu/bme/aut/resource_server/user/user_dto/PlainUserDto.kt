@@ -5,7 +5,6 @@ import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user_group.organization.Address
 import hu.bme.aut.resource_server.utils.Gender
 import java.time.LocalDate
-import java.util.*
 
 open class PlainUserDto(
     var firstName: String,
@@ -16,7 +15,7 @@ open class PlainUserDto(
 
     val address: Address?,
 
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern="dd-MM-yyyy")
     val birthDate: LocalDate?,
 
     val gender: Gender?

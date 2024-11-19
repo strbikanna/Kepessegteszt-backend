@@ -77,6 +77,7 @@ import { AdminCognitiveProfilePageComponent } from './pages/admin/admin-cognitiv
 import { DatePickerComponent } from './common/date-picker/date-picker.component';
 import { UpAndDownButtonComponent } from './common/up-and-down-button/up-and-down-button.component';
 import { AdminProfileDataComparisonPageComponent } from './pages/admin/admin-profile-data-comparison/admin-profile-data-comparison-page.component';
+import {MatTableModule} from "@angular/material/table";
 
 @NgModule({
     declarations: [
@@ -158,7 +159,7 @@ import { AdminProfileDataComparisonPageComponent } from './pages/admin/admin-pro
         NgxEchartsModule.forRoot({
             echarts
         }),
-        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule, MatSliderModule, MatSnackBarModule
+        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule, MatSliderModule, MatSnackBarModule, MatTableModule
     ],
     providers: [
         {
