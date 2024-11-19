@@ -1,18 +1,21 @@
 import {BehaviorSubject} from "rxjs";
 import {User} from "../model/user.model";
 import {Role} from "../utils/constants";
+import {AuthUser} from "../model/user-contacts.model";
 
 /**
  * Global class to spread current user info and authentication data.
  */
 export class UserInfo{
   public static readonly loginStatus: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
-  public static currentUser: User = {
+  public static currentUser: AuthUser = {
     username: "Test",
     firstName: "Clara",
     lastName: "Oswald",
-    email: "clara_testuser@test.cogni",
-    roles: ["STUDENT"]
+    roles: ["STUDENT"],
+    email: "",
+    id: 1,
+    contacts: [],
   }
   public static accessToken: string
   public static isAdmin(){

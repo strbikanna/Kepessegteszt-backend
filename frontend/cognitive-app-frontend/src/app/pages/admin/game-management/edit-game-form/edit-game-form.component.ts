@@ -83,12 +83,10 @@ export class EditGameFormComponent implements OnInit {
         if(this.game === undefined){
             this.service.createGame(game).subscribe(game => {
                 this.sendThumbnail(game)
-                this.onBack()
             })
         }else{
             this.service.editGame(game).subscribe(game => {
                 this.sendThumbnail(game)
-                this.onBack()
             })
         }
     }
@@ -96,7 +94,10 @@ export class EditGameFormComponent implements OnInit {
     onSave(){
         if(this.game && this.game.id && this.configChanged()){
             this.openConfirmDialog()
-        }else{
+        }if(this.game && this.abilitiesChanged() ){
+            this.openAbilityChangeConfirmDialog()
+        }
+        else{
             this.onSubmit()
         }
     }
@@ -109,11 +110,21 @@ export class EditGameFormComponent implements OnInit {
                 onOk: () => this.onSubmit()
             }})
     }
+    openAbilityChangeConfirmDialog() {
+        this.dialog.open(ConfirmDialogComponent, {data: {
+                title: this.text.confirm_ability_change.title,
+                message: this.text.confirm_ability_change.message,
+                onCancel: () => {},
+                onOk: () => this.onSubmit()
+            }})
+    }
     private sendThumbnail(game: Game){
         if(this.gameForm.controls.thumbnail.value){
             const formData = new FormData()
             formData.set('file', this.gameForm.controls.thumbnail.value)
-            this.service.sendGameThumbnail(formData, game.id!!).subscribe()
+            this.service.sendGameThumbnail(formData, game.id!!).subscribe(_ => this.onBack())
+        }else{
+            this.onBack()
         }
     }
 
@@ -240,6 +251,18 @@ export class EditGameFormComponent implements OnInit {
         if(formConfigItems.length !== this.game.configItems.length) return true
         for(let i = 0; i < formConfigItems.length; i++){
             if(!this.game.configItems.find(item => isSameConfigItem(item, formConfigItems[i]))){
+                return true
+            }
+        }
+        return false
+    }
+
+    private abilitiesChanged() {
+        if(!this.game) return false
+        let formAbilities = this.getFormAffectedAbilities()
+        if(formAbilities.length !== this.game.affectedAbilities.length) return true
+        for(let i = 0; i < formAbilities.length; i++){
+            if(!this.game.affectedAbilities.find(ability => ability.code === formAbilities[i].code)){
                 return true
             }
         }

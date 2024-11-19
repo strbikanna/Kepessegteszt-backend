@@ -1,5 +1,6 @@
 package hu.bme.aut.auth_server.user
 
+import hu.bme.aut.auth_server.role.Role
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -29,11 +30,16 @@ class UserManagementController(
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
-    fun getAll(@RequestParam pageNumber: Int?, @RequestParam pageSize: Int?, @RequestParam(required = false) usernames: List<String>?): List<UserDto> {
+    fun getAll(
+        @RequestParam pageNumber: Int = 0,
+        @RequestParam pageSize: Int = 100,
+        @RequestParam(required = false) usernames: List<String>?,
+        @RequestParam(required = false) roles: List<Role>?
+    ): List<UserDto> {
         if(usernames!=null){
-            return userService.getAllByUsernames(usernames)
+            return userService.getAllByUsernames(usernames, roles)
         }
-        return userService.getUsersWithoutContact(pageNumber, pageSize)
+        return userService.getUsersWithoutContact(pageNumber, pageSize, null)
     }
 
     @GetMapping("/search")
@@ -72,6 +78,11 @@ class UserManagementController(
             user.id = id
         }
         return ResponseEntity(userService.updateUser(user), HttpStatus.OK)
+    }
+    @PutMapping("/personal_data/{username}")
+    @PreAuthorize("hasRole('ADMIN')")
+    fun updateUserByUsername(@PathVariable username: String, @RequestBody user: UserDto): ResponseEntity<UserDto> {
+        return ResponseEntity(userService.updatePersonalData(user), HttpStatus.OK)
     }
 
     @GetMapping("/status")

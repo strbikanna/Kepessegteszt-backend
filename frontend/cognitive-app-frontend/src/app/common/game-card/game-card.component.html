@@ -14,7 +14,7 @@
             <p class="text">{{ game.description }}</p>
             <div class="flex align-items-center">
                 <mat-icon *ngIf="game.affectedAbilities.length > 0" class="mr-2">psychology</mat-icon>
-                <p *ngFor="let ability of game.affectedAbilities" class="description m-0 text">{{ ability.name }}</p>
+                <p class="description m-0 text">{{ abilitiesText }}</p>
             </div>
         </div>
     </mat-card-content>

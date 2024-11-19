@@ -14,6 +14,11 @@ export const TEXTS = {
         game_management: 'Játékok kezelése',
         result_management: 'Eredmények',
         game_recommendation: 'Játékok ajánlása',
+        section_title:{
+            admin: 'Adminisztráció',
+            profile: 'Kognitív profil',
+            game: 'Játékok',
+        }
     },
     home: {
         welcome: 'Örülünk, hogy itt vagy!',
@@ -46,11 +51,28 @@ export const TEXTS = {
     },
     user_info: {
         description: 'Felhasználói profil információk',
+        personal_data_title: 'Személyes adatok',
+        roles_data_title: 'Jogosultságok',
+        extra_info_title: 'További adatok',
         first_name: 'Keresztnév',
         last_name: 'Vezetéknév',
         email: 'Email-cím',
         username: 'Felhasználónév',
-        roles: 'Szerepkörök',
+        roles: 'Jogosultságok',
+        birth_date: 'Születési dátum',
+        address: 'Lakcím',
+        city: 'Város',
+        street: 'Utca',
+        house_number: 'Házszám',
+        zip: 'Irányítószám',
+        gender: 'Nem',
+        female: 'Nő',
+        male: 'Férfi',
+        save: 'Mentés',
+        required: 'Ez a mező nem maradhat üresen',
+        required_address: 'A cím megadásakor minden mezőt ki kell tölteni',
+        success_title: 'Sikeres frissítés',
+        success_message: 'A felhasználó adatai sikeresen frissítve lettek',
     },
     paging: {
         firstPage: 'Első oldal',
@@ -233,6 +255,10 @@ export const TEXTS = {
             confirm: {
                 title: 'Biztosan mented a játékot?',
                 message: 'Megváltozott a játékkonfiguráció. Az előző játék így inaktív lesz és egy új játék lesz létrehozva a megadott adatokkal. A mentés után az új játéknak új ID-ja lesz!'
+            },
+            confirm_ability_change: {
+                title: 'Biztosan mented a játékot?',
+                message: 'Megváltozotak a játék által mért képességek. Az eddigi kiértékelések, mérések így már nem lesznek relevánsak!'
             }
         },
         config_item_form: {
@@ -279,7 +305,7 @@ export const TEXTS = {
         result_info: {
             game: 'Játék neve ',
             timestamp: 'Játék időpontja',
-            result: 'Eredmény ',
+            result: 'Eredmény',
             passed: 'Sikeres',
             failed: 'Sikertelen',
             config: 'Játék konfiguráció',

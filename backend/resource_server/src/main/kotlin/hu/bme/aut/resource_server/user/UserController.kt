@@ -7,6 +7,7 @@ import hu.bme.aut.resource_server.profile.dto.ProfileItem
 import hu.bme.aut.resource_server.profile.dto.ProfileItemStatisticsDto
 import hu.bme.aut.resource_server.profile_calculation.calculator.CalculationHelper
 import hu.bme.aut.resource_server.user.filter.UserFilterDto
+import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
 import hu.bme.aut.resource_server.user_group.UserGroupDto
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -203,6 +204,26 @@ class UserController(
             )
         }.filterNotNull()
         return groupStatistics
+    }
+
+    @GetMapping("/personal_data")
+    @ResponseStatus(HttpStatus.OK)
+    fun getUserData(authentication: Authentication): PlainUserDto {
+        val username = authentication.name
+        return userService.getUserDtoByUsername(username)
+    }
+
+    @PutMapping("/personal_data")
+    @ResponseStatus(HttpStatus.OK)
+    fun updateUserData(
+        authentication: Authentication,
+        @RequestBody user: PlainUserDto
+    ) {
+        val username = authentication.name
+        if (username != user.username) {
+            throw IllegalArgumentException("You can only update your own data.")
+        }
+        userService.updateUser(user)
     }
 
 }

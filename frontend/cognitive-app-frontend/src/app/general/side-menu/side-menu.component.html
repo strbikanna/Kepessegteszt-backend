@@ -1,0 +1,52 @@
+<mat-drawer-container autosize class="menu">
+    <mat-drawer [opened]="isDrawerOpenObservable | async" mode="side" class="w-full">
+        <p class="description ml-3">{{ text.section_title.admin }}</p>
+        <mat-divider/>
+        <button mat-menu-item *ngIf="isAdmin" routerLink="/admin" [routerLinkActive]="['activeLink']">
+            <mat-icon>group</mat-icon>
+            <span>{{ text.user_management }}</span>
+        </button>
+
+        <p class="description ml-3">{{ text.section_title.profile }}</p>
+        <mat-divider/>
+        <button mat-menu-item *ngIf="loginStatus && !isAdmin" routerLink="/cognitive-profile"
+                [routerLinkActive]="['activeLink']">
+            <mat-icon>psychology</mat-icon>
+            <span>{{ text.cognitive_profile }}</span>
+        </button>
+        <button mat-menu-item *ngIf="isAdmin || isScientist || isTeacher" routerLink="/cognitive-profile-admin"
+                [routerLinkActive]="['activeLink']">
+            <mat-icon>psychology</mat-icon>
+            <span>{{ text.cognitive_profile }}</span>
+        </button>
+        <button mat-menu-item *ngIf="loginStatus && isStudent" routerLink="/profile-compare"
+                [routerLinkActive]="['activeLink']">
+            <mat-icon>analytics</mat-icon>
+            <span>{{ text.profile_comparison }}</span>
+        </button>
+        <button mat-menu-item *ngIf="loginStatus && isAdminOrScientist" routerLink="/profile-compare-admin"
+                [routerLinkActive]="['activeLink']">
+            <mat-icon>query_stats</mat-icon>
+            <span>{{ text.profile_comparison }}</span>
+        </button>
+
+
+        <p class="description ml-3">{{ text.section_title.game }}</p>
+        <mat-divider/>
+        <button mat-menu-item *ngIf="loginStatus" routerLink="/result" [routerLinkActive]="['activeLink']">
+            <mat-icon>fact_check</mat-icon>
+            <span>{{ text.result_management }}</span>
+        </button>
+        <button mat-menu-item *ngIf="isAdminOrScientist" routerLink="/game-management"
+                [routerLinkActive]="['activeLink']">
+            <mat-icon>sports_esports</mat-icon>
+            <span>{{ text.game_management }}</span>
+        </button>
+        <button mat-menu-item *ngIf="isAdmin || isScientist || isTeacher" routerLink="/recommendation"
+                [routerLinkActive]="['activeLink']">
+            <mat-icon>reviews</mat-icon>
+            <span>{{ text.game_recommendation }}</span>
+        </button>
+
+    </mat-drawer>
+</mat-drawer-container>

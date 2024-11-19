@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, HostListener, OnInit, Output} from '@angular/core';
 import {UserInfo} from "../../auth/userInfo";
 import {Role} from "../../utils/constants";
 import {TEXTS} from "../../utils/app.text_messages";
@@ -13,6 +13,10 @@ import {imagePaths} from "../../utils/app.image_resources";
 
 export class HeaderComponent implements OnInit{
 
+    @Output() drawerStateChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    private drawerState: boolean = false;
+
     loginStatus = false;
     isAdmin = false;
     isAdminOrScientist = false;
@@ -21,6 +25,7 @@ export class HeaderComponent implements OnInit{
     isScientist = false;
     isStudent = false;
     protected readonly imagePaths = imagePaths;
+    windowWidth!: number;
 
     constructor(private changeDetectorRef: ChangeDetectorRef,) {  }
 
@@ -34,6 +39,21 @@ export class HeaderComponent implements OnInit{
             this.isScientist = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.SCIENTIST) !== undefined  && this.loginStatus
             this.changeDetectorRef.detectChanges()
         });
+        this.windowWidth = window.innerWidth;
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+        this.windowWidth = window.innerWidth;
+    }
+
+    changeDrawerState() {
+        this.drawerState = !this.drawerState;
+        this.drawerStateChanged.emit(this.drawerState);
+    }
+
+    displayMobileMenu(){
+        return this.windowWidth < 768
     }
 
 }

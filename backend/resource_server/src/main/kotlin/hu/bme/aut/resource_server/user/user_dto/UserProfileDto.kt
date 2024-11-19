@@ -4,15 +4,15 @@ import hu.bme.aut.resource_server.profile.dto.ProfileItem
 import hu.bme.aut.resource_server.user.UserEntity
 
 class UserProfileDto(
-    firstName: String,
+    val firstName: String,
 
-    lastName: String,
+    val lastName: String,
 
-    username: String,
+    val username: String,
 
     val profile: MutableSet<ProfileItem>,
 
-    ) : PlainUserDto(firstName, lastName, username) {
+    ) {
     constructor(user: UserEntity) : this(
         user.firstName,
         user.lastName,
