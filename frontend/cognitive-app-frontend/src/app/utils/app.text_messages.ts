@@ -185,7 +185,7 @@ export const TEXTS = {
             min: 'Minimum',
             max: 'Maximum',
             comparison_type: 'Összehasonlítás típusa',
-            comparison_type_description: 'Válaszd ki, milyen módon legyen összehasonlítva a kognitív profil adatok a többi felhasználó adataival.',
+            comparison_type_description: 'Válaszd ki, milyen módon legyenek összehasonlítva a kognitív profil adatok a többi felhasználó adataival.',
             group_selection: 'Csoport kiválasztása',
             submit: 'Összehasonlítás',
             error_group_required: 'Válassz ki egy csoportot az összehasonlításhoz',

@@ -6,5 +6,5 @@ export interface Ability {
 }
 export enum AbilityType{
     FLOAT = "FLOATING",
-    ENUM = "ENUM",
+    ENUM = "ENUMERATED",
 }

@@ -21,4 +21,8 @@ export class UserInfo{
   public static isAdmin(){
     return this.currentUser.roles.includes(Role.ADMIN) && this.loginStatus.value
   }
+  public static canSeeInsightData(){
+    return (this.currentUser.roles.includes(Role.ADMIN) || this.currentUser.roles.includes(Role.TEACHER) || this.currentUser.roles.includes(Role.SCIENTIST))
+        && this.loginStatus.value
+  }
 }

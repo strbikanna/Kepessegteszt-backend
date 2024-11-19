@@ -1,6 +1,6 @@
 <mat-drawer-container autosize class="menu">
     <mat-drawer [opened]="isDrawerOpenObservable | async" mode="side" class="w-full">
-        <p class="description ml-3">{{ text.section_title.admin }}</p>
+        <p class="description ml-3" *ngIf="isAdmin">{{ text.section_title.admin }}</p>
         <mat-divider/>
         <button mat-menu-item *ngIf="isAdmin" routerLink="/admin" [routerLinkActive]="['activeLink']">
             <mat-icon>group</mat-icon>
@@ -9,12 +9,12 @@
 
         <p class="description ml-3">{{ text.section_title.profile }}</p>
         <mat-divider/>
-        <button mat-menu-item *ngIf="loginStatus && !isAdmin" routerLink="/cognitive-profile"
+        <button mat-menu-item *ngIf="loginStatus && isStudent" routerLink="/cognitive-profile"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>psychology</mat-icon>
             <span>{{ text.cognitive_profile }}</span>
         </button>
-        <button mat-menu-item *ngIf="isAdmin || isScientist || isTeacher" routerLink="/cognitive-profile-admin"
+        <button mat-menu-item *ngIf="UserInfo.canSeeInsightData()" routerLink="/cognitive-profile-admin"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>psychology</mat-icon>
             <span>{{ text.cognitive_profile }}</span>
@@ -42,7 +42,7 @@
             <mat-icon>sports_esports</mat-icon>
             <span>{{ text.game_management }}</span>
         </button>
-        <button mat-menu-item *ngIf="isAdmin || isScientist || isTeacher" routerLink="/recommendation"
+        <button mat-menu-item *ngIf="UserInfo.canSeeInsightData()" routerLink="/recommendation"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>reviews</mat-icon>
             <span>{{ text.game_recommendation }}</span>

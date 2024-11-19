@@ -23,13 +23,13 @@ export class ResultService {
         if (searchOptions.gameIds) {
             params = params.set('gameIds', searchOptions.gameIds.join(','))
         }
-        if (searchOptions.usernames && UserInfo.isAdmin()) {
+        if (searchOptions.usernames && UserInfo.canSeeInsightData()) {
             params = params.set('usernames', searchOptions.usernames.join(','))
         }
         if (searchOptions.passed != null) {
             params = params.set('resultWin', searchOptions.passed.toString())
         }
-        let path = UserInfo.isAdmin() ? '/gameplay/results/all' : '/gameplay/results';
+        let path = UserInfo.canSeeInsightData() ? '/gameplay/results/all' : '/gameplay/results';
 
         return this.http.get<Result[]>(this.httpService.baseUrl + path, {params: params}).pipe(
             map((data: Result[]) =>

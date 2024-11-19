@@ -94,7 +94,7 @@ class ResultController(
     @Transactional
     @GetMapping("/results/all")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST', 'TEACHER')")
     fun getAllResults(
         @RequestParam sortBy: String = "timestamp",
         @RequestParam sortOrder: String = "DESC",
