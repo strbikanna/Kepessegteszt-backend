@@ -255,6 +255,10 @@ export const TEXTS = {
             confirm: {
                 title: 'Biztosan mented a játékot?',
                 message: 'Megváltozott a játékkonfiguráció. Az előző játék így inaktív lesz és egy új játék lesz létrehozva a megadott adatokkal. A mentés után az új játéknak új ID-ja lesz!'
+            },
+            confirm_ability_change: {
+                title: 'Biztosan mented a játékot?',
+                message: 'Megváltozotak a játék által mért képességek. Az eddigi kiértékelések, mérések így már nem lesznek relevánsak!'
             }
         },
         config_item_form: {
