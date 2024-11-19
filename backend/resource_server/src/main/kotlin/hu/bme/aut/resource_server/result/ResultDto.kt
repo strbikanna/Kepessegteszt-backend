@@ -13,5 +13,7 @@ data class ResultDto(
      */
     val gameplayId: Long,
 
+    val newConfig: Map<String, Any>? = null
+
     ) {
 }

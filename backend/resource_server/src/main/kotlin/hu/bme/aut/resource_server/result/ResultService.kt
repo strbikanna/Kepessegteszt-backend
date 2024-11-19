@@ -27,7 +27,7 @@ class ResultService(
         val gameplay = ResultEntity(
             result = data.result,
             passed = isResultPassed(data.result),
-            config = recommendedGame.config.toMutableMap(),
+            config = data.newConfig?.toMutableMap() ?: recommendedGame.config.toMutableMap(),
             user = user,
             recommendedGame = recommendedGame
         )
