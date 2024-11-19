@@ -79,6 +79,8 @@ import { UpAndDownButtonComponent } from './common/up-and-down-button/up-and-dow
 import { AdminProfileDataComparisonPageComponent } from './pages/admin/admin-profile-data-comparison/admin-profile-data-comparison-page.component';
 import {MatTableModule} from "@angular/material/table";
 import { SideMenuComponent } from './general/side-menu/side-menu.component';
+import {MatTreeModule} from "@angular/material/tree";
+import { TrueFalsePipe } from './utils/true-false.pipe';
 
 @NgModule({
     declarations: [
@@ -121,7 +123,8 @@ import { SideMenuComponent } from './general/side-menu/side-menu.component';
         DatePickerComponent,
         UpAndDownButtonComponent,
         AdminProfileDataComparisonPageComponent,
-        SideMenuComponent
+        SideMenuComponent,
+        TrueFalsePipe
     ],
     imports: [
         BrowserModule,
@@ -161,7 +164,7 @@ import { SideMenuComponent } from './general/side-menu/side-menu.component';
         NgxEchartsModule.forRoot({
             echarts
         }),
-        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule, MatSliderModule, MatSnackBarModule, MatTableModule
+        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule, MatSliderModule, MatSnackBarModule, MatTableModule, MatTreeModule
     ],
     providers: [
         {

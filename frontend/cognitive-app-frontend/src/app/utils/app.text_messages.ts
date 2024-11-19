@@ -301,7 +301,7 @@ export const TEXTS = {
         result_info: {
             game: 'Játék neve ',
             timestamp: 'Játék időpontja',
-            result: 'Eredmény ',
+            result: 'Eredmény',
             passed: 'Sikeres',
             failed: 'Sikertelen',
             config: 'Játék konfiguráció',
