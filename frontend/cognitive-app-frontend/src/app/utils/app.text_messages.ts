@@ -14,6 +14,11 @@ export const TEXTS = {
         game_management: 'Játékok kezelése',
         result_management: 'Eredmények',
         game_recommendation: 'Játékok ajánlása',
+        section_title:{
+            admin: 'Adminisztráció',
+            profile: 'Kognitív profil',
+            game: 'Játékok',
+        }
     },
     home: {
         welcome: 'Örülünk, hogy itt vagy!',

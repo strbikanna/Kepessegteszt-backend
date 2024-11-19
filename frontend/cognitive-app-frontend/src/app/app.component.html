@@ -1,6 +1,7 @@
-<app-header></app-header>
-<main>
+<app-header (drawerStateChanged)="drawerStateChanged($event)"></app-header>
+<main class="flex">
     <div class="page-content">
+        <app-side-menu class="side-menu" [isDrawerOpenObservable]="drawerState" *ngIf="drawerState |async"></app-side-menu>
         <router-outlet></router-outlet>
     </div>
 </main>

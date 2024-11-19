@@ -78,6 +78,7 @@ import { DatePickerComponent } from './common/date-picker/date-picker.component'
 import { UpAndDownButtonComponent } from './common/up-and-down-button/up-and-down-button.component';
 import { AdminProfileDataComparisonPageComponent } from './pages/admin/admin-profile-data-comparison/admin-profile-data-comparison-page.component';
 import {MatTableModule} from "@angular/material/table";
+import { SideMenuComponent } from './general/side-menu/side-menu.component';
 
 @NgModule({
     declarations: [
@@ -119,7 +120,8 @@ import {MatTableModule} from "@angular/material/table";
         AdminCognitiveProfilePageComponent,
         DatePickerComponent,
         UpAndDownButtonComponent,
-        AdminProfileDataComparisonPageComponent
+        AdminProfileDataComparisonPageComponent,
+        SideMenuComponent
     ],
     imports: [
         BrowserModule,

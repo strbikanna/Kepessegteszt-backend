@@ -1,6 +1,6 @@
 :host {
   width: 100%;
-  height: 90vh;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-self: center;
@@ -10,8 +10,8 @@
 .impersonation{
   position: fixed;
   top: 17%;
-  left: 10%;
-  width: 80%;
+  left: 20%;
+  width: 60%;
   @media (min-width: 100px) and (max-width: 750px){
     left: 0;
     width: 100%;
