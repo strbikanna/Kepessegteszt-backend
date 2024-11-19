@@ -24,7 +24,7 @@ export class GameManagementPageComponent implements OnInit {
     defaultPageSize = 50;
     lastPageEvent: PageEvent | undefined = undefined;
     games!: Observable<Game[]>
-    activeFilter?: boolean
+    activeFilter?: boolean | undefined = true
 
     @ViewChild('paginatorTop') paginatorTop!: MatPaginator
     @ViewChild('paginatorBottom') paginatorBottom!: MatPaginator
@@ -38,7 +38,7 @@ export class GameManagementPageComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.games = this.service.getExistingGamesPaged(0, this.defaultPageSize);
+        this.games = this.service.getExistingGamesPaged(0, this.defaultPageSize, this.activeFilter);
         this.service.getGamesCount().subscribe( count => this.dataLength = count)
     }
 

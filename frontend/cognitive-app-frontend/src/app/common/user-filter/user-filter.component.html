@@ -35,29 +35,10 @@
     <h4>{{text.ability}}</h4>
     <div class="flex w-12">
         <div class="w-max mr-3">
-            <div *ngFor="let ability of availableAbilities | async"
+            <div *ngFor="let ability of allAbilities"
                  class="flex align-items-center justify-content-between">
-                <p class="mr-3">{{ ability.name }}</p>
-                <button *ngIf="!isAbilityInForm(ability)" mat-mini-fab (click)="addAbilityFilter(ability)"
-                        color="primary">
-                    <mat-icon>chevron_right</mat-icon>
-                </button>
-            </div>
-        </div>
-        <div class="w-max">
-            <div *ngFor="let abilityFilterControl of userFilterForm.controls.abilityFilter.controls; index as i"
-                 [formGroup]="getAbilityFilterGroup(abilityFilterControl)"
-                 class="flex align-items-center w-full justify-content-between"
-            >
-                <mat-label class="mr-3">{{ getAbilityNameOfControl(abilityFilterControl) }}</mat-label>
-                <mat-slider min="{{abilityValueMin}}" max="{{abilityValueMax}}" [discrete]="true" step="0.05"
-                            class="w-8">
-                    <input formControlName="valueMin" matSliderStartThumb>
-                    <input formControlName="valueMax" matSliderEndThumb>
-                </mat-slider>
-                <button mat-icon-button (click)="removeAbilityFilter(i)">
-                    <mat-icon>close</mat-icon>
-                </button>
+                <mat-checkbox [value]="isAbilityInForm(ability)" (change)="abilityFilterChange(ability, $event)">
+                    {{ ability.name }} </mat-checkbox>
             </div>
         </div>
     </div>

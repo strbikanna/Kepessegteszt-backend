@@ -17,7 +17,7 @@
         <app-date-picker (dateChosen)="onDatesChosen($event)"></app-date-picker>
     </div>
 </div>
-<div class="mx-2">
+<div class="mx-2" *ngIf="chosenUsername">
     <h2 class="text-left my-1">{{text.llm.prompt}}</h2>
     <p class="title text-left">{{text.llm.used_prompt}}</p>
     <p class="description">{{profileDescription?.prompt}}</p>

@@ -1,6 +1,6 @@
 <div class="flex align-items-center">
     <div class="w-5">
-        <h1 class="mt-0">{{ userPickerText.choose_contact }} {{nameOfUser ? ' - '+nameOfUser : ''}}</h1>
+        <h1 class="mt-0">{{ userPickerText.choose_contact }} {{ nameOfUser ? ' - ' + nameOfUser : '' }}</h1>
         <p class="description">{{ userPickerText.choose_contact_description }}</p>
         <app-user-autocomplete (userSelected)="onUserChosen($event)" [multiple]="false"></app-user-autocomplete>
     </div>
@@ -9,55 +9,55 @@
 
 <div *ngIf="chosenUsername">
     <div class="flex justify-content-between">
-        <form [formGroup]="profileQueryForm" (ngSubmit)="onSubmit()" class="flex flex-column align-items-start mt-3">
-            <mat-radio-group formControlName="calculationType" class="flex flex-column">
-                <h3 class="mb-2">{{ text.comparison_type }}</h3>
-                <p class="description">{{ text.comparison_type_description }}</p>
-                <mat-radio-button [value]="calculationTypeOptions[0]">{{ text.avg }}</mat-radio-button>
-                <mat-radio-button [value]="calculationTypeOptions[1]">{{ text.min }}</mat-radio-button>
-                <mat-radio-button [value]="calculationTypeOptions[2]">{{ text.max }}</mat-radio-button>
-                <mat-error *ngIf="profileQueryForm.controls.calculationType.invalid">
-                    {{ text.error_type_required }}
-                </mat-error>
-            </mat-radio-group>
-            <button mat-flat-button color="primary" type="submit" class="mt-3"
-                    (click)="onSubmit()"
-                    [disabled]="profileQueryForm.invalid">{{ text.submit }}
-            </button>
-        </form>
+        <div>
+            <form [formGroup]="profileQueryForm" (ngSubmit)="onSubmit()"
+                  class="flex flex-column align-items-start mt-3">
+                <mat-radio-group formControlName="calculationType" class="flex flex-column">
+                    <h3 class="mb-2">{{ text.comparison_type }}</h3>
+                    <p class="description">{{ text.comparison_type_description }}</p>
+                    <mat-radio-button [value]="calculationTypeOptions[0]">{{ text.avg }}</mat-radio-button>
+                    <mat-radio-button [value]="calculationTypeOptions[1]">{{ text.min }}</mat-radio-button>
+                    <mat-radio-button [value]="calculationTypeOptions[2]">{{ text.max }}</mat-radio-button>
+                    <mat-error *ngIf="profileQueryForm.controls.calculationType.invalid">
+                        {{ text.error_type_required }}
+                    </mat-error>
+                </mat-radio-group>
+                    <button mat-flat-button color="primary" type="submit" class="mt-3"
+                            (click)="onSubmit()"
+                            [disabled]="profileQueryForm.invalid">{{ text.submit }}
+                    </button>
+            </form>
+            <div class="mt-4">
+                <mat-divider/>
+                <h2>{{ text.composite_filter_description }}</h2>
+                <app-user-filter [availableGroups]="groups" [availableAbilities]="allAbilities"
+                                 (filterChange)="setUserFilter($event)"/>
+            </div>
+        </div>
         <div class="w-7 m-2">
             <app-profile-radar-chart
                     [profileDataObservable]="userProfileData"
                     [comparisonDataObservable]="dataToCompare"
                     [comparisonTitle]="comparisonTitle"
             ></app-profile-radar-chart>
+            <div class="w-full h-30rem">
+                <app-candlestick-chart [data]="getCandleStickData()"></app-candlestick-chart>
+            </div>
         </div>
     </div>
-    <h2 class="text-left my-1">{{llmText.prompt}}</h2>
-    <p class="title text-left">{{llmText.used_prompt}}</p>
-    <p class="description">{{comparisonDescription?.prompt}}</p>
+    <h2 class="text-left my-1">{{ llmText.prompt }}</h2>
+    <p class="title text-left">{{ llmText.used_prompt }}</p>
+    <p class="description">{{ comparisonDescription?.prompt }}</p>
     <mat-progress-bar *ngIf="descriptionLoading" mode="buffer"></mat-progress-bar>
-    <h3>{{llmText.prompt_description}}</h3>
+    <h3>{{ llmText.prompt_description }}</h3>
     <mat-form-field class="w-full">
-        <mat-label>{{llmText.prompt}}</mat-label>
+        <mat-label>{{ llmText.prompt }}</mat-label>
         <textarea matInput [(ngModel)]="prompt"></textarea>
     </mat-form-field>
-    <button mat-button (click)="onSubmitPrompt()" color="primary">{{llmText.prompt_action}}</button>
-    <h2 class="text-left" *ngIf="!descriptionLoading">{{llmText.llm_text}}</h2>
-    <p class="description">{{comparisonDescription?.abilitiesAsText}}</p>
+    <button mat-button (click)="onSubmitPrompt()" color="primary">{{ llmText.prompt_action }}</button>
+    <h2 class="text-left" *ngIf="!descriptionLoading">{{ llmText.llm_text }}</h2>
+    <p class="description">{{ comparisonDescription?.abilitiesAsText }}</p>
     <mat-progress-bar *ngIf="descriptionLoading" mode="buffer"></mat-progress-bar>
-    <div class="w-10">
-        <mat-expansion-panel class="w-full" [expanded]="filterExpanded" (opened)="filterExpanded=true">
-            <mat-expansion-panel-header>
-                <mat-panel-title> {{ text.composite_filter_title }}</mat-panel-title>
-                <mat-panel-description> {{ text.composite_filter_description }}</mat-panel-description>
-            </mat-expansion-panel-header>
-            <app-user-filter [availableGroups]="groups" [availableAbilities]="allAbilities"
-                             (filterChange)="setUserFilter($event)"/>
-        </mat-expansion-panel>
-        <div class="w-full h-30rem">
-            <app-candlestick-chart [data]="getCandleStickData()"></app-candlestick-chart>
-        </div>
-    </div>
+
 </div>
 

@@ -55,7 +55,7 @@ export class ResultPageComponent implements OnInit {
         this.getResults();
         this.resultService.getCountOfResults().subscribe(count => this.dataLength = count);
         this.loadGameNames();
-        if (UserInfo.isAdmin()) {
+        if (UserInfo.canSeeInsightData()) {
             this.sortOptions.push(this.text.username)
             this.loadUsernames();
         }

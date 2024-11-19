@@ -1,11 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbilityFilter, UserFilter} from "./user-filter.model";
-import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {ProfileData} from "../../model/profile_data.model";
+import {FormArray, FormBuilder, Validators} from "@angular/forms";
 import {UserGroup} from "../../model/user_group.model";
 import {Observable} from "rxjs";
 import {TEXTS} from "../../utils/app.text_messages";
-import {Ability} from "../../model/ability.model";
+import {Ability, AbilityType} from "../../model/ability.model";
+import {MatCheckboxChange} from "@angular/material/checkbox";
 
 @Component({
     selector: 'app-user-filter',
@@ -28,12 +28,12 @@ export class UserFilterComponent implements OnInit {
     ngOnInit() {
         this.availableAbilities.subscribe(
             (abilities) => {
-                this.allAbilities = abilities;
+                this.allAbilities = abilities.filter((ability) => ability.type === AbilityType.ENUM);
             });
     }
 
     protected text = TEXTS.cognitive_profile.user_filter
-    private allAbilities: Ability[] = [];
+    protected allAbilities: Ability[] = [];
 
     protected userFilterForm = this.fb.group({
         ageMin: [undefined],
@@ -43,6 +43,14 @@ export class UserFilterComponent implements OnInit {
         userGroupId: [undefined],
         abilityFilter: this.fb.array<AbilityFilter>([])
     });
+
+    abilityFilterChange(ability: Ability, event: MatCheckboxChange){
+        if(event.checked){
+            this.addAbilityFilter(ability);
+        }else{
+            this.removeAbilityFilter(ability.code)
+        }
+    }
 
     isAbilityInForm(ability: Ability){
         let abilityFilters = this.userFilterForm.get('abilityFilter') as FormArray;
@@ -55,15 +63,17 @@ export class UserFilterComponent implements OnInit {
             return;
         }
         abilityFilters.push(this.fb.group({
-            code: [ability.code],
-            valueMin: [undefined],
-            valueMax: [undefined]
+            code: [ability.code]
         }));
     }
 
-    removeAbilityFilter(index: number) {
+    removeAbilityFilter(code: string) {
         let abilityFilters = this.userFilterForm.get('abilityFilter') as FormArray;
-        abilityFilters.removeAt(index);
+        const ability = abilityFilters.controls.find(c => c.get('code')?.value === code);
+        if(ability) {
+            const index = abilityFilters.controls.indexOf(ability);
+            abilityFilters.removeAt(index);
+        }
     }
 
     applyFilters() {
@@ -83,15 +93,6 @@ export class UserFilterComponent implements OnInit {
             filter.addressZip = undefined;
         }
         this.filterChange.emit(filter);
-    }
-
-    getAbilityNameOfControl(formControl: AbstractControl){
-        let formGroup = formControl as FormGroup;
-        let abilityCode = formGroup.controls['code'].value;
-        return this.allAbilities.find((ability) => ability.code === abilityCode)?.name;
-    }
-    getAbilityFilterGroup(formControl: AbstractControl){
-        return formControl as FormGroup;
     }
 
 
