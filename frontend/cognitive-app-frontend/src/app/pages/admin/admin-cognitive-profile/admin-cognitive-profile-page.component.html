@@ -3,7 +3,7 @@
         <h4>{{ text.user_picker.choose_contact }}</h4>
         <p>{{ text.user_picker.choose_contact_description }}</p>
         <app-user-autocomplete (userSelected)="userSelected($event)" [multiple]="false"
-                               [searchOnlyContacts]="true"></app-user-autocomplete>
+                               [searchOnlyContacts]="true" [autoChoose]="true"></app-user-autocomplete>
     </div>
 </div>
 <mat-divider></mat-divider>

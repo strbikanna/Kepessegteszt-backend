@@ -2,7 +2,7 @@
 <h2 class="title">{{ texts.subtitle }}</h2>
 <div class="topContainer">
     <div>
-        <app-user-autocomplete (userSelected)="onUserSelected($event)" [multiple]="false"/>
+        <app-user-autocomplete (userSelected)="onUserSelected($event)" [multiple]="false" [autoChoose]="true"/>
         <app-game-search (onGameSelected)="onGameSelected($event)" [multiple]="false"
                          [filterGamesBy]="filterGamesByActive"/>
     </div>

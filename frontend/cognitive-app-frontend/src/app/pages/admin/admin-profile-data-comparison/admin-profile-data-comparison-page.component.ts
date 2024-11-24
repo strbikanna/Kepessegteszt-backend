@@ -67,6 +67,7 @@ export class AdminProfileDataComparisonPageComponent extends ProfileDataComparis
     }
 
     onUserChosen(user: User) {
+        console.log(user);
         this.chosenUsername = user.username;
         this.nameOfUser = user.firstName + ' ' + user.lastName;
         this.initDataForUser(user.username);

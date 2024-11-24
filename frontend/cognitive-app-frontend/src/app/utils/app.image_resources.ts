@@ -5,5 +5,5 @@ export const imagePaths = {
     astronaut: `${environment.clientUrl}/assets/logos/astronaut.png`,
     defaultGamePicture: `${environment.clientUrl}/assets/logos/mission.png`,
     failure: `${environment.clientUrl}/assets/logos/uups.png`,
-    research: `${environment.clientUrl}/assets/logos/research.png`,
+    research: `${environment.clientUrl}/assets/logos/research.jpg`,
 }

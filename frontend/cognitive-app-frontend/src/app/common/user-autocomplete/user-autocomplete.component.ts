@@ -2,11 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TEXTS} from "../../utils/app.text_messages";
 import {AuthUser} from "../../model/user-contacts.model";
 import {FormControl} from "@angular/forms";
-import {ContactService} from "../../service/contact_service/contact.service";
-import {Observable} from "rxjs";
 import {AdminService} from "../../service/admin/admin.service";
-import {UserFilter} from "../user-filter/user-filter.model";
-import {UserInfo} from "../../auth/userInfo";
 
 @Component({
     selector: 'app-user-autocomplete',
@@ -18,6 +14,10 @@ export class UserAutocompleteComponent implements OnInit {
     @Input() multiple = true;
     @Input() searchOnlyContacts = true;
     @Input() selectedUsernames: string[] = [];
+    /**
+     * if true, and only one user is available, this user will be selected automatically
+     */
+    @Input() autoChoose: boolean = false;
     /**
      * emits the actually selected users
      */
@@ -37,11 +37,13 @@ export class UserAutocompleteComponent implements OnInit {
             this.service.getContacts().subscribe(users => {
                 this.userOptions = users;
                 this.defaultUserOptions = users;
+                this.autoSelectUser();
             });
         } else {
             this.service.getAllUsers(0, 30).subscribe(users => {
                 this.userOptions = users;
                 this.defaultUserOptions = users;
+                this.autoSelectUser();
             });
         }
         this.selectedUsernames = this.selectedUsernames.filter(name => name && name.trim() !== '');
@@ -119,5 +121,15 @@ export class UserAutocompleteComponent implements OnInit {
         this.service.getAllByUsernames(usernames).subscribe(users => {
           this.selectedUsers = users;
         });
+    }
+
+    private autoSelectUser(){
+        if(this.autoChoose && this.userOptions.length === 1){
+            console.log('auto select user');
+            const selectedUser = this.userOptions[0];
+            this.selectedUsers = [selectedUser];
+            this.userSelectionChanged.emit(this.selectedUsers);
+            this.userSelected.emit(selectedUser);
+        }
     }
 }
