@@ -125,7 +125,6 @@ export class UserAutocompleteComponent implements OnInit {
 
     private autoSelectUser(){
         if(this.autoChoose && this.userOptions.length === 1){
-            console.log('auto select user');
             const selectedUser = this.userOptions[0];
             this.selectedUsers = [selectedUser];
             this.userSelectionChanged.emit(this.selectedUsers);
