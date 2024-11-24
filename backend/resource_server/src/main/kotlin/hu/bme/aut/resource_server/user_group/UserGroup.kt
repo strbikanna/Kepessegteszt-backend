@@ -21,10 +21,10 @@ abstract class UserGroup(
         joinColumns = [JoinColumn(name = "group_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-    open val admins: MutableList<UserEntity> = mutableListOf(),
+    open val admins: MutableSet<UserEntity> = mutableSetOf(),
 
     ) {
-    abstract val members: MutableList<UserEntity>
+    abstract val members: MutableSet<UserEntity>
     abstract fun getAllGroups(): List<Group>
     abstract fun getAllUserIds(): Set<Int>
     abstract fun toDto(): UserGroupDto

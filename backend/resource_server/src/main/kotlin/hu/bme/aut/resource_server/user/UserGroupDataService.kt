@@ -43,6 +43,8 @@ class UserGroupDataService(
         }
         user.groups.add(group)
         userRepository.save(user)
+        group.members.add(user)
+        groupRepository.save(group)
     }
 
     @Transactional
@@ -54,6 +56,7 @@ class UserGroupDataService(
         orgRepository.save(org)
         userRepository.save(user)
     }
+
 
     fun getAllUserIdsByFilter(filter: UserFilterDto): List<Int> {
         return userRepository.findAll(UserSpecification(filter)).map { it.id!! }

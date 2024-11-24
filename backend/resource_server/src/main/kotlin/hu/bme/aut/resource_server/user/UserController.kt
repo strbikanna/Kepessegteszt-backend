@@ -59,7 +59,6 @@ class UserController(
 
     @PutMapping("/group")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN')")
     fun addUserToGroup(
         authentication: Authentication,
         @RequestParam(required = true) username: String,

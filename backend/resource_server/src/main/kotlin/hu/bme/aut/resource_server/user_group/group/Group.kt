@@ -23,7 +23,7 @@ class Group(
         joinColumns = [JoinColumn(name = "group_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-    override val members: MutableList<UserEntity> = mutableListOf(),
+    override val members: MutableSet<UserEntity> = mutableSetOf(),
 
     @OneToMany(cascade = [CascadeType.ALL])
     @JoinColumn(name = "parent_group_id", referencedColumnName = "id")

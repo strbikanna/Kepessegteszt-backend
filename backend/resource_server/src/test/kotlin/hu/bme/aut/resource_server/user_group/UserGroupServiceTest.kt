@@ -67,6 +67,7 @@ class UserGroupServiceTest(
     }
 
     @Test
+    @Transactional
     fun shouldRemoveUserFromGroup(){
         val org = createOrganization(1)
         val group1 = createGroup(1, org)
@@ -77,9 +78,11 @@ class UserGroupServiceTest(
         org.groups.add(group1)
         organizationRepository.save(org)
         groupRepository.save(group1)
-        userGroupService.removeUserFromGroup(user, org)
-        val allUsersInGroup = userGroupService.getAllUsersInGroup(group1)
+        userGroupService.removeUserFromGroup(user.username, org.id!!)
+        val allUsersInGroup = userGroupService.getAllUsersInGroup(group1.id!!)
+        val modifiedUser = testUtilsService.userRepository.findById(user.id!!)
         assertEquals(0, allUsersInGroup.size)
+        assertEquals(0, modifiedUser.get().groups.size)
     }
 
     @Test
@@ -96,7 +99,7 @@ class UserGroupServiceTest(
         org.admins.add(user)
         organizationRepository.save(org)
         groupRepository.save(group1)
-        userGroupService.removeAdminFromGroup(user, org)
+        userGroupService.removeAdminFromGroup(user.username, org.id!!)
         val orgInDb = organizationRepository.findAll().first()
         assertEquals(0, orgInDb.admins.size)
         assertEquals(1, orgInDb.groups.first().admins.size)

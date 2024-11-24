@@ -89,12 +89,10 @@ data class UserEntity(
 
         val userEntity = other as UserEntity
 
-        return id == userEntity.id || username == userEntity.username || (
-                firstName == userEntity.firstName &&
-                        lastName == userEntity.lastName &&
-                        birthDate == userEntity.birthDate &&
-                        gender == userEntity.gender &&
-                        address == userEntity.address
-                )
+        return id == userEntity.id || username == userEntity.username
+    }
+
+    override fun hashCode(): Int {
+        return id ?: username.hashCode()
     }
 }
