@@ -30,8 +30,11 @@ class UserGroupController(
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    fun getAllUserGroups(): List<UserGroupDto> {
-        return userGroupService.getAllUserGroups().map { it.toDto() }
+    fun getAllUserGroups(
+        @RequestParam("pageIndex", required = false, defaultValue = "0") pageIndex: Int,
+        @RequestParam("pageSize", required = false, defaultValue = "100") pageSize: Int
+    ): List<UserGroupDto> {
+        return userGroupService.getAllUserGroups(pageIndex, pageSize).map { it.toDto() }
     }
 
     @GetMapping("/members/{groupId}")
@@ -94,6 +97,20 @@ class UserGroupController(
         @RequestBody org: OrganizationDto
     ): UserGroupDto {
         return userGroupService.createOrganization(org.name, org.address).toDto()
+    }
+
+    @GetMapping("/search_members/{groupId}")
+    @ResponseStatus(HttpStatus.OK)
+    fun searchMembersInGroup(
+        authentication: Authentication,
+        @PathVariable groupId: Int,
+        @RequestParam("name") name: String
+    ): Set<PlainUserDto> {
+        authService.checkGroupDataReadAndThrow(authentication, groupId)
+        val members: MutableSet<PlainUserDto> = mutableSetOf()
+        members.addAll(userGroupService.searchOrganizationMembersByName(groupId, name).map { PlainUserDto(it) })
+        members.addAll(userGroupService.searchGroupMembersByName(groupId, name).map { PlainUserDto(it) })
+        return members
     }
 
 

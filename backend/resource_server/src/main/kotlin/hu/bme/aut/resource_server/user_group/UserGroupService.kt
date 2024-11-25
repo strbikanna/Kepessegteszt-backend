@@ -9,6 +9,7 @@ import hu.bme.aut.resource_server.user_group.organization.Organization
 import hu.bme.aut.resource_server.user_group.organization.OrganizationRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 
 @Service
@@ -23,8 +24,8 @@ class UserGroupService(
      * Returns all user groups.
      * Should be called within transaction. (@Transactional)
      */
-    fun getAllUserGroups(): List<UserGroup> {
-        return userGroupRepository.findAll()
+    fun getAllUserGroups(pageIndex: Int =0, pageSize: Int = 100): List<UserGroup> {
+        return userGroupRepository.findAll(PageRequest.of(pageIndex, pageSize)).toList()
     }
 
     @Transactional
@@ -98,4 +99,15 @@ class UserGroupService(
         val org = Organization(name = name, address = address)
         return organizationRepository.save(org)
     }
+
+    @Transactional
+    fun searchOrganizationMembersByName(orgId: Int, name: String): List<UserEntity> {
+        return organizationRepository.searchMembersByNameInGroup(orgId, name)
+    }
+
+    @Transactional
+    fun searchGroupMembersByName(groupId: Int, name: String): List<UserEntity> {
+        return groupRepository.searchMembersByNameInGroup(groupId, name)
+    }
+
 }
