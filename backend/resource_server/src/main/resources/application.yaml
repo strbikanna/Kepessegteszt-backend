@@ -34,7 +34,7 @@ springdoc:
 
 llms:
   mistral:
-    api-key: 1F4EMj7EOQlgaiHyKHY548YfGS1mPq91
+    api-key: 
     model-name: mistral-large-latest
   openai:
     api-key:
