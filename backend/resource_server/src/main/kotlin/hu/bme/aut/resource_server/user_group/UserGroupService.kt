@@ -28,6 +28,14 @@ class UserGroupService(
         return userGroupRepository.findAll(PageRequest.of(pageIndex, pageSize)).toList()
     }
 
+    fun getAllOrganizations(pageIndex: Int =0, pageSize: Int = 100): List<Organization> {
+        return organizationRepository.findAll(PageRequest.of(pageIndex, pageSize)).toList()
+    }
+
+    fun getAllGroups(pageIndex: Int =0, pageSize: Int = 100): List<Group> {
+        return groupRepository.findAll(PageRequest.of(pageIndex, pageSize)).toList()
+    }
+
     @Transactional
     fun addAdminUserToGroup(username: String, groupId: Int) {
         val user = userRepository.findByUsername(username).orElseThrow()
@@ -69,11 +77,13 @@ class UserGroupService(
     fun removeAdminFromGroup(username: String, groupId: Int) {
         val user = userRepository.findByUsername(username).orElseThrow()
         val group = userGroupRepository.findById(groupId).orElseThrow()
-        val dbGroup = userGroupRepository.findById(group.id!!).get()
-        dbGroup.admins.remove(user)
+        group.admins.remove(user)
         userGroupRepository.save(group)
     }
 
+    /**
+     * Returns all users in the group or organization based on its id
+     */
     @Transactional
     fun getAllUsersInGroup(groupId: Int): List<UserEntity> {
         val group = userGroupRepository.findById(groupId).orElseThrow()
@@ -82,6 +92,9 @@ class UserGroupService(
         return userRepository.findByIdIn(userIds.toList())
     }
 
+    /**
+     * Returns all admins in the group or org based on its id
+     */
     @Transactional
     fun getAdminsOfGroup(groupId: Int): List<UserEntity> {
         val group = userGroupRepository.findById(groupId).orElseThrow()
@@ -101,13 +114,32 @@ class UserGroupService(
     }
 
     @Transactional
-    fun searchOrganizationMembersByName(orgId: Int, name: String): List<UserEntity> {
-        return organizationRepository.searchMembersByNameInGroup(orgId, name)
+    fun searchOrganizationMembersByName(orgIds: List<Int>, name: String): List<UserEntity> {
+        return organizationRepository.searchMembersByNameInGroup(orgIds, name)
     }
 
     @Transactional
-    fun searchGroupMembersByName(groupId: Int, name: String): List<UserEntity> {
-        return groupRepository.searchMembersByNameInGroup(groupId, name)
+    fun searchGroupMembersByName(groupIds: List<Int>, name: String): List<UserEntity> {
+        return groupRepository.searchMembersByNameInGroup(groupIds, name)
+    }
+
+    @Transactional
+    fun searchGroupsByName(name: String): List<Group> {
+        return groupRepository.findByNameLikeOrderByNameAsc(name)
+    }
+
+    @Transactional
+    fun searchOrganizationsByName(name: String): List<Organization> {
+        return organizationRepository.findByNameLikeOrderByNameAsc(name)
+    }
+
+    fun getChildrenOfOrganization(organizationId: Int): List<Group> {
+        return groupRepository.getAllByOrganization(organizationId)
+    }
+
+    @Transactional
+    fun getChildrenOfGroup(groupId: Int): List<Group> {
+        return groupRepository.findById(groupId).orElseThrow().childGroups
     }
 
 }

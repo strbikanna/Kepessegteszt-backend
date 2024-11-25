@@ -81,6 +81,8 @@ import {MatTableModule} from "@angular/material/table";
 import { SideMenuComponent } from './general/side-menu/side-menu.component';
 import {MatTreeModule} from "@angular/material/tree";
 import { TrueFalsePipe } from './utils/true-false.pipe';
+import { GroupManagementComponent } from './pages/admin/group-management/group-management.component';
+import { GroupTreeComponent } from './common/group-tree/group-tree.component';
 
 @NgModule({
     declarations: [
@@ -124,7 +126,9 @@ import { TrueFalsePipe } from './utils/true-false.pipe';
         UpAndDownButtonComponent,
         AdminProfileDataComparisonPageComponent,
         SideMenuComponent,
-        TrueFalsePipe
+        TrueFalsePipe,
+        GroupManagementComponent,
+        GroupTreeComponent
     ],
     imports: [
         BrowserModule,

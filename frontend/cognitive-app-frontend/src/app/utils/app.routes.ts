@@ -18,10 +18,11 @@ import {
 import {
     AdminProfileDataComparisonPageComponent
 } from "../pages/admin/admin-profile-data-comparison/admin-profile-data-comparison-page.component";
+import {GroupManagementComponent} from "../pages/admin/group-management/group-management.component";
 
 
 export const appRoutes: Routes = [
-    {path: 'admin', component: AdminPageComponent, canActivate: [adminAuthGuard]},
+    {path: 'admin', component: AdminPageComponent, canActivate: [adminAuthGuard], title: 'Felhasználók kezelése'},
     {path: 'game-management', component: GameManagementPageComponent, canActivate: [editorGuard], title: 'Játékok kezelése'},
     {path: 'edit-game/:id', component: EditGameFormComponent, canActivate: [editorGuard], title: 'Játék szerkesztése'},
     {path: 'edit-game', component: EditGameFormComponent, canActivate: [editorGuard], title: 'Játék szerkesztése'},
@@ -33,5 +34,6 @@ export const appRoutes: Routes = [
     {path: 'cognitive-profile-admin', component: AdminCognitiveProfilePageComponent, canActivate: [loggedInGuard, editorGuard], title: 'Kognitív profil'},
     {path: 'recommendation', component: RecommendationPageComponent, canActivate: [loggedInGuard], title: 'Játékok ajánlása'},
     {path: 'result', component: ResultPageComponent, canActivate: [loggedInGuard], title: 'Eredmények megtekintése'},
+    {path: 'group-management', component: GroupManagementComponent, canActivate: [loggedInGuard, editorGuard], title: 'Felhasználói csoportok kezelése'},
     {path: '**', component: NotFoundComponent}
 ];

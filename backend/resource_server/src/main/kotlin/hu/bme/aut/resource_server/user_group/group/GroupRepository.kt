@@ -1,6 +1,7 @@
 package hu.bme.aut.resource_server.user_group.group
 
 import hu.bme.aut.resource_server.user.UserEntity
+import hu.bme.aut.resource_server.user_group.organization.Organization
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
@@ -9,8 +10,15 @@ interface GroupRepository : JpaRepository<Group, Int> {
 
     @Query(
         "SELECT m FROM Group g " +
-                "JOIN FETCH g.members m " +
-                "WHERE g.id = :groupId AND " +
+                "INNER JOIN g.members m " +
+                "WHERE g.id IN :groupIds AND " +
             "(m.firstName LIKE %:name% OR m.lastName LIKE %:name% OR CONCAT(m.firstName, m.lastName) LIKE %:name%)")
-    fun searchMembersByNameInGroup(groupId: Int, name: String): List<UserEntity>
+    fun searchMembersByNameInGroup(groupIds: List<Int>, name: String): List<UserEntity>
+
+
+    @Query(
+        nativeQuery = true,
+        value = "SELECT * FROM user_group WHERE organization_id = :organizationId AND parent_group_id IS NULL"
+    )
+    fun getAllByOrganization(organizationId: Int): List<Group>
 }

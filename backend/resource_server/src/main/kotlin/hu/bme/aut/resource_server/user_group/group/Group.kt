@@ -59,7 +59,8 @@ class Group(
         return GroupDto(
             id = id!!,
             name = name,
-            organizationDto = organization.toDto()
+            organizationDto = organization.toDto(),
+            childGroupIds = childGroups.map { it.id!! }
         )
     }
 
