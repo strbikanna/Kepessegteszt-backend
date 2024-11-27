@@ -85,6 +85,8 @@ import { GroupManagementComponent } from './pages/admin/group-management/group-m
 import { GroupTreeComponent } from './common/group-tree/group-tree.component';
 import { UserSearchByGroupComponent } from './common/user-search-by-group/user-search-by-group.component';
 import { AddUserToGroupDialogComponent } from './pages/admin/group-management/add-user-to-group-dialog/add-user-to-group-dialog.component';
+import { CreateGroupDialogComponent } from './pages/admin/group-management/create-group-dialog/create-group-dialog.component';
+import { CreateOrgDialogComponent } from './pages/admin/group-management/create-org-dialog/create-org-dialog.component';
 
 @NgModule({
     declarations: [
@@ -132,7 +134,9 @@ import { AddUserToGroupDialogComponent } from './pages/admin/group-management/ad
         GroupManagementComponent,
         GroupTreeComponent,
         UserSearchByGroupComponent,
-        AddUserToGroupDialogComponent
+        AddUserToGroupDialogComponent,
+        CreateGroupDialogComponent,
+        CreateOrgDialogComponent
     ],
     imports: [
         BrowserModule,

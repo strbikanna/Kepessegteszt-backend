@@ -1,6 +1,13 @@
 <h1>{{ text.title }}</h1>
 <div class="flex">
-    <app-group-tree (onGroupIdSelectedForDetails)="onGroupIdSelected($event)"></app-group-tree>
+    <div>
+        <app-group-tree (onGroupIdSelectedForDetails)="onGroupIdSelected($event)"></app-group-tree>
+        <button mat-flat-button (click)="openCreateOrganizationDialog()" color="primary" *ngIf="canCreateOrg()"
+                class="mt-5">
+            <mat-icon>add</mat-icon>
+            {{ text.create_organization }}
+        </button>
+    </div>
     <div class="ml-8">
         <h3 *ngIf="selectedGroup" class="ml-8 mb-2">{{ selectedGroup?.name }}</h3>
         <h3 *ngIf="selectedOrganization" class="ml-8 mb-2">{{ selectedOrganization?.name }}</h3>
@@ -19,7 +26,7 @@
                         </div>
                     </mat-list-item>
                 </mat-list>
-                <button mat-button (click)="openDialog(false)" color="primary">
+                <button mat-button (click)="openAddUserDialog(false)" color="primary">
                     <mat-icon>add</mat-icon>
                     {{ text.add_member }}
                 </button>
@@ -37,11 +44,15 @@
                         </div>
                     </mat-list-item>
                 </mat-list>
-                <button mat-button (click)="openDialog(true)" color="primary">
+                <button mat-button (click)="openAddUserDialog(true)" color="primary">
                     <mat-icon>add</mat-icon>
                     {{ text.add_admin }}
                 </button>
             </div>
         </div>
+        <button mat-flat-button (click)="openCreateGroupDialog()" color="primary" *ngIf="selected" class="mt-5 ml-8">
+            <mat-icon>add</mat-icon>
+            {{ text.create_group }}
+        </button>
     </div>
 </div>

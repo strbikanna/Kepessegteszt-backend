@@ -158,10 +158,11 @@ class UserGroupController(
     @Transactional
     fun createGroup(
         authentication: Authentication,
-        @RequestBody group: GroupDto
+        @RequestBody group: GroupDto,
+        @RequestParam(required = false, value = "parentGroupId") parentGroupId: Int?
     ): UserGroupDto {
-        authService.checkUserGroupWriteAndThrow(authentication, group.organizationDto.id)
-        return userGroupService.createGroup(group.name, group.organizationDto.id).toDto()
+        authService.checkUserGroupWriteAndThrow(authentication, group.organizationDto.id!!)
+        return userGroupService.createGroup(group.name, group.organizationDto.id, parentGroupId).toDto()
     }
 
     @PostMapping("/organization")

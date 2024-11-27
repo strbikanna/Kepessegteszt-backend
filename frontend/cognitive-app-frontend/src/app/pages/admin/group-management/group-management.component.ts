@@ -4,10 +4,13 @@ import {TEXTS} from "../../../utils/app.text_messages";
 import {UserGroupService} from "../../../service/user-group/user-group.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Location} from "@angular/common";
-import {User} from "../../../model/user.model";
+import {Address, User} from "../../../model/user.model";
 import {Observable, of} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {AddUserToGroupDialogComponent} from "./add-user-to-group-dialog/add-user-to-group-dialog.component";
+import {CreateGroupDialogComponent} from "./create-group-dialog/create-group-dialog.component";
+import {CreateOrgDialogComponent} from "./create-org-dialog/create-org-dialog.component";
+import {UserInfo} from "../../../auth/userInfo";
 
 
 @Component({
@@ -31,12 +34,34 @@ export class GroupManagementComponent implements OnInit {
 
     dialog = inject(MatDialog);
 
-    openDialog(addAdmin: boolean) {
+    openAddUserDialog(addAdmin: boolean) {
         this.dialog.open(AddUserToGroupDialogComponent, {
             data: {
                 title: addAdmin ? this.text.add_admin : this.text.add_member,
                 onOk: addAdmin ? (user: User) => this.addAdmin(user.username)
                     : (user: User) => this.addMember(user.username),
+                onCancel: () => {
+                }
+            },
+        });
+    }
+
+    openCreateGroupDialog() {
+        this.dialog.open(CreateGroupDialogComponent, {
+            data: {
+                parentGroupName: this.selectedGroup?.name ?? '',
+                organization: this.selectedGroup?.organization ?? this.selectedOrganization,
+                onOk: (group: { name: string; organization: Organization }) => this.createGroup(group),
+                onCancel: () => {
+                }
+            },
+        });
+    }
+
+    openCreateOrganizationDialog() {
+        this.dialog.open(CreateOrgDialogComponent, {
+            data: {
+                onOk: (organization: { name: string; address: Address }) => this.createOrganization(organization),
                 onCancel: () => {
                 }
             },
@@ -106,6 +131,21 @@ export class GroupManagementComponent implements OnInit {
                 }
             )
         }
+    }
+    canCreateOrg(): boolean {
+        return UserInfo.isAdmin()
+    }
+
+    private createGroup(group: { name: string; organization: Organization }) {
+        this.service.createGroup(group, this.selectedGroup?.id).subscribe(group => {
+            this.onGroupIdSelected(group.id)
+        })
+    }
+
+    private createOrganization(organization: { name: string; address: Address }) {
+        this.service.createOrganization(organization).subscribe(organization => {
+            this.onGroupIdSelected(organization.id)
+        })
     }
 
     private loadGroup(id: number) {

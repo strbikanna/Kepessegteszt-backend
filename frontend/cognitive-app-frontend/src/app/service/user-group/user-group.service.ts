@@ -3,7 +3,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {SimpleHttpService} from "../../utils/simple-http.service";
 import {map, Observable} from "rxjs";
 import {Group, Organization} from "../../model/user-group";
-import {User} from "../../model/user.model";
+import {Address, User} from "../../model/user.model";
 import {UserInfo} from "../../auth/userInfo";
 
 @Injectable({
@@ -44,14 +44,14 @@ export class UserGroupService {
         );
     }
 
-    createOrganization(organization: Organization): Observable<Organization> {
+    createOrganization(organization: {name: string, address: Address}): Observable<Organization> {
         return this.http.post<Organization>(`${this.httpService.baseUrl}/user_group/organization`, organization).pipe(
             map(org => this.convertOrg(org))
         );
     }
 
-    createGroup(group: Group): Observable<Group> {
-        return this.http.post<Group>(`${this.httpService.baseUrl}/user_group/group`, group).pipe(
+    createGroup(group: {name: string, organization: Organization}, parentGroupId?: number): Observable<Group> {
+        return this.http.post<Group>(`${this.httpService.baseUrl}/user_group/group?parentGroupId=${parentGroupId}`, group).pipe(
             map(group => this.convertGroup(group))
         );
     }

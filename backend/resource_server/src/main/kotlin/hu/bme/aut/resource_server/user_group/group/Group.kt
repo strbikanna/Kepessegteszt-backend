@@ -4,6 +4,7 @@ import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user_group.UserGroup
 import hu.bme.aut.resource_server.user_group.UserGroupDto
 import hu.bme.aut.resource_server.user_group.organization.Organization
+import hu.bme.aut.resource_server.user_group.organization.OrganizationDto
 import jakarta.persistence.*
 
 @Entity
@@ -59,7 +60,7 @@ class Group(
         return GroupDto(
             id = id!!,
             name = name,
-            organizationDto = organization.toDto(),
+            organizationDto = organization.toDto() as OrganizationDto,
             childGroupIds = childGroups.map { it.id!! },
             adminUsernames = admins.map { it.username }
         )

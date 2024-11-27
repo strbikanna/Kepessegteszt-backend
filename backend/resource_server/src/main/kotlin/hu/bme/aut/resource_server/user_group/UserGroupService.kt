@@ -137,10 +137,16 @@ class UserGroupService(
     }
 
     @Transactional
-    fun createGroup(name: String, orgId: Int): Group {
+    fun createGroup(name: String, orgId: Int, parentGroupId: Int?=null): Group {
         val orgOfGroup = organizationRepository.findById(orgId).orElseThrow()
-        val group = Group(name = name, organization = orgOfGroup)
-        return groupRepository.save(group)
+        var group = Group(name = name, organization = orgOfGroup)
+        group = groupRepository.save(group)
+        if(parentGroupId != null){
+            val parentGroup = groupRepository.findById(parentGroupId).orElseThrow()
+            parentGroup.childGroups.add(group)
+            groupRepository.save(parentGroup)
+        }
+        return group
     }
     @Transactional
     fun createOrganization(name: String, address: Address): Organization {
