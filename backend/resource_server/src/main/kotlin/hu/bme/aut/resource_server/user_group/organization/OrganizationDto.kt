@@ -5,6 +5,7 @@ import hu.bme.aut.resource_server.user_group.UserGroupDto
 class OrganizationDto(
         id: Int,
         name: String,
+        adminUsernames: List<String>,
         val address: Address,
-) : UserGroupDto(id, name) {
+) : UserGroupDto(id, name, adminUsernames) {
 }

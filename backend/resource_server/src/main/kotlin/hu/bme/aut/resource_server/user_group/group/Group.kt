@@ -60,7 +60,8 @@ class Group(
             id = id!!,
             name = name,
             organizationDto = organization.toDto(),
-            childGroupIds = childGroups.map { it.id!! }
+            childGroupIds = childGroups.map { it.id!! },
+            adminUsernames = admins.map { it.username }
         )
     }
 

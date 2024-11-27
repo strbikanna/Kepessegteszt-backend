@@ -29,4 +29,15 @@ open class PlainUserDto(
         user.gender
     )
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is PlainUserDto) return false
+
+        return username == other.username
+    }
+
+    override fun hashCode(): Int {
+        return username.hashCode()
+    }
+
 }

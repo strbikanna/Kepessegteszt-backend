@@ -7,6 +7,7 @@ import hu.bme.aut.resource_server.user_group.group.GroupRepository
 import hu.bme.aut.resource_server.user_group.organization.Address
 import hu.bme.aut.resource_server.user_group.organization.Organization
 import hu.bme.aut.resource_server.user_group.organization.OrganizationRepository
+import hu.bme.aut.resource_server.utils.RoleName
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
@@ -24,16 +25,32 @@ class UserGroupService(
      * Returns all user groups.
      * Should be called within transaction. (@Transactional)
      */
-    fun getAllUserGroups(pageIndex: Int =0, pageSize: Int = 100): List<UserGroup> {
-        return userGroupRepository.findAll(PageRequest.of(pageIndex, pageSize)).toList()
+    fun getAllUserGroups(pageIndex: Int =0, pageSize: Int = 100, authUsername: String): List<UserGroup> {
+        val user = userRepository.findByUsername(authUsername).orElseThrow()
+        if(user.roles.any{it.roleName == RoleName.ADMIN}){
+            return userGroupRepository.findAll(PageRequest.of(pageIndex, pageSize)).toList()
+        }
+        return user.groups + user.organizations
     }
 
-    fun getAllOrganizations(pageIndex: Int =0, pageSize: Int = 100): List<Organization> {
-        return organizationRepository.findAll(PageRequest.of(pageIndex, pageSize)).toList()
+    fun getAllOrganizations(pageIndex: Int =0, pageSize: Int = 100, authUsername: String): List<Organization> {
+        val user = userRepository.findByUsername(authUsername).orElseThrow()
+        if(user.roles.any{it.roleName == RoleName.ADMIN}){
+            return organizationRepository.findAll(PageRequest.of(pageIndex, pageSize)).toList()
+        }
+        return user.organizations
     }
 
-    fun getAllGroups(pageIndex: Int =0, pageSize: Int = 100): List<Group> {
-        return groupRepository.findAll(PageRequest.of(pageIndex, pageSize)).toList()
+    fun getAllGroups(pageIndex: Int =0, pageSize: Int = 100, authUsername: String): List<Group> {
+        val user = userRepository.findByUsername(authUsername).orElseThrow()
+        if(user.roles.any{it.roleName == RoleName.ADMIN}){
+            return groupRepository.findAll(PageRequest.of(pageIndex, pageSize)).toList()
+        }
+        return user.groups
+    }
+
+    fun getById(id: Int): UserGroup {
+        return userGroupRepository.findById(id).orElseThrow()
     }
 
     @Transactional
@@ -89,6 +106,23 @@ class UserGroupService(
         val group = userGroupRepository.findById(groupId).orElseThrow()
         val dbGroup = userGroupRepository.findById(group.id!!).get()
         val userIds = dbGroup.getAllUserIds()
+        return userRepository.findByIdIn(userIds.toList())
+    }
+
+    @Transactional
+    fun getAllUsersToSee(username: String, pageIndex: Int=0, pageSize: Int=100): List<UserEntity> {
+        val user = userRepository.findByUsername(username).orElseThrow()
+        if(user.roles.any{it.roleName == RoleName.ADMIN}){
+            return userRepository.findAll(PageRequest.of(pageIndex, pageSize)).toList()
+        }
+        val groupsToSee : MutableSet<UserGroup> = user.groups.toMutableSet()
+        val orgs = user.organizations
+        orgs.forEach { org ->
+            if(org.admins.any { it.id == user.id }){
+                groupsToSee.add(org)
+            }
+        }
+        val userIds = groupsToSee.flatMap { it.getAllUserIds() }
         return userRepository.findByIdIn(userIds.toList())
     }
 

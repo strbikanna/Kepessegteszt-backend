@@ -64,7 +64,8 @@ class Organization(
         return OrganizationDto(
             id = id!!,
             name = name,
-            address = address
+            address = address,
+            adminUsernames = admins.map { it.username }
         )
     }
 }

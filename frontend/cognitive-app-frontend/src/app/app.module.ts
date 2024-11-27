@@ -83,6 +83,7 @@ import {MatTreeModule} from "@angular/material/tree";
 import { TrueFalsePipe } from './utils/true-false.pipe';
 import { GroupManagementComponent } from './pages/admin/group-management/group-management.component';
 import { GroupTreeComponent } from './common/group-tree/group-tree.component';
+import { UserSearchByGroupComponent } from './common/user-search-by-group/user-search-by-group.component';
 
 @NgModule({
     declarations: [
@@ -128,7 +129,8 @@ import { GroupTreeComponent } from './common/group-tree/group-tree.component';
         SideMenuComponent,
         TrueFalsePipe,
         GroupManagementComponent,
-        GroupTreeComponent
+        GroupTreeComponent,
+        UserSearchByGroupComponent
     ],
     imports: [
         BrowserModule,

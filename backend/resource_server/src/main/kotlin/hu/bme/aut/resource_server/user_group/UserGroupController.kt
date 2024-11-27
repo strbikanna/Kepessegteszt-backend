@@ -4,6 +4,7 @@ import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
 import hu.bme.aut.resource_server.user_group.group.GroupDto
 import hu.bme.aut.resource_server.user_group.organization.OrganizationDto
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
@@ -29,21 +30,37 @@ class UserGroupController(
 
     @GetMapping("/{groupType}")
     @ResponseStatus(HttpStatus.OK)
+    @Transactional
     fun getAllUserGroups(
         @PathVariable groupType: String = "all",
         @RequestParam("pageIndex", required = false, defaultValue = "0") pageIndex: Int,
-        @RequestParam("pageSize", required = false, defaultValue = "100") pageSize: Int
+        @RequestParam("pageSize", required = false, defaultValue = "100") pageSize: Int,
+        authentication: Authentication
     ): List<UserGroupDto> {
+        val username = authentication.name
         return when (groupType) {
-            "organization" -> userGroupService.getAllOrganizations(pageIndex, pageSize).map { it.toDto() }
-            "org" -> userGroupService.getAllOrganizations(pageIndex, pageSize).map { it.toDto() }
-            "group" -> userGroupService.getAllGroups(pageIndex, pageSize).map { it.toDto() }
-            else -> userGroupService.getAllUserGroups(pageIndex, pageSize).map { it.toDto() }
+            "organization" -> userGroupService.getAllOrganizations(pageIndex, pageSize, username).map { it.toDto() }
+            "org" -> userGroupService.getAllOrganizations(pageIndex, pageSize, username).map { it.toDto() }
+            "group" -> userGroupService.getAllGroups(pageIndex, pageSize, username).map { it.toDto() }
+            else -> userGroupService.getAllUserGroups(pageIndex, pageSize, username).map { it.toDto() }
         }
     }
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    fun getUserGroupById(
+        authentication: Authentication,
+        @RequestParam id: Int
+    ): UserGroupDto {
+        authService.checkGroupDataReadAndThrow(authentication, id)
+        return userGroupService.getById(id).toDto()
+    }
+
+
     @GetMapping("/child_groups/{groupType}")
     @ResponseStatus(HttpStatus.OK)
+    @Transactional
     fun getChildGroupsOfOrganization(
         @RequestParam("id") id: Int,
         @PathVariable groupType: String ,
@@ -58,6 +75,7 @@ class UserGroupController(
 
     @GetMapping("/search/{groupType}")
     @ResponseStatus(HttpStatus.OK)
+    @Transactional
     fun searchUserGroups(
         @PathVariable groupType: String = "all",
         @RequestParam name: String,
@@ -79,6 +97,16 @@ class UserGroupController(
     ): List<PlainUserDto> {
         authService.checkGroupDataReadAndThrow(authentication, groupId)
         return userGroupService.getAllUsersInGroup(groupId).map { PlainUserDto(it) }
+    }
+
+    @GetMapping("/users_to_see")
+    @ResponseStatus(HttpStatus.OK)
+    fun getAllUsersToSee(
+        authentication: Authentication,
+        @RequestParam(required = false, defaultValue = "0") pageIndex: Int,
+        @RequestParam(required = false, defaultValue = "100") pageSize: Int
+    ): List<PlainUserDto> {
+        return userGroupService.getAllUsersToSee(authentication.name, pageIndex, pageSize).map { PlainUserDto(it) }
     }
 
     @DeleteMapping("/members")
@@ -126,6 +154,7 @@ class UserGroupController(
 
     @PostMapping("/group")
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
     fun createGroup(
         authentication: Authentication,
         @RequestBody group: GroupDto
@@ -137,6 +166,7 @@ class UserGroupController(
     @PostMapping("/organization")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
     fun createOrganization(
         authentication: Authentication,
         @RequestBody org: OrganizationDto
