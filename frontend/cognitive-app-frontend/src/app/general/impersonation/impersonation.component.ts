@@ -4,7 +4,7 @@ import {UserInfo} from "../../auth/userInfo";
 import {User} from "../../model/user.model";
 import {Observable} from "rxjs";
 import {TEXTS} from "../../utils/app.text_messages";
-import {AppConstants} from "../../utils/constants";
+import {AppConstants, Role} from "../../utils/constants";
 
 @Component({
   selector: 'app-impersonation',
@@ -17,6 +17,7 @@ export class ImpersonationComponent implements OnInit {
   public canImpersonate = false
   public user: User | undefined = undefined
   text= TEXTS.impersonation
+  homeText = TEXTS.home
   private storageKey = AppConstants.impersonationDisabledKey
   constructor(private impersonationService: LoginService) {}
 
@@ -50,5 +51,23 @@ export class ImpersonationComponent implements OnInit {
   disableImpersonation(){
     sessionStorage.setItem(this.storageKey, 'true')
     this.canImpersonate = false
+  }
+
+  getFeatureMessageForUser() {
+    if (this.user === undefined) {
+      return this.homeText.login
+    }
+    if (this.user.roles.includes(Role.SCIENTIST)) {
+      return this.homeText.features_scientist
+    }
+    if (this.user.roles.includes(Role.TEACHER)) {
+      return this.homeText.features_teacher
+    }
+    if (this.user.roles.includes(Role.PARENT)) {
+      return this.homeText.features_parent
+    }
+    if (this.user.roles.includes(Role.STUDENT)) {
+      return this.homeText.features_student
+    } else return ''
   }
 }

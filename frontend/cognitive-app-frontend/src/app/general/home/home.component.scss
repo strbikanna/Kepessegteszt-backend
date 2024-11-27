@@ -7,19 +7,6 @@
   background-image: url('https://coglica.aut.bme.hu/cogniapp/assets/space-background.jpg');
   background-size: cover;
 }
-.impersonation{
-  position: fixed;
-  top: 17%;
-  left: 20%;
-  width: 60%;
-  @media (min-width: 100px) and (max-width: 750px){
-    left: 0;
-    width: 100%;
-  }
-  background: black;
-  color: #F1EFEF;
-  border-radius: 0.5em;
-}
 
 .welcome-container {
   width: 100%;

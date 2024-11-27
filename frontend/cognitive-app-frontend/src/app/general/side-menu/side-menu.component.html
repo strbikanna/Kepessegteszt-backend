@@ -3,8 +3,12 @@
         <p class="description ml-3" *ngIf="isAdmin">{{ text.section_title.admin }}</p>
         <mat-divider/>
         <button mat-menu-item *ngIf="isAdmin" routerLink="/admin" [routerLinkActive]="['activeLink']">
-            <mat-icon>group</mat-icon>
+            <mat-icon>manage_accounts</mat-icon>
             <span>{{ text.user_management }}</span>
+        </button>
+        <button mat-menu-item *ngIf="isAdmin" routerLink="/group-management">
+            <mat-icon>group</mat-icon>
+            <span>{{ text.group_management}}</span>
         </button>
 
         <p class="description ml-3">{{ text.section_title.profile }}</p>
