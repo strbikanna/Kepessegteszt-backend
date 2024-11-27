@@ -12,6 +12,7 @@ export const TEXTS = {
         profile_comparison: 'Kognitív profil elemzés',
         user_management: 'Felhasználók kezelése',
         game_management: 'Játékok kezelése',
+        group_management: 'Intézmények és csoportok kezelése',
         result_management: 'Eredmények',
         game_recommendation: 'Játékok ajánlása',
         section_title:{
@@ -274,6 +275,11 @@ export const TEXTS = {
             description_placeholder: 'Opcionális leírás a paraméterről',
         },
         active_filter: "Aktív játékok",
+    },
+    group_management:{
+      title: 'Csoportok kezelése',
+      group_tree_title: 'Intézmények és Csoportok',
+      select_group_tooltip: 'Csoport kiválasztása a részletek megtekintéséhez'
     },
     file_upload: {
         no_content: 'Nincs kiválasztott fájl',

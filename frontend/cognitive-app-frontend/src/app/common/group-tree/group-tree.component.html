@@ -1,5 +1,5 @@
 <div class="group-tree-container">
-    <h2>Organization and Group Tree</h2>
+    <h3>{{text.group_tree_title}}</h3>
 
     <mat-progress-bar *ngIf="dataLoading" mode="indeterminate"></mat-progress-bar>
 
@@ -8,11 +8,15 @@
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
             <button *ngFor="let i of iterablesForLevel(node.level)" mat-icon-button disabled></button>
             <button mat-icon-button disabled></button>
-            <span (click)="selectGroup(node.id)" class="group-name">{{ node.name }}</span>
+            <span class="group-name  {{selectedNodeId === node.id ? 'selected' : ''}}"
+                  matTooltip="{{text.select_group_tooltip}}" (click)="selectGroup(node.id)"
+                  matTooltipPosition="after">
+                {{ node.name }}
+            </span>
         </mat-tree-node>
 
         <!-- Expandable node -->
-        <mat-nested-tree-node *matTreeNodeDef="let node; when hasChild" matTreeNodeToggle>
+        <mat-nested-tree-node *matTreeNodeDef="let node; when hasChild">
             <div class="flex align-items-center">
                 <button *ngFor="let i of iterablesForLevel(node.level)" mat-icon-button disabled></button>
                 <button mat-icon-button matTreeNodeToggle
@@ -22,7 +26,11 @@
                         {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
                     </mat-icon>
                 </button>
-                <span (click)="selectGroup(node.id)" class="group-name">{{ node.name }}</span>
+                <span  class="group-name {{selectedNodeId === node.id ? 'selected' : ''}}"
+                       (click)="selectGroup(node.id)"
+                       matTooltip="{{text.select_group_tooltip}}" matTooltipPosition="after">
+                    {{ node.name }}
+                </span>
                 <mat-progress-bar
                         *ngIf="node.loading"
                         mode="indeterminate">
