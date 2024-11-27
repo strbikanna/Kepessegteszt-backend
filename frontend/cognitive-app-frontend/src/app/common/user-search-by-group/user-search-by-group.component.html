@@ -1,0 +1,15 @@
+<form class="m-2">
+    <mat-form-field>
+        <mat-label>{{text.label}}</mat-label>
+        <input type="text"
+               placeholder="{{text.placeholder}}"
+               matInput
+               [formControl]="searchNameControl"
+               [matAutocomplete]="auto">
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-option *ngFor="let user of userOptions"
+                    [value]="user.firstName + user.lastName">{{user.firstName + ' ' + user.lastName}}</mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+</form>
+
