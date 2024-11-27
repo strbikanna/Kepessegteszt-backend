@@ -4,6 +4,7 @@ export interface Organization {
     id: number;
     name: string;
     address: Address;
+    canWrite: boolean;
 }
 
 export interface Group {
@@ -11,4 +12,5 @@ export interface Group {
     name: string;
     organization: Organization;
     childGroupIds: number[];
+    canWrite: boolean;
 }
