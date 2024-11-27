@@ -13,4 +13,9 @@ interface OrganizationRepository : JpaRepository<Organization, Int>{
             "WHERE o.id IN :groupIds AND " +
             "(m.firstName LIKE %:name% OR m.lastName LIKE %:name% OR CONCAT(m.firstName, m.lastName) LIKE %:name%)")
     fun searchMembersByNameInGroup(groupIds: List<Int>, name: String): List<UserEntity>
+
+    @Query("SELECT m FROM Organization o " +
+            "INNER JOIN o.members m " +
+            "WHERE (m.firstName LIKE %:name% OR m.lastName LIKE %:name% OR CONCAT(m.firstName, m.lastName) LIKE %:name%)")
+    fun searchMembersByName( name: String): List<UserEntity>
 }

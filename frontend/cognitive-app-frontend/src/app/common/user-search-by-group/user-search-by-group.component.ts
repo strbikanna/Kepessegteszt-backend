@@ -41,6 +41,14 @@ export class UserSearchByGroupComponent implements  OnInit {
     }
   }
 
+  onOptionSelected(){
+    const name = this.searchNameControl.value
+    const user = this.userOptions.find(user => name === `${user.firstName} ${user.lastName}`)
+    if(user){
+      this.userSelected.emit(user)
+    }
+  }
+
   private loadUserGroups(){
     this.service.getAllUserGroups().subscribe(groups => {
       this.allGroupIds = groups.map(group => group.id)

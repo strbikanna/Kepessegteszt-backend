@@ -84,6 +84,7 @@ import { TrueFalsePipe } from './utils/true-false.pipe';
 import { GroupManagementComponent } from './pages/admin/group-management/group-management.component';
 import { GroupTreeComponent } from './common/group-tree/group-tree.component';
 import { UserSearchByGroupComponent } from './common/user-search-by-group/user-search-by-group.component';
+import { AddUserToGroupDialogComponent } from './pages/admin/group-management/add-user-to-group-dialog/add-user-to-group-dialog.component';
 
 @NgModule({
     declarations: [
@@ -130,7 +131,8 @@ import { UserSearchByGroupComponent } from './common/user-search-by-group/user-s
         TrueFalsePipe,
         GroupManagementComponent,
         GroupTreeComponent,
-        UserSearchByGroupComponent
+        UserSearchByGroupComponent,
+        AddUserToGroupDialogComponent
     ],
     imports: [
         BrowserModule,

@@ -6,9 +6,11 @@
                matInput
                [formControl]="searchNameControl"
                [matAutocomplete]="auto">
-        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="onOptionSelected()">
             <mat-option *ngFor="let user of userOptions"
-                    [value]="user.firstName + user.lastName">{{user.firstName + ' ' + user.lastName}}</mat-option>
+                    [value]="user.firstName+' '+ user.lastName"
+            >
+                {{user.firstName+' '+ user.lastName}}</mat-option>
         </mat-autocomplete>
     </mat-form-field>
 </form>

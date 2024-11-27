@@ -4,6 +4,7 @@ import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
 import hu.bme.aut.resource_server.user_group.group.GroupDto
 import hu.bme.aut.resource_server.user_group.organization.OrganizationDto
+import hu.bme.aut.resource_server.utils.RoleName
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -176,19 +177,22 @@ class UserGroupController(
 
     @PostMapping("/members/search")
     @ResponseStatus(HttpStatus.OK)
+    @Transactional
     fun searchMembersInGroup(
         authentication: Authentication,
         @RequestBody groupIds: List<Int>,
         @RequestParam("name") name: String
     ): Set<PlainUserDto> {
         groupIds.forEach { authService.checkGroupDataReadAndThrow(authentication, it) }
+        val user = authService.getAuthUser(authentication)
         val members: MutableSet<PlainUserDto> = mutableSetOf()
+        if(user.roles.any{it.roleName == RoleName.ADMIN}){
+            members.addAll(userGroupService.searchUsersByName(name).map { PlainUserDto(it) })
+            return members
+        }
         members.addAll(userGroupService.searchOrganizationMembersByName(groupIds, name).map { PlainUserDto(it) })
         members.addAll(userGroupService.searchGroupMembersByName(groupIds, name).map { PlainUserDto(it) })
         return members
     }
-
-
-
 
 }

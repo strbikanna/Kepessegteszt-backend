@@ -70,4 +70,7 @@ interface UserRepository: JpaRepository<UserEntity, Int>, JpaSpecificationExecut
             "WHERE p.ability.code = :abilityCode " +
             "AND p.abilityValue is not null")
     fun getAllAbilityValues(abilityCode: String): List<Double>
+
+    @Query("SELECT u FROM UserEntity u WHERE u.firstName LIKE %:name% OR u.lastName LIKE %:name% OR CONCAT(u.firstName, u.lastName) LIKE %:name%")
+    fun searchByName(name: String): List<UserEntity>
 }

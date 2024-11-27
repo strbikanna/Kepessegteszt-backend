@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {SimpleHttpService} from "../../utils/simple-http.service";
-import {Observable} from "rxjs";
+import {map, Observable} from "rxjs";
 import {Group, Organization} from "../../model/user-group";
 import {User} from "../../model/user.model";
+import {UserInfo} from "../../auth/userInfo";
 
 @Injectable({
     providedIn: 'root'
@@ -14,27 +15,45 @@ export class UserGroupService {
     }
 
     getAllOrganizations(): Observable<Organization[]> {
-        return this.http.get<Organization[]>(`${this.httpService.baseUrl}/user_group/org`);
+        return this.http.get<Organization[]>(`${this.httpService.baseUrl}/user_group/org`).pipe(
+            map(groups => groups.map(this.convertOrg))
+        );
+    }
+
+    getById(id: number): Observable<Organization | Group> {
+        return this.http.get<Organization | Group>(`${this.httpService.baseUrl}/user_group?id=${id}`).pipe(
+            map(group => this.convertOrgOrGroup(group))
+        );
     }
 
     getAllGroups(): Observable<Group[]> {
-        return this.http.get<Group[]>(`${this.httpService.baseUrl}/user_group/group`);
+        return this.http.get<Group[]>(`${this.httpService.baseUrl}/user_group/group`).pipe(
+            map(groups => groups.map(this.convertGroup))
+        );
     }
 
     searchOrganization(name: string): Observable<Organization[]> {
-        return this.http.get<Organization[]>(`${this.httpService.baseUrl}/user_group/search/org?name=${name}`);
+        return this.http.get<Organization[]>(`${this.httpService.baseUrl}/user_group/search/org?name=${name}`).pipe(
+            map(groups => groups.map(this.convertOrg))
+        );
     }
 
     searchGroup(name: string): Observable<Group[]> {
-        return this.http.get<Group[]>(`${this.httpService.baseUrl}/user_group/search/group?name=${name}`);
+        return this.http.get<Group[]>(`${this.httpService.baseUrl}/user_group/search/group?name=${name}`).pipe(
+            map(groups => groups.map(this.convertGroup))
+        );
     }
 
     createOrganization(organization: Organization): Observable<Organization> {
-        return this.http.post<Organization>(`${this.httpService.baseUrl}/user_group/organization`, organization);
+        return this.http.post<Organization>(`${this.httpService.baseUrl}/user_group/organization`, organization).pipe(
+            map(org => this.convertOrg(org))
+        );
     }
 
     createGroup(group: Group): Observable<Group> {
-        return this.http.post<Group>(`${this.httpService.baseUrl}/user_group/group`, group);
+        return this.http.post<Group>(`${this.httpService.baseUrl}/user_group/group`, group).pipe(
+            map(group => this.convertGroup(group))
+        );
     }
 
     addMemberToGroup(groupId: number, username: string) {
@@ -70,16 +89,34 @@ export class UserGroupService {
         return this.http.delete(`${this.httpService.baseUrl}/user_group/admins`, {params: params});
     }
 
-    searchMembers(groupIds: number[], name: string): Observable<User[]> {
-        return this.http.post<User[]>(`${this.httpService.baseUrl}/user_group/members/search?name=${name}`, groupIds);
-    }
 
     getGroupsInOrganization(orgId: number): Observable<Group[]> {
-        return this.http.get<Group[]>(`${this.httpService.baseUrl}/user_group/child_groups/org?id=${orgId}`);
+        return this.http.get<Group[]>(`${this.httpService.baseUrl}/user_group/child_groups/org?id=${orgId}`).pipe(
+            map(groups => groups.map(this.convertGroup))
+        );
     }
 
     getGroupsInGroup(groupId: number): Observable<Group[]> {
-        return this.http.get<Group[]>(`${this.httpService.baseUrl}/user_group/child_groups/group?id=${groupId}`);
+        return this.http.get<Group[]>(`${this.httpService.baseUrl}/user_group/child_groups/group?id=${groupId}`).pipe(
+            map(groups => groups.map(this.convertGroup))
+        );
+    }
+
+    private convertGroup(group: any): Group{
+        const user = UserInfo.currentUser
+        group.canWrite = group.adminUsernames.includes(user.username) || UserInfo.isAdmin()
+        return group
+    }
+    private convertOrg(group: any): Organization{
+        const user = UserInfo.currentUser
+        group.canWrite = group.adminUsernames.includes(user.username) || UserInfo.isAdmin()
+        return group
+    }
+
+    private convertOrgOrGroup(group: any): Group | Organization {
+        const user = UserInfo.currentUser
+        group.canWrite = group.adminUsernames.includes(user.username) || UserInfo.isAdmin()
+        return group
     }
 
 }

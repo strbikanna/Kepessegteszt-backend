@@ -15,7 +15,7 @@ export const TEXTS = {
         group_management: 'Intézmények és csoportok kezelése',
         result_management: 'Eredmények',
         game_recommendation: 'Játékok ajánlása',
-        section_title:{
+        section_title: {
             admin: 'Adminisztráció',
             profile: 'Kognitív profil',
             game: 'Játékok',
@@ -276,10 +276,18 @@ export const TEXTS = {
         },
         active_filter: "Aktív játékok",
     },
-    group_management:{
-      title: 'Csoportok kezelése',
-      group_tree_title: 'Intézmények és Csoportok',
-      select_group_tooltip: 'Csoport kiválasztása a részletek megtekintéséhez'
+    group_management: {
+        title: 'Csoportok kezelése',
+        group_tree_title: 'Intézmények és Csoportok',
+        select_group_tooltip: 'Csoport kiválasztása a részletek megtekintéséhez',
+        members: 'Tagok',
+        admins: 'Adminok',
+        remove_member: 'Eltávolítás a csoportból',
+        remove_admin: 'Admin jogok visszavonása',
+        create_group: 'Csoport létrehozása',
+        create_organization: 'Intézmény regisztrálása',
+        add_member: 'Új tag hozzáadása',
+        add_admin: 'Admin hozzáadása',
     },
     file_upload: {
         no_content: 'Nincs kiválasztott fájl',

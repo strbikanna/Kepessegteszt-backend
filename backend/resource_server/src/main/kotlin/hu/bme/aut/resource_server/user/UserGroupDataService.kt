@@ -38,13 +38,9 @@ class UserGroupDataService(
         val orgOfGroup = group.organization
         if(!user.organizations.contains(orgOfGroup)){
             user.organizations.add(orgOfGroup)
-            orgOfGroup.members.add(user)
-            orgRepository.save(orgOfGroup)
         }
         user.groups.add(group)
         userRepository.save(user)
-        group.members.add(user)
-        groupRepository.save(group)
     }
 
     @Transactional
@@ -52,8 +48,6 @@ class UserGroupDataService(
         val user = userRepository.findByUsername(username).orElseThrow()
         val org = orgRepository.findById(orgId).orElseThrow()
         user.organizations.add(org)
-        org.members.add(user)
-        orgRepository.save(org)
         userRepository.save(user)
     }
 

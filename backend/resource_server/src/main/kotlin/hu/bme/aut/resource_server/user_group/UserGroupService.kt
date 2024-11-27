@@ -30,7 +30,7 @@ class UserGroupService(
         if(user.roles.any{it.roleName == RoleName.ADMIN}){
             return userGroupRepository.findAll(PageRequest.of(pageIndex, pageSize)).toList()
         }
-        return user.groups + user.organizations
+        return (user.groups + user.organizations).toList()
     }
 
     fun getAllOrganizations(pageIndex: Int =0, pageSize: Int = 100, authUsername: String): List<Organization> {
@@ -38,7 +38,7 @@ class UserGroupService(
         if(user.roles.any{it.roleName == RoleName.ADMIN}){
             return organizationRepository.findAll(PageRequest.of(pageIndex, pageSize)).toList()
         }
-        return user.organizations
+        return user.organizations.toList()
     }
 
     fun getAllGroups(pageIndex: Int =0, pageSize: Int = 100, authUsername: String): List<Group> {
@@ -46,7 +46,7 @@ class UserGroupService(
         if(user.roles.any{it.roleName == RoleName.ADMIN}){
             return groupRepository.findAll(PageRequest.of(pageIndex, pageSize)).toList()
         }
-        return user.groups
+        return user.groups.toList()
     }
 
     fun getById(id: Int): UserGroup {
@@ -59,6 +59,7 @@ class UserGroupService(
         val group = userGroupRepository.findById(groupId).orElseThrow()
         val dbGroup = userGroupRepository.findById(group.id!!).get()
         dbGroup.admins.add(user)
+        dbGroup.members.add(user)
         userGroupRepository.save(group)
     }
 
@@ -149,13 +150,19 @@ class UserGroupService(
 
     @Transactional
     fun searchOrganizationMembersByName(orgIds: List<Int>, name: String): List<UserEntity> {
-        return organizationRepository.searchMembersByNameInGroup(orgIds, name)
+        return organizationRepository.searchMembersByNameInGroup(orgIds, name.replace(" ", ""))
+    }
+
+    @Transactional
+    fun searchUsersByName(name: String): List<UserEntity> {
+        return userRepository.searchByName(name.replace(" ", ""))
     }
 
     @Transactional
     fun searchGroupMembersByName(groupIds: List<Int>, name: String): List<UserEntity> {
-        return groupRepository.searchMembersByNameInGroup(groupIds, name)
+        return groupRepository.searchMembersByNameInGroup(groupIds, name.replace(" ", ""))
     }
+
 
     @Transactional
     fun searchGroupsByName(name: String): List<Group> {

@@ -1,1 +1,47 @@
-<app-group-tree></app-group-tree>
+<h1>{{ text.title }}</h1>
+<div class="flex">
+    <app-group-tree (onGroupIdSelectedForDetails)="onGroupIdSelected($event)"></app-group-tree>
+    <div class="ml-8">
+        <h3 *ngIf="selectedGroup" class="ml-8 mb-2">{{ selectedGroup?.name }}</h3>
+        <h3 *ngIf="selectedOrganization" class="ml-8 mb-2">{{ selectedOrganization?.name }}</h3>
+
+        <div *ngIf="selected" class="flex">
+            <div class="ml-8">
+                <mat-list role="list">
+                    <p class="description text-lg font-bold">{{ text.members }}</p>
+                    <mat-list-item *ngFor="let user of membersOfGroup |async">
+                        <div class="flex align-items-center">
+                            {{ user.firstName + ' ' + user.lastName }}
+                            <button mat-icon-button (click)="removeMember(user.username)"
+                                    matTooltip="{{ text.remove_member }}">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </div>
+                    </mat-list-item>
+                </mat-list>
+                <button mat-button (click)="openDialog(false)" color="primary">
+                    <mat-icon>add</mat-icon>
+                    {{ text.add_member }}
+                </button>
+            </div>
+            <div class="ml-8">
+                <mat-list role="list">
+                    <p class="description text-lg font-bold">{{ text.admins }}</p>
+                    <mat-list-item *ngFor="let user of adminsOfGroup |async">
+                        <div class="flex align-items-center">
+                            {{ user.firstName + ' ' + user.lastName }}
+                            <button mat-icon-button (click)="removeAdmin(user.username)"
+                                    matTooltip="{{ text.remove_admin }}">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </div>
+                    </mat-list-item>
+                </mat-list>
+                <button mat-button (click)="openDialog(true)" color="primary">
+                    <mat-icon>add</mat-icon>
+                    {{ text.add_admin }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
