@@ -9,8 +9,13 @@
         </button>
     </div>
     <div class="ml-8">
-        <h3 *ngIf="selectedGroup" class="ml-8 mb-2">{{ selectedGroup?.name }}</h3>
-        <h3 *ngIf="selectedOrganization" class="ml-8 mb-2">{{ selectedOrganization?.name }}</h3>
+        <h3 *ngIf="selectedGroup" class="ml-8 mb-2">{{ selectedGroup.name }}</h3>
+        <p *ngIf="selectedGroup" class="ml-8 description">{{text.parent_organization_name}} {{ selectedGroup.organization.name }}</p>
+        <h3 *ngIf="selectedOrganization" class="ml-8 mb-2">{{ selectedOrganization.name }}</h3>
+        <p *ngIf="selectedOrganization" class="ml-8 description">
+            {{text.organization_address}}: {{ selectedOrganization.address.zip }} {{ selectedOrganization.address.city }},
+            {{ selectedOrganization.address.street }} {{ selectedOrganization.address.houseNumber }}
+        </p>
 
         <div *ngIf="selected" class="flex">
             <div class="ml-8">
