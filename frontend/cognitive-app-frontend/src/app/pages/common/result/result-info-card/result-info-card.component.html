@@ -8,7 +8,7 @@
         </mat-chip>
         <mat-panel-title> {{ result.gameName }}</mat-panel-title>
         <mat-panel-description> {{ result.username }}</mat-panel-description>
-        <mat-panel-description> {{ result.timestamp | date }}</mat-panel-description>
+        <mat-panel-description> {{ result.timestamp | timestamp }}</mat-panel-description>
     </mat-expansion-panel-header>
     <div>
        <p class="sectionTitle"> {{ texts.result }}:</p> {{ result.passed ? texts.passed : texts.failed }}

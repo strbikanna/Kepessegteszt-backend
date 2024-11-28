@@ -87,6 +87,7 @@ import { UserSearchByGroupComponent } from './common/user-search-by-group/user-s
 import { AddUserToGroupDialogComponent } from './pages/admin/group-management/add-user-to-group-dialog/add-user-to-group-dialog.component';
 import { CreateGroupDialogComponent } from './pages/admin/group-management/create-group-dialog/create-group-dialog.component';
 import { CreateOrgDialogComponent } from './pages/admin/group-management/create-org-dialog/create-org-dialog.component';
+import { TimestampPipe } from './utils/timestamp.pipe';
 
 @NgModule({
     declarations: [
@@ -136,7 +137,8 @@ import { CreateOrgDialogComponent } from './pages/admin/group-management/create-
         UserSearchByGroupComponent,
         AddUserToGroupDialogComponent,
         CreateGroupDialogComponent,
-        CreateOrgDialogComponent
+        CreateOrgDialogComponent,
+        TimestampPipe
     ],
     imports: [
         BrowserModule,
