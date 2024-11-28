@@ -17,7 +17,7 @@ spring:
   web:
     resources:
       # Path to static files, set local file path
-      static-locations: file:/Users/Lenovo/Anna/Projects/backend/resource_server/thumbnails
+      static-locations: file:/Users/annav/Projekte/Kepessegteszt-backend/backend/resource_server/thumbnails
   mvc:
     static-path-pattern: /game_images/**
 
@@ -26,7 +26,7 @@ spring:
       resourceserver:
         jwt:
           # Uri of auth server, customize if needed
-          issuer-uri: http://localhost:9000
+          issuer-uri: https://coglica.aut.bme.hu/auth
 
 springdoc:
   api-docs:
@@ -34,7 +34,7 @@ springdoc:
 
 llms:
   mistral:
-    api-key: 
+    api-key:
     model-name: mistral-large-latest
   openai:
     api-key:
@@ -48,8 +48,8 @@ app:
     # Indicates if Python environment is present
     exists: true
     # Path to python module, set local file path
-    source-location: C:/Users/Lenovo/Anna/Projects/backend/resource_server/python_module
-    models-location: C:/Users/Lenovo/Anna/Projects/backend/resource_server/python_module/modellek/
-  thumbnail-location: C:/Users/Lenovo/Anna/Projects/backend/resource_server/thumbnails
+    source-location: C:/Users/annav/Projekte/Kepessegteszt-backend/backend/resource_server/python_module
+    models-location: C:/Users/annav/Projekte/Kepessegteszt-backend/backend/resource_server/python_module/modellek/
+  thumbnail-location: C:/Users/annav/Projekte/Kepessegteszt-backend/backend/resource_server/thumbnails
   # Path to static files, set local port of resource server if needed
   image-path: http://localhost:8090/game_images
