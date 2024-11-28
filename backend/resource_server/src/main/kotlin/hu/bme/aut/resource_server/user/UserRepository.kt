@@ -3,14 +3,14 @@ package hu.bme.aut.resource_server.user
 import hu.bme.aut.resource_server.user_group.organization.Address
 import hu.bme.aut.resource_server.utils.Gender
 import jakarta.transaction.Transactional
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
 import java.time.LocalDate
 import java.util.*
 
-interface UserRepository: CrudRepository<UserEntity, Int>, JpaSpecificationExecutor<UserEntity> {
+interface UserRepository: JpaRepository<UserEntity, Int>, JpaSpecificationExecutor<UserEntity> {
     fun findByUsername(username: String): Optional<UserEntity>
 
     fun findAllByUsernameIn(username: List<String>): List<UserEntity>
@@ -70,4 +70,7 @@ interface UserRepository: CrudRepository<UserEntity, Int>, JpaSpecificationExecu
             "WHERE p.ability.code = :abilityCode " +
             "AND p.abilityValue is not null")
     fun getAllAbilityValues(abilityCode: String): List<Double>
+
+    @Query("SELECT u FROM UserEntity u WHERE u.firstName LIKE %:name% OR u.lastName LIKE %:name% OR CONCAT(u.firstName, u.lastName) LIKE %:name%")
+    fun searchByName(name: String): List<UserEntity>
 }

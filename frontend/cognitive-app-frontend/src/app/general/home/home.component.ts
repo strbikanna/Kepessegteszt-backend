@@ -26,22 +26,6 @@ export class HomeComponent implements OnInit {
         });
     }
 
-    getFeatureMessageForUser() {
-        if (this.user === undefined) {
-            return this.texts.login
-        }
-        if (this.user.roles.includes(Role.SCIENTIST)) {
-            return this.texts.features_scientist
-        }
-        if (this.user.roles.includes(Role.TEACHER)) {
-            return this.texts.features_teacher
-        }
-        if (this.user.roles.includes(Role.PARENT)) {
-            return this.texts.features_parent
-        }
-        if (this.user.roles.includes(Role.STUDENT)) {
-            return this.texts.features_student
-        } else return ''
-    }
+
 
 }

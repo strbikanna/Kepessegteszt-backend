@@ -41,7 +41,12 @@ class UserGroupDataServiceTest(
         testService.groupRepository.save(group)
         userGroupDataService.addUserToGroup(user.username, group.id!!)
         val userInDb = testService.userRepository.findByUsername(user.username).orElseThrow()
+        val dbGroup = testService.groupRepository.findById(group.id!!).orElseThrow()
+        val dbOrg = testService.organizationRepository.findById(org.id!!).orElseThrow()
         assertEquals(1, userInDb.groups.size)
+        assertEquals(1, userInDb.organizations.size)
+        assertEquals(1, dbGroup.members.size)
+        assertEquals(1, dbOrg.members.size)
     }
 
     @Test

@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+<div mat-dialog-content>
+    <app-user-search-by-group (userSelected)="onUserSelected($event)"/>
+</div>
+<div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close (click)="onCancel()" color="primary" >{{text.cancel}}</button>
+    <button mat-flat-button [mat-dialog-close]="true" (click)="onSubmit()" color="primary" [disabled]="!selectedUser">{{text.ok}}</button>
+</div>

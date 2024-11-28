@@ -57,16 +57,21 @@ class UserController(
         return userGroupService.getGroupsOfUser(username)
     }
 
-    @PutMapping("/group")
+    @PatchMapping("/{groupType}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN')")
     fun addUserToGroup(
         authentication: Authentication,
         @RequestParam(required = true) username: String,
-        @RequestParam(required = true) groupId: Int
+        @RequestParam(required = true) groupId: Int,
+        @PathVariable groupType: String
     ) {
         authService.checkUserGroupWriteAndThrow(authentication, groupId)
-        userGroupService.addUserToGroup(username, groupId)
+        when(groupType) {
+            "group" -> userGroupService.addUserToGroup(username, groupId)
+            "organization" -> userGroupService.addUserToOrganization(username, groupId)
+            "org" -> userGroupService.addUserToOrganization(username, groupId)
+            else -> throw IllegalArgumentException("Invalid group type, supported types: group, organization")
+        }
     }
 
     /**

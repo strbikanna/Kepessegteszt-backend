@@ -2,7 +2,7 @@
     <div class="w-5">
         <h1 class="mt-0">{{ userPickerText.choose_contact }} {{ nameOfUser ? ' - ' + nameOfUser : '' }}</h1>
         <p class="description">{{ userPickerText.choose_contact_description }}</p>
-        <app-user-autocomplete (userSelected)="onUserChosen($event)" [multiple]="false"></app-user-autocomplete>
+        <app-user-autocomplete (userSelected)="onUserChosen($event)" [multiple]="false" [autoChoose]="true"></app-user-autocomplete>
     </div>
     <img *ngIf="!chosenUsername" src="{{imagePaths.research}}" alt="loading" class="researchImg">
 </div>

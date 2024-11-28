@@ -18,8 +18,12 @@
                 <span>{{ text.cognitive_profile }}</span>
             </button>
             <button mat-menu-item *ngIf="isAdmin" routerLink="/admin">
-                <mat-icon>group</mat-icon>
+                <mat-icon>manage_accounts</mat-icon>
                 <span>{{ text.user_management }}</span>
+            </button>
+            <button mat-menu-item *ngIf="isAdmin" routerLink="/group-management">
+                <mat-icon>group</mat-icon>
+                <span>{{ text.group_management}}</span>
             </button>
             <button mat-menu-item *ngIf="loginStatus" routerLink="/result">
                 <mat-icon>fact_check</mat-icon>

@@ -4,12 +4,14 @@ export interface User{
   lastName: string,
   roles: string[],
   birthDate?: Date,
-  address?: {
+  address?: Address,
+  gender?: string,
+}
+
+export interface Address{
     city: string,
     street: string,
     houseNumber: string,
     zip: string
-  },
-  gender?: string,
 }
 

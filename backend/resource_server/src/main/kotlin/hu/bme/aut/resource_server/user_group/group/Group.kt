@@ -4,6 +4,7 @@ import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user_group.UserGroup
 import hu.bme.aut.resource_server.user_group.UserGroupDto
 import hu.bme.aut.resource_server.user_group.organization.Organization
+import hu.bme.aut.resource_server.user_group.organization.OrganizationDto
 import jakarta.persistence.*
 
 @Entity
@@ -23,7 +24,7 @@ class Group(
         joinColumns = [JoinColumn(name = "group_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-    override val members: MutableList<UserEntity> = mutableListOf(),
+    override val members: MutableSet<UserEntity> = mutableSetOf(),
 
     @OneToMany(cascade = [CascadeType.ALL])
     @JoinColumn(name = "parent_group_id", referencedColumnName = "id")
@@ -59,7 +60,9 @@ class Group(
         return GroupDto(
             id = id!!,
             name = name,
-            organizationDto = organization.toDto()
+            organizationDto = organization.toDto() as OrganizationDto,
+            childGroupIds = childGroups.map { it.id!! },
+            adminUsernames = admins.map { it.username }
         )
     }
 

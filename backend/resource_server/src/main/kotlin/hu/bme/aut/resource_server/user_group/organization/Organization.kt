@@ -27,10 +27,10 @@ class Organization(
         joinColumns = [JoinColumn(name = "org_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-    override val members: MutableList<UserEntity> = mutableListOf(),
+    override val members: MutableSet<UserEntity> = mutableSetOf(),
 
     @OneToMany(mappedBy = "organization")
-    val groups: MutableList<Group> = mutableListOf(),
+    val groups: MutableSet<Group> = mutableSetOf(),
 
     ) : UserGroup(name = name) {
     override fun getAllGroups(): List<Group> {
@@ -64,7 +64,8 @@ class Organization(
         return OrganizationDto(
             id = id!!,
             name = name,
-            address = address
+            address = address,
+            adminUsernames = admins.map { it.username }
         )
     }
 }

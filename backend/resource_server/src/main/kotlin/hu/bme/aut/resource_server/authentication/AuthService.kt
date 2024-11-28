@@ -7,6 +7,7 @@ import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import hu.bme.aut.resource_server.user_group.UserGroupRepository
 import hu.bme.aut.resource_server.user_group.group.Group
+import hu.bme.aut.resource_server.utils.RoleName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -26,9 +27,9 @@ import reactor.core.publisher.Mono
  */
 @Service
 class AuthService(
-        @Autowired private var recommendedGameRepository: RecommendedGameRepository,
-        @Autowired private var userRepository: UserRepository,
-        @Autowired private var userGroupRepository: UserGroupRepository
+    @Autowired private var recommendedGameRepository: RecommendedGameRepository,
+    @Autowired private var userRepository: UserRepository,
+    @Autowired private var userGroupRepository: UserGroupRepository
 ) {
     @Value("\${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private lateinit var AUTH_SERVER_URI: String
@@ -70,18 +71,20 @@ class AuthService(
         return userRepository.findByUsername(username).orElseThrow()
     }
 
-    fun <T> doIfIsContact(authentication: Authentication, contactUsername: String, action: () -> T): Deferred<T>  = CoroutineScope(Dispatchers.IO).async {
-        if (isContact(authentication, contactUsername)) {
-            return@async action()
-        } else {
-            throw AuthException().notContact()
+    fun <T> doIfIsContact(authentication: Authentication, contactUsername: String, action: () -> T): Deferred<T> =
+        CoroutineScope(Dispatchers.IO).async {
+            if (isContact(authentication, contactUsername)) {
+                return@async action()
+            } else {
+                throw AuthException().notContact()
+            }
         }
-    }
+
     /**
      * Checks if the user is authorized to see the contact's data.
      * @throws IllegalAccessException if the user is not authorized to see the contact's data.
      */
-    suspend fun isContact(authentication: Authentication, contactUsername: String) : Boolean {
+    suspend fun isContact(authentication: Authentication, contactUsername: String): Boolean {
         if (webclient == null) {
             initWebClient()
         }
@@ -90,10 +93,10 @@ class AuthService(
 
         val isContact = CoroutineScope(Dispatchers.IO).async {
             val requestSpec = webclient!!
-                    .get()
-                    .uri("/user/impersonation_contacts")
-                    .header("Authorization", "Bearer $accessTokenOfUser")
-                    .accept(MediaType.APPLICATION_JSON)
+                .get()
+                .uri("/user/impersonation_contacts")
+                .header("Authorization", "Bearer $accessTokenOfUser")
+                .accept(MediaType.APPLICATION_JSON)
             val response: Mono<String> = requestSpec.retrieve().bodyToMono(String::class.java)
             response.block()?.let {
                 if (it.contains(contactUsername)) {
@@ -108,8 +111,16 @@ class AuthService(
     @Transactional
     fun checkUserGroupWriteAndThrow(authentication: Authentication, userGroupId: Int) {
         val user = getAuthUser(authentication)
+        if (isAdmin(user)) {
+            return
+        }
+        if (authentication.authorities.stream().noneMatch { Role.canSeeUserGroupData(it.authority) }) {
+            throw IllegalAccessException("This user is not authorized to write group data.")
+        }
         val uGroup = userGroupRepository.findById(userGroupId).orElseThrow()
-        if (uGroup.admins.contains(user) && authentication.authorities.stream().anyMatch { Role.canSeeUserGroupData(it.authority) }) {
+        if (uGroup.admins.contains(user) && authentication.authorities.stream()
+                .anyMatch { Role.canSeeUserGroupData(it.authority) }
+        ) {
             return
         }
         throw IllegalAccessException("This user is not authorized to change this group.")
@@ -117,9 +128,6 @@ class AuthService(
 
     @Transactional
     fun getGroupsToAccess(authentication: Authentication): List<Group> {
-        if (authentication.authorities.stream().noneMatch { Role.canSeeUserGroupData(it.authority) }){
-            throw IllegalAccessException("This user is not authorized to write group data.")
-        }
         val user = getAuthUser(authentication)
         val groups = user.groups
         val allGroups = mutableListOf<Group>()
@@ -130,9 +138,18 @@ class AuthService(
     @Transactional
     fun checkGroupDataReadAndThrow(authentication: Authentication, userGroupId: Int) {
         val user = getAuthUser(authentication)
+        if (isAdmin(user)) {
+            return
+        }
         val uGroup = userGroupRepository.findById(userGroupId).orElseThrow()
-        if(!( uGroup.members.contains(user) || uGroup.admins.contains(user) || uGroup.getAllUserIds().contains(user.id))){
+        if (!(uGroup.members.contains(user) || uGroup.admins.contains(user) || uGroup.getAllUserIds()
+                .contains(user.id))
+        ) {
             throw IllegalAccessException("This user is not authorized to see this group's data.")
         }
+    }
+
+    private fun isAdmin(user: UserEntity): Boolean {
+        return user.roles.stream().anyMatch { it.roleName == RoleName.ADMIN }
     }
 }

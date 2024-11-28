@@ -65,7 +65,7 @@ data class UserEntity(
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "org_id", referencedColumnName = "id")],
     )
-    var organizations: MutableList<Organization> = mutableListOf(),
+    var organizations: MutableSet<Organization> = mutableSetOf(),
 
     @ManyToMany
     @JoinTable(
@@ -73,7 +73,7 @@ data class UserEntity(
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "group_id", referencedColumnName = "id")],
     )
-    val groups: MutableList<Group> = mutableListOf(),
+    val groups: MutableSet<Group> = mutableSetOf(),
 
     ) {
     fun getProfile(): MutableSet<ProfileItem> {
@@ -89,12 +89,10 @@ data class UserEntity(
 
         val userEntity = other as UserEntity
 
-        return id == userEntity.id || username == userEntity.username || (
-                firstName == userEntity.firstName &&
-                        lastName == userEntity.lastName &&
-                        birthDate == userEntity.birthDate &&
-                        gender == userEntity.gender &&
-                        address == userEntity.address
-                )
+        return id == userEntity.id || username == userEntity.username
+    }
+
+    override fun hashCode(): Int {
+        return id ?: username.hashCode()
     }
 }

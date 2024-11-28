@@ -4,6 +4,9 @@ import {AuthUser} from "../../model/user-contacts.model";
 import {FormControl} from "@angular/forms";
 import {TEXTS} from "../../utils/app.text_messages";
 
+/**
+ * Searches users in a user-group
+ */
 @Component({
   selector: 'app-user-search',
   templateUrl: './user-search.component.html',
