@@ -66,6 +66,27 @@ class ResultService(
                 .toList()
                 .map { convertToDto(it) }
         }
+        return resultRepository.findAllByUserIn(users, page).toList().map { convertToDto(it) }
+    }
+    @Transactional
+    fun getAllFiltered(gameIds: List<Int>?, resultPassed: Boolean?, page: Pageable,): List<ResultDetailsDto> {
+        val existsGameFilter = !gameIds.isNullOrEmpty()
+        val existsResultFilter = resultPassed != null
+        if(existsGameFilter && existsResultFilter){
+            return resultRepository.findAllByPassedAndRecommendedGameGameIdIn(resultPassed!!, gameIds!!, page)
+                .toList()
+                .map { convertToDto(it) }
+        }
+        if(existsGameFilter){
+            return resultRepository.findAllByRecommendedGameGameIdIn(gameIds!!, page)
+                .toList()
+                .map { convertToDto(it) }
+        }
+        if(existsResultFilter){
+            return resultRepository.findAllByPassed(resultPassed!!, page)
+                .toList()
+                .map { convertToDto(it) }
+        }
         return resultRepository.findAll(page).toList().map { convertToDto(it) }
     }
 
@@ -82,7 +103,21 @@ class ResultService(
         if(existsResultFilter){
             return resultRepository.countByUserInAndPassed(users, resultPassed!!)
         }
+        return resultRepository.countByUserIn(users)
+    }
 
+    fun getCountByFilters(gameIds: List<Int>?, resultPassed: Boolean?): Long{
+        val existsGameFilter = !gameIds.isNullOrEmpty()
+        val existsResultFilter = resultPassed != null
+        if(existsGameFilter && existsResultFilter){
+            return resultRepository.countByRecommendedGameGameIdInAndPassed(gameIds!!, resultPassed!!)
+        }
+        if(existsGameFilter){
+            return resultRepository.countByRecommendedGameGameIdIn(gameIds!!)
+        }
+        if(existsResultFilter){
+            return resultRepository.countByPassed(resultPassed!!)
+        }
         return resultRepository.count()
     }
 

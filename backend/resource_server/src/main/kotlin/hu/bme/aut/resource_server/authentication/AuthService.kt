@@ -67,6 +67,10 @@ class AuthService(
         return userRepository.findByUsername(authentication.name).orElseThrow()
     }
 
+    fun getAuthUserWithRoles(authentication: Authentication): UserEntity {
+        return userRepository.findByUsernameWithRoles(authentication.name).orElseThrow()
+    }
+
     fun getContactByUsername(username: String): UserEntity {
         return userRepository.findByUsername(username).orElseThrow()
     }

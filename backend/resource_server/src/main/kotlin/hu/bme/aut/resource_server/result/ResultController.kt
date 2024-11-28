@@ -106,10 +106,19 @@ class ResultController(
         @RequestParam usernames: List<String>? = null,
         authentication: Authentication
     ): Deferred<List<ResultDetailsDto>> = CoroutineScope(Dispatchers.IO).async {
+        val user = authService.getAuthUserWithRoles(authentication)
+        val sort = resultService.convertSortBy(sortBy, sortOrder)
+        if(user.roles.any { it.roleName == RoleName.ADMIN }){
+            return@async if(usernames.isNullOrEmpty()){
+                resultService.getAllFiltered(gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort))
+            } else {
+                resultService.getAllFiltered(usernames, gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort))
+            }
+        }
         val contactUsernames = authService.getContactUsernames(authentication)
         val usernamesToAccess =
             if (usernames.isNullOrEmpty()) contactUsernames else usernames.filter { contactUsernames.contains(it) }
-        val sort = resultService.convertSortBy(sortBy, sortOrder)
+
         return@async resultService.getAllFiltered(
             usernamesToAccess,
             gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort)
@@ -127,7 +136,14 @@ class ResultController(
         @RequestParam usernames: List<String>? = null
     ): Deferred<Long> = CoroutineScope(Dispatchers.IO).async {
         val contactUsernames = authService.getContactUsernames(authentication)
-        val user = authService.getAuthUser(authentication)
+        val user = authService.getAuthUserWithRoles(authentication)
+        if(user.roles.any { it.roleName == RoleName.ADMIN }){
+            return@async if(usernames.isNullOrEmpty()){
+                resultService.getCountByFilters(gameIds, resultWin)
+            } else {
+                resultService.getCountByFilters(usernames, gameIds, resultWin)
+            }
+        }
         val usernamesToAccess =
             if (user.roles.any { Role.canSeeUserGroupData(it.roleName) || it.roleName == RoleName.PARENT }) {
                 usernames?.filter { contactUsernames.contains(it) } ?: contactUsernames
