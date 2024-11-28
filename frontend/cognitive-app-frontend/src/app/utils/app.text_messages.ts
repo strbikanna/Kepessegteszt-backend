@@ -172,7 +172,8 @@ export const TEXTS = {
             prompt_description: 'Próbáld ki egyedi kérdés megadásával a kognitív profil elemzését.',
             prompt_action: 'Profil kiértékelés a megadott kérdés alapján',
             used_prompt: 'Használt prompt',
-            llm_text: 'Elemzés'
+            llm_text: 'Elemzés',
+            empty_description: 'Sajnos nem lehet elkészíteni az elemzést, mert nincs elég adat.',
         },
         date_picker: {
             see_history: 'Megtekintés korábbi időpontban',

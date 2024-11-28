@@ -20,18 +20,19 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
     protected name?: string;
     protected currProfileData?: CognitiveProfile;
     protected profileDescription?: ProfileDescription;
-  protected profileHistoryData: BehaviorSubject<CognitiveProfile[]> = new BehaviorSubject<CognitiveProfile[]>([]);
+    protected profileHistoryData: BehaviorSubject<CognitiveProfile[]> = new BehaviorSubject<CognitiveProfile[]>([]);
     protected loadingProfile = true;
     protected loadingHistory = true;
-  protected loadingDescription = true;
-  protected prompt = '';
+    protected loadingDescription = true;
+    protected prompt = '';
 
-  constructor(
-      private router: Router,
-      private location: Location,
-      private route: ActivatedRoute,
-      private service: CognitiveProfileService,
-  ) {}
+    constructor(
+        private router: Router,
+        private location: Location,
+        private route: ActivatedRoute,
+        private service: CognitiveProfileService,
+    ) {
+    }
 
     ngOnInit() {
         this.chosenUsername = this.route.snapshot.queryParams['username'];
@@ -57,30 +58,33 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
                 this.profileHistoryData?.next(profiles);
                 this.loadingHistory = false
             });
-        this.service.getProfileDescription(undefined, this.chosenUsername).subscribe(description => {
-        this.profileDescription = description;
-        this.loadingDescription = false
-      });
-    }
-  }
-
-  onSubmitPrompt() {
-    this.loadingDescription = true;
-    this.service.getProfileDescription(this.prompt, this.chosenUsername).subscribe(description => {
-        this.profileDescription = description;
-        this.loadingDescription = false;
-    });
+            this.service.getProfileDescription(undefined, this.chosenUsername).subscribe(description => {
+                if(description.abilitiesAsText == null || description.abilitiesAsText === ''){
+                    description.abilitiesAsText = this.text.llm.empty_description;
+                }
+                this.profileDescription = description;
+                this.loadingDescription = false
+            });
+        }
     }
 
-  onDatesChosen(dateRange: DateRange) {
-    this.loadingHistory = true;
-    if (this.chosenUsername !== undefined) {
-      this.service.getProfilesBetweenOfOtherUser(dateRange.start, dateRange.end, this.chosenUsername).subscribe(profiles => {
-        this.profileHistoryData?.next(profiles);
-        this.loadingHistory = false;
-      });
+    onSubmitPrompt() {
+        this.loadingDescription = true;
+        this.service.getProfileDescription(this.prompt, this.chosenUsername).subscribe(description => {
+            this.profileDescription = description;
+            this.loadingDescription = false;
+        });
     }
-  }
+
+    onDatesChosen(dateRange: DateRange) {
+        this.loadingHistory = true;
+        if (this.chosenUsername !== undefined) {
+            this.service.getProfilesBetweenOfOtherUser(dateRange.start, dateRange.end, this.chosenUsername).subscribe(profiles => {
+                this.profileHistoryData?.next(profiles);
+                this.loadingHistory = false;
+            });
+        }
+    }
 
     updateUrlParams() {
         const params = {
