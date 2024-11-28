@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.recommended_game
 
+import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.GameRepository
 import hu.bme.aut.resource_server.user.UserRepository
 import jakarta.transaction.Transactional
@@ -31,11 +32,14 @@ class RecommendedGameService(
     @Transactional
     fun getNextChoiceForUser(username: String): List<RecommendedGameDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
-        val latestCompleted = recommendedGameRepository.findLatestCompleted(user).subList(0, 2)
-        return listOf(
-            recommendedGameRepository.findAllByRecommendedToAndGameAndCompleted(user, latestCompleted[0].game, false).first().toDto(),
-            recommendedGameRepository.findAllByRecommendedToAndGameAndCompleted(user, latestCompleted[1].game, false).first().toDto()
-        )
+        val latestCompleted = recommendedGameRepository.findLatestCompleted(user)
+        val top2Distinct: MutableList<GameEntity> = mutableListOf()
+        latestCompleted.forEach {
+            if(top2Distinct.size < 2 && !top2Distinct.contains(it.game)){
+                top2Distinct.add(it.game)
+            }
+        }
+        return top2Distinct.map{game -> recommendedGameRepository.findAllByRecommendedToAndGameAndCompleted(user, game, false).first().toDto() }
     }
 
     /**
