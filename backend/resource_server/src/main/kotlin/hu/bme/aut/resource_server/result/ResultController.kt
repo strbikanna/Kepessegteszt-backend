@@ -95,7 +95,7 @@ class ResultController(
     @Transactional
     @GetMapping("/results/all")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST', 'TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST', 'TEACHER', 'PARENT')")
     fun getAllResults(
         @RequestParam sortBy: String = "timestamp",
         @RequestParam sortOrder: String = "DESC",
@@ -129,7 +129,7 @@ class ResultController(
         val contactUsernames = authService.getContactUsernames(authentication)
         val user = authService.getAuthUser(authentication)
         val usernamesToAccess =
-            if (user.roles.any { Role.canSeeUserGroupData(it.roleName) }) {
+            if (user.roles.any { Role.canSeeUserGroupData(it.roleName) || it.roleName == RoleName.PARENT }) {
                 usernames?.filter { contactUsernames.contains(it) } ?: contactUsernames
             } else {
                 listOf(authentication.name)
