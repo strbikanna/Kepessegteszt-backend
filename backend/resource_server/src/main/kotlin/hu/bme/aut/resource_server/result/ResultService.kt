@@ -47,43 +47,22 @@ class ResultService(
     }
 
     @Transactional
-    fun getAllFiltered(usernames: List<String>?,  gameIds: List<Int>?, resultPassed: Boolean?, page: Pageable,): List<ResultDetailsDto> {
-        val users = if(usernames != null) userRepository.findAllByUsernameIn(usernames) else null
-        val existUserFilter = !users.isNullOrEmpty()
+    fun getAllFiltered(usernames: List<String>,  gameIds: List<Int>?, resultPassed: Boolean?, page: Pageable,): List<ResultDetailsDto> {
+        val users = userRepository.findAllByUsernameIn(usernames)
         val existsGameFilter = !gameIds.isNullOrEmpty()
         val existsResultFilter = resultPassed != null
-        if(existUserFilter && existsGameFilter && existsResultFilter){
-            return resultRepository.findAllByUserInAndPassedAndRecommendedGameGameIdIn(users!!, resultPassed!!, gameIds!!, page)
-                .toList()
-                .map { convertToDto(it) }
-        }
-        if(existUserFilter && existsGameFilter){
-            return resultRepository.findAllByUserInAndRecommendedGameGameIdIn(users!!, gameIds!!, page)
-                .toList()
-                .map { convertToDto(it) }
-        }
-        if(existUserFilter && existsResultFilter){
-            return resultRepository.findAllByUserInAndPassed(users!!, resultPassed!!, page)
-                .toList()
-                .map { convertToDto(it) }
-        }
         if(existsGameFilter && existsResultFilter){
-            return resultRepository.findAllByPassedAndRecommendedGameGameIdIn(resultPassed!!, gameIds!!, page)
-                .toList()
-                .map { convertToDto(it) }
-        }
-        if(existUserFilter){
-            return resultRepository.findAllByUserIn(users!!, page)
+            return resultRepository.findAllByUserInAndPassedAndRecommendedGameGameIdIn(users, resultPassed!!, gameIds!!, page)
                 .toList()
                 .map { convertToDto(it) }
         }
         if(existsGameFilter){
-            return resultRepository.findAllByRecommendedGameGameIdIn(gameIds!!, page)
+            return resultRepository.findAllByUserInAndRecommendedGameGameIdIn(users, gameIds!!, page)
                 .toList()
                 .map { convertToDto(it) }
         }
         if(existsResultFilter){
-            return resultRepository.findAllByPassed(resultPassed!!, page)
+            return resultRepository.findAllByUserInAndPassed(users, resultPassed!!, page)
                 .toList()
                 .map { convertToDto(it) }
         }

@@ -7,6 +7,7 @@ import hu.bme.aut.resource_server.role.Role
 import hu.bme.aut.resource_server.utils.RoleName
 import jakarta.servlet.http.HttpServletResponse
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.springframework.beans.factory.annotation.Autowired
@@ -102,10 +103,14 @@ class ResultController(
         @RequestParam pageIndex: Int = 0,
         @RequestParam gameIds: List<Int>? = null,
         @RequestParam resultWin: Boolean? = null,
-        @RequestParam usernames: List<String>? = null
-    ): List<ResultDetailsDto> {
+        @RequestParam usernames: List<String>? = null,
+        authentication: Authentication
+    ): Deferred<List<ResultDetailsDto>> = CoroutineScope(Dispatchers.IO).async {
+        val contactUsernames = authService.getContactUsernames(authentication)
+        val usernamesToAccess = if (usernames.isNullOrEmpty()) contactUsernames else usernames.filter { contactUsernames.contains(it) }
         val sort = resultService.convertSortBy(sortBy, sortOrder)
-        return resultService.getAllFiltered(usernames, gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort))
+        return@async resultService.getAllFiltered(usernamesToAccess,
+            gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort))
     }
 
     @GetMapping("/count")
