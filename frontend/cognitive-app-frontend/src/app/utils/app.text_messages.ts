@@ -322,7 +322,14 @@ export const TEXTS = {
         chosenUser: 'Kiválasztott játékos',
         chosenGame: 'Kiválasztott játék',
         saved: 'Ajánlás mentve',
-        existing_recommendations: 'Meglévő ajánlások',
+        deleted: 'Ajánlás törölve lett',
+        existing_recommendations: 'Meglévő (nem teljesített) játék-ajánlások',
+        visit_profile: 'Kognitív profil megtekintése',
+        visit_results: 'A játékhoz tartozó eredmények megtekintése',
+        card:{
+            delete_game: 'Ajánlás törlése',
+            confirm_title: 'Biztosan törölni szeretnéd ezt a játékbeállítást?',
+        }
     },
     result: {
         result_info: {

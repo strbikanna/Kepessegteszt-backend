@@ -37,13 +37,11 @@ class RecommendedGameController(
     @ResponseStatus(HttpStatus.OK)
     fun getRecommendationsByGame(
         @RequestParam(required = false) gameId: Int?,
-        @RequestParam(required= false) completed: Boolean?,
+        @RequestParam(required= false) completed: Boolean? = false,
         @RequestParam username: String,
         authentication: Authentication
     ): List<RecommendedGameDto> {
-        return recommendedGameService.getRecommendationsToUserAndGame(username, authentication.name, gameId).filter{
-            if(completed != null) it.completed == completed else true
-        }
+        return recommendedGameService.getRecommendationsToUserAndGame(username, gameId, completed)
     }
 
     @GetMapping("/config/{id}")
@@ -100,5 +98,12 @@ class RecommendedGameController(
         val currentActiveRecommendations = gameplayRecommenderService.getAllRecommendationToUser(authentication.name)
         gameplayRecommenderService.deleteRecommendations(currentActiveRecommendations)
         return gameplayRecommenderService.createNewRecommendations(authentication.name).map { it.toDto() }
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SCIENTIST') or hasRole('TEACHER')")
+    fun deleteRecommendedGame(@PathVariable id: Long, authentication: Authentication) {
+        recommendedGameService.deleteRecommendedGame(id)
     }
 }

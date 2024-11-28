@@ -12,10 +12,20 @@
             <h3 class="title">{{ texts.chosenGame }}:</h3>
         </div>
         <div class="chipContainer">
-            <mat-chip *ngIf="chosenUser" (click)="onUserClicked()">{{ chosenUser.firstName }} {{ chosenUser.lastName }}</mat-chip>
-            <mat-chip *ngIf="!chosenUser">?</mat-chip>
-            <mat-chip *ngIf="chosenGame" (click)="onGameClicked()">{{ chosenGame.name }}</mat-chip>
-            <mat-chip *ngIf="!chosenGame">?</mat-chip>
+            <mat-chip-row *ngIf="chosenUser" (click)="onUserClicked()"
+                      matTooltip="{{texts.visit_profile}}"
+            >
+                {{ chosenUser.firstName }} {{ chosenUser.lastName }}
+                <button matChipRemove (click)="onRemoveChosenUser()">
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </mat-chip-row>
+            <mat-chip-row *ngIf="chosenGame" (click)="onGameClicked()" matTooltip="{{texts.visit_results}}">
+                {{ chosenGame.name }}
+                <button matChipRemove (click)="onRemoveChosenGame()">
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </mat-chip-row>
         </div>
 
     </div>
@@ -51,9 +61,10 @@
 
     </div>
     <div *ngIf="existingRecommendationsEnabled()" class="w-4">
-        <h2 class="title mb-4">{{texts.existing_recommendations}}</h2>
+        <h2 class="title mb-4">{{ texts.existing_recommendations }}</h2>
         <div class="mb-2" *ngFor="let recommendation of existingRecommendations | async">
-        <app-recommendation-detail-card  [recommendation]="recommendation"></app-recommendation-detail-card>
+            <app-recommendation-detail-card [recommendation]="recommendation"
+                                            (deleteRecommendation)="onDeleteRecommendation($event)"></app-recommendation-detail-card>
         </div>
     </div>
 </div>

@@ -42,11 +42,12 @@
     padding-top: 1em;
     margin-left: 2em;
 
-    mat-chip {
-      display: block;
+    mat-chip-row {
+      display: flex;
       margin-bottom: 3em;
       background: #C3ACD0;
       text-align: center;
+      align-items: center;
     }
   }
 }
