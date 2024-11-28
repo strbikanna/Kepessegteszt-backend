@@ -13,15 +13,15 @@
     </div>
     <mat-menu #menu="matMenu" class="w-12">
         <div *ngIf="displayMobileMenu()">
-            <button mat-menu-item *ngIf="loginStatus && !isAdmin" routerLink="/cognitive-profile">
+            <button mat-menu-item *ngIf="loginStatus && isStudent" routerLink="/cognitive-profile">
                 <mat-icon>psychology</mat-icon>
                 <span>{{ text.cognitive_profile }}</span>
             </button>
-            <button mat-menu-item *ngIf="isAdmin" routerLink="/admin">
+            <button mat-menu-item *ngIf="canSeeUserManagement()" routerLink="/admin">
                 <mat-icon>manage_accounts</mat-icon>
                 <span>{{ text.user_management }}</span>
             </button>
-            <button mat-menu-item *ngIf="isAdmin" routerLink="/group-management">
+            <button mat-menu-item *ngIf="canSeeGroupManagement()" routerLink="/group-management">
                 <mat-icon>group</mat-icon>
                 <span>{{ text.group_management}}</span>
             </button>
@@ -33,19 +33,19 @@
                 <mat-icon>analytics</mat-icon>
                 <span>{{ text.profile_comparison }}</span>
             </button>
-            <button mat-menu-item *ngIf="loginStatus && isAdminOrScientist" routerLink="/profile-compare-admin">
+            <button mat-menu-item *ngIf="canSeeAdminCognitiveProfileCompare()" routerLink="/profile-compare-admin">
                 <mat-icon>query_stats</mat-icon>
                 <span>{{ text.profile_comparison }}</span>
             </button>
-            <button mat-menu-item *ngIf="isAdminOrScientist" routerLink="/game-management">
+            <button mat-menu-item *ngIf="canSeeGameManagement()" routerLink="/game-management">
                 <mat-icon>sports_esports</mat-icon>
                 <span>{{ text.game_management }}</span>
             </button>
-            <button mat-menu-item *ngIf="isAdmin || isScientist || isTeacher" routerLink="/recommendation">
+            <button mat-menu-item *ngIf="canSeeRecommendations()" routerLink="/recommendation">
                 <mat-icon>reviews</mat-icon>
                 <span>{{ text.game_recommendation }}</span>
             </button>
-            <button mat-menu-item *ngIf="isAdmin || isScientist || isTeacher" routerLink="/cognitive-profile-admin">
+            <button mat-menu-item *ngIf="canSeeAdminCognitiveProfile()" routerLink="/cognitive-profile-admin">
                 <mat-icon>psychology</mat-icon>
                 <span>{{ text.cognitive_profile }}</span>
             </button>
