@@ -72,7 +72,7 @@ class ResultController(
         authentication: Authentication,
         @RequestParam sortBy: String = "timestamp",
         @RequestParam sortOrder: String = "DESC",
-        @RequestParam pageSize: Int = 10,
+        @RequestParam pageSize: Int = 100,
         @RequestParam pageIndex: Int = 0,
         @RequestParam gameIds: List<Int>? = null,
         @RequestParam resultWin: Boolean? = null
@@ -99,7 +99,7 @@ class ResultController(
     fun getAllResults(
         @RequestParam sortBy: String = "timestamp",
         @RequestParam sortOrder: String = "DESC",
-        @RequestParam pageSize: Int = 10,
+        @RequestParam pageSize: Int = 100,
         @RequestParam pageIndex: Int = 0,
         @RequestParam gameIds: List<Int>? = null,
         @RequestParam resultWin: Boolean? = null,
@@ -107,11 +107,15 @@ class ResultController(
         authentication: Authentication
     ): Deferred<List<ResultDetailsDto>> = CoroutineScope(Dispatchers.IO).async {
         val contactUsernames = authService.getContactUsernames(authentication)
-        val usernamesToAccess = if (usernames.isNullOrEmpty()) contactUsernames else usernames.filter { contactUsernames.contains(it) }
+        val usernamesToAccess =
+            if (usernames.isNullOrEmpty()) contactUsernames else usernames.filter { contactUsernames.contains(it) }
         val sort = resultService.convertSortBy(sortBy, sortOrder)
-        return@async resultService.getAllFiltered(usernamesToAccess,
-            gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort))
+        return@async resultService.getAllFiltered(
+            usernamesToAccess,
+            gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort)
+        )
     }
+
 
     @GetMapping("/count")
     @ResponseStatus(HttpStatus.OK)
@@ -121,12 +125,16 @@ class ResultController(
         @RequestParam gameIds: List<Int>? = null,
         @RequestParam resultWin: Boolean? = null,
         @RequestParam usernames: List<String>? = null
-    ): Long {
+    ): Deferred<Long> = CoroutineScope(Dispatchers.IO).async {
+        val contactUsernames = authService.getContactUsernames(authentication)
         val user = authService.getAuthUser(authentication)
-        if(user.roles.find { it.roleName == RoleName.ADMIN } != null){
-            return resultService.getCountByFilters(usernames, gameIds, resultWin)
-        }
-        return resultService.getCountByFilters(listOf(authentication.name), gameIds, resultWin)
+        val usernamesToAccess =
+            if (user.roles.any { Role.canSeeUserGroupData(it.roleName) }) {
+                usernames?.filter { contactUsernames.contains(it) } ?: contactUsernames
+            } else {
+                listOf(authentication.name)
+            }
+        return@async resultService.getCountByFilters(usernamesToAccess, gameIds, resultWin)
     }
 
     @GetMapping("/csv")

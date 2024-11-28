@@ -69,32 +69,20 @@ class ResultService(
         return resultRepository.findAll(page).toList().map { convertToDto(it) }
     }
 
-    fun getCountByFilters(usernames: List<String>?,  gameIds: List<Int>?, resultPassed: Boolean?): Long{
-        val users = if(usernames != null) userRepository.findAllByUsernameIn(usernames) else null
-        val existUserFilter = !users.isNullOrEmpty()
+    fun getCountByFilters(usernames: List<String>,  gameIds: List<Int>?, resultPassed: Boolean?): Long{
+        val users = userRepository.findAllByUsernameIn(usernames)
         val existsGameFilter = !gameIds.isNullOrEmpty()
         val existsResultFilter = resultPassed != null
-        if(existUserFilter && existsGameFilter && existsResultFilter){
-            return resultRepository.countByUserInAndRecommendedGameGameIdInAndPassed(users!!,  gameIds!!, resultPassed!!)
-        }
-        if(existUserFilter && existsGameFilter){
-            return resultRepository.countByUserInAndRecommendedGameGameIdIn(users!!, gameIds!!)
-        }
-        if(existUserFilter && existsResultFilter){
-            return resultRepository.countByUserInAndPassed(users!!, resultPassed!!)
-        }
         if(existsGameFilter && existsResultFilter){
-            return resultRepository.countByRecommendedGameGameIdInAndPassed(gameIds!!, resultPassed!!)
-        }
-        if(existUserFilter){
-            return resultRepository.countByUserIn(users!!)
+            return resultRepository.countByUserInAndRecommendedGameGameIdInAndPassed(users,  gameIds!!, resultPassed!!)
         }
         if(existsGameFilter){
-            return resultRepository.countByRecommendedGameGameIdIn(gameIds!!)
+            return resultRepository.countByUserInAndRecommendedGameGameIdIn(users, gameIds!!)
         }
         if(existsResultFilter){
-            return resultRepository.countByPassed(resultPassed!!)
+            return resultRepository.countByUserInAndPassed(users, resultPassed!!)
         }
+
         return resultRepository.count()
     }
 

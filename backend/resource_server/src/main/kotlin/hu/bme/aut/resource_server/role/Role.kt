@@ -15,6 +15,9 @@ data class Role(
             val role = RoleName.valueOf(roleName.removePrefix("ROLE_"))
             return role == RoleName.ADMIN || role == RoleName.SCIENTIST || role == RoleName.TEACHER
         }
+        fun canSeeUserGroupData(role: RoleName): Boolean {
+            return role == RoleName.ADMIN || role == RoleName.SCIENTIST || role == RoleName.TEACHER
+        }
     }
 }
 
