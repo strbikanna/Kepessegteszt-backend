@@ -28,8 +28,6 @@ export class ResultPageComponent implements OnInit {
     defaultPageSize = 5;
     lastPageEvent: PageEvent = {pageIndex: 0, pageSize: this.defaultPageSize, length: this.dataLength};
 
-    userNameOptions: Observable<string[]> = new Observable<string[]>();
-    gameNameOptions: Observable<string[]> = new Observable<string[]>();
     sortOptions: string[] = [this.text.timestamp, this.text.game];
     loading = true;
 
@@ -42,8 +40,6 @@ export class ResultPageComponent implements OnInit {
 
     constructor(
         protected resultService: ResultService,
-        private gameService: GameManagementService,
-        private userService: AdminService,
         private router: Router,
         private route: ActivatedRoute,
         private location: Location,
@@ -54,10 +50,8 @@ export class ResultPageComponent implements OnInit {
         this.loadStateFromUrlParams();
         this.getResults();
         this.resultService.getCountOfResults().subscribe(count => this.dataLength = count);
-        this.loadGameNames();
         if (UserInfo.canSeeInsightData()) {
             this.sortOptions.push(this.text.username)
-            this.loadUsernames();
         }
     }
 
@@ -113,21 +107,14 @@ export class ResultPageComponent implements OnInit {
         return UserInfo.isAdmin();
     }
 
+    canAccessOtherUserData(): boolean {
+        return UserInfo.canSeeOthersResults();
+    }
+
     passedFilterElements(): Observable<string[]>{
         return of([this.text.result_info.passed, this.text.result_info.failed])
     }
 
-    private loadGameNames() {
-        this.gameNameOptions = this.gameService.getExistingGamesPaged().pipe(
-            map((games: Game[]) => games.map(game => `${game.name} (${game.id})`)),
-        )
-    }
-
-    private loadUsernames() {
-        this.userNameOptions = this.userService.getAllUsers().pipe(
-            map(users => users.map(user => `${user.firstName} ${user.lastName} (${user.username})`))
-        )
-    }
 
     private getSearchOptions(): SearchOptions {
         let options: SearchOptions = {
