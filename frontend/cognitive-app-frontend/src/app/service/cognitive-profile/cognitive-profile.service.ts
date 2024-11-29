@@ -46,7 +46,7 @@ export class CognitiveProfileService {
         }
         return this.http.get<ProfileDescription>(`${this.helper.baseUrl}${this.profileEndpoint}/abilities-as-text`, {params: params}).pipe(
             map(desc =>{
-                if(desc.abilitiesAsText == null || desc.abilitiesAsText === ''){
+                if(desc.abilitiesAsText === ''){
                     desc.abilitiesAsText = TEXTS.cognitive_profile.llm.empty_description;
                 }
                 return desc

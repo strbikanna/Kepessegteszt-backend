@@ -35,26 +35,29 @@
             </div>
         </div>
         <div class="w-7 m-2">
+            <h2 *ngIf="!(userProfileData|async)?.length" class="text-center">{{ text.no_data }}</h2>
             <app-profile-radar-chart
+                    *ngIf="(userProfileData|async)?.length && (dataToCompare|async)?.length"
                     [profileDataObservable]="userProfileData"
                     [comparisonDataObservable]="dataToCompare"
                     [comparisonTitle]="comparisonTitle"
             ></app-profile-radar-chart>
-            <div class="w-full h-30rem">
+            <div class="w-full h-30rem" *ngIf="canSeeStatistics()">
                 <app-candlestick-chart [data]="getCandleStickData()"></app-candlestick-chart>
             </div>
         </div>
     </div>
-    <h2 class="text-left my-1">{{ llmText.prompt }}</h2>
-    <p class="title text-left">{{ llmText.used_prompt }}</p>
-    <p class="description">{{ comparisonDescription?.prompt }}</p>
-    <mat-progress-bar *ngIf="descriptionLoading" mode="buffer"></mat-progress-bar>
-    <h3>{{ llmText.prompt_description }}</h3>
-    <mat-form-field class="w-full">
+    <h2 class="text-left my-1" *ngIf="canPrompt()">{{ llmText.prompt }}</h2>
+    <p class="title text-left" *ngIf="canPrompt()">{{ llmText.used_prompt }}</p>
+    <p class="description" *ngIf="canPrompt()">{{ comparisonDescription?.prompt }}</p>
+
+    <h3 *ngIf="canPrompt()">{{ llmText.prompt_description }}</h3>
+    <mat-form-field class="w-full" *ngIf="canPrompt()">
         <mat-label>{{ llmText.prompt }}</mat-label>
         <textarea matInput [(ngModel)]="prompt"></textarea>
     </mat-form-field>
-    <button mat-button (click)="onSubmitPrompt()" color="primary">{{ llmText.prompt_action }}</button>
+    <button mat-button (click)="onSubmitPrompt()" color="primary" *ngIf="canPrompt()">{{ llmText.prompt_action }}</button>
+
     <h2 class="text-left" *ngIf="!descriptionLoading">{{ llmText.llm_text }}</h2>
     <p class="description">{{ comparisonDescription?.abilitiesAsText }}</p>
     <mat-progress-bar *ngIf="descriptionLoading" mode="buffer"></mat-progress-bar>

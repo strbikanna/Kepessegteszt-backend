@@ -18,6 +18,9 @@ data class Role(
         fun canSeeUserGroupData(role: RoleName): Boolean {
             return role == RoleName.ADMIN || role == RoleName.SCIENTIST || role == RoleName.TEACHER
         }
+        fun canGetContacts(role: RoleName): Boolean {
+            return role == RoleName.ADMIN || role == RoleName.SCIENTIST || role == RoleName.TEACHER || role == RoleName.PARENT
+        }
     }
 }
 

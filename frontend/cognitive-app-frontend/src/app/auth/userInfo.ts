@@ -30,4 +30,13 @@ export class UserInfo{
     return (this.currentUser.roles.includes(Role.ADMIN) || this.currentUser.roles.includes(Role.TEACHER) || this.currentUser.roles.includes(Role.SCIENTIST) || this.currentUser.roles.includes(Role.PARENT))
         && this.loginStatus.value
   }
+
+  public static canSeeCognitiveProfileStatistics(){
+    return (this.currentUser.roles.includes(Role.ADMIN) || this.currentUser.roles.includes(Role.TEACHER) || this.currentUser.roles.includes(Role.SCIENTIST))
+        && this.loginStatus.value
+  }
+  public static canSeePromptLlm(){
+    return (this.currentUser.roles.includes(Role.ADMIN) || this.currentUser.roles.includes(Role.TEACHER) || this.currentUser.roles.includes(Role.SCIENTIST))
+        && this.loginStatus.value
+  }
 }

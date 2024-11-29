@@ -8,6 +8,7 @@ import {UserGroup} from "../../model/user_group.model";
 import {UserFilter} from "../../common/user-filter/user-filter.model";
 import {ProfileStatistics} from "../../model/profile-statistics.model";
 import {ProfileDescription} from "../../model/ProfileDescription";
+import {TEXTS} from "../../utils/app.text_messages";
 
 @Injectable({
   providedIn: 'root'
@@ -116,7 +117,14 @@ export class ProfileDataComparisonService {
         abilityFilter: filter.abilityFilter
       }
     }
-    return this.http.post<ProfileDescription>(this.httpService.baseUrl + '/user/profile/abilities-as-text-to-group',userFilter, {params: params});
+    return this.http.post<ProfileDescription>(this.httpService.baseUrl + '/user/profile/abilities-as-text-to-group',userFilter, {params: params}).pipe(
+        map((response: any) => {
+          if(response.abilitiesAsText === ""){
+            response.abilitiesAsText = TEXTS.cognitive_profile.llm.empty_description;
+          }
+            return response;
+        })
+    );
   }
 
 }

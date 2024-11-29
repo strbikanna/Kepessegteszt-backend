@@ -8,6 +8,7 @@ import {User} from "../../../model/user.model";
 import {BehaviorSubject} from "rxjs";
 import {Location} from "@angular/common";
 import {ProfileDescription} from "../../../model/ProfileDescription";
+import {UserInfo} from "../../../auth/userInfo";
 
 @Component({
     selector: 'app-admin-cognitive-profile',
@@ -98,5 +99,7 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
         });
         this.location.go(urlTree.toString());
     }
+
+    protected readonly UserInfo = UserInfo;
 }
 

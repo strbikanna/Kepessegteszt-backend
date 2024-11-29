@@ -18,16 +18,18 @@
     </div>
 </div>
 <div class="mx-2" *ngIf="chosenUsername">
-    <h2 class="text-left my-1">{{text.llm.prompt}}</h2>
-    <p class="title text-left">{{text.llm.used_prompt}}</p>
-    <p class="description">{{profileDescription?.prompt}}</p>
+
+    <h2 class="text-left my-1" *ngIf="UserInfo.canSeePromptLlm()">{{text.llm.prompt}}</h2>
+    <p class="title text-left" *ngIf="UserInfo.canSeePromptLlm()">{{text.llm.used_prompt}}</p>
+    <p class="description" *ngIf="UserInfo.canSeePromptLlm()">{{profileDescription?.prompt}}</p>
+
     <mat-progress-bar *ngIf="loadingDescription" mode="buffer"></mat-progress-bar>
-    <h3>{{text.llm.prompt_description}}</h3>
-    <mat-form-field class="w-full">
+    <h3 *ngIf="UserInfo.canSeePromptLlm()">{{text.llm.prompt_description}}</h3>
+    <mat-form-field *ngIf="UserInfo.canSeePromptLlm()" class="w-full">
         <mat-label>{{text.llm.prompt}}</mat-label>
         <textarea matInput [(ngModel)]="prompt"></textarea>
     </mat-form-field>
-    <button mat-button (click)="onSubmitPrompt()" color="primary">{{text.llm.prompt_action}}</button>
+    <button *ngIf="UserInfo.canSeePromptLlm()" mat-button (click)="onSubmitPrompt()" color="primary">{{text.llm.prompt_action}}</button>
     <h2 class="text-left" *ngIf="profileDescription">{{text.llm.llm_text}}</h2>
     <p class="description">{{profileDescription?.abilitiesAsText}}</p>
 </div>

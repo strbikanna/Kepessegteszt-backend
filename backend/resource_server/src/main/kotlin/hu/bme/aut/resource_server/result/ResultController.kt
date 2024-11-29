@@ -135,8 +135,12 @@ class ResultController(
         @RequestParam resultWin: Boolean? = null,
         @RequestParam usernames: List<String>? = null
     ): Deferred<Long> = CoroutineScope(Dispatchers.IO).async {
-        val contactUsernames = authService.getContactUsernames(authentication)
         val user = authService.getAuthUserWithRoles(authentication)
+        if(user.roles.none { Role.canGetContacts(it.roleName) }){
+            return@async resultService.getCountByFilters(listOf(authentication.name), gameIds, resultWin)
+        }
+        val contactUsernames = authService.getContactUsernames(authentication)
+
         if(user.roles.any { it.roleName == RoleName.ADMIN }){
             return@async if(usernames.isNullOrEmpty()){
                 resultService.getCountByFilters(gameIds, resultWin)

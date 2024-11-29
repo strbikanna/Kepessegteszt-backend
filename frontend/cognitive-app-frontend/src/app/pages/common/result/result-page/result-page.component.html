@@ -59,6 +59,7 @@
                     *ngFor="let result of results"
                     [result]="result"
             ></app-result-info-card>
+            <p *ngIf="!results?.length" class="description text-center">{{text.no_data}}</p>
         </div>
     </div>
 </mat-drawer-container>

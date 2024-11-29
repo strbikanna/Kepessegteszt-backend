@@ -182,6 +182,7 @@ export const TEXTS = {
         },
         comparison: {
             title: 'Kognitív profil elemzése',
+            no_data: 'Nincs elég adat az összehasonlításhoz.',
             description: 'Válaszd ki, mely csoport adatait szeretnéd összehasonlítani a sajátoddal',
             avg: 'Átlag',
             min: 'Minimum',
@@ -352,6 +353,7 @@ export const TEXTS = {
         passed: "Játékeredmény",
         timestamp: "Időpont",
         apply: "Kiválasztás alkalmazása",
+        no_data: "Nincs megjeleníthető eredmény."
 
     }
 }
