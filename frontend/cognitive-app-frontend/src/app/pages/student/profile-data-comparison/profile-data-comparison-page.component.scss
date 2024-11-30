@@ -1,4 +1,4 @@
-:host{
+:host {
   width: 100%;
   height: 100%;
   display: flex;
@@ -6,41 +6,52 @@
   flex-wrap: wrap;
   justify-content: space-evenly;
 }
-.form-container{
+
+.form-container {
   display: flex;
   flex-direction: column;
   width: max-content;
   margin: 1em;
   margin-bottom: 2em;
   align-items: center;
-  button{
+
+  button {
     display: block;
     width: max-content;
     background-color: #C3ACD0;
   }
 }
-.drop-down-container{
+
+.drop-down-container {
   flex-grow: 0;
   display: block;
   width: 20em;
   margin-bottom: 2em;
 }
-.radio-container{
+
+.radio-container {
   display: flex;
   flex-direction: column;
   width: max-content;
   margin-bottom: 1em;
 }
 
-.title{
+.title {
   font-size: larger;
 }
-.description{
+
+.description {
   font-size: medium;
   color: dimgrey;
 }
-.chart{
+
+.chart {
   margin: 1em;
   min-width: 40em;
   width: fit-content;
+}
+
+.image {
+  height: 24em;
+  object-fit: cover;
 }

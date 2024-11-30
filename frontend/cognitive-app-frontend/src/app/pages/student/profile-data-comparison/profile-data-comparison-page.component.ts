@@ -8,6 +8,7 @@ import {TEXTS} from "../../../utils/app.text_messages";
 import {AbilityService} from "../../../service/ability/ability.service";
 import {Ability} from "../../../model/ability.model";
 import {UserFilter} from "../../../common/user-filter/user-filter.model";
+import {imagePaths} from "../../../utils/app.image_resources";
 
 @Component({
     selector: 'app-profile-data-comparison',
@@ -66,4 +67,5 @@ export class ProfileDataComparisonPageComponent implements OnInit {
 
     comparisonTitle: 'avg' | 'max' | 'min' = 'avg';
 
+    protected readonly imagePaths = imagePaths;
 }

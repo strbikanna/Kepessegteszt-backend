@@ -63,7 +63,7 @@ import { FilterControlComponent } from './common/filter-control/filter-control.c
 import {CdkFixedSizeVirtualScroll, CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import { GameSearchComponent } from './common/game-search/game-search.component';
-import { RecommendationDetailCardComponent } from './common/recommendation-detail-card/recommendation-detail-card.component';
+import { RecommendationDetailCardComponent } from './pages/admin/recommendation/recommendation-detail-card/recommendation-detail-card.component';
 import { UserFilterComponent } from './common/user-filter/user-filter.component';
 import { ProfileLineChartComponent } from './charts/profile-line-chart/profile-line-chart.component';
 import { RatioScaleComponent } from './charts/ratio-scale/ratio-scale.component';
@@ -82,11 +82,12 @@ import { SideMenuComponent } from './general/side-menu/side-menu.component';
 import {MatTreeModule} from "@angular/material/tree";
 import { TrueFalsePipe } from './utils/true-false.pipe';
 import { GroupManagementComponent } from './pages/admin/group-management/group-management.component';
-import { GroupTreeComponent } from './common/group-tree/group-tree.component';
+import { GroupTreeComponent } from './pages/admin/group-management/group-tree/group-tree.component';
 import { UserSearchByGroupComponent } from './common/user-search-by-group/user-search-by-group.component';
 import { AddUserToGroupDialogComponent } from './pages/admin/group-management/add-user-to-group-dialog/add-user-to-group-dialog.component';
 import { CreateGroupDialogComponent } from './pages/admin/group-management/create-group-dialog/create-group-dialog.component';
 import { CreateOrgDialogComponent } from './pages/admin/group-management/create-org-dialog/create-org-dialog.component';
+import { TimestampPipe } from './utils/timestamp.pipe';
 
 @NgModule({
     declarations: [
@@ -136,7 +137,8 @@ import { CreateOrgDialogComponent } from './pages/admin/group-management/create-
         UserSearchByGroupComponent,
         AddUserToGroupDialogComponent,
         CreateGroupDialogComponent,
-        CreateOrgDialogComponent
+        CreateOrgDialogComponent,
+        TimestampPipe
     ],
     imports: [
         BrowserModule,

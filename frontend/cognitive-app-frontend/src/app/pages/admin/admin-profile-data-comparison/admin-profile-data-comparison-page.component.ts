@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {
     ProfileDataComparisonPageComponent
 } from "../../student/profile-data-comparison/profile-data-comparison-page.component";
@@ -14,6 +14,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Location} from "@angular/common";
 import {ProfileDescription} from "../../../model/ProfileDescription";
 import {imagePaths} from "../../../utils/app.image_resources";
+import {UserInfo} from "../../../auth/userInfo";
 
 @Component({
     selector: 'app-admin-profile-data-comparison-page',
@@ -57,9 +58,11 @@ export class AdminProfileDataComparisonPageComponent extends ProfileDataComparis
                 this.dataToCompare.next(data)
             }
         )
-        this.service.getProfileStatisticsOfGroup(this.userFilter, this.chosenUsername!!).subscribe(data =>
-            this.profileStatisticsData.next(data)
-        );
+        if(this.canSeeStatistics()) {
+            this.service.getProfileStatisticsOfGroup(this.userFilter, this.chosenUsername!!).subscribe(data =>
+                this.profileStatisticsData.next(data)
+            );
+        }
         this.service.getComparisonDescription(this.userFilter, this.prompt, this.chosenUsername).subscribe(description => {
             this.comparisonDescription = description;
             this.descriptionLoading = false;
@@ -67,7 +70,6 @@ export class AdminProfileDataComparisonPageComponent extends ProfileDataComparis
     }
 
     onUserChosen(user: User) {
-        console.log(user);
         this.chosenUsername = user.username;
         this.nameOfUser = user.firstName + ' ' + user.lastName;
         this.initDataForUser(user.username);
@@ -77,13 +79,23 @@ export class AdminProfileDataComparisonPageComponent extends ProfileDataComparis
     initDataForUser(username: string) {
         this.groups = this.service.getGroupsOfOtherUser(username);
         this.userProfileData = this.service.getProfileData(username);
-        this.service.getProfileStatisticsOfGroup(undefined, username).subscribe(data =>
-            this.profileStatisticsData.next(data)
-        );
+        if(this.canSeeStatistics()) {
+            this.service.getProfileStatisticsOfGroup(undefined, username).subscribe(data => {
+                this.profileStatisticsData.next(data);
+            });
+        }
         this.service.getComparisonDescription(undefined, undefined, username).subscribe(description => {
             this.comparisonDescription = description;
             this.descriptionLoading = false;
         });
+        this.onSubmit();
+    }
+
+    canSeeStatistics(): boolean {
+        return UserInfo.canSeeCognitiveProfileStatistics();
+    }
+    canPrompt(): boolean {
+        return UserInfo.canSeePromptLlm();
     }
 
     getCandleStickData(): Observable<CandlestickChartDataModel[]> {
@@ -119,7 +131,4 @@ export class AdminProfileDataComparisonPageComponent extends ProfileDataComparis
         });
         this.location.go(urlTree.toString());
     }
-
-
-    protected readonly imagePaths = imagePaths;
 }

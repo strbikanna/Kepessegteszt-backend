@@ -15,7 +15,7 @@ export class ImpersonationComponent implements OnInit {
 
   public contacts: Observable<User[]> = new Observable<User[]>()
   public canImpersonate = false
-  public user: User | undefined = undefined
+  public user: User | undefined = UserInfo.currentUser
   text= TEXTS.impersonation
   homeText = TEXTS.home
   private storageKey = AppConstants.impersonationDisabledKey

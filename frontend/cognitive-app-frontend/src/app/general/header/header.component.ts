@@ -55,5 +55,34 @@ export class HeaderComponent implements OnInit{
     displayMobileMenu(){
         return this.windowWidth < 768
     }
+    canSeeAdminCognitiveProfile(){
+        return UserInfo.currentUser?.roles.find(
+            role => role.toUpperCase() === Role.TEACHER ||
+                role.toUpperCase() === Role.ADMIN ||
+                role.toUpperCase() === Role.SCIENTIST ||
+                role.toUpperCase() === Role.PARENT
+        ) && this.loginStatus
+    }
+    canSeeAdminCognitiveProfileCompare(){
+        return this.canSeeAdminCognitiveProfile()
+    }
+    canSeeUserManagement(){
+        return UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.ADMIN) && this.loginStatus
+    }
+    canSeeGroupManagement(){
+        return UserInfo.currentUser?.roles.find(role =>
+            role.toUpperCase() === Role.ADMIN || role.toUpperCase() === Role.TEACHER || role.toUpperCase() === Role.SCIENTIST
+        ) && this.loginStatus
+    }
+    canSeeGameManagement(){
+        return UserInfo.currentUser?.roles.find(role =>
+            role.toUpperCase() === Role.ADMIN || role.toUpperCase() === Role.SCIENTIST
+        ) && this.loginStatus
+    }
+    canSeeRecommendations(){
+        return UserInfo.currentUser?.roles.find(role =>
+            role.toUpperCase() === Role.ADMIN || role.toUpperCase() === Role.SCIENTIST || role.toUpperCase() === Role.TEACHER
+        ) && this.loginStatus
+    }
 
 }

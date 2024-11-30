@@ -23,6 +23,7 @@ export class GroupManagementComponent implements OnInit {
     selectedOrganization?: Organization
     selectedGroup?: Group
     selected: boolean = false
+    showCannotAccessData: boolean = false
 
     adminsOfGroup: Observable<User[]> = of([])
     membersOfGroup: Observable<User[]> = of([])
@@ -81,8 +82,6 @@ export class GroupManagementComponent implements OnInit {
         this.selected = false
         this.updateUrlParams(id)
         this.loadGroup(id)
-        this.loadMembersOfGroup(id)
-        this.loadAdminsOfGroup(id)
     }
 
     removeMember(username: string) {
@@ -155,7 +154,14 @@ export class GroupManagementComponent implements OnInit {
             } else {
                 this.selectedOrganization = group as Organization
             }
+            if(!group.canWrite){
+                this.showCannotAccessData = true
+                return
+            }
+            this.showCannotAccessData = false
             this.selected = true
+            this.loadMembersOfGroup(id)
+            this.loadAdminsOfGroup(id)
         });
 
     }

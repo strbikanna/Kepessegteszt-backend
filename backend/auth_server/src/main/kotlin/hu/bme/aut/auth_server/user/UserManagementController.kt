@@ -21,6 +21,14 @@ class UserManagementController(
         return ResponseEntity(contacts, HttpStatus.OK)
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'SCIENTIST', 'PARENT')")
+    @GetMapping("/impersonation_contacts/usernames")
+    fun getContactUsernames(authentication: Authentication): ResponseEntity<List<String>> {
+        val username = authentication.name
+        val contacts = userService.getImpersonationContactDtos(username)
+        return ResponseEntity(contacts.map { it.username }, HttpStatus.OK)
+    }
+
     @GetMapping("/me")
     fun getUserInfo(authentication: Authentication): ResponseEntity<UserDto> {
         val username = authentication.name

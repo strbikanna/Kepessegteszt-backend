@@ -22,4 +22,7 @@ export class RecommendationService {
     }
     return this.http.get<RecommendedGame[]>(`${this.httpService.baseUrl}/recommended_game/search`, {params: params});
   }
+  deleteRecommendation(id: number){
+    return this.http.delete(`${this.httpService.baseUrl}/recommended_game/${id}`);
+  }
 }

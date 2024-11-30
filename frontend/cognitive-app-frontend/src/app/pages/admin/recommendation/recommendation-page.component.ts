@@ -8,8 +8,8 @@ import {TEXTS} from "../../../utils/app.text_messages";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Recommendation} from "../../../model/recommendation.model";
 import {AuthUser} from "../../../model/user-contacts.model";
-import {Observable, of} from "rxjs";
-import {mockRecommendedGame, RecommendedGame} from "../../../model/recommended_game.model";
+import {Observable} from "rxjs";
+import {RecommendedGame} from "../../../model/recommended_game.model";
 import {Router} from "@angular/router";
 
 
@@ -29,9 +29,7 @@ export class RecommendationPageComponent {
     constructor(
         private service: RecommendationService, private fb: FormBuilder,
         private _snackbar: MatSnackBar, private router: Router
-    ) {
-        this.loadExistingRecommendations('Student Simon', 1)
-    }
+    ) {}
 
     onGameSelected(game: Game) {
         this.chosenGame = game;
@@ -60,10 +58,6 @@ export class RecommendationPageComponent {
         if ((value >= config.easiestValue && value <= config.hardestValue) || (value <= config.easiestValue && value >= config.hardestValue)) return null;
         formGroup.controls['setting'].setErrors({invalidConfigValue: true})
         return {invalidConfigValue: true}
-    }
-
-    convertDisplayValue(value: number, config: ConfigItem): string {
-        return value.toString()
     }
 
     labelOfControl(control: AbstractControl): string {
@@ -101,6 +95,14 @@ export class RecommendationPageComponent {
         }
         this.service.saveRecommendation(recommendedGame).subscribe(() => {
             this._snackbar.open(this.texts.saved, undefined, {duration: 3000})
+            this.loadExistingRecommendations(this.chosenUser!!.username, this.chosenGame?.id)
+        })
+    }
+
+    onDeleteRecommendation(id: number){
+        this.service.deleteRecommendation(id).subscribe(() => {
+            this._snackbar.open(this.texts.deleted, undefined, {duration: 3000})
+            this.loadExistingRecommendations(this.chosenUser!!.username, this.chosenGame?.id)
         })
     }
 
@@ -120,6 +122,21 @@ export class RecommendationPageComponent {
         if(this.chosenGame){
             const params = {chosenGameIds: this.chosenGame.id, chosenUserNames: this.chosenUser?.username}
             this.router.navigate(['/result'], {queryParams: params})
+        }
+    }
+
+    onRemoveChosenUser() {
+        this.chosenUser = undefined;
+        this.onRemoveChosenGame();
+        this.existingRecommendations = new Observable<RecommendedGame[]>();
+    }
+
+    onRemoveChosenGame() {
+        this.chosenGame = undefined;
+        this.configForm = this.fb.array<FormGroup>([]);
+        this.existingRecommendations = new Observable<RecommendedGame[]>();
+        if(this.chosenUser){
+            this.loadExistingRecommendations(this.chosenUser.username, undefined);
         }
     }
 

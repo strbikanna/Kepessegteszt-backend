@@ -21,12 +21,12 @@
         <div class="toolsContainer">
             <div class="filter">
                 <h4>{{ text.filter }}</h4>
-                <p *ngIf="isAdmin()">{{ text.username }}</p>
-                <div *ngIf="isAdmin()" class="w-full flex mb-2">
+                <p *ngIf="canAccessOtherUserData()">{{ text.username }}</p>
+                <div *ngIf="canAccessOtherUserData()" class="w-full flex mb-2">
                     <app-user-autocomplete
                             (userSelectionChanged)="onUserNamesChosen($event)"
                             [selectedUsernames]="[getSelectedUserName() ?? '']"
-                            [searchOnlyContacts]="!isAdmin()"
+                            [searchOnlyContacts]="true"
                     ></app-user-autocomplete>
                 </div>
                 <mat-divider></mat-divider>
@@ -59,6 +59,7 @@
                     *ngFor="let result of results"
                     [result]="result"
             ></app-result-info-card>
+            <p *ngIf="!results?.length" class="description text-center">{{text.no_data}}</p>
         </div>
     </div>
 </mat-drawer-container>

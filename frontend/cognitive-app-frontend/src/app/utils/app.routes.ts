@@ -6,7 +6,7 @@ import {loggedInGuard} from "../auth/logged-in.guard";
 import {NotFoundComponent} from "../general/not-found/not-found.component";
 import {GameManagementPageComponent} from "../pages/admin/game-management/game-management-page.component";
 import {EditGameFormComponent} from "../pages/admin/game-management/edit-game-form/edit-game-form.component";
-import {editorGuard} from "../auth/editor.guard";
+import {adminCognitiveProfileGuard, gameManagementGuard, groupManagementGuard} from "../auth/gameManagementGuard";
 import {RecommendationPageComponent} from "../pages/admin/recommendation/recommendation-page.component";
 import {ProfileDataComparisonPageComponent} from "../pages/student/profile-data-comparison/profile-data-comparison-page.component";
 import {ResultPageComponent} from "../pages/common/result/result-page/result-page.component";
@@ -23,17 +23,17 @@ import {GroupManagementComponent} from "../pages/admin/group-management/group-ma
 
 export const appRoutes: Routes = [
     {path: 'admin', component: AdminPageComponent, canActivate: [adminAuthGuard], title: 'Felhasználók kezelése'},
-    {path: 'game-management', component: GameManagementPageComponent, canActivate: [editorGuard], title: 'Játékok kezelése'},
-    {path: 'edit-game/:id', component: EditGameFormComponent, canActivate: [editorGuard], title: 'Játék szerkesztése'},
-    {path: 'edit-game', component: EditGameFormComponent, canActivate: [editorGuard], title: 'Játék szerkesztése'},
+    {path: 'game-management', component: GameManagementPageComponent, canActivate: [gameManagementGuard], title: 'Játékok kezelése'},
+    {path: 'edit-game/:id', component: EditGameFormComponent, canActivate: [gameManagementGuard], title: 'Játék szerkesztése'},
+    {path: 'edit-game', component: EditGameFormComponent, canActivate: [gameManagementGuard], title: 'Játék szerkesztése'},
     {path: '', component: HomeComponent, title: 'Cognitive App'},
     {path: 'profile', component: ProfilePageComponent, canActivate: [loggedInGuard], title: 'Profil'},
     {path: 'profile-compare', component: ProfileDataComparisonPageComponent, canActivate: [loggedInGuard], title: 'Profil összehasonlítás'},
-    {path: 'profile-compare-admin', component: AdminProfileDataComparisonPageComponent, canActivate: [loggedInGuard, editorGuard], title: 'Profil összehasonlítás'},
+    {path: 'profile-compare-admin', component: AdminProfileDataComparisonPageComponent, canActivate: [loggedInGuard, adminCognitiveProfileGuard], title: 'Profil összehasonlítás'},
     {path: 'cognitive-profile', component: CognitiveProfilePageComponent, canActivate: [loggedInGuard], title: 'Kognitív profil'},
-    {path: 'cognitive-profile-admin', component: AdminCognitiveProfilePageComponent, canActivate: [loggedInGuard, editorGuard], title: 'Kognitív profil'},
+    {path: 'cognitive-profile-admin', component: AdminCognitiveProfilePageComponent, canActivate: [loggedInGuard, adminCognitiveProfileGuard], title: 'Kognitív profil'},
     {path: 'recommendation', component: RecommendationPageComponent, canActivate: [loggedInGuard], title: 'Játékok ajánlása'},
     {path: 'result', component: ResultPageComponent, canActivate: [loggedInGuard], title: 'Eredmények megtekintése'},
-    {path: 'group-management', component: GroupManagementComponent, canActivate: [loggedInGuard, editorGuard], title: 'Felhasználói csoportok kezelése'},
+    {path: 'group-management', component: GroupManagementComponent, canActivate: [loggedInGuard, groupManagementGuard], title: 'Felhasználói csoportok kezelése'},
     {path: '**', component: NotFoundComponent}
 ];

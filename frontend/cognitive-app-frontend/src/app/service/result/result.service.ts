@@ -29,7 +29,7 @@ export class ResultService {
         if (searchOptions.passed != null) {
             params = params.set('resultWin', searchOptions.passed.toString())
         }
-        let path = UserInfo.canSeeInsightData() ? '/gameplay/results/all' : '/gameplay/results';
+        let path = UserInfo.canSeeOthersResults() ? '/gameplay/results/all' : '/gameplay/results';
 
         return this.http.get<Result[]>(this.httpService.baseUrl + path, {params: params}).pipe(
             map((data: Result[]) =>

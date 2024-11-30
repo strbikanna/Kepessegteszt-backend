@@ -67,6 +67,10 @@ class AuthService(
         return userRepository.findByUsername(authentication.name).orElseThrow()
     }
 
+    fun getAuthUserWithRoles(authentication: Authentication): UserEntity {
+        return userRepository.findByUsernameWithRoles(authentication.name).orElseThrow()
+    }
+
     fun getContactByUsername(username: String): UserEntity {
         return userRepository.findByUsername(username).orElseThrow()
     }
@@ -106,6 +110,30 @@ class AuthService(
             return@async false
         }
         return isContact.await()
+    }
+
+    suspend fun getContactUsernames(authentication: Authentication): List<String> {
+        if (webclient == null) {
+            initWebClient()
+        }
+        val jwt = authentication.principal as Jwt
+        val accessTokenOfUser = jwt.tokenValue
+
+        val contacts = CoroutineScope(Dispatchers.IO).async {
+            val requestSpec = webclient!!
+                .get()
+                .uri("/user/impersonation_contacts/usernames")
+                .header("Authorization", "Bearer $accessTokenOfUser")
+                .accept(MediaType.APPLICATION_JSON)
+            val usernamesMono = requestSpec.retrieve()
+                .bodyToMono(Array<String>::class.java) // Expecting an array of strings
+                .map { it.toList() }
+            usernamesMono.block()?.let {
+                return@async it
+            }
+            return@async emptyList<String>()
+        }
+        return contacts.await()
     }
 
     @Transactional

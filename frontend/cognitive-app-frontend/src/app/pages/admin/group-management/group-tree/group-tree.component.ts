@@ -1,10 +1,10 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {UserGroupService} from "../../service/user-group/user-group.service";
+import {UserGroupService} from "../../../../service/user-group/user-group.service";
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
 import {BehaviorSubject, Observable} from "rxjs";
-import {TEXTS} from "../../utils/app.text_messages";
-import {Group} from "../../model/user-group";
+import {TEXTS} from "../../../../utils/app.text_messages";
+import {Group} from "../../../../model/user-group";
 
 
 interface GroupNode {

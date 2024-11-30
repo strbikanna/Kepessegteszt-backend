@@ -7,6 +7,7 @@ import hu.bme.aut.resource_server.role.Role
 import hu.bme.aut.resource_server.utils.RoleName
 import jakarta.servlet.http.HttpServletResponse
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.springframework.beans.factory.annotation.Autowired
@@ -71,7 +72,7 @@ class ResultController(
         authentication: Authentication,
         @RequestParam sortBy: String = "timestamp",
         @RequestParam sortOrder: String = "DESC",
-        @RequestParam pageSize: Int = 10,
+        @RequestParam pageSize: Int = 100,
         @RequestParam pageIndex: Int = 0,
         @RequestParam gameIds: List<Int>? = null,
         @RequestParam resultWin: Boolean? = null
@@ -94,19 +95,36 @@ class ResultController(
     @Transactional
     @GetMapping("/results/all")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST', 'TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST', 'TEACHER', 'PARENT')")
     fun getAllResults(
         @RequestParam sortBy: String = "timestamp",
         @RequestParam sortOrder: String = "DESC",
-        @RequestParam pageSize: Int = 10,
+        @RequestParam pageSize: Int = 100,
         @RequestParam pageIndex: Int = 0,
         @RequestParam gameIds: List<Int>? = null,
         @RequestParam resultWin: Boolean? = null,
-        @RequestParam usernames: List<String>? = null
-    ): List<ResultDetailsDto> {
+        @RequestParam usernames: List<String>? = null,
+        authentication: Authentication
+    ): Deferred<List<ResultDetailsDto>> = CoroutineScope(Dispatchers.IO).async {
+        val user = authService.getAuthUserWithRoles(authentication)
         val sort = resultService.convertSortBy(sortBy, sortOrder)
-        return resultService.getAllFiltered(usernames, gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort))
+        if(user.roles.any { it.roleName == RoleName.ADMIN }){
+            return@async if(usernames.isNullOrEmpty()){
+                resultService.getAllFiltered(gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort))
+            } else {
+                resultService.getAllFiltered(usernames, gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort))
+            }
+        }
+        val contactUsernames = authService.getContactUsernames(authentication)
+        val usernamesToAccess =
+            if (usernames.isNullOrEmpty()) contactUsernames else usernames.filter { contactUsernames.contains(it) }
+
+        return@async resultService.getAllFiltered(
+            usernamesToAccess,
+            gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort)
+        )
     }
+
 
     @GetMapping("/count")
     @ResponseStatus(HttpStatus.OK)
@@ -116,12 +134,27 @@ class ResultController(
         @RequestParam gameIds: List<Int>? = null,
         @RequestParam resultWin: Boolean? = null,
         @RequestParam usernames: List<String>? = null
-    ): Long {
-        val user = authService.getAuthUser(authentication)
-        if(user.roles.find { it.roleName == RoleName.ADMIN } != null){
-            return resultService.getCountByFilters(usernames, gameIds, resultWin)
+    ): Deferred<Long> = CoroutineScope(Dispatchers.IO).async {
+        val user = authService.getAuthUserWithRoles(authentication)
+        if(user.roles.none { Role.canGetContacts(it.roleName) }){
+            return@async resultService.getCountByFilters(listOf(authentication.name), gameIds, resultWin)
         }
-        return resultService.getCountByFilters(listOf(authentication.name), gameIds, resultWin)
+        val contactUsernames = authService.getContactUsernames(authentication)
+
+        if(user.roles.any { it.roleName == RoleName.ADMIN }){
+            return@async if(usernames.isNullOrEmpty()){
+                resultService.getCountByFilters(gameIds, resultWin)
+            } else {
+                resultService.getCountByFilters(usernames, gameIds, resultWin)
+            }
+        }
+        val usernamesToAccess =
+            if (user.roles.any { Role.canSeeUserGroupData(it.roleName) || it.roleName == RoleName.PARENT }) {
+                usernames?.filter { contactUsernames.contains(it) } ?: contactUsernames
+            } else {
+                listOf(authentication.name)
+            }
+        return@async resultService.getCountByFilters(usernamesToAccess, gameIds, resultWin)
     }
 
     @GetMapping("/csv")

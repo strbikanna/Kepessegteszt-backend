@@ -17,6 +17,9 @@
             {{ selectedOrganization.address.street }} {{ selectedOrganization.address.houseNumber }}
         </p>
 
+        <p *ngIf="showCannotAccessData" class="ml-8 description" >{{text.cannot_access_data}}</p>
+
+
         <div *ngIf="selected" class="flex">
             <div class="ml-8">
                 <mat-list role="list">

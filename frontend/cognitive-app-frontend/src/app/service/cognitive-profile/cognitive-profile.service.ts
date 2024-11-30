@@ -7,6 +7,7 @@ import {AppConstants} from "../../utils/constants";
 import {User} from "../../model/user.model";
 import {SimpleHttpService} from "../../utils/simple-http.service";
 import {ProfileDescription} from "../../model/ProfileDescription";
+import {TEXTS} from "../../utils/app.text_messages";
 
 @Injectable({
     providedIn: 'root'
@@ -44,6 +45,12 @@ export class CognitiveProfileService {
             params = params.set('requestedUsername', username);
         }
         return this.http.get<ProfileDescription>(`${this.helper.baseUrl}${this.profileEndpoint}/abilities-as-text`, {params: params}).pipe(
+            map(desc =>{
+                if(desc.abilitiesAsText === ''){
+                    desc.abilitiesAsText = TEXTS.cognitive_profile.llm.empty_description;
+                }
+                return desc
+            }),
             catchError(this.helper.handleHttpError)
         )
     }

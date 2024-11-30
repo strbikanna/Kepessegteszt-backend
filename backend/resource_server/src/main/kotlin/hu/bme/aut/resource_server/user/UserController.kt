@@ -131,6 +131,9 @@ class UserController(
     ): AbiltityToTextDto {
         val username = requestedUsername ?: authentication.name
         val userAbilities = userService.getUserDtoWithProfileByUsername(username).profile.toList()
+        if(userAbilities.isEmpty()) {
+            return AbiltityToTextDto("", "")
+        }
         // Should be called in a coroutine or a suspend function
         return abilitiesToTextService.generateFromAbilities(userAbilities, prompt)
     }
@@ -149,9 +152,15 @@ class UserController(
 
         val user = userService.getUserEntityWithProfileByUsername(username)
         val abilities = user.profileFloat.map { it.ability }.toSet()
+        if(abilities.isEmpty()) {
+            return AbiltityToTextDto("", "")
+        }
         // IntelliJ IDEA suggests to put it in withContext(Dispatchers.IO) when called in a suspend function
         val groupAbilities = withContext(Dispatchers.IO) {
             userGroupService.getAbilityToAverageValueInGroup(userGroupId, filterDto, abilities)
+        }
+        if(groupAbilities.isEmpty()) {
+            return AbiltityToTextDto("", "")
         }
         val groupName = userGroupId?.let { userGroupService.getGroupById(it).name } ?: "csoport"
 

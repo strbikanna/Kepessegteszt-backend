@@ -54,7 +54,6 @@ class UserGroupController(
         authentication: Authentication,
         @RequestParam id: Int
     ): UserGroupDto {
-        authService.checkGroupDataReadAndThrow(authentication, id)
         return userGroupService.getById(id).toDto()
     }
 

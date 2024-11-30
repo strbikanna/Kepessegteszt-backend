@@ -172,7 +172,8 @@ export const TEXTS = {
             prompt_description: 'Próbáld ki egyedi kérdés megadásával a kognitív profil elemzését.',
             prompt_action: 'Profil kiértékelés a megadott kérdés alapján',
             used_prompt: 'Használt prompt',
-            llm_text: 'Elemzés'
+            llm_text: 'Elemzés',
+            empty_description: 'Sajnos nem lehet elkészíteni az elemzést, mert nincs elég adat.',
         },
         date_picker: {
             see_history: 'Megtekintés korábbi időpontban',
@@ -181,6 +182,7 @@ export const TEXTS = {
         },
         comparison: {
             title: 'Kognitív profil elemzése',
+            no_data: 'Nincs elég adat az összehasonlításhoz.',
             description: 'Válaszd ki, mely csoport adatait szeretnéd összehasonlítani a sajátoddal',
             avg: 'Átlag',
             min: 'Minimum',
@@ -282,6 +284,7 @@ export const TEXTS = {
         select_group_tooltip: 'Csoport kiválasztása a részletek megtekintéséhez',
         members: 'Tagok',
         admins: 'Adminok',
+        cannot_access_data: 'Ennek a csoportnak nem tekintheted meg az adatait, mivel nem vagy tagja.',
         remove_member: 'Eltávolítás a csoportból',
         remove_admin: 'Admin jogok visszavonása',
         create_group: 'Csoport létrehozása',
@@ -322,7 +325,14 @@ export const TEXTS = {
         chosenUser: 'Kiválasztott játékos',
         chosenGame: 'Kiválasztott játék',
         saved: 'Ajánlás mentve',
-        existing_recommendations: 'Meglévő ajánlások',
+        deleted: 'Ajánlás törölve lett',
+        existing_recommendations: 'Meglévő (nem teljesített) játék-ajánlások',
+        visit_profile: 'Kognitív profil megtekintése',
+        visit_results: 'A játékhoz tartozó eredmények megtekintése',
+        card:{
+            delete_game: 'Ajánlás törlése',
+            confirm_title: 'Biztosan törölni szeretnéd ezt a játékbeállítást?',
+        }
     },
     result: {
         result_info: {
@@ -343,6 +353,7 @@ export const TEXTS = {
         passed: "Játékeredmény",
         timestamp: "Időpont",
         apply: "Kiválasztás alkalmazása",
+        no_data: "Nincs megjeleníthető eredmény."
 
     }
 }

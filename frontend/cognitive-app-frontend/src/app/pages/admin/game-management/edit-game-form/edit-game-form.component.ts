@@ -44,7 +44,8 @@ export class EditGameFormComponent implements OnInit {
                 private fb: FormBuilder,
                 private router: Router,
                 private dialog: MatDialog
-    ) {}
+    ) {
+    }
 
     /**
      * retrieve game by route param id data from server
@@ -52,9 +53,9 @@ export class EditGameFormComponent implements OnInit {
     ngOnInit(): void {
         this.route.paramMap.subscribe(params => {
             const id = params.get('id') as unknown as number;
-            if(id !== null){
+            if (id !== null) {
                 this.loadGameData(id);
-            }else{
+            } else {
                 this.initWithEmptyGame();
             }
         })
@@ -80,50 +81,61 @@ export class EditGameFormComponent implements OnInit {
             configDescription: this.game?.configDescription ?? '',
             configItems: this.getFormConfigItems()
         }
-        if(this.game === undefined){
+        if (this.game === undefined) {
             this.service.createGame(game).subscribe(game => {
                 this.sendThumbnail(game)
             })
-        }else{
+        } else {
             this.service.editGame(game).subscribe(game => {
                 this.sendThumbnail(game)
             })
         }
     }
 
-    onSave(){
-        if(this.game && this.game.id && this.configChanged()){
+    onSave() {
+        if (this.game && this.game.id && this.configChanged()) {
             this.openConfirmDialog()
-        }if(this.game && this.abilitiesChanged() ){
+            return;
+        }
+        if (this.game && this.abilitiesChanged()) {
             this.openAbilityChangeConfirmDialog()
+            return;
         }
-        else{
-            this.onSubmit()
-        }
+
+        this.onSubmit()
+
     }
 
     openConfirmDialog() {
-        this.dialog.open(ConfirmDialogComponent, {data: {
+        this.dialog.open(ConfirmDialogComponent, {
+            data: {
                 title: this.text.confirm.title,
                 message: this.text.confirm.message,
-                onCancel: () => {},
+                onCancel: () => {
+                },
                 onOk: () => this.onSubmit()
-            }})
+            }
+        })
     }
+
     openAbilityChangeConfirmDialog() {
-        this.dialog.open(ConfirmDialogComponent, {data: {
+        this.dialog.open(ConfirmDialogComponent, {
+            data: {
                 title: this.text.confirm_ability_change.title,
                 message: this.text.confirm_ability_change.message,
-                onCancel: () => {},
+                onCancel: () => {
+                },
                 onOk: () => this.onSubmit()
-            }})
+            }
+        })
     }
-    private sendThumbnail(game: Game){
-        if(this.gameForm.controls.thumbnail.value){
+
+    private sendThumbnail(game: Game) {
+        if (this.gameForm.controls.thumbnail.value) {
             const formData = new FormData()
             formData.set('file', this.gameForm.controls.thumbnail.value)
             this.service.sendGameThumbnail(formData, game.id!!).subscribe(_ => this.onBack())
-        }else{
+        } else {
             this.onBack()
         }
     }
@@ -149,6 +161,7 @@ export class EditGameFormComponent implements OnInit {
     onDeleteConfigItem(index: number) {
         this.gameForm.controls.configItems.removeAt(index)
     }
+
     onUpdateConfigItem(index: number, configItem: ConfigItem) {
         let oldConfigItem = this.gameForm.controls.configItems.at(index).value
         this.usedParamOrders = this.usedParamOrders.filter(order => order !== oldConfigItem?.paramOrder)
@@ -189,10 +202,10 @@ export class EditGameFormComponent implements OnInit {
         return this.gameForm.controls.abilities as FormArray
     }
 
-    getFormConfigItems(){
-        let configItems : ConfigItem[] = []
+    getFormConfigItems() {
+        let configItems: ConfigItem[] = []
         this.gameForm.controls.configItems.controls.forEach(control => {
-            if(control.value !== null){
+            if (control.value !== null) {
                 configItems.push(control.value)
             }
         })
@@ -220,7 +233,8 @@ export class EditGameFormComponent implements OnInit {
             })
         })
     }
-    private initWithEmptyGame(){
+
+    private initWithEmptyGame() {
         this.abilityService.getAllAbilities().subscribe(abilities => {
             this.setFormAbilities(abilities)
             this.loading = false;
@@ -245,12 +259,13 @@ export class EditGameFormComponent implements OnInit {
             this.abilitiesForm.push(abilityForm)
         })
     }
-    private configChanged(): boolean{
-        if(!this.game) return false
+
+    private configChanged(): boolean {
+        if (!this.game) return false
         let formConfigItems = this.getFormConfigItems()
-        if(formConfigItems.length !== this.game.configItems.length) return true
-        for(let i = 0; i < formConfigItems.length; i++){
-            if(!this.game.configItems.find(item => isSameConfigItem(item, formConfigItems[i]))){
+        if (formConfigItems.length !== this.game.configItems.length) return true
+        for (let i = 0; i < formConfigItems.length; i++) {
+            if (!this.game.configItems.find(item => isSameConfigItem(item, formConfigItems[i]))) {
                 return true
             }
         }
@@ -258,11 +273,11 @@ export class EditGameFormComponent implements OnInit {
     }
 
     private abilitiesChanged() {
-        if(!this.game) return false
+        if (!this.game) return false
         let formAbilities = this.getFormAffectedAbilities()
-        if(formAbilities.length !== this.game.affectedAbilities.length) return true
-        for(let i = 0; i < formAbilities.length; i++){
-            if(!this.game.affectedAbilities.find(ability => ability.code === formAbilities[i].code)){
+        if (formAbilities.length !== this.game.affectedAbilities.length) return true
+        for (let i = 0; i < formAbilities.length; i++) {
+            if (!this.game.affectedAbilities.find(ability => ability.code === formAbilities[i].code)) {
                 return true
             }
         }
