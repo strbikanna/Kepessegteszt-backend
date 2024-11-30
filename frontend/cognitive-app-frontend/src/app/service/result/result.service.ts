@@ -23,7 +23,7 @@ export class ResultService {
         if (searchOptions.gameIds) {
             params = params.set('gameIds', searchOptions.gameIds.join(','))
         }
-        if (searchOptions.usernames && UserInfo.canSeeInsightData()) {
+        if (searchOptions.usernames && UserInfo.canSeeOthersResults()) {
             params = params.set('usernames', searchOptions.usernames.join(','))
         }
         if (searchOptions.passed != null) {
@@ -45,7 +45,7 @@ export class ResultService {
         if (gameIds) {
             params = params.set('gameIds', gameIds.join(','))
         }
-        if (usernames && UserInfo.isAdmin()) {
+        if (usernames && UserInfo.canSeeOthersResults()) {
             params = params.set('usernames', usernames.join(','))
         }
         if (passed != null) {
