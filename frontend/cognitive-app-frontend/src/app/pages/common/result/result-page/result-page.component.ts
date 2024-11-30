@@ -49,8 +49,8 @@ export class ResultPageComponent implements OnInit {
     ngOnInit() {
         this.loadStateFromUrlParams();
         this.getResults();
-        this.resultService.getCountOfResults().subscribe(count => this.dataLength = count);
-        if (UserInfo.canSeeInsightData()) {
+        this.resultService.getCountOfResults(this.chosenUsernames, this.chosenGameIds).subscribe(count => this.dataLength = count);
+        if (UserInfo.canSeeOthersResults()) {
             this.sortOptions.push(this.text.username)
         }
     }
