@@ -53,7 +53,7 @@ object ScoreCalculator {
     }
 
     private fun getScoreOfResult(result: ResultForCalculationEntity, game: GameEntity): Double {
-        return (result.result["passed"] as Boolean).let { if(it) 1.0 else 0.0 }
+        return (result.result["passed"] as Boolean?)?.let { if(it) 1.0 else 0.0 } ?: 0.0
     }
 
     private fun getDifficultyOfResult(result: ResultForCalculationEntity, game: GameEntity): Double {

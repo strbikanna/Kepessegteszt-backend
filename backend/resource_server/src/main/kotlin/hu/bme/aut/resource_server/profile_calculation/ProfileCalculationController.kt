@@ -39,6 +39,7 @@ class ProfileCalculationController(
      */
     @PostMapping("/process_results")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_SCIENTIST')")
     fun processResults(@RequestParam gameId: Int): Deferred<CalculationInfoDto> =
         CoroutineScope(Dispatchers.Default).async {
             val meanAndDeviation = resultProcessingService.processGameResults(gameId)

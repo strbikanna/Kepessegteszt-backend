@@ -77,15 +77,17 @@ class GameResultProcessingService(
         val userIds = dataService.getAllUserIds()
         userIds.forEach { userId ->
             val medianOfUser = calculateMedianOfUser(game, userId)
-            val normalizedResultForUser = ResultForCalculationEntity(
-                game = game,
-                user = dataService.getUserById(userId),
-                normalizedResult = medianOfUser,
-                result = mutableMapOf(),
-                config = mutableMapOf(),
-            )
-            dataService.deleteAllNormalizedResultsOfGameAndUser(game, dataService.getUserById(userId))
-            dataService.saveAll(listOf(normalizedResultForUser))
+            if(medianOfUser != null) {
+                val normalizedResultForUser = ResultForCalculationEntity(
+                    game = game,
+                    user = dataService.getUserById(userId),
+                    normalizedResult = medianOfUser,
+                    result = mutableMapOf(),
+                    config = mutableMapOf(),
+                )
+                dataService.deleteAllNormalizedResultsOfGameAndUser(game, dataService.getUserById(userId))
+                dataService.saveAll(listOf(normalizedResultForUser))
+            }
         }
     }
 
