@@ -62,14 +62,16 @@ export class GlobalErrorhandlerService implements ErrorHandler {
             }
         }
         // Opens the alert dialog with error message and details
-        this.zone.run(() =>
-            this.dialog.open(
-                AlertDialogComponent,
-                {
-                    data: {message: message, detail: detail}
-                }
-            )
-        );
+        if (error instanceof HttpErrorResponse && error.status !== 503) {
+            this.zone.run(() =>
+                this.dialog.open(
+                    AlertDialogComponent,
+                    {
+                        data: {message: message, detail: detail}
+                    }
+                )
+            );
+        }
         this.previousError = error ?? this.previousError
         console.error('Error from global error handler', error);
     }
