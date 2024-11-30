@@ -1,11 +1,14 @@
 package hu.bme.aut.resource_server.user_group
 
 import hu.bme.aut.resource_server.TestUtilsService
+import hu.bme.aut.resource_server.role.Role
+import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user_group.group.Group
 import hu.bme.aut.resource_server.user_group.group.GroupRepository
 import hu.bme.aut.resource_server.user_group.organization.Address
 import hu.bme.aut.resource_server.user_group.organization.Organization
 import hu.bme.aut.resource_server.user_group.organization.OrganizationRepository
+import hu.bme.aut.resource_server.utils.RoleName
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -24,9 +27,13 @@ class UserGroupServiceTest(
         @Autowired private var groupRepository: GroupRepository,
         @Autowired private var organizationRepository: OrganizationRepository
 ) {
+    private lateinit var authUser: UserEntity
     @BeforeEach
     fun setUp() {
        testUtilsService.emptyRepositories()
+        authUser = testUtilsService.createUnsavedTestUser()
+        authUser.roles.add(Role(RoleName.ADMIN))
+        testUtilsService.saveUser(authUser)
     }
 
     @Test
@@ -48,7 +55,7 @@ class UserGroupServiceTest(
         organizationRepository.save(org)
         groupRepository.save(group1)
         groupRepository.save(group2)
-        val allGroups = userGroupService.getAllUserGroups()
+        val allGroups = userGroupService.getAllUserGroups(authUsername = authUser.username)
         assertEquals(3, allGroups.size)
     }
 
@@ -62,7 +69,7 @@ class UserGroupServiceTest(
         group2.childGroups.add(group3)
         organizationRepository.save(org)
         groupRepository.save(group1)
-        val allGroups = userGroupService.getAllUserGroups()
+        val allGroups = userGroupService.getAllUserGroups(authUsername = authUser.username)
         assertEquals(4, allGroups.size)
     }
 

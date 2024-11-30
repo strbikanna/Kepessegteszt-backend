@@ -6,10 +6,12 @@ import hu.bme.aut.resource_server.profile_calculation.calculator.ScoreCalculator
 import hu.bme.aut.resource_server.profile_calculation.data.MeanAndDeviation
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
+import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -28,40 +30,25 @@ class GameResultProcessingService(
      * Calculates the mean and deviation of the normalized results of the given game.
      * Can be used by both multi- and single ability games.
      */
-    suspend fun processGameResults(gameId: Int): MeanAndDeviation =
-        withContext(Dispatchers.IO){
+    @Transactional
+    fun processGameResults(gameId: Int): MeanAndDeviation {
             val game = dataService.getGameWithConfigItems(gameId)
-            val normalizationTimeStamp = LocalDateTime.now()
-            normalizeNewResults(game, normalizationTimeStamp)
-            val newNormalizedResults = deleteOlderNormalizedResults(game)
-            //TODO paging for large datasets
-            val mean = CalculationHelper.calculateMean(newNormalizedResults.map { it.normalizedResult!! })
-            val deviation = CalculationHelper.calculateStdDeviation(newNormalizedResults.map { it.normalizedResult!! }, mean)
-            return@withContext MeanAndDeviation(mean, deviation)
+
+            //delete old normalized results of this game
+            dataService.deleteAllNormalizedResultsOfGame(game)
+
+            //normalize all non normalized results of this game
+            normalizeNewResults(game)
+
+            //calculate median of normalized results of each user
+            calculateMedianOfEachUser(game)
+
+            val newNormalizedResultValues = dataService.getAllNormalizedResultsOfGame(game).map { it.normalizedResult!! } //one result for each user
+            val mean = CalculationHelper.calculateMean(newNormalizedResultValues)
+            val deviation = CalculationHelper.calculateStdDeviation(newNormalizedResultValues, mean)
+            return MeanAndDeviation(mean, deviation)
         }
 
-
-
-    /**
-     * For every user only 1 normalized result will remain which is the latest. All older ones are deleted.
-     * @returns the list of the latest normalized results which contains 1 result per user
-     */
-    fun deleteOlderNormalizedResults(game: GameEntity): List<ResultForCalculationEntity>{
-        val allNormalizedResults = dataService.getAllNormalizedResultsOfGame(game)
-        val userIdToResult = mutableMapOf<Int, ResultForCalculationEntity>()
-        allNormalizedResults.forEach{result ->
-            val resultInMap = userIdToResult[result.user.id]
-            if(resultInMap == null){
-                userIdToResult[result.user.id!!] = result
-            }else  if(resultInMap.timestamp!!.isBefore(result.timestamp!!)){
-                dataService.delete(resultInMap)
-                userIdToResult[result.user.id!!] = result
-            }else{
-                dataService.delete(result)
-            }
-        }
-        return userIdToResult.values.toList()
-    }
 
 
     /**
@@ -77,26 +64,59 @@ class GameResultProcessingService(
         for(i in 0 .. maxPages){
             results = dataService.getAllNonNormalizedResultsOfGame(game, PageRequest.of(i, defaultPageSize))
             normalizedResults = calculator.calculateNormalizedScores(results, game)
-            dataService.deleteAll(results)
-            dataService.saveAll(
-                selectRelevantNormalizedResultsForUpdate(normalizedResults, timestamp)
-            )
+            dataService.saveAll( normalizedResults)
         }
     }
 
     /**
-     * Selects 1 result for each user that has the maximal normalized result value.
-     * All results must have normalizedResult field not null!
-     * Sets timestamp to @param timestamp
-      */
-    private fun selectRelevantNormalizedResultsForUpdate(allNormalizedResults: List<ResultForCalculationEntity>, timestamp: LocalDateTime): List<ResultForCalculationEntity>{
-        val userIdToResult = mutableMapOf<Int, ResultForCalculationEntity>()
-        allNormalizedResults.forEach{ result ->
-            val currentNormalizedResult = userIdToResult[result.user.id]?.normalizedResult
-            if(currentNormalizedResult == null || currentNormalizedResult < result.normalizedResult!!){
-                userIdToResult[result.user.id!!] = result.copy(timestamp = timestamp)
-            }
+     * Selects all normalized result of game and user and calculates the median of these values.
+     * Saves only the median value.
+     * Deletes the old normalized values.
+     */
+    fun calculateMedianOfEachUser(game: GameEntity){
+        val userIds = dataService.getAllUserIds()
+        userIds.forEach { userId ->
+            val medianOfUser = calculateMedianOfUser(game, userId)
+            val normalizedResultForUser = ResultForCalculationEntity(
+                game = game,
+                user = dataService.getUserById(userId),
+                normalizedResult = medianOfUser,
+                result = mutableMapOf(),
+                config = mutableMapOf(),
+            )
+            dataService.deleteAllNormalizedResultsOfGameAndUser(game, dataService.getUserById(userId))
+            dataService.saveAll(listOf(normalizedResultForUser))
         }
-        return userIdToResult.values.toList()
+    }
+
+    private companion object{
+        val sortOrderNormalizedResultDesc = Sort.by(Sort.Order.desc("normalizedResult"))
+        val sortOrderNormalizedResultAsc = Sort.by(Sort.Order.asc("normalizedResult"))
+        const val PAGE_SIZE_FOR_MEDIAN = 2
+    }
+
+    private fun calculateMedianOfUser(game: GameEntity, userId: Int): Double?{
+        val user = dataService.getUserById(userId)
+        val countOfNormalizedResults = dataService.getCountOfNormalizedResultsByGameAndUser(game, user)
+        if(countOfNormalizedResults == 0L)
+            return null
+
+        val middleValue: Int = (countOfNormalizedResults/2).toInt()
+
+        val page = PageRequest.of(
+            if(middleValue < PAGE_SIZE_FOR_MEDIAN) 0 else (middleValue - PAGE_SIZE_FOR_MEDIAN/2)-1,
+            PAGE_SIZE_FOR_MEDIAN,
+            sortOrderNormalizedResultAsc
+        )
+
+        val normalizedResults = dataService.getNormalizedResultsByGameAndUserPaged(game, user, page)
+        var max = normalizedResults.firstOrNull()?.normalizedResult ?: return null
+        normalizedResults
+            .filter { it.normalizedResult != null }
+            .forEach {
+            if(it.normalizedResult!! > max)
+                max = it.normalizedResult!!
+        }
+        return max
     }
 }

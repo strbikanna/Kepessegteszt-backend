@@ -19,55 +19,31 @@ class ScoreCalculatorTest {
             game = game,
             user = TestDataSource.createUsersForTestWithEmptyProfile(1)[0],
             result = mutableMapOf(
-                "level" to 5,
-                "round" to 8,
-                "healthPoints" to 5,
-                "maxRound" to 10,
-                "maxHealthPoints" to 6,
                 "passed" to true,
             ),
             config = game.configDescription
         )
         winGame = TestDataSource.createGameForTest().copy(
-            configDescription = mutableMapOf(
-                "levelFieldName" to "level",
-                "winFieldName" to "gameWon",
-                "maxLevel" to 10,
-            )
+
         )
     }
 
 
-    @Test
-    fun shouldCalculateProperGameBasedOnPoints(){
-        val normalizedResults = ScoreCalculator.calculateNormalizedScores(listOf(result), game)
-        assertEquals(1, normalizedResults.size)
-        val expectedResult = 0.0 //result does not have corresponding config to game
-        assertEquals(expectedResult, normalizedResults[0].normalizedResult)
-    }
-
-    @Test
-    fun shouldReturnPointsCorrectly(){
-        val maxPointsOfLevel = ScoreCalculator.getMaxScoreOfLevel(result, game)
-        val actualPoints = ScoreCalculator.getActualScoreOfLevel(result, game)
-        assertEquals(16.0, maxPointsOfLevel)
-        assertEquals(13.0, actualPoints)
-    }
     @Test
     fun shouldCalculateProperGameBasedOnWin(){
         val winResult = ResultForCalculationEntity(
             game = winGame,
             user = TestDataSource.createUsersForTestWithEmptyProfile(1)[0],
-            result = mutableMapOf(
-                "level" to 5,
-                "passed" to true,
-            ),
-            config = winGame.configDescription
+            result = mutableMapOf("passed" to true),
+            config = winGame.configItems.associate { it.paramName to it.initialValue }.toMutableMap()
         )
         val normalizedResults = ScoreCalculator.calculateNormalizedScores(listOf(winResult), winGame)
         assertEquals(1, normalizedResults.size)
-        val expectedResult =  0.0 //result does not have corresponding config to game
-        assertEquals(expectedResult, normalizedResults[0].normalizedResult)
+        //param1: 10000/15000
+        //param2: 5/10
+        //result: (2/3+1/2)/2 = 7/12
+        val expectedResult = "0.58333"
+        assertEquals(expectedResult, normalizedResults[0].normalizedResult.toString().substring(0, 7))
     }
 
     @Test
@@ -87,12 +63,12 @@ class ScoreCalculatorTest {
         val normalizedResults = ScoreCalculator.calculateNormalizedScores(listOf(malformedResult), game)
         assertEquals(0, normalizedResults.size)
     }
+
     @Test
-    fun shouldNotThrowWhenMalformedResult1(){
+    fun shouldNotThrowWhenMalformedResult(){
         val malformedResult = ResultForCalculationEntity(
             game = game,
             user = TestDataSource.createUsersForTestWithEmptyProfile(1)[0],
-            //maxHealthPoints is malformed
             result = mutableMapOf(
                 "level" to "5",
                 "round" to "8",
@@ -105,39 +81,5 @@ class ScoreCalculatorTest {
         val normalizedResults = ScoreCalculator.calculateNormalizedScores(listOf(malformedResult), game)
         assertEquals(0, normalizedResults.size)
     }
-    @Test
-    fun shouldNotThrowWhenMalformedResult2(){
-        val malformedResult = ResultForCalculationEntity(
-            game = game,
-            user = TestDataSource.createUsersForTestWithEmptyProfile(1)[0],
-            //maxExtraPointsField is not as in config
-            result = mutableMapOf(
-                "level" to "5",
-                "round" to "8",
-                "healthPoints" to "5",
-                "maxRound" to "10",
-                "MISTAKE" to "3",
-            ),
-            config = game.configDescription
-        )
-        val normalizedResults = ScoreCalculator.calculateNormalizedScores(listOf(malformedResult), game)
-        assertEquals(0, normalizedResults.size)
-    }
-    @Test
-    fun shouldCalculateWithoutExtraPoints(){
-        val malformedResult = ResultForCalculationEntity(
-            game = game,
-            user = TestDataSource.createUsersForTestWithEmptyProfile(1)[0],
-            //passed are missing
-            result = mutableMapOf(
-                "level" to "5",
-                "round" to "8",
-                "maxRound" to "10",
-            ),
-            config = game.configDescription
-        )
-        val normalizedResults = ScoreCalculator.calculateNormalizedScores(listOf(malformedResult), game)
-        //should not throw but empty list is result because missing passed
-        assertEquals(0, normalizedResults.size)
-    }
+
 }

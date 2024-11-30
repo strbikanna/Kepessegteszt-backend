@@ -44,7 +44,7 @@ class ProfileCalculationController(
             val meanAndDeviation = resultProcessingService.processGameResults(gameId)
             val countOfUpdatedProfiles = dataService.getCountOfRecentCalculation(gameId)
             profileUpdaterService.updateUserProfileByResultsOfGame(gameId, meanAndDeviation)
-            autoRecommendationService.createRecommendationModel(gameId)
+            //autoRecommendationService.createRecommendationModel(gameId)
             return@async CalculationInfoDto(meanAndDeviation, countOfUpdatedProfiles)
         }
 }
