@@ -19,6 +19,9 @@ interface UserRepository: JpaRepository<UserEntity, Int>, JpaSpecificationExecut
 
     fun findByIdIn(ids: List<Int>): List<UserEntity>
 
+    @Query("SELECT u.id FROM UserEntity u")
+    fun findAllIds(): List<Int>
+
     @Query("SELECT u FROM UserEntity u LEFT JOIN FETCH u.profileFloat LEFT JOIN FETCH u.profileEnum WHERE u.id = :id")
     fun findByIdWithProfile(id: Int): Optional<UserEntity>
 

@@ -17,14 +17,6 @@ object TestDataSource {
     )
 
     fun createGameForTest(): GameEntity {
-        val config = mutableMapOf<String, Any>(
-            "levelFieldName" to "level",
-            "pointsFieldName" to "round",
-            "maxPointsFieldName" to "maxRound",
-            "extraPointsFieldName" to "healthPoints",
-            "maxExtraPointsFieldName" to "maxHealthPoints",
-            "maxLevel" to 10,
-        )
         val configItem1 = ConfigItem(
             paramName = "timeLimit",
             initialValue = 10000,
@@ -50,7 +42,6 @@ object TestDataSource {
             description = "game1",
             thumbnailPath = "game1",
             active = true,
-            configDescription = config,
             affectedAbilities = mutableSetOf(affectedAbility),
             configItems = mutableSetOf(configItem1, configItem2),
         )
@@ -140,13 +131,21 @@ object TestDataSource {
             results.add(
                 ResultForCalculationEntity(
                     result = mutableMapOf(
-                        "level" to 2,
-                        "round" to 8,
-                        "maxRound" to 10,
-                        "healthPoints" to 8,
-                        "maxHealthPoints" to 10,
-                        "passed" to false                    ),
+                        "passed" to false
+                    ),
                     config = mutableMapOf(),
+                    user = users[i - 1],
+                    game = game,
+                )
+            )
+        }
+        for (i in users.size / 2..users.size) {
+            results.add(
+                ResultForCalculationEntity(
+                    result = mutableMapOf(
+                        "passed" to true
+                    ),
+                    config = game.configItems.associate { it.paramName to it.initialValue }.toMutableMap(),
                     user = users[i - 1],
                     game = game,
                 )
@@ -156,31 +155,9 @@ object TestDataSource {
             results.add(
                 ResultForCalculationEntity(
                     result = mutableMapOf(
-                        "level" to 3,
-                        "round" to 6,
-                        "maxRound" to 10,
-                        "healthPoints" to 8,
-                        "maxHealthPoints" to 10,
                         "passed" to true
                     ),
-                    config = mutableMapOf(),
-                    user = users[i - 1],
-                    game = game,
-                )
-            )
-        }
-        for (i in 5 * users.size / 6..users.size) {
-            results.add(
-                ResultForCalculationEntity(
-                    result = mutableMapOf(
-                        "level" to 4,
-                        "round" to 7,
-                        "maxRound" to 10,
-                        "healthPoints" to 7,
-                        "maxHealthPoints" to 10,
-                        "passed" to true
-                    ),
-                    config = mutableMapOf(),
+                    config = game.configItems.associate { it.paramName to it.hardestValue }.toMutableMap(),
                     user = users[i - 1],
                     game = game,
                 )
