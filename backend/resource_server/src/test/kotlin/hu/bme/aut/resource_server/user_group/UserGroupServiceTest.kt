@@ -22,15 +22,17 @@ import org.springframework.test.context.ActiveProfiles
 @SpringBootTest
 @ActiveProfiles("test")
 class UserGroupServiceTest(
-        @Autowired private var testUtilsService: TestUtilsService,
-        @Autowired private var userGroupService: UserGroupService,
-        @Autowired private var groupRepository: GroupRepository,
-        @Autowired private var organizationRepository: OrganizationRepository
+    @Autowired private var testUtilsService: TestUtilsService,
+    @Autowired private var userGroupService: UserGroupService,
+    @Autowired private var groupRepository: GroupRepository,
+    @Autowired private var organizationRepository: OrganizationRepository
 ) {
     private lateinit var authUser: UserEntity
+
     @BeforeEach
     fun setUp() {
-       testUtilsService.emptyRepositories()
+        testUtilsService.emptyRepositories()
+        testUtilsService.fillAbilityRepository()
         authUser = testUtilsService.createUnsavedTestUser()
         authUser.roles.add(Role(RoleName.ADMIN))
         testUtilsService.saveUser(authUser)
@@ -48,7 +50,7 @@ class UserGroupServiceTest(
     }
 
     @Test
-    fun shouldGetAllGroupsAndOrgs(){
+    fun shouldGetAllGroupsAndOrgs() {
         val org = createOrganization(1)
         val group1 = createGroup(1, org)
         val group2 = createGroup(2, org)
@@ -60,7 +62,8 @@ class UserGroupServiceTest(
     }
 
     @Test
-    fun shouldGetAllNestedGroups(){
+    @Transactional
+    fun shouldGetAllNestedGroups() {
         val org = createOrganization(1)
         val group1 = createGroup(1, org)
         val group2 = createGroup(2, org)
@@ -75,7 +78,7 @@ class UserGroupServiceTest(
 
     @Test
     @Transactional
-    fun shouldRemoveUserFromGroup(){
+    fun shouldRemoveUserFromGroup() {
         val org = createOrganization(1)
         val group1 = createGroup(1, org)
         val user = testUtilsService.createUnsavedTestUser()
@@ -94,7 +97,7 @@ class UserGroupServiceTest(
 
     @Test
     @Transactional
-    fun shouldRemoveAdminFromGroup(){
+    fun shouldRemoveAdminFromGroup() {
         val org = createOrganization(1)
         val group1 = createGroup(1, org)
         val user = testUtilsService.createUnsavedTestUser()
@@ -116,15 +119,17 @@ class UserGroupServiceTest(
     private fun createGroup(testNum: Int, organization: Organization): Group {
         return Group(name = "Example Group $testNum", organization = organization)
     }
+
     private fun createOrganization(testNum: Int): Organization {
         return Organization(name = "Example School $testNum", address = createAddress(testNum))
     }
+
     private fun createAddress(houseNum: Int): Address {
         return Address(
-                city = "Budapest",
-                zip = "1117",
-                street = "Irinyi József utca",
-                houseNumber = "$houseNum"
+            city = "Budapest",
+            zip = "1117",
+            street = "Irinyi József utca",
+            houseNumber = "$houseNum"
         )
     }
 }

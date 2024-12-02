@@ -40,11 +40,13 @@ object ScoreCalculator {
         val normalizedResults = mutableListOf<ResultForCalculationEntity>()
         results.forEach { result ->
             try {
-                val score = getScoreOfResult(result, game)
-                val difficulty = getDifficultyOfResult(result, game)
-                val normalizedScore = score * difficulty
-                result.normalizedResult = normalizedScore
-                normalizedResults.add(result)
+                val score = getScoreOfResult(result)
+                if(score !=null) {
+                    val difficulty = getDifficultyOfResult(result, game)
+                    val normalizedScore = score * difficulty
+                    result.normalizedResult = normalizedScore
+                    normalizedResults.add(result)
+                }
             } catch (e: RuntimeException) {
                 log.error("Error while calculating normalized score: ${e.message}")
             }
@@ -52,8 +54,8 @@ object ScoreCalculator {
         return normalizedResults
     }
 
-    private fun getScoreOfResult(result: ResultForCalculationEntity, game: GameEntity): Double {
-        return (result.result["passed"] as Boolean?)?.let { if(it) 1.0 else 0.0 } ?: 0.0
+    private fun getScoreOfResult(result: ResultForCalculationEntity): Double? {
+        return (result.result["passed"] as Boolean?)?.let { if(it) 1.0 else 0.0 }
     }
 
     private fun getDifficultyOfResult(result: ResultForCalculationEntity, game: GameEntity): Double {

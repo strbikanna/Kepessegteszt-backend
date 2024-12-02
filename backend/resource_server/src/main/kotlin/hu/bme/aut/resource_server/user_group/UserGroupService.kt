@@ -25,6 +25,7 @@ class UserGroupService(
      * Returns all user groups.
      * Should be called within transaction. (@Transactional)
      */
+    @Transactional
     fun getAllUserGroups(pageIndex: Int =0, pageSize: Int = 100, authUsername: String): List<UserGroup> {
         val user = userRepository.findByUsername(authUsername).orElseThrow()
         if(user.roles.any{it.roleName == RoleName.ADMIN}){
@@ -33,6 +34,7 @@ class UserGroupService(
         return (user.groups + user.organizations).toList()
     }
 
+    @Transactional
     fun getAllOrganizations(pageIndex: Int =0, pageSize: Int = 100, authUsername: String): List<Organization> {
         val user = userRepository.findByUsername(authUsername).orElseThrow()
         if(user.roles.any{it.roleName == RoleName.ADMIN}){
@@ -41,6 +43,7 @@ class UserGroupService(
         return user.organizations.toList()
     }
 
+    @Transactional
     fun getAllGroups(pageIndex: Int =0, pageSize: Int = 100, authUsername: String): List<Group> {
         val user = userRepository.findByUsername(authUsername).orElseThrow()
         if(user.roles.any{it.roleName == RoleName.ADMIN}){
