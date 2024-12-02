@@ -81,8 +81,7 @@ class UserGroupServiceTest(
     fun shouldRemoveUserFromGroup() {
         val org = createOrganization(1)
         val group1 = createGroup(1, org)
-        val user = testUtilsService.createUnsavedTestUser()
-        testUtilsService.fillAbilityRepository()
+        val user = testUtilsService.createUnsavedTestUser().copy(username = "test_user2")
         testUtilsService.saveUser(user)
         group1.members.add(user)
         org.groups.add(group1)
@@ -100,8 +99,7 @@ class UserGroupServiceTest(
     fun shouldRemoveAdminFromGroup() {
         val org = createOrganization(1)
         val group1 = createGroup(1, org)
-        val user = testUtilsService.createUnsavedTestUser()
-        testUtilsService.fillAbilityRepository()
+        val user = testUtilsService.createUnsavedTestUser().copy(username = "test_user2")
         testUtilsService.saveUser(user)
         group1.admins.add(user)
         org.groups.add(group1)

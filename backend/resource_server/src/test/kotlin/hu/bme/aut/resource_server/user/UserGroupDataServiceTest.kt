@@ -1,11 +1,13 @@
 package hu.bme.aut.resource_server.user
 
 import hu.bme.aut.resource_server.TestUtilsService
+import hu.bme.aut.resource_server.profile.EnumProfileItem
 import hu.bme.aut.resource_server.user.filter.AbilityFilterDto
 import hu.bme.aut.resource_server.user.filter.UserFilterDto
 import hu.bme.aut.resource_server.user_group.group.Group
 import hu.bme.aut.resource_server.user_group.organization.Address
 import hu.bme.aut.resource_server.user_group.organization.Organization
+import hu.bme.aut.resource_server.utils.EnumAbilityValue
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -31,7 +33,6 @@ class UserGroupDataServiceTest(
     }
 
     @Test
-    @Transactional
     fun shouldAddUserToGroup() {
         val org = Organization(name = "TestOrg", address = Address("11", "TestStreet", "TestCity", "1123"))
         val group = Group(name = "TestGroup", organization = org)
@@ -48,6 +49,9 @@ class UserGroupDataServiceTest(
         assertEquals(1, dbGroup.members.size)
         assertEquals(1, dbOrg.members.size)
     }
+
+
+
 
     @Test
     fun testEmptyUserGroups() {
@@ -71,52 +75,14 @@ class UserGroupDataServiceTest(
 
     @Test
     fun `should filter users by ability correctly`() {
-        var userIdsFound = userGroupDataService.getAllUserIdsByFilter(
-            UserFilterDto(
-                abilityFilter = listOf(
-                    AbilityFilterDto(
-                        code = "Gf",
-                        valueMin = 1.0,
-                        valueMax = 1.1
-                    )
-                )
-            )
-        )
-        assertEquals(1, userIdsFound.size)
-        userIdsFound = userGroupDataService.getAllUserIdsByFilter(
-            UserFilterDto(
-                abilityFilter = listOf(
-                    AbilityFilterDto(
-                        code = "Gf",
-                        valueMin = 0.8,
-                        valueMax = 1.0
-                    )
-                )
-            )
-        )
-        assertEquals(2, userIdsFound.size)
-    }
-
-    @Test
-    fun `should filter by more abilities correctly`(){
         val userIdsFound = userGroupDataService.getAllUserIdsByFilter(
             UserFilterDto(
-                abilityFilter = listOf(
-                    AbilityFilterDto(
-                        code = "Gf",
-                        valueMin = 1.0,
-                        valueMax = 1.1
-                    ),
-                    AbilityFilterDto(
-                        code = "Gq",
-                        valueMin = 1.0,
-                        valueMax = 1.2
-                    )
-                )
+                abilityFilter = listOf( AbilityFilterDto(code = "Cls"))
             )
         )
         assertEquals(1, userIdsFound.size)
     }
+
 
     @Test
     fun `should filter by address and age correctly`() {
@@ -140,14 +106,14 @@ class UserGroupDataServiceTest(
                 addressCity = "Budapest",
                 abilityFilter = listOf(
                     AbilityFilterDto(
-                        code = "Gf",
+                        code = "Cls",
                         valueMin = 1.0,
                         valueMax = 1.2
                     )
                 )
             )
         )
-        assertEquals(2, userIdsFound.size)
+        assertEquals(1, userIdsFound.size)
     }
 
     private fun saveUsers() {
@@ -156,21 +122,21 @@ class UserGroupDataServiceTest(
             birthDate = LocalDate.of(2010, 11, 2),
             address = Address("11a", "Petofi utca", "Budapest", "1111")
         )
-        user1.profileFloat.forEach { it.abilityValue = 1.0 }
+        user1.profileEnum.add(EnumProfileItem(null, testService.abilityColorsense, EnumAbilityValue.YES))
 
         val user2 = testService.createUnsavedTestUser().copy(
             username = "test_user2",
             birthDate = LocalDate.of(2010, 11, 2),
             address = Address("112", "Petofi utca", "Budapest", "1021")
         )
-        user2.profileFloat.forEach { it.abilityValue = 1.2 }
+        user1.profileEnum.add(EnumProfileItem(null, testService.abilityColorsense, EnumAbilityValue.NO))
 
         val user3 = testService.createUnsavedTestUser().copy(
             username = "test_user3",
             birthDate = LocalDate.of(2010, 11, 2),
             address = Address("110", "Bethlen koz", "Pecs", "8011")
         )
-        user3.profileFloat.forEach { it.abilityValue = 0.9 }
+        user1.profileEnum.add(EnumProfileItem(null, testService.abilityColorsense, EnumAbilityValue.UNKNOWN))
 
         testService.userRepository.saveAll(listOf(user1, user2, user3))
     }
