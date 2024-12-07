@@ -9,7 +9,7 @@
 
 <div *ngIf="chosenUsername">
     <div class="flex justify-content-between">
-        <div>
+        <div class="w-6">
             <form [formGroup]="profileQueryForm" (ngSubmit)="onSubmit()"
                   class="flex flex-column align-items-start mt-3">
                 <mat-radio-group formControlName="calculationType" class="flex flex-column">
@@ -34,7 +34,7 @@
                                  (filterChange)="setUserFilter($event)"/>
             </div>
         </div>
-        <div class="w-7 m-2">
+        <div class="w-5 m-2">
             <h2 *ngIf="!(userProfileData|async)?.length" class="text-center">{{ text.no_data }}</h2>
             <app-profile-radar-chart
                     *ngIf="(userProfileData|async)?.length && (dataToCompare|async)?.length"

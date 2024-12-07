@@ -37,6 +37,7 @@ export class ProfileDataComparisonPageComponent implements OnInit {
         this.groups = this.service.getGroupsOfUser()
         this.userProfileData = this.service.getProfileData()
         this.allAbilities = this.abilityService.getAllAbilities()
+        this.onSubmit()
     }
 
     setUserFilter(userFilter: UserFilter) {
