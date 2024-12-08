@@ -14,13 +14,13 @@
 
 .container {
   display: grid;
-  @media screen and (max-width: 800px) {
+  @media screen and (max-width: 1200px) {
     grid-template-columns: 1fr 1fr ;
   }
-  @media screen and (min-width: 800px) {
+  @media screen and (min-width: 1200px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
-  @media screen and (min-width: 1400px) {
+  @media screen and (min-width: 1600px) {
     grid-template-columns: 1fr 1fr 1fr 1fr;
   }
   padding: 1em;
