@@ -51,5 +51,9 @@ export class GameCardComponent implements OnInit {
     this.extraButtonClick.emit(game);
   }
 
+  get abilitiesText(): string {
+    return this.game.affectedAbilities.map(a => a.name).join(', ');
+  }
+
   protected readonly imagePaths = imagePaths;
 }

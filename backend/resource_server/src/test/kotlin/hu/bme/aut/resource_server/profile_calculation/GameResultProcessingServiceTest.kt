@@ -36,11 +36,8 @@ class GameResultProcessingServiceTest(
         testService.saveUsers(users)
         val results = TestDataSource.createResultsForCalculation_ThreePartition(users, game)
         repository.saveAll(results)
-        runBlocking {
-            val meanAndDeviation = service.processGameResults(game.id!!)
-            assertEquals(0.0, meanAndDeviation.mean) //because result difficulty is not set
-        }
-
+        val meanAndDeviation = service.processGameResults(game.id!!)
+        assertEquals("0.6444", meanAndDeviation.mean.toString().substring(0, 6))
     }
 
     @Test
@@ -48,17 +45,15 @@ class GameResultProcessingServiceTest(
         testService.saveAbility(TestDataSource.affectedAbility)
         val game = TestDataSource.createGameForTest()
         testService.saveGame(game)
-        val users = TestDataSource.createUsersForTestWithEmptyProfile(10)
+        val users = TestDataSource.createUsersForTestWithEmptyProfile(30)
         testService.saveUsers(users)
         val results = TestDataSource.createResultsForCalculation_ThreePartition(users, game)
         repository.saveAll(results)
-        runBlocking {
-            service.processGameResults(game.id!!)
-            val allResults = repository.findAll()
-            assertTrue(allResults.all { it.normalizedResult != null })
-            assertEquals(10,  allResults.size)
-            assertEquals(allResults.size,  allResults.distinctBy { it.user.id }.size)
-        }
+        service.processGameResults(game.id!!)
+        val allResults = repository.findAll()
+        assertTrue(allResults.all { it.normalizedResult != null })
+        assertEquals(30, allResults.size)
+        assertEquals(allResults.size, allResults.distinctBy { it.user.id }.size)
     }
 
 }

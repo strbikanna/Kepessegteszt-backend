@@ -2,6 +2,7 @@ package hu.bme.aut.resource_server.profile
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import hu.bme.aut.resource_server.ability.AbilityEntity
+import hu.bme.aut.resource_server.profile.dto.ProfileItem
 import hu.bme.aut.resource_server.utils.EnumAbilityValue
 import jakarta.persistence.*
 
@@ -21,7 +22,7 @@ data class EnumProfileItem(
 
     @Column
     @Enumerated(value= EnumType.STRING)
-    var abilityValue: EnumAbilityValue
+    var abilityValue: EnumAbilityValue = EnumAbilityValue.UNKNOWN
 ){
     fun toProfileItem(): ProfileItem {
         return ProfileItem(

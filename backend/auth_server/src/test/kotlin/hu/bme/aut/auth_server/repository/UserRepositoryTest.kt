@@ -27,6 +27,12 @@ class UserRepositoryTest(@Autowired private var userRepository: UserRepository) 
     }
 
     @Test
+    fun shouldFindUsersWithRole() {
+        val result = userRepository.findByUsernameInAndRolesContaining(listOf("student_user"), RoleEntity(Role.STUDENT))
+        assertTrue(result.isNotEmpty())
+    }
+
+    @Test
     fun shouldSaveUser() {
         val userEntity = UserEntity(
             firstName = "firstName",

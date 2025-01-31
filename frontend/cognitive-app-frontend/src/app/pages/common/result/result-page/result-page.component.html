@@ -1,0 +1,65 @@
+<div class="pagerRow">
+    <button mat-button color="primary" (click)="drawer.toggle()">
+        <mat-icon>filter_alt</mat-icon>
+        {{ text.filter }}
+    </button>
+    <mat-paginator #paginator [length]="dataLength"
+                   [pageSize]="defaultPageSize"
+                   [pageSizeOptions]="pageSizeOptions"
+                   aria-label="Select page"
+                   (page)="handlePageEvent($event)">
+    </mat-paginator>
+    <app-csv-download-button *ngIf="isAdmin()" [csvLink]="resultService.csvPath"></app-csv-download-button>
+</div>
+<div class="flex align-items-center lg:w-4 sm:w-6 justify-content-evenly mb-2">
+    <mat-icon color="primary">swap_vert</mat-icon>
+    <app-sort-control [sortElements]="sortOptions"
+                      (onSort)="onSortElementChosen($event)"></app-sort-control>
+</div>
+<mat-drawer-container autosize class="drawerContainer">
+    <mat-drawer mode="side" #drawer>
+        <div class="toolsContainer">
+            <div class="filter">
+                <h4>{{ text.filter }}</h4>
+                <p *ngIf="canAccessOtherUserData()">{{ text.username }}</p>
+                <div *ngIf="canAccessOtherUserData()" class="w-full flex mb-2">
+                    <app-user-autocomplete
+                            (userSelectionChanged)="onUserNamesChosen($event)"
+                            [selectedUsernames]="[getSelectedUserName() ?? '']"
+                            [searchOnlyContacts]="true"
+                    ></app-user-autocomplete>
+                </div>
+                <mat-divider></mat-divider>
+                <p>{{ text.game }}</p>
+                <div class="w-full flex mb-2">
+                    <app-game-search [multiple]="true"
+                                     [selectedGameIds]="getSelectedGameIds()"
+                                     (onMultipleGameSelected)="onGamesChosen($event)"></app-game-search>
+                </div>
+                <mat-divider></mat-divider>
+                <p>{{ text.passed }}</p>
+                <app-filter-control [filterElements]="passedFilterElements()"
+                                    (onFilter)="onPassedChosen($event)"
+                >
+                </app-filter-control>
+            </div>
+        </div>
+
+        <button mat-flat-button color="primary" (click)="onApplyFilters()">
+            <mat-icon>refresh</mat-icon>
+            {{ text.apply }}
+        </button>
+    </mat-drawer>
+    <div class="cardsContainer" (click)="drawer.close()">
+        <div *ngIf="loading">
+            <mat-progress-bar></mat-progress-bar>
+        </div>
+        <div *ngIf="!loading">
+            <app-result-info-card
+                    *ngFor="let result of results"
+                    [result]="result"
+            ></app-result-info-card>
+            <p *ngIf="!results?.length" class="description text-center">{{text.no_data}}</p>
+        </div>
+    </div>
+</mat-drawer-container>

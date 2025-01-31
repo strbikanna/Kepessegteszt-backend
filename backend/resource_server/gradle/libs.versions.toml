@@ -10,6 +10,7 @@ csvVersion = "1.8"
 restAssuredVersion = "5.3.1"
 hamcrestVersion = "2.2"
 springAzureVersion = "5.7.0"
+langchain4jVersion = "0.35.0"
 
 [libraries]
 spring-boot-starter-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
@@ -44,7 +45,11 @@ spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-star
 spring-security-test = { module = "org.springframework.security:spring-security-test" }
 rest-assured = { module = "io.rest-assured:rest-assured", version.ref="restAssuredVersion" }
 hamcrest = { module = "org.hamcrest:hamcrest", version.ref="hamcrestVersion" }
-
+#langchain4j
+langchain4j = { module = "dev.langchain4j:langchain4j", version.ref = "langchain4jVersion" }
+langchain4j-openai = { module = "dev.langchain4j:langchain4j-open-ai", version.ref = "langchain4jVersion" }
+langchain4j-gemini = { module = "dev.langchain4j:langchain4j-google-ai-gemini", version.ref = "langchain4jVersion" }
+langchain4j-mistral = { module = "dev.langchain4j:langchain4j-mistral-ai", version.ref = "langchain4jVersion" }
 
 [plugins]
 springframework-boot = { id = "org.springframework.boot", version.ref="springBootVersion" }

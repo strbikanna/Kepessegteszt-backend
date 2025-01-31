@@ -1,11 +1,11 @@
-import {Game} from "./game.model";
-import {User} from "./user.model";
-
 export interface RecommendedGame {
-    id: string | undefined;
-    game: Game;
-    recommender: User | null;
-    recommendedTo: User | null;
+    id: number | undefined;
+    gameId: number;
+    name: string;
+    description: string;
+    thumbnail: string;
+    recommender?: string | null;
+    recommendedTo: string;
     recommendationDate: Date;
     completed: boolean;
     config: any;

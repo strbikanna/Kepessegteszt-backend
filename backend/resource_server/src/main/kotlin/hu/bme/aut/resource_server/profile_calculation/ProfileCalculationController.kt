@@ -39,12 +39,13 @@ class ProfileCalculationController(
      */
     @PostMapping("/process_results")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_SCIENTIST')")
     fun processResults(@RequestParam gameId: Int): Deferred<CalculationInfoDto> =
         CoroutineScope(Dispatchers.Default).async {
             val meanAndDeviation = resultProcessingService.processGameResults(gameId)
             val countOfUpdatedProfiles = dataService.getCountOfRecentCalculation(gameId)
             profileUpdaterService.updateUserProfileByResultsOfGame(gameId, meanAndDeviation)
-            autoRecommendationService.createRecommendationModel(gameId)
+            //autoRecommendationService.createRecommendationModel(gameId)
             return@async CalculationInfoDto(meanAndDeviation, countOfUpdatedProfiles)
         }
 }

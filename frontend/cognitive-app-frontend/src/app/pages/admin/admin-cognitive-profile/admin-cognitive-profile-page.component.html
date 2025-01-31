@@ -1,0 +1,45 @@
+<div class="flex w-full justify-content-start mx-5">
+    <div>
+        <h4>{{ text.user_picker.choose_contact }}</h4>
+        <p>{{ text.user_picker.choose_contact_description }}</p>
+        <app-user-autocomplete (userSelected)="userSelected($event)" [multiple]="false"
+                               [searchOnlyContacts]="true" [autoChoose]="true"></app-user-autocomplete>
+    </div>
+</div>
+<mat-divider></mat-divider>
+<h2 *ngIf="name" class="mx-4 mb-0">{{name +' '+ text.title_user}}</h2>
+<div class="flex m-4 align-items-start" *ngIf="chosenUsername">
+    <div class="w-7">
+        <app-profile-card *ngIf="!loadingProfile" [profileData]="currProfileData!!" id="card"></app-profile-card>
+    </div>
+    <mat-progress-bar *ngIf="loadingProfile" mode="buffer"></mat-progress-bar>
+    <div class="flex w-5 align-items-center flex-column ml-4">
+        <app-date-picker (dateChosen)="onDatesChosen($event)"></app-date-picker>
+    </div>
+</div>
+<div class="mx-2" *ngIf="chosenUsername">
+
+    <h2 class="text-left my-1" *ngIf="UserInfo.canSeePromptLlm()">{{text.llm.prompt}}</h2>
+    <p class="title text-left" *ngIf="UserInfo.canSeePromptLlm()">{{text.llm.used_prompt}}</p>
+    <p class="description" *ngIf="UserInfo.canSeePromptLlm()">{{profileDescription?.prompt}}</p>
+
+    <mat-progress-bar *ngIf="loadingDescription" mode="buffer"></mat-progress-bar>
+    <h3 *ngIf="UserInfo.canSeePromptLlm()">{{text.llm.prompt_description}}</h3>
+    <mat-form-field *ngIf="UserInfo.canSeePromptLlm()" class="w-full">
+        <mat-label>{{text.llm.prompt}}</mat-label>
+        <textarea matInput [(ngModel)]="prompt"></textarea>
+    </mat-form-field>
+    <button *ngIf="UserInfo.canSeePromptLlm()" mat-button (click)="onSubmitPrompt()" color="primary">{{text.llm.prompt_action}}</button>
+    <h2 class="text-left" *ngIf="profileDescription">{{text.llm.llm_text}}</h2>
+    <p class="description">{{profileDescription?.abilitiesAsText}}</p>
+</div>
+<mat-divider></mat-divider>
+
+<app-up-and-down-button elementId="chart"></app-up-and-down-button>
+<div id="chart">
+    <div *ngIf="chosenUsername">
+        <app-profile-chart *ngIf="!loadingHistory" [profileDataObservable]="profileHistoryData"></app-profile-chart>
+        <mat-progress-bar *ngIf="loadingHistory" mode="buffer"></mat-progress-bar>
+    </div>
+</div>
+

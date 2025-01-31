@@ -3,6 +3,7 @@ package hu.bme.aut.resource_server.result
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
+import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
@@ -25,7 +26,8 @@ class ResultService(
         val user = recommendedGame.recommendedTo
         val gameplay = ResultEntity(
             result = data.result,
-            config = recommendedGame.config.toMutableMap(),
+            passed = isResultPassed(data.result),
+            config = data.newConfig?.toMutableMap() ?: recommendedGame.config.toMutableMap(),
             user = user,
             recommendedGame = recommendedGame
         )
@@ -45,49 +47,83 @@ class ResultService(
     }
 
     @Transactional
-    fun getAllFiltered(usernames: List<String>, page: Pageable, gameIds: List<Int>?, resultPassed: Boolean?): List<ResultDetailsDto> {
-        val resultCount = page.pageSize
+    fun getAllFiltered(usernames: List<String>,  gameIds: List<Int>?, resultPassed: Boolean?, page: Pageable,): List<ResultDetailsDto> {
         val users = userRepository.findAllByUsernameIn(usernames)
-        val results = resultRepository.findAllByUserIn(users, page).content
-            .filter { (gameIds.isNullOrEmpty() || gameIds.contains(it.recommendedGame.game.id)) && (resultPassed == null || it.result["passed"] as Boolean? == resultPassed) }
-            .map { convertToDto(it) }.toMutableList()
-        var currPage = page
-        while(results.size < resultCount){
-            currPage = currPage.next()
-            val nextPage = resultRepository.findAllByUserIn(users, currPage).content
-                .filter { (gameIds.isNullOrEmpty() || gameIds.contains(it.recommendedGame.game.id)) && (resultPassed == null || it.result["passed"] as Boolean? == resultPassed) }
+        val existsGameFilter = !gameIds.isNullOrEmpty()
+        val existsResultFilter = resultPassed != null
+        if(existsGameFilter && existsResultFilter){
+            return resultRepository.findAllByUserInAndPassedAndRecommendedGameGameIdIn(users, resultPassed!!, gameIds!!, page)
+                .toList()
                 .map { convertToDto(it) }
-            if(nextPage.isEmpty()){
-                break
-            }
-            results.addAll(nextPage)
         }
-        return results.take(resultCount)
+        if(existsGameFilter){
+            return resultRepository.findAllByUserInAndRecommendedGameGameIdIn(users, gameIds!!, page)
+                .toList()
+                .map { convertToDto(it) }
+        }
+        if(existsResultFilter){
+            return resultRepository.findAllByUserInAndPassed(users, resultPassed!!, page)
+                .toList()
+                .map { convertToDto(it) }
+        }
+        return resultRepository.findAllByUserIn(users, page).toList().map { convertToDto(it) }
+    }
+    @Transactional
+    fun getAllFiltered(gameIds: List<Int>?, resultPassed: Boolean?, page: Pageable,): List<ResultDetailsDto> {
+        val existsGameFilter = !gameIds.isNullOrEmpty()
+        val existsResultFilter = resultPassed != null
+        if(existsGameFilter && existsResultFilter){
+            return resultRepository.findAllByPassedAndRecommendedGameGameIdIn(resultPassed!!, gameIds!!, page)
+                .toList()
+                .map { convertToDto(it) }
+        }
+        if(existsGameFilter){
+            return resultRepository.findAllByRecommendedGameGameIdIn(gameIds!!, page)
+                .toList()
+                .map { convertToDto(it) }
+        }
+        if(existsResultFilter){
+            return resultRepository.findAllByPassed(resultPassed!!, page)
+                .toList()
+                .map { convertToDto(it) }
+        }
+        return resultRepository.findAll(page).toList().map { convertToDto(it) }
+    }
+
+    fun getCountByFilters(usernames: List<String>,  gameIds: List<Int>?, resultPassed: Boolean?): Long{
+        val users = userRepository.findAllByUsernameIn(usernames)
+        val existsGameFilter = !gameIds.isNullOrEmpty()
+        val existsResultFilter = resultPassed != null
+        if(existsGameFilter && existsResultFilter){
+            return resultRepository.countByUserInAndRecommendedGameGameIdInAndPassed(users,  gameIds!!, resultPassed!!)
+        }
+        if(existsGameFilter){
+            return resultRepository.countByUserInAndRecommendedGameGameIdIn(users, gameIds!!)
+        }
+        if(existsResultFilter){
+            return resultRepository.countByUserInAndPassed(users, resultPassed!!)
+        }
+        return resultRepository.countByUserIn(users)
+    }
+
+    fun getCountByFilters(gameIds: List<Int>?, resultPassed: Boolean?): Long{
+        val existsGameFilter = !gameIds.isNullOrEmpty()
+        val existsResultFilter = resultPassed != null
+        if(existsGameFilter && existsResultFilter){
+            return resultRepository.countByRecommendedGameGameIdInAndPassed(gameIds!!, resultPassed!!)
+        }
+        if(existsGameFilter){
+            return resultRepository.countByRecommendedGameGameIdIn(gameIds!!)
+        }
+        if(existsResultFilter){
+            return resultRepository.countByPassed(resultPassed!!)
+        }
+        return resultRepository.count()
     }
 
     @Transactional
     fun getAll(page: Pageable): List<ResultDetailsDto>{
         return resultRepository.findAll(page).content.map { convertToDto(it) }
-    }
-
-    @Transactional
-    fun getAllFiltered(page: Pageable, gameIds: List<Int>?, resultPassed: Boolean?): List<ResultDetailsDto> {
-        val resultCount = page.pageSize
-        val results0 = resultRepository.findAll(page).content.toMutableList()
-        val results = results0.filter { (gameIds.isNullOrEmpty() || gameIds.contains(it.recommendedGame.game.id)) && (resultPassed == null || it.result["passed"] as Boolean? == resultPassed) }
-            .map { convertToDto(it) }.toMutableList()
-        var currPage = page
-        while(results.size < resultCount){
-            currPage = currPage.next()
-            val nextPage = resultRepository.findAll(currPage).content
-                .filter { (gameIds.isNullOrEmpty() || gameIds.contains(it.recommendedGame.game.id)) && (resultPassed == null || it.result["passed"] as Boolean? == resultPassed) }
-                .map { convertToDto(it) }
-            if(nextPage.isEmpty()){
-                break
-            }
-            results.addAll(nextPage)
-        }
-        return results.take(resultCount)
     }
 
     fun getAll(): List<ResultEntity> {
@@ -118,6 +154,10 @@ class ResultService(
 
     fun getCountOfResults(): Long {
         return resultRepository.count()
+    }
+
+    private fun isResultPassed(result: Map<String, Any>): Boolean? {
+        return result["passed"] as Boolean?
     }
 
     private fun convertToDto(result: ResultEntity): ResultDetailsDto {

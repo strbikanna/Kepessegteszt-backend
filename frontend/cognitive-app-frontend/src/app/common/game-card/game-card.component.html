@@ -1,21 +1,31 @@
-<mat-card>
+<mat-card class="{{game.active ? '': 'inactiveGameCard'}}">
     <mat-card-content>
         <img src="{{game.thumbnail}}">
-        <div class="text-content">
-            <mat-card-title>{{game.name}}</mat-card-title>
-            <mat-card-subtitle>ID: {{game.id}}</mat-card-subtitle>
-            <p>{{game.description}}</p>
-            <p *ngFor="let text of otherTexts">{{text}}</p>
+        <div class="content">
+            <div class="flex align-items-center justify-content-between">
+                <div class="flex align-items-baseline w-9">
+                    <mat-card-title class="mr-1 my-0 w-7">{{ game.name }}</mat-card-title>
+                    <mat-card-subtitle class="mx-2 w-2">ID: {{ game.id }}</mat-card-subtitle>
+                    <mat-icon *ngIf="game.active" color="primary">check_circle</mat-icon>
+                    <mat-icon *ngIf="!game.active" color="warn">cancel</mat-icon>
+                </div>
+                <mat-chip class="mx-2">V_{{ game.version }}</mat-chip>
+            </div>
+            <p class="text">{{ game.description }}</p>
+            <div class="flex align-items-center">
+                <mat-icon *ngIf="game.affectedAbilities.length > 0" class="mr-2">psychology</mat-icon>
+                <p class="description m-0 text">{{ abilitiesText }}</p>
+            </div>
         </div>
     </mat-card-content>
     <mat-divider></mat-divider>
     <mat-card-actions *ngIf="buttonText" align="end">
         <button *ngIf="extraButtonText" mat-button color="warn" (click)="raiseExtraClickEvent(game)"
                 [disabled]="!game.active">
-            {{extraButtonText}}
+            {{ extraButtonText }}
         </button>
         <button mat-button color="primary" (click)="raiseClickEvent(game)" [disabled]="!game.active">
-            {{buttonText}}
+            {{ buttonText }}
         </button>
     </mat-card-actions>
 </mat-card>

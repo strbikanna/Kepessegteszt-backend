@@ -1,0 +1,28 @@
+<div class="game-search mb-2">
+    <mat-form-field>
+        <mat-label>{{text.label}}</mat-label>
+        <input type="text"
+               placeholder="{{text.placeholder}}"
+               aria-label="Text"
+               matInput
+               [formControl]="gameAutocompleteForm"
+               [matAutocomplete]="auto">
+        <button *ngIf="gameAutocompleteForm.value" matSuffix mat-icon-button (click)="resetAutoComplete()">
+            <mat-icon>close</mat-icon>
+        </button>
+        <mat-hint>{{text.hint}}</mat-hint>
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="convertDisplay" (optionSelected)="onGameChosen()">
+            <mat-option *ngFor="let option of filteredGameOptions" [value]="option">
+                {{option.name}} ({{option.id}})
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+</div>
+<div *ngIf="multiple">
+    <mat-chip *ngFor="let game of chosenGames" removable (removed)="onGameRemoved(game)">
+        {{ game.name }} (id: {{ game.id }})
+        <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </mat-chip>
+</div>

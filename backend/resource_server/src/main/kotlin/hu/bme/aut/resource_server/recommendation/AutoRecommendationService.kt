@@ -58,76 +58,44 @@ class AutoRecommendationService(
             val result = dataService.getResultById(resultId)
             val user = result.user
             val game = dataService.getGameWithConfigItems(result.recommendedGame.game.id!!)
-            log.trace("Creating next recommendation based on result for user: ${user.username}")
+            log.trace("Creating next recommendation based on result for user: ${user.username}; for game: ${game.name}")
             if(game.configItems.isEmpty()){
-                log.warn("No config items found for game ${game.name}")
+                log.info("No config items found for game ${game.name}")
                 return@withContext emptyMap()
             }
             val success = isResultSuccess(result)
             val nextRecommendation = result.recommendedGame.config.toMutableMap()
-            val previousRecommendation = dataService.getPreviousRecommendation(result.recommendedGame)  ?: result.recommendedGame
-            val lastChangedParam = getLastChangedParam(result.recommendedGame, previousRecommendation)
-            var nextParamToChange: ConfigItem? = lastChangedParam
-            var currValue = result.recommendedGame.config[lastChangedParam.paramName] as Int
-            if((currValue + lastChangedParam.increment > lastChangedParam.hardestValue && success) ||
-                currValue - lastChangedParam.increment < lastChangedParam.easiestValue && !success){
-                nextParamToChange = game.configItems.find { it.paramOrder == lastChangedParam.paramOrder + 1 }
-                if(nextParamToChange != null){
-                    nextRecommendation[lastChangedParam.paramName] = lastChangedParam.initialValue
-                }else{
-                    nextParamToChange = findNextParamToChange(game.configItems, result.config, lastChangedParam)
-                }
-                currValue = result.recommendedGame.config[nextParamToChange.paramName] as Int
+            val paramsToChange = game.configItems.filter { canChangeParam(nextRecommendation, it, success) }
+            if(paramsToChange.isEmpty()){
+                return@withContext nextRecommendation
             }
+            val nextParamIndex = Math.random().times(paramsToChange.size).toInt()
+            val nextParamToChange: ConfigItem = paramsToChange.elementAt(nextParamIndex)
+            val currValue = result.recommendedGame.config[nextParamToChange.paramName] as Int
+
             if (success) {
-                val harderRecommendationParam = recommendHarder(nextParamToChange!!, currValue)
+                val harderRecommendationParam = recommendHarder(nextParamToChange, currValue)
                 nextRecommendation[harderRecommendationParam.first] = harderRecommendationParam.second
             } else {
-                val easierRecommendationParam = recommendEasier(nextParamToChange!!, currValue)
+                val easierRecommendationParam = recommendEasier(nextParamToChange, currValue)
                 nextRecommendation[easierRecommendationParam.first] = easierRecommendationParam.second
             }
-            log.info("Next recommendation created based on result for user: ${user.username}")
+            log.info("Next recommendation created based on result for user: ${user.username}; for game: ${game.name}. Config: $nextRecommendation")
             return@withContext nextRecommendation
         }
 
-    /**
-     * Finds the next parameter to change in the config.
-     * The next parameter is the one with the next order after the last changed parameter.
-     * If the last changed parameter already has minimum or maximum value then the next parameter is the one with the next order
-     * that has no minimum or maximum value.
-     */
-    private fun findNextParamToChange(configItems: Set<ConfigItem>, currConfig: Map<String, Any>, lastChangedParam: ConfigItem): ConfigItem {
-        var paramToChange = lastChangedParam
-        var currValue = currConfig[paramToChange.paramName] as Int
-        val paramCondition = if(currValue >= paramToChange.hardestValue){
-            {c: Int -> c + paramToChange.increment > paramToChange.hardestValue}
-        } else {
-            {c: Int -> c - paramToChange.increment < paramToChange.easiestValue}
+    private fun canChangeParam(
+        currentRecommendation: MutableMap<String, Any>,
+        param: ConfigItem,
+        success: Boolean
+    ) : Boolean {
+        return if (success) {
+                ((currentRecommendation[param.paramName] as Int) + param.increment <= param.hardestValue && param.increment > 0 ) ||
+                        ((currentRecommendation[param.paramName] as Int) + param.increment >= param.hardestValue && param.increment < 0)
+        }else{
+                (currentRecommendation[param.paramName] as Int) - param.increment >= param.easiestValue && param.increment > 0 ||
+                        (currentRecommendation[param.paramName] as Int) - param.increment <= param.easiestValue && param.increment < 0
         }
-        var maxCycle = configItems.size
-        while (paramCondition(currValue) && maxCycle-- > 0) {
-            paramToChange = configItems.find { it.paramOrder == paramToChange.paramOrder + 1 } ?: configItems.first()
-            currValue = currConfig[paramToChange.paramName] as Int
-        }
-        return paramToChange
-    }
-
-    /**
-     * Returns the last changed config parameter of the recommendation or the first one if no change happened.
-     */
-    //@Transactional
-    private fun getLastChangedParam(
-        recommendation: RecommendedGameEntity,
-        previousRecommendation: RecommendedGameEntity
-    ): ConfigItem {
-        val game = dataService.getGameWithConfigItems(recommendation.game.id!!)
-        val firstOrderConfigItem = game.configItems.find { it.paramOrder == 1 }!!
-        val currentConfig = recommendation.config
-        val previousConfig = previousRecommendation.config
-        val changedConfigName = currentConfig.keys.find { name -> currentConfig[name] != previousConfig[name] }
-            ?: return firstOrderConfigItem
-        return game.configItems.find { it.paramName == changedConfigName }
-            ?: firstOrderConfigItem
     }
 
     private fun isResultSuccess(result: ResultEntity): Boolean{
@@ -152,7 +120,7 @@ class AutoRecommendationService(
      * 2. best normalized result of the user
      * 3. latest result of the user
      */
-    //TODO make this suspend but take care of lazy loading and transactional issues
+    //TODO use neural network model
     fun generateRecommendationForUser(user: UserEntity, game: GameEntity): RecommendedGameEntity {
         log.info("Generating recommendation for user ${user.username} for game ${game.name}")
         val expectedResult: Double?
@@ -171,46 +139,12 @@ class AutoRecommendationService(
                 null
             }
         }
-        if (expectedResult == null) return generateRecommendationByNotNormalizedResult(user, game)
 
-        val levelPoints = expectedResult - ScoreCalculator.maxNormalizedNonLevelPoints * motivationRate
-        var recommendedLevel = ScoreCalculator.getLevelByLevelPoints(levelPoints, game)
-        log.trace("Recommended level: $recommendedLevel")
         return RecommendedGameEntity(
             recommendedTo = user,
             game = game,
-            config = mapOf("level" to recommendedLevel)
+            config = game.configItems.associateBy({ it.paramName }, { it.initialValue })
         )
     }
 
-    private fun generateRecommendationByNotNormalizedResult(user: UserEntity, game: GameEntity): RecommendedGameEntity {
-        log.trace("Generating recommendation by not normalized result for user ${user.username} for game ${game.name}")
-        val latestResult = dataService.getLatestResultOfUser(game, user)
-        var recommendation = RecommendedGameEntity(
-            recommendedTo = user,
-            game = game,
-            config = mapOf("level" to 1)
-        )
-        if (latestResult != null) {
-            val maxPossiblePoints = ScoreCalculator.getMaxScoreOfLevel(latestResult, game)
-            val points = ScoreCalculator.getActualScoreOfLevel(latestResult, game)
-            val successRatio = if (maxPossiblePoints != 0.0) points / maxPossiblePoints else 0.0
-            val latestLevel =
-                try {
-                    latestResult.config["level"]?.toString()?.toInt() ?: latestResult.result["level"]?.toString()
-                        ?.toInt() ?: 1
-                } catch (e: NumberFormatException) {
-                    1
-                }
-            recommendation = if (successRatio >= motivationRate)
-                recommendation.copy(
-                    config = mapOf("level" to (latestLevel + 1))
-                ) else
-                recommendation.copy(
-                    config = mapOf("level" to (latestLevel))
-                )
-        }
-        log.trace("Recommended level: {}", recommendation.config["level"])
-        return recommendation
-    }
 }

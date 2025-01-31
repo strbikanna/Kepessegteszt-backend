@@ -1,0 +1,27 @@
+:host {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.groupData {
+  color: #C3ACD0;
+}
+
+.ownData {
+  color: #ffa33c;
+}
+
+.container {
+  display: grid;
+  @media screen and (max-width: 1200px) {
+    grid-template-columns: 1fr 1fr ;
+  }
+  @media screen and (min-width: 1200px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @media screen and (min-width: 1600px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  padding: 1em;
+}

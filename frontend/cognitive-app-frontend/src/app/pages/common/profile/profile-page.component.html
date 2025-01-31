@@ -1,0 +1,77 @@
+<div [formGroup]="userForm" class="w-10 sm:w-12">
+    <h2>{{ user?.lastName }} {{ user?.firstName }}</h2>
+    <p class="description">{{ text.description }}</p>
+    <div class="flex align-items-start w-full">
+        <p class="title lg:w-2 sm:w-3">{{ text.personal_data_title }}</p>
+        <div class="w-8 mt-4 flex">
+            <div *ngFor="let element of personalData" class="mr-3">
+                <p class="description m-0">{{ element.text }}:</p>
+                <mat-form-field *ngIf="element.editable && element.key" class="mt-2 mb-3">
+                    <mat-label>{{ element.text }}</mat-label>
+                    <input matInput [formControlName]="element.key" (change)="isDataChanged=true">
+                    <mat-error *ngIf="userForm.get(element.key)?.getError('required')">
+                        {{ text.required }}
+                    </mat-error>
+                </mat-form-field>
+                <p *ngIf="!element.editable" class="ml-1">{{ element.value }}</p>
+            </div>
+        </div>
+    </div>
+    <mat-divider/>
+
+    <div class="flex align-items-start mt-3 w-full">
+        <p class="title lg:w-2 sm:w-3">{{ text.birth_date }}</p>
+        <mat-form-field>
+            <mat-label>{{ text.birth_date }}</mat-label>
+            <input matInput [matDatepicker]="datepicker" [formControlName]="birthDateData.key" (dateChange)="isDataChanged=true"/>
+            <mat-hint>Hónap/Nap/Év</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+            <mat-datepicker #datepicker/>
+        </mat-form-field>
+    </div>
+    <mat-divider/>
+
+    <div class="flex align-items-start mt-3 w-full">
+        <p class="title lg:w-2 sm:w-3">{{ text.gender }}</p>
+        <mat-radio-group aria-label="Select an option" [formControlName]="genderData.key" (change)="isDataChanged=true">
+            <mat-radio-button value="MALE">{{ text.male }}</mat-radio-button>
+            <mat-radio-button value="FEMALE">{{ text.female }}</mat-radio-button>
+        </mat-radio-group>
+        <mat-error *ngIf="userForm.get(genderData.key)?.getError('required')">
+            {{ text.required }}
+        </mat-error>
+    </div>
+    <mat-divider/>
+
+    <div class="flex align-items-start mt-3 w-full">
+        <p class="title lg:w-2 sm:w-3">{{ text.address }}</p>
+        <div class="flex">
+            <div *ngFor="let element of addressData" class="mr-3">
+                <p class="description m-0">{{ element.text }}:</p>
+                <mat-form-field class="mt-2 mb-3">
+                    <mat-label>{{ element.text }}</mat-label>
+                    <input matInput [formControlName]="element.key" (change)="isDataChanged=true">
+                    <mat-error *ngIf="userForm.getError('addressInvalid')">
+                        {{ text.required }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+    <mat-divider/>
+
+    <div class="flex align-items-start mt-3 w-full">
+        <p class="title lg:w-2 sm:w-3">{{ text.roles_data_title }}</p>
+        <p>{{ rolesData.value }}</p>
+    </div>
+    <div class="w-full flex justify-content-end">
+        <button mat-raised-button color="primary" (click)="submitForm()"
+                [disabled]="!userForm.valid || !userForm.dirty || !isDataChanged"
+        >
+            {{ text.save }}
+        </button>
+    </div>
+
+</div>
+
+

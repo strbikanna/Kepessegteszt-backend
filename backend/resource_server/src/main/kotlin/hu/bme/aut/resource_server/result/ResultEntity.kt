@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.gameplayresult
+package hu.bme.aut.resource_server.result
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
@@ -25,6 +25,9 @@ data class ResultEntity(
 
     @Type(JsonType::class)
     val result: Map<String, Any>,
+
+    @Column(name = "passed")
+    val passed: Boolean? = null,
 
     @JsonIgnore
     @ManyToOne(fetch= FetchType.LAZY)

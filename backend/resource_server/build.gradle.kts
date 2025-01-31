@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.json)
     //jep
     implementation(libs.ninia.jep)
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
     //h2
     runtimeOnly(libs.h2)
     implementation(libs.spring.boot.starter.webflux)
@@ -62,6 +63,12 @@ dependencies {
     testImplementation(libs.spring.security.test)
     testImplementation(libs.rest.assured)
     testImplementation(libs.hamcrest)
+
+    // LangChain
+    implementation(libs.langchain4j)
+    implementation(libs.langchain4j.openai)
+    implementation(libs.langchain4j.gemini)
+    implementation(libs.langchain4j.mistral)
 }
 
 tasks.withType<KotlinCompile> {

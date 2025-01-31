@@ -1,0 +1,39 @@
+<mat-paginator #paginatorTop [length]="dataLength"
+               [pageSize]="defaultPageSize"
+               [pageSizeOptions]="pageSizeOptions"
+               aria-label="Select page"
+               (page)="handlePageEvent($event)">
+</mat-paginator>
+<div class="flex align-items-center m-2">
+    <mat-icon color="primary">swap_vert</mat-icon>
+    <button mat-button color="primary" (click)="onActiveFilterSelected()" class="ml-4 cursor-pointer">
+        <mat-icon *ngIf="activeFilter" color="primary">check</mat-icon>
+        <mat-icon *ngIf="activeFilter===false" color="primary">close</mat-icon>
+        {{ activeFilterText }}
+    </button>
+</div>
+<div class="game-list-container">
+    <div *ngFor="let game of games | async">
+        <app-game-card [game]="game"
+                       [otherTexts]="getCardTexts(game)"
+                       [buttonText]="actionText.edit"
+                       (buttonClick)="navigateToEdit(game)"
+                       [extraButtonText]="actionText.calculation"
+                       (extraButtonClick)="startResultProcessing(game)"
+        ></app-game-card>
+    </div>
+</div>
+<div>
+    <button mat-fab color="primary" (click)="navigateToNewGame()">
+        <mat-icon>add</mat-icon>
+    </button>
+</div>
+<mat-paginator #paginatorBottom [length]="dataLength"
+               [pageSize]="defaultPageSize"
+               [pageSizeOptions]="pageSizeOptions"
+               [hidePageSize]="true"
+               aria-label="Select page"
+               (page)="handlePageEvent($event)"
+               class="bottomPager"
+>
+</mat-paginator>

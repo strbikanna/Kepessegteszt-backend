@@ -1,6 +1,5 @@
 :host{
   width: 100%;
-  margin: 0.6em;
 }
 mat-card-content:first-child {
   padding: 0;
@@ -10,17 +9,14 @@ mat-card-content:first-child {
   align-items: center;
 }
 img{
-  @media only screen and (max-width: 600px) {
-    display: none;
-  }
-  width: 11em;
-  height: 11em;
+  width: 30%;
+  height: 80%;
   object-fit: cover;
   align-self: flex-start;
 }
-.text-content{
+.content{
   padding-top: 1em;
-  padding-inline: 2em;
+  padding-inline: 1.6em;
   width: 100%;
 }
 button{
@@ -30,5 +26,9 @@ button{
   max-width: 90%;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  height: min-content;
+}
+.inactiveGameCard{
+    background-color: #f5f5f5;
+    opacity: 0.6;
 }

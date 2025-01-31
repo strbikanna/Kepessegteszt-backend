@@ -11,8 +11,12 @@ interface ResultForCalculationRepository : JpaRepository<ResultForCalculationEnt
     override fun findAll(): List<ResultForCalculationEntity>
     fun findAllByGameAndNormalizedResultNotNull(game: GameEntity, page: Pageable): List<ResultForCalculationEntity>
     fun findAllByGameAndNormalizedResultNotNull(game: GameEntity): List<ResultForCalculationEntity>
+    fun deleteByGameAndNormalizedResultNotNull(game: GameEntity)
+    fun deleteByGameAndUserAndNormalizedResultNotNull(game: GameEntity, user: UserEntity)
     fun findAllByGameAndNormalizedResultNull(game: GameEntity, page: Pageable): List<ResultForCalculationEntity>
-    fun findAllByGame(game: GameEntity, page: Pageable): List<ResultForCalculationEntity>
+
+    fun findAllByGameAndUserAndNormalizedResultNotNull(game: GameEntity, user: UserEntity, page: Pageable): List<ResultForCalculationEntity>
+    fun countByGameAndUserAndNormalizedResultNotNull(game: GameEntity, user: UserEntity): Long
 
     fun countByGame(game: GameEntity): Long
     fun countByGameAndNormalizedResultNull(game: GameEntity): Long

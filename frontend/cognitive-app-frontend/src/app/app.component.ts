@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {BehaviorSubject} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,10 @@ import {Component} from '@angular/core';
 })
 export class AppComponent{
   title = 'cognitive-app-frontend';
+  drawerState: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  drawerStateChanged(state: boolean){
+    this.drawerState.next(state);
+  }
 
 }

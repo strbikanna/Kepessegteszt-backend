@@ -99,7 +99,7 @@ class AbilityControllerTest(
         given(requestSpec)
             .header(testService.authHeaderName, testService.authUsername)
             .get("${abilityEndpoint}/all")
-            .then().statusCode(HttpStatus.FORBIDDEN.value())
+            .then().statusCode(HttpStatus.OK.value())
 
         val abilityEntity = AbilityEntity("Gt", "test ability name", "testDescription")
         //save new ability

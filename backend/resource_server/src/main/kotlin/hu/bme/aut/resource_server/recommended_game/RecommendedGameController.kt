@@ -1,10 +1,6 @@
 package hu.bme.aut.resource_server.recommended_game
 
-import hu.bme.aut.resource_server.authentication.AuthException
 import hu.bme.aut.resource_server.authentication.AuthService
-import hu.bme.aut.resource_server.authentication.notContact
-import hu.bme.aut.resource_server.utils.CoroutineException
-import hu.bme.aut.resource_server.utils.defaultCoroutineExceptionHandler
 import kotlinx.coroutines.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -36,6 +32,18 @@ class RecommendedGameController(
             recommendedGameService.getAllRecommendedToUser(authentication.name, pageIndex, pageSize)
     }
 
+    @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'SCIENTIST')")
+    @ResponseStatus(HttpStatus.OK)
+    fun getRecommendationsByGame(
+        @RequestParam(required = false) gameId: Int?,
+        @RequestParam(required= false) completed: Boolean? = false,
+        @RequestParam username: String,
+        authentication: Authentication
+    ): List<RecommendedGameDto> {
+        return recommendedGameService.getRecommendationsToUserAndGame(username, gameId, completed)
+    }
+
     @GetMapping("/config/{id}")
     @ResponseStatus(HttpStatus.OK)
     fun getRecommendedGameConfig(@PathVariable id: Long, authentication: Authentication): Deferred<Map<String, Any>> =
@@ -43,6 +51,12 @@ class RecommendedGameController(
             authService.checkGameConfigAccessAnThrow(id, authentication)
             return@async recommendedGameService.getRecommendedGameConfig(id)
         }
+
+    @GetMapping("/next_choice")
+    @ResponseStatus(HttpStatus.OK)
+    fun getNextChoiceForUser(authentication: Authentication): List<RecommendedGameDto> {
+        return recommendedGameService.getNextChoiceForUser(authentication.name)
+    }
 
     @PostMapping("/recommend")
     @ResponseStatus(HttpStatus.CREATED)
@@ -84,5 +98,12 @@ class RecommendedGameController(
         val currentActiveRecommendations = gameplayRecommenderService.getAllRecommendationToUser(authentication.name)
         gameplayRecommenderService.deleteRecommendations(currentActiveRecommendations)
         return gameplayRecommenderService.createNewRecommendations(authentication.name).map { it.toDto() }
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SCIENTIST') or hasRole('TEACHER')")
+    fun deleteRecommendedGame(@PathVariable id: Long, authentication: Authentication) {
+        recommendedGameService.deleteRecommendedGame(id)
     }
 }

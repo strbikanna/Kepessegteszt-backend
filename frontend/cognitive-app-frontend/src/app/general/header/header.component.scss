@@ -1,0 +1,45 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 2.5em;
+  padding: 1.5em;
+}
+
+div.menubar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.mobileMenu{
+  @media screen and (min-width: 600px) {
+    display: none;
+  }
+}
+
+button {
+  font-size: larger;
+  font-weight: normal;
+  font-family: "Poetsen One", cursive;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 2em;
+    height: 2em;
+    object-fit: contain;
+    cursor: pointer;
+  }
+}
+
+a {
+  display: block;
+  margin-right: 1.5em;
+  height: 2em;
+  font-size: medium;
+  font-weight: normal;
+}

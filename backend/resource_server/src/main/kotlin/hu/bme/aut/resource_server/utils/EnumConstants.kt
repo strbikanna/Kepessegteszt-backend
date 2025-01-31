@@ -8,5 +8,9 @@ enum class AbilityType{
 }
 
 enum class EnumAbilityValue{
-    YES, NO, POSSIBLE, INCLINED
+    YES, NO, POSSIBLE, INCLINED, UNKNOWN
+}
+
+enum class Gender{
+    MALE, FEMALE
 }

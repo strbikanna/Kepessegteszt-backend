@@ -6,6 +6,7 @@ import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.result.ResultRepository
 import hu.bme.aut.resource_server.user.UserEntity
+import hu.bme.aut.resource_server.user.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
@@ -19,7 +20,7 @@ class ResultForCalculationDataService(
     @Autowired private var resultForCalculationRepository: ResultForCalculationRepository,
     @Autowired private var gameRepository: GameRepository,
     @Autowired private var resultRepository: ResultRepository,
-    @Autowired private var recommendedGameRepository: RecommendedGameRepository
+    @Autowired private var userRepository: UserRepository
 ) {
     private val log = LoggerFactory.getLogger(ResultForCalculationDataService::class.java)
     fun getCountForNewCalculation(gameId: Int): Long {
@@ -47,6 +48,8 @@ class ResultForCalculationDataService(
     fun getGameWithConfigItems(gameId: Int): GameEntity = gameRepository.findByIdWithConfigItems(gameId).orElseThrow()
 
     fun getAllNormalizedResultsOfGame(game: GameEntity) = resultForCalculationRepository.findAllByGameAndNormalizedResultNotNull(game)
+    fun deleteAllNormalizedResultsOfGame(game: GameEntity) = resultForCalculationRepository.deleteByGameAndNormalizedResultNotNull(game)
+    fun deleteAllNormalizedResultsOfGameAndUser(game: GameEntity, user: UserEntity) = resultForCalculationRepository.deleteByGameAndUserAndNormalizedResultNotNull(game, user)
     fun getAllNonNormalizedResultsOfGame(game: GameEntity, page: Pageable) = resultForCalculationRepository.findAllByGameAndNormalizedResultNull(game, page)
     fun delete(result: ResultForCalculationEntity) = resultForCalculationRepository.delete(result)
     fun deleteAll(results: List<ResultForCalculationEntity>) = resultForCalculationRepository.deleteAll(results)
@@ -62,14 +65,13 @@ class ResultForCalculationDataService(
      */
     fun getLatestResultOfUser(game: GameEntity, user: UserEntity) = resultForCalculationRepository.findTopByGameAndUserOrderByTimestampDesc(game, user)
 
-    fun getResultById(resultId: Long) = resultRepository.findById(resultId).orElseThrow()
+    fun getResultById(resultId: Long) = resultRepository.findById(resultId).orElseThrow( )
 
-    fun getPreviousRecommendation(currRecommendation: RecommendedGameEntity): RecommendedGameEntity?{
-        return recommendedGameRepository.findTopByTimestampBeforeAndRecommendedToAndGameOrderByTimestamp(
-            currRecommendation.timestamp!!,
-            currRecommendation.recommendedTo,
-            currRecommendation.game
-        )
-    }
+    fun getCountOfNormalizedResultsByGameAndUser(game: GameEntity, user: UserEntity) = resultForCalculationRepository.countByGameAndUserAndNormalizedResultNotNull(game, user)
+    fun getNormalizedResultsByGameAndUserPaged(game: GameEntity, user: UserEntity, page: Pageable) = resultForCalculationRepository.findAllByGameAndUserAndNormalizedResultNotNull(game, user, page)
+
+    fun getAllUserIds() = userRepository.findAllIds()
+    fun getUserById(userId: Int) = userRepository.findById(userId).orElseThrow()
+    fun getUsersByIds(userIds: List<Int>) = userRepository.findByIdIn(userIds)
 
 }

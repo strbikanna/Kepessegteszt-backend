@@ -1,0 +1,15 @@
+.menu{
+  height: 100%;
+  width: 20em;
+}
+button{
+  height: 5em;
+}
+.activeLink{
+  background: #e0e0e0;
+}
+:host{
+  @media screen and (max-width: 600px) {
+    display: none;
+  }
+}

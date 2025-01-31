@@ -1,0 +1,34 @@
+.passed{
+    background: #C6EBC5;
+    width: 100%;
+}
+.failed{
+    background: #F5DAD2;
+    width: 100%;
+}
+.infoIcon{
+    margin-inline: 1em;
+    display: flex;
+}
+:host{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2em;
+    margin-inline: 1em;
+    width: 100%;
+}
+mat-tree,.tree-node{
+    background: inherit !important;
+    margin-top: 0em !important;
+    margin-bottom: 0.2em !important;
+}
+.tree-node{
+    margin-left: 40%;
+}
+.sectionTitle{
+    font-size: 1.2em;
+    display: inline-block;
+    width: 40%;
+    margin-bottom: 0.1em;
+}

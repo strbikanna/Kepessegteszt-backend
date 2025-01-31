@@ -1,0 +1,19 @@
+<div class="profile-container">
+    <app-profile-card *ngIf="!loadingProfile" [profileData]="currentProfileData" id="card"></app-profile-card>
+    <mat-progress-bar *ngIf="loadingProfile" mode="buffer"></mat-progress-bar>
+    <div class="w-min" *ngIf="!loading">
+        <h3 >{{text.llm.llm_text}}</h3>
+        <p class="description">{{profileDescription}}</p>
+        <mat-progress-bar *ngIf="loadingDescription" mode="buffer"></mat-progress-bar>
+        <app-date-picker (dateChosen)="onDateChosen($event)"></app-date-picker>
+    </div>
+</div>
+<mat-divider></mat-divider>
+<app-up-and-down-button elementId="chart"></app-up-and-down-button>
+<div id="chart">
+    <div>
+        <app-profile-chart *ngIf="!loading" [profileDataObservable]="profileDataHistory"></app-profile-chart>
+        <mat-progress-bar *ngIf="loading" mode="buffer"></mat-progress-bar>
+    </div>
+
+</div>

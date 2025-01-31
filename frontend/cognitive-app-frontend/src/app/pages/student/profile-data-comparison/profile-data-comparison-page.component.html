@@ -1,0 +1,42 @@
+<div *ngIf="(dataToCompare |async)?.length && (userProfileData |async)?.length">
+    <div class="flex flex-wrap">
+        <form [formGroup]="profileQueryForm" (ngSubmit)="onSubmit()" class="form-container">
+            <mat-radio-group formControlName="calculationType" class="radio-container">
+                <mat-label class="title">{{ text.comparison_type }}</mat-label>
+                <p class="description">{{ text.comparison_type_description }}</p>
+                <mat-radio-button [value]="calculationTypeOptions[0]">{{ text.avg }}</mat-radio-button>
+                <mat-radio-button [value]="calculationTypeOptions[1]">{{ text.min }}</mat-radio-button>
+                <mat-radio-button [value]="calculationTypeOptions[2]">{{ text.max }}</mat-radio-button>
+                <mat-error *ngIf="profileQueryForm.controls.calculationType.invalid">
+                    {{ text.error_type_required }}
+                </mat-error>
+            </mat-radio-group>
+            <button mat-flat-button type="submit" [disabled]="profileQueryForm.invalid">{{ text.submit }}</button>
+        </form>
+        <div class="chart">
+            <app-profile-radar-chart
+                    [profileDataObservable]="userProfileData"
+                    [comparisonDataObservable]="dataToCompare"
+                    [comparisonTitle]="comparisonTitle"
+            ></app-profile-radar-chart>
+        </div>
+    </div>
+
+    <div class="w-full flex flex-column align-items-center">
+        <mat-expansion-panel class="w-full" [expanded]="filterExpanded" (opened)="filterExpanded=true">
+            <mat-expansion-panel-header>
+                <mat-panel-title> {{ text.composite_filter_title }}</mat-panel-title>
+                <mat-panel-description> {{ text.composite_filter_description }}</mat-panel-description>
+            </mat-expansion-panel-header>
+            <app-user-filter [availableGroups]="groups" [availableAbilities]="allAbilities"
+                             (filterChange)="setUserFilter($event)"/>
+        </mat-expansion-panel>
+        <app-profile-line-chart [groupProfileData]="dataToCompare" [userProfileData]="userProfileData"/>
+    </div>
+</div>
+<div *ngIf="!(dataToCompare |async)?.length  || !(userProfileData |async)?.length"
+     class="flex flex-column align-items-center">
+    <h2 class="text-center">{{ text.no_data }}</h2>
+    <img src="{{imagePaths.noData}}" class="image">
+</div>
+

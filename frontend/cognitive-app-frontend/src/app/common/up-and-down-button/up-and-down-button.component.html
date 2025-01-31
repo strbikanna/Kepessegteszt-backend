@@ -1,0 +1,7 @@
+
+<button *ngIf="isExpandMoreButtonVisible" mat-icon-button class="expand-button" (click)="onDownClicked()">
+    <mat-icon>expand_more</mat-icon>
+</button>
+<button *ngIf="!isExpandMoreButtonVisible" mat-icon-button class="expand-button" (click)="onTopClicked()">
+    <mat-icon>expand_less</mat-icon>
+</button>

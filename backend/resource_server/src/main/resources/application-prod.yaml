@@ -1,0 +1,32 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 3MB
+      max-request-size: 3MB
+  # Database connection settings, customize if needed
+  datasource:
+    url: ${RES_DATABASE_URL}
+    username: ${RES_DATABASE_USERNAME}
+    password: ${RES_DATABASE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  web:
+    resources:
+      # Path to static files, set local file path
+      static-locations: file:${THUMBNAIL_PATH}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Uri of auth server, customize if needed
+          issuer-uri: https://coglica.aut.bme.hu/auth
+
+app:
+  python:
+    # Path to python module, set local file path
+    source-location: ${PYTHON_PATH}
+    models-location: ${PYTHON_PATH}/modellek/
+  thumbnail-location: ${THUMBNAIL_PATH}
+  # Path to static files, set local port of resource server if needed
+  image-path: https://coglica.aut.bme.hu/api/game_images

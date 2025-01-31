@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/ability")
-@PreAuthorize("hasRole('ADMIN') or hasRole('SCIENTIST')")
 class AbilityController(
         @Autowired private var abilityRepository: AbilityRepository
 ) {
@@ -26,6 +25,7 @@ class AbilityController(
     }
 
     @PutMapping("/{code}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SCIENTIST')")
     @ResponseStatus(HttpStatus.OK)
     fun updateAbility(@RequestBody abilityEntity: AbilityEntity, @PathVariable code: String): AbilityEntity {
         if(code == abilityEntity.code) {
@@ -36,6 +36,7 @@ class AbilityController(
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SCIENTIST')")
     @ResponseStatus(HttpStatus.CREATED)
     fun createAbility(@RequestBody abilityEntity: AbilityEntity): AbilityEntity {
         return abilityRepository.save(abilityEntity)
