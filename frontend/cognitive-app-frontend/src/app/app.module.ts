@@ -88,6 +88,8 @@ import { AddUserToGroupDialogComponent } from './pages/admin/group-management/ad
 import { CreateGroupDialogComponent } from './pages/admin/group-management/create-group-dialog/create-group-dialog.component';
 import { CreateOrgDialogComponent } from './pages/admin/group-management/create-org-dialog/create-org-dialog.component';
 import { TimestampPipe } from './utils/timestamp.pipe';
+import { PrivacyPolicyPageComponent } from './general/privacy-policy-page/privacy-policy-page.component';
+import { FooterComponent } from './general/footer/footer.component';
 
 @NgModule({
     declarations: [
@@ -138,7 +140,9 @@ import { TimestampPipe } from './utils/timestamp.pipe';
         AddUserToGroupDialogComponent,
         CreateGroupDialogComponent,
         CreateOrgDialogComponent,
-        TimestampPipe
+        TimestampPipe,
+        PrivacyPolicyPageComponent,
+        FooterComponent
     ],
     imports: [
         BrowserModule,
