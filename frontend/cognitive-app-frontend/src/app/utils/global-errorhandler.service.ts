@@ -2,7 +2,7 @@ import {ErrorHandler, Injectable, NgZone} from '@angular/core';
 import {HttpErrorResponse} from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
 import {AlertDialogComponent} from "../common/alert-dialog/alert-dialog.component";
-import {TEXTS} from "./app.text_messages";
+import {TEXTS} from "../text/app.text_messages";
 import {NavigationEnd, Router} from "@angular/router";
 import {UserInfo} from "../auth/userInfo";
 import {AppConstants} from "./constants";

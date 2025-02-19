@@ -1,6 +1,6 @@
 import {Component, ElementRef, HostListener, Input} from '@angular/core';
 import {NG_VALUE_ACCESSOR} from "@angular/forms";
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 
 /**
  * File upload form component

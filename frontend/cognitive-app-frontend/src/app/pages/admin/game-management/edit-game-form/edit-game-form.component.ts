@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Ability} from "../../../../model/ability.model";
 import {GameManagementService} from "../../../../service/game-management/game-management.service";
-import {TEXTS} from "../../../../utils/app.text_messages";
+import {TEXTS} from "../../../../text/app.text_messages";
 import {AbilityService} from "../../../../service/ability/ability.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Game} from "../../../../model/game.model";

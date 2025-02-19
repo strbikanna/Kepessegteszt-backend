@@ -3,7 +3,7 @@ import {EChartsOption} from "echarts";
 import {CognitiveProfile} from "../../model/cognitive_profile.model";
 import * as themeColors from "../../../assets/chart_theme/chart_colors";
 import {Ability, AbilityType} from "../../model/ability.model";
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 import {Observable} from "rxjs";
 
 @Component({

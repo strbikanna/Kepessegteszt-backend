@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 import {UserInfo} from "../../auth/userInfo";
 import {Role} from "../../utils/constants";
 import {imagePaths} from "../../utils/app.image_resources";

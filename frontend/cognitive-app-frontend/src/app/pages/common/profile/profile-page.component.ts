@@ -1,7 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {UserInfo} from "../../../auth/userInfo";
 import {User} from "../../../model/user.model";
-import {TEXTS} from "../../../utils/app.text_messages";
+import {TEXTS} from "../../../text/app.text_messages";
 import {AuthUser} from "../../../model/user-contacts.model";
 import {UserDataService} from "../../../service/user-data/user-data.service";
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";

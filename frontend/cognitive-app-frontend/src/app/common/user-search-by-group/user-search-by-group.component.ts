@@ -3,7 +3,7 @@ import {UserGroupSearchService} from "../../service/user-group/user-group-search
 import {UserGroup} from "../../model/user_group.model";
 import {User} from "../../model/user.model";
 import {FormControl} from "@angular/forms";
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 
 @Component({
   selector: 'app-user-search-by-group',

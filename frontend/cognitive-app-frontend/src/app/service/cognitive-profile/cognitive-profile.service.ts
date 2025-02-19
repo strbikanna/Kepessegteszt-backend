@@ -7,7 +7,7 @@ import {AppConstants} from "../../utils/constants";
 import {User} from "../../model/user.model";
 import {SimpleHttpService} from "../../utils/simple-http.service";
 import {ProfileDescription} from "../../model/ProfileDescription";
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 
 @Injectable({
     providedIn: 'root'

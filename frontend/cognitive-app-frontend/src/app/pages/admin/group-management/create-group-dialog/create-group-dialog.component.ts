@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {TEXTS} from "../../../../utils/app.text_messages";
+import {TEXTS} from "../../../../text/app.text_messages";
 import {User} from "../../../../model/user.model";
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";

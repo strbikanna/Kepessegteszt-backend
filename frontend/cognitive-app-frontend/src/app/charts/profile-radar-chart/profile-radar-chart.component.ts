@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {EChartsOption} from "echarts";
 import {combineLatestWith, Observable} from "rxjs";
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 import {ProfileData} from "../../model/profile_data.model";
 import * as themeColors from "../../../assets/chart_theme/chart_colors";
 

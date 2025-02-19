@@ -6,6 +6,14 @@
     height: 100%;
     margin: 0;
 }
+.rocketBackground{
+    background-image: url('../assets/cosmic-control.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100%;
+    margin: 0;
+}
 body{
     color: whitesmoke;
     min-height: 100vh;

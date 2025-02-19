@@ -3,7 +3,7 @@ import {LoginService} from "../login/login.service";
 import {UserInfo} from "../../auth/userInfo";
 import {User} from "../../model/user.model";
 import {Observable} from "rxjs";
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 import {AppConstants, Role} from "../../utils/constants";
 
 @Component({

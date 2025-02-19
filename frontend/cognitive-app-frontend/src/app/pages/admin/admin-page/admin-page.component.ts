@@ -6,7 +6,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatPaginatorIntl, PageEvent} from "@angular/material/paginator";
 import {Role} from "../../../utils/constants";
 import {MatCheckboxChange} from "@angular/material/checkbox";
-import {TEXTS} from "../../../utils/app.text_messages";
+import {TEXTS} from "../../../text/app.text_messages";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {PaginatorTranslator} from "../../../common/paginator/paginator-translator";
 

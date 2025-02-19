@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 import {imagePaths} from "../../utils/app.image_resources";
 
 @Component({

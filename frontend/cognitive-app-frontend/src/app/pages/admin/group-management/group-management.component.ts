@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {Group, Organization} from "../../../model/user-group";
-import {TEXTS} from "../../../utils/app.text_messages";
+import {TEXTS} from "../../../text/app.text_messages";
 import {UserGroupService} from "../../../service/user-group/user-group.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Location} from "@angular/common";
