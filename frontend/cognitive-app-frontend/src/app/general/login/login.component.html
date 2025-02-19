@@ -1,20 +1,24 @@
-  <button mat-flat-button color="primary" *ngIf= "!isLoggedIn" (click) ="login()" type="submit">
-    {{text.login}}
-  </button>
-  <div *ngIf= "isLoggedIn" class="user-container" >
-    <p class="user-name">{{user?.firstName}} {{user?.lastName}}</p>
+<button mat-flat-button color="primary" *ngIf="!isLoggedIn" (click)="login()" type="submit">
+    {{ text.login }}
+</button>
+<div *ngIf="isLoggedIn" class="user-container">
+    <p class="user-name">{{ user?.firstName }} {{ user?.lastName }}</p>
     <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon>account_circle</mat-icon>
+        <mat-icon>account_circle</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item routerLink="/profile">
-        <mat-icon>manage_accounts</mat-icon>
-        <span>{{text.profile}}</span>
-      </button>
-      <button mat-menu-item (click) ="logout()">
-        <mat-icon>logout</mat-icon>
-        <span>{{text.logout}}</span>
-      </button>
+        <button mat-menu-item routerLink="/profile">
+            <mat-icon>manage_accounts</mat-icon>
+            <span>{{ text.profile }}</span>
+        </button>
+        <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            <span>{{ text.logout }}</span>
+        </button>
+        <button mat-menu-item routerLink="/delete-account">
+            <mat-icon color="warn">close</mat-icon>
+            <span>{{ text.delete_account }}</span>
+        </button>
     </mat-menu>
     <br/>
-  </div>
+</div>

@@ -23,7 +23,8 @@
         <p class="title lg:w-2 sm:w-3">{{ text.birth_date }}</p>
         <mat-form-field>
             <mat-label>{{ text.birth_date }}</mat-label>
-            <input matInput [matDatepicker]="datepicker" [formControlName]="birthDateData.key" (dateChange)="isDataChanged=true"/>
+            <input matInput [matDatepicker]="datepicker" [formControlName]="birthDateData.key"
+                   (dateChange)="isDataChanged=true"/>
             <mat-hint>Hónap/Nap/Év</mat-hint>
             <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
             <mat-datepicker #datepicker/>
@@ -73,5 +74,6 @@
     </div>
 
 </div>
+
 
 

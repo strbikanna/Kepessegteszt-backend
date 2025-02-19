@@ -8,6 +8,7 @@ export const TEXTS = {
     menu: {
         login: 'Bejelentkezés',
         logout: 'Kijelentkezés',
+        delete_account: 'Fiók törlése',
         home: 'Cognitive App',
         games: 'Játékok',
         profile: 'Profil',
@@ -70,6 +71,11 @@ export const TEXTS = {
         required_address: 'A cím megadásakor minden mezőt ki kell tölteni',
         success_title: 'Sikeres frissítés',
         success_message: 'A felhasználó adatai sikeresen frissítve lettek',
+        delete_account: 'Fiók törlése',
+        delete_account_description: 'A fiók törlésével az összes felhasználói adat véglegesen eltávolításra kerül az adatbázisból. A fiók törlése nem visszavonható.',
+        delete_account_confirm: 'Kijelentem, hogy biztosan törölni szeretném a fiókot és minden hozzá tartozó adatot.',
+        account_deleted: 'A fiókod sikeresen törölve lett',
+        account_deleted_message: 'Nincs más teendő',
     },
     paging: {
         firstPage: 'Első oldal',

@@ -4,5 +4,5 @@
     <p>{{detail}}</p>
 </div>
 <div mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>{{buttonText}}</button>
+    <button mat-button mat-dialog-close (click)="onOk()">{{buttonText}}</button>
 </div>

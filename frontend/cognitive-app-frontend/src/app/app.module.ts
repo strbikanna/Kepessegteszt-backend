@@ -90,6 +90,7 @@ import { CreateOrgDialogComponent } from './pages/admin/group-management/create-
 import { TimestampPipe } from './utils/timestamp.pipe';
 import { PrivacyPolicyPageComponent } from './general/privacy-policy-page/privacy-policy-page.component';
 import { FooterComponent } from './general/footer/footer.component';
+import { DeleteAccountComponent } from './pages/common/delete-account/delete-account.component';
 
 @NgModule({
     declarations: [
@@ -142,7 +143,8 @@ import { FooterComponent } from './general/footer/footer.component';
         CreateOrgDialogComponent,
         TimestampPipe,
         PrivacyPolicyPageComponent,
-        FooterComponent
+        FooterComponent,
+        DeleteAccountComponent
     ],
     imports: [
         BrowserModule,

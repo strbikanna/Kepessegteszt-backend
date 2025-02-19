@@ -1,0 +1,10 @@
+<div class="mt-7">
+    <h3>{{ text.delete_account }}</h3>
+    <p class="description">{{ text.delete_account_description }}</p>
+    <mat-checkbox [formControl]="deleteAccountControl">{{ text.delete_account_confirm }}</mat-checkbox>
+    <div class="mt-2">
+        <button mat-raised-button color="warn" (click)="deleteAccount()"
+                [disabled]="!deleteAccountControl.value">{{ text.delete_account }}
+        </button>
+    </div>
+</div>
