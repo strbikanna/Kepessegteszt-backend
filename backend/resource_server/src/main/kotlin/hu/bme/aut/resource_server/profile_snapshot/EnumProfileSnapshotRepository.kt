@@ -13,5 +13,6 @@ interface EnumProfileSnapshotRepository : CrudRepository<EnumProfileSnapshotItem
     fun findAllByUserAndTimestampBetween(user: UserEntity, begin: LocalDateTime, end: LocalDateTime): List<EnumProfileSnapshotItem>
     fun findAllByUserAndAbilityInAndTimestampBetween(user: UserEntity, abilities: List<AbilityEntity>, begin: LocalDateTime, end: LocalDateTime): List<EnumProfileSnapshotItem>
     fun existsByUserAndTimestampBetween(user: UserEntity, begin: LocalDateTime, end: LocalDateTime): Boolean
+    fun deleteByUser(user: UserEntity)
 
 }

@@ -1,14 +1,22 @@
 package hu.bme.aut.resource_server.authentication
 
+import hu.bme.aut.resource_server.error.ApiCallException
+import hu.bme.aut.resource_server.error.removeUserFailed
+import jakarta.validation.constraints.AssertTrue
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatusCode
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.test.context.ActiveProfiles
@@ -49,5 +57,34 @@ class AuthServiceTest(
             val isContact = authService.isContact(mockAuthentication, testUsername)
             assertTrue(isContact)
         }
+    }
+
+    @Test
+    fun shouldThrowWhenErrorToReachAuthServer() {
+        val testToken = "mockToken"
+
+        val mockAuthentication = mock(Authentication::class.java)
+        val mockJwt = mock(Jwt::class.java)
+        Mockito.`when`(mockAuthentication.principal).thenReturn(mockJwt)
+        Mockito.`when`(mockJwt.tokenValue).thenReturn(testToken)
+
+        val mockWebClient = mock(WebClient::class.java)
+        val mockRequestHeadersUriSpec = mock(WebClient.RequestHeadersUriSpec::class.java)
+        val mockRequestHeadersSpec = mock(WebClient.RequestHeadersSpec::class.java)
+        val mockResponseSpec = mock(WebClient.ResponseSpec::class.java)
+        authService.webclient = mockWebClient
+        Mockito.`when`(mockWebClient.delete()).thenReturn(mockRequestHeadersUriSpec)
+        Mockito.`when`(mockRequestHeadersUriSpec.uri("/user/me")).thenReturn(mockRequestHeadersSpec)
+        Mockito.`when`(mockRequestHeadersSpec.accept(MediaType.APPLICATION_JSON)).thenReturn(mockRequestHeadersSpec)
+        Mockito.`when`(mockRequestHeadersSpec.header("Authorization", "Bearer $testToken"))
+            .thenReturn(mockRequestHeadersSpec)
+        Mockito.`when`(mockRequestHeadersSpec.retrieve()).thenReturn(mockResponseSpec)
+        Mockito.`when`(mockResponseSpec.toBodilessEntity())
+            .thenReturn(Mono.just(ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR)))
+
+        runBlocking {
+            assertThrows<ApiCallException> { authService.removeUserFromAuthServer(mockAuthentication) }
+        }
+
     }
 }

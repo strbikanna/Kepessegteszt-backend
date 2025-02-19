@@ -105,4 +105,9 @@ class ProfileSnapshotService(
             23,59,59,
         )
 
+    fun deleteAllSnapshotsOfUser(user: UserEntity) {
+        floatProfileSnapshotRepository.deleteByUser(user)
+        enumProfileSnapshotRepository.deleteByUser(user)
+    }
+
 }

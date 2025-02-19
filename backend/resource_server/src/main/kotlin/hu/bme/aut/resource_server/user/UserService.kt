@@ -1,13 +1,20 @@
 package hu.bme.aut.resource_server.user
 
+import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
+import hu.bme.aut.resource_server.recommended_game.RecommendedGameService
+import hu.bme.aut.resource_server.result.ResultService
 import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
 class UserService(
-        @Autowired private var userRepository: UserRepository,
+    @Autowired private var userRepository: UserRepository,
+    private val profileSnapshotService: ProfileSnapshotService,
+    private val recommendedGameService: RecommendedGameService,
+    private val resultService: ResultService,
 ){
     fun getAllUsers(): List<PlainUserDto>{
         return userRepository.findAll().map { PlainUserDto(it) }
@@ -40,6 +47,24 @@ class UserService(
         return UserProfileDto(
             updatedEntity
         )
+    }
+
+    @Transactional
+    fun removeUserForever(username: String){
+        val user = userRepository.findByUsername(username).orElseThrow()
+
+        user.groups.clear()
+        user.organizations.clear()
+        user.profileFloat.clear()
+        user.profileEnum.clear()
+        user.roles.clear()
+        userRepository.save(user)
+
+        profileSnapshotService.deleteAllSnapshotsOfUser(user)
+        recommendedGameService.deleteAllRecommendationsByUser(user)
+        resultService.deleteAllResultsOfUser(user)
+
+        userRepository.deleteAllByUsername(username)
     }
 
 }

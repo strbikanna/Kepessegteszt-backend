@@ -12,6 +12,7 @@ import java.time.LocalDateTime
 
 interface RecommendedGameRepository: JpaRepository<RecommendedGameEntity, Long> {
     fun findAllByRecommendedTo(recommendedTo: UserEntity): List<RecommendedGameEntity>
+    fun findAllByRecommender(recommender: UserEntity): List<RecommendedGameEntity>
     fun findAllByRecommendedToAndGame(recommendedTo: UserEntity, game:GameEntity): List<RecommendedGameEntity>
     fun findAllByRecommendedToAndGameAndCompleted(recommendedTo: UserEntity, game:GameEntity, completed: Boolean): List<RecommendedGameEntity>
     fun findAllByRecommendedToAndCompleted(recommendedTo: UserEntity, completed: Boolean): List<RecommendedGameEntity>
