@@ -109,7 +109,7 @@ class UserGroupController(
         return userGroupService.getAllUsersToSee(authentication.name, pageIndex, pageSize).map { PlainUserDto(it) }
     }
 
-    @DeleteMapping("/members")
+    @DeleteMapping("/member")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun removeUserFromGroup(
         authentication: Authentication,
