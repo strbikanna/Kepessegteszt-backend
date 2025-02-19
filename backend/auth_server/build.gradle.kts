@@ -38,6 +38,7 @@ dependencies {
 	implementation (libs.flyway.core)
 	implementation (libs.flyway.mysql)
 	implementation(libs.openapi.starter.webmvc)
+	implementation(libs.ua.parser)
 	runtimeOnly(libs.mysql.connector)
 	runtimeOnly(libs.h2)
 	annotationProcessor(libs.lombok)

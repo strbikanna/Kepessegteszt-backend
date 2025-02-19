@@ -1,0 +1,20 @@
+.spaceBackground{
+    background-image: url('../assets/register-background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100%;
+    margin: 0;
+}
+body{
+    color: whitesmoke;
+    min-height: 100vh;
+}
+
+.centeredContainer{
+    width: 100vw;
+    padding-left: 1em;
+    padding-right: 1em;
+    display: flex;
+    justify-content: center;
+}

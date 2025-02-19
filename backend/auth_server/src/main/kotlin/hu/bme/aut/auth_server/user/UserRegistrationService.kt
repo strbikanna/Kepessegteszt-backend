@@ -18,9 +18,12 @@ class UserRegistrationService(
     /**
      * Saves the user to the database.
      * Encodes the password.
-     * @throws SQLIntegrityConstraintViolationException if the username is already taken.
+     * @throws IllegalArgumentException if the username is already taken.
      */
     fun saveUserOrThrowException(userData: RegistrationData): UserEntity {
+        if(userRepository.existsByUsername(userData.username)) {
+            throw IllegalArgumentException("Username already taken")
+        }
         val encodedPassword = passwordEncoder.encode(userData.password)
         val userEntity = UserEntity(
             firstName = userData.firstName,

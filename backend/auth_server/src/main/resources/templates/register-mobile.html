@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link th:href="@{/styles/main-style.css}" rel="stylesheet" />
+    <title>Regisztráció</title>
+</head>
+<body class="spaceBackground">
+<div class="container mt-5 mx-1">
+    <h1 class="text-center">Csatlakozz az űrközösséghez!</h1>
+    <p class="text-center">Csak néhány információt kell megadnod ehhez. Ne feledd, a jelszót meg kell jegyezned!</p>
+</div>
+<div class="container w-80 mx-1">
+    <div class="row d-flex justify-content-center mt-5 pb-4">
+        <div class="col-md-6">
+            <form th:action="@{/register}" th:object="${user}" method="post" class="needs-validation">
+                <div class="mb-3">
+                    <h5>Add meg a vezetékneved</h5>
+                    <label for="firstName" class="form-label">Vezetéknév</label>
+                    <input type="text" class="form-control" id="firstName" th:field="*{firstName}"
+                           placeholder="Írd be a vezetékneved" required>
+                </div>
+                <div class="mb-3">
+                    <h5>Add meg a keresztneved</h5>
+                    <label for="lastName" class="form-label">Keresztnév</label>
+                    <input type="text" class="form-control" id="lastName" th:field="*{lastName}"
+                           placeholder="Írd be a keresztneved" required>
+                </div>
+                <div class="mb-3">
+                    <h5>Válassz felhasználónevet </h5>
+                        <p>Ez lesz a kódneved, amivel azonosítani fogunk az űrkalandorok között.</p>
+                    <label for="username" class="form-label">Felhasználónév</label>
+                    <input th:if="!*{error}==true" type="text" class="form-control" id="username" th:field="*{username}"
+                           placeholder="Válassz felhasználónevet" required>
+                    <input th:if="*{error}" type="text" class="form-control alert-danger" id="username-error"
+                           th:field="*{username}" placeholder="Válassz felhasználónevet" required>
+                    <p th:if="*{error}" class="text-danger">Ez a név már foglalt. Találj ki egy másikat!</p>
+                </div>
+                <div class="mb-3">
+                    <h5>Szükség lesz az email címed megadására is</h5>
+                    <p>Ezzel tudjuk megerősíteni a regisztrációt.</p>
+                    <label for="email" class="form-label">Email-cím</label>
+                    <input type="email" class="form-control" id="email" th:field="*{email}"
+                           placeholder="Add meg az email-címed" required>
+                </div>
+                <div class="mb-3">
+                    <h5>És végül, válassz egy erős jelszót, amit csak te tudsz!</h5>
+                    <label for="password" class="form-label">Jelszó</label>
+                    <input type="password" class="form-control" id="password" th:field="*{password}"
+                           placeholder="Használj erős jelszót" required>
+                </div>
+                <div class="d-grid mt-1">
+                    <button type="submit" class="btn btn-dark">Regisztráció</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.5.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+6lZ/3GGXn8zXCp+HHAAK5FVf33E5I5fh2zA3c5OaF72K0q"
+        crossorigin="anonymous"></script>
+</body>
+</html>
