@@ -82,4 +82,12 @@ class UserManagementServiceTest(
         assertTrue(user3.contacts.any { it.id == user1.id })
         assertTrue(user2.contacts.isEmpty())
     }
+
+    @Test
+    fun shouldRemoveUserWithContacts(){
+        userManagementService.removeUser(testUserEntity1.username)
+        assertTrue(userRepository.findByUsername(testUserEntity1.username).isEmpty)
+        val user2 = userManagementService.loadUserByUsernameWithContacts(testUserEntity2.username).get()
+        assertTrue(user2.contacts.isEmpty())
+    }
 }
