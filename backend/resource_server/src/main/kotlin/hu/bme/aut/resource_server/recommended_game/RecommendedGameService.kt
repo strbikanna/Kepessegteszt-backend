@@ -2,6 +2,7 @@ package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.GameRepository
+import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
@@ -107,5 +108,13 @@ class RecommendedGameService(
             throw IllegalArgumentException("Cannot delete completed recommendation, because it is completed already.")
         }
         recommendedGameRepository.deleteById(recommendedGameId)
+    }
+
+
+    fun deleteAllRecommendationsByUser(user: UserEntity) {
+        val allRecommendedTo = recommendedGameRepository.findAllByRecommendedTo(user)
+        val allRecommendedBy = recommendedGameRepository.findAllByRecommender(user)
+        recommendedGameRepository.deleteAll(allRecommendedTo)
+        recommendedGameRepository.deleteAll(allRecommendedBy)
     }
 }

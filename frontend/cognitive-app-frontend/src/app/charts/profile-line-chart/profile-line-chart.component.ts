@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
 import {ProfileData} from "../../model/profile_data.model";
 import {Ability} from "../../model/ability.model";
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 
 @Component({
   selector: 'app-profile-line-chart',

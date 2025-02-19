@@ -1,12 +1,14 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {UserInfo} from "../../../auth/userInfo";
 import {User} from "../../../model/user.model";
-import {TEXTS} from "../../../utils/app.text_messages";
+import {TEXTS} from "../../../text/app.text_messages";
 import {AuthUser} from "../../../model/user-contacts.model";
 import {UserDataService} from "../../../service/user-data/user-data.service";
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
-import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {AlertDialogComponent} from "../../../common/alert-dialog/alert-dialog.component";
+import {LoginService} from "../../../general/login/login.service";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-profile',
@@ -35,8 +37,7 @@ export class ProfilePageComponent implements OnInit {
 
     readonly dialog = inject(MatDialog);
 
-    constructor(private service: UserDataService, private fb: FormBuilder) {
-    }
+    constructor(private service: UserDataService, private fb: FormBuilder, private loginService: LoginService, private router: Router) {}
 
     ngOnInit(): void {
         UserInfo.loginStatus.subscribe(isLoggedIn => {
@@ -152,5 +153,7 @@ export class ProfilePageComponent implements OnInit {
             return {addressInvalid: true}
         }
     }
+
+
 
 }

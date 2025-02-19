@@ -4,18 +4,21 @@ import hu.bme.aut.resource_server.TestUtilsService
 import hu.bme.aut.resource_server.profile.EnumProfileItem
 import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.profile.FloatProfileRepository
+import hu.bme.aut.resource_server.result.ResultEntity
 import hu.bme.aut.resource_server.user_group.group.Group
 import hu.bme.aut.resource_server.user_group.organization.Address
 import hu.bme.aut.resource_server.user_group.organization.Organization
 import hu.bme.aut.resource_server.utils.EnumAbilityValue
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import java.util.*
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -119,6 +122,24 @@ class UserServiceTest(
         )
         val updatedUser = userService.updateUserProfile(testUser1)
         assertEquals(4, updatedUser.profile.size)
+    }
+
+    @Test
+    @Transactional
+    fun shouldDeleteUser(){
+        testService.fillUserRepository()
+        val organization = Organization(name = "Test org", address = Address(street = "Test street", city = "Test city", zip = "1234", houseNumber = "1"))
+        testService.organizationRepository.save(organization)
+        val testUser1 = userService.getUserEntityWithProfileByUsername("test_user1")
+        testUser1.organizations.add(organization)
+        testService.userRepository.save(testUser1)
+        testService.resultRepository.save(
+            testService.createGamePlayResult(testUser1)
+        )
+        assertEquals(1, testService.resultRepository.findAllByUser(testUser1).size)
+        userService.removeUserForever("test_user1")
+        assertFalse(testService.userRepository.existsByUsername("test_user1"))
+        assertEquals(0, testService.resultRepository.findAllByUser(testUser1).size)
     }
 
 

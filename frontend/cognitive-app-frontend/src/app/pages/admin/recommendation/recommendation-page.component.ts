@@ -4,7 +4,7 @@ import {Game} from "../../../model/game.model";
 import {RecommendationService} from "../../../service/recommendation/recommendation.service";
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {ConfigItem} from "../../../model/config_item.model";
-import {TEXTS} from "../../../utils/app.text_messages";
+import {TEXTS} from "../../../text/app.text_messages";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Recommendation} from "../../../model/recommendation.model";
 import {AuthUser} from "../../../model/user-contacts.model";

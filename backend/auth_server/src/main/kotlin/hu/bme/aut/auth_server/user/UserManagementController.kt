@@ -97,4 +97,10 @@ class UserManagementController(
     fun statusTest(): ResponseEntity<String> {
         return ResponseEntity(HttpStatus.OK)
     }
+
+    @DeleteMapping("/me")
+    fun deleteUser(authentication: Authentication): ResponseEntity<String> {
+        userService.removeUser(authentication.name)
+        return ResponseEntity(HttpStatus.OK)
+    }
 }

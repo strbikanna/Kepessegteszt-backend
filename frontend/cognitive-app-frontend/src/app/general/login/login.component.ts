@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from "../../model/user.model";
 import {LoginService} from "./login.service";
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 import {UserInfo} from "../../auth/userInfo";
 import {AuthUser} from "../../model/user-contacts.model";
 

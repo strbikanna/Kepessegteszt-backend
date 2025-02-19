@@ -3,7 +3,7 @@ import {CognitiveProfileService} from "../../../service/cognitive-profile/cognit
 import {CognitiveProfile} from "../../../model/cognitive_profile.model";
 import {BehaviorSubject, Observable} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {TEXTS} from "../../../utils/app.text_messages";
+import {TEXTS} from "../../../text/app.text_messages";
 import {UserInfo} from "../../../auth/userInfo";
 import {Role} from "../../../utils/constants";
 import {User} from "../../../model/user.model";

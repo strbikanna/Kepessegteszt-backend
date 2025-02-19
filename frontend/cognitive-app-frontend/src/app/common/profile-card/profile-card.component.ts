@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {CognitiveProfile} from "../../model/cognitive_profile.model";
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 
 @Component({
     selector: 'app-profile-card',

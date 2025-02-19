@@ -1,6 +1,6 @@
 import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {RecommendedGame} from "../../../../model/recommended_game.model";
-import {TEXTS} from "../../../../utils/app.text_messages";
+import {TEXTS} from "../../../../text/app.text_messages";
 import {MatDialog} from "@angular/material/dialog";
 import {
   AddUserToGroupDialogComponent

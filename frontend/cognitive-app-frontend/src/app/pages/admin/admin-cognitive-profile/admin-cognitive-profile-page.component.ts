@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {CognitiveProfileService} from "../../../service/cognitive-profile/cognitive-profile.service";
 import {CognitiveProfile} from "../../../model/cognitive_profile.model";
 import {DateRange} from "../../../common/date-picker/date-picker.component";
-import {TEXTS} from "../../../utils/app.text_messages";
+import {TEXTS} from "../../../text/app.text_messages";
 import {User} from "../../../model/user.model";
 import {BehaviorSubject} from "rxjs";
 import {Location} from "@angular/common";

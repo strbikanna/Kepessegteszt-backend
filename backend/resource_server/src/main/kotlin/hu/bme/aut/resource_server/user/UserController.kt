@@ -240,4 +240,12 @@ class UserController(
         userService.updateUser(user)
     }
 
+    @DeleteMapping("/me")
+    @ResponseStatus(HttpStatus.OK)
+    suspend fun removeUser(authentication: Authentication) {
+        val username = authentication.name
+        authService.removeUserFromAuthServer(authentication)
+        userService.removeUserForever(username)
+    }
+
 }

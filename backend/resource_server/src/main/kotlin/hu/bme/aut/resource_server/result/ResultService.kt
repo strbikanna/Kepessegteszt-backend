@@ -156,6 +156,10 @@ class ResultService(
         return resultRepository.count()
     }
 
+    fun deleteAllResultsOfUser(user: UserEntity) {
+        resultRepository.deleteAllByUser(user)
+    }
+
     private fun isResultPassed(result: Map<String, Any>): Boolean? {
         return result["passed"] as Boolean?
     }

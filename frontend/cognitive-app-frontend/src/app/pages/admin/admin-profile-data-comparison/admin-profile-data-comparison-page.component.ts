@@ -6,7 +6,7 @@ import {ProfileDataComparisonService} from "../../../service/profile-data-compar
 import {FormBuilder} from "@angular/forms";
 import {AbilityService} from "../../../service/ability/ability.service";
 import {User} from "../../../model/user.model";
-import {TEXTS} from "../../../utils/app.text_messages";
+import {TEXTS} from "../../../text/app.text_messages";
 import {ProfileStatistics} from "../../../model/profile-statistics.model";
 import {BehaviorSubject, map, Observable} from "rxjs";
 import {CandlestickChartDataModel} from "../../../charts/candlestick-chart/candlestick-chart-data.model";

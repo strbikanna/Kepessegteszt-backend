@@ -96,6 +96,7 @@ class AuthServerConfig {
                     it.requestMatchers("/swagger-ui/**").permitAll()
                     it.requestMatchers("/v3/api-docs/swagger-config").permitAll()
                     it.requestMatchers("/mail/**").permitAll()
+                    it.requestMatchers("/styles/**", "/assets/**").permitAll()
                     it.anyRequest().authenticated()
                 }
                 .oauth2ResourceServer { it.jwt(withDefaults()) }

@@ -1,3 +1,6 @@
+import {text_home} from "./app.text_home";
+import {cognitive_profile_text} from "./app.text_cognitive_profile";
+
 /**
  * Texts displayed in application components.
  */
@@ -5,6 +8,7 @@ export const TEXTS = {
     menu: {
         login: 'Bejelentkezés',
         logout: 'Kijelentkezés',
+        delete_account: 'Fiók törlése',
         home: 'Cognitive App',
         games: 'Játékok',
         profile: 'Profil',
@@ -21,14 +25,7 @@ export const TEXTS = {
             game: 'Játékok',
         }
     },
-    home: {
-        welcome: 'Örülünk, hogy itt vagy!',
-        features_student: 'Játssz a kedvenc játékaiddal és kövesd nyomon a profilod fejlődését!',
-        features_parent: 'Kövesd nyomon gyermeked fejlődését és segíts neki a játékok kiválasztásában!',
-        features_teacher: 'Kövesd nyomon diákjaid fejlődését és ajánlj nekik játékokat!',
-        features_scientist: 'Tölts fel játékokat, ajánld őket diákoknak és kövesd nyomon a fejlődésüket!',
-        login: 'Jelentkezz be a játékok eléréséhez!',
-    },
+    home: text_home,
     impersonation: {
         message: 'Bejelentkezhetsz a következő felhasználók nevében, vagy maradhatsz a saját fiókodban.',
         cancel: 'Maradok a saját fiókomban',
@@ -74,6 +71,11 @@ export const TEXTS = {
         required_address: 'A cím megadásakor minden mezőt ki kell tölteni',
         success_title: 'Sikeres frissítés',
         success_message: 'A felhasználó adatai sikeresen frissítve lettek',
+        delete_account: 'Fiók törlése',
+        delete_account_description: 'A fiók törlésével az összes felhasználói adat véglegesen eltávolításra kerül az adatbázisból. A fiók törlése nem visszavonható.',
+        delete_account_confirm: 'Kijelentem, hogy biztosan törölni szeretném a fiókot és minden hozzá tartozó adatot.',
+        account_deleted: 'A fiókod sikeresen törölve lett',
+        account_deleted_message: 'Nincs más teendő',
     },
     paging: {
         firstPage: 'Első oldal',
@@ -142,80 +144,7 @@ export const TEXTS = {
         upload: 'Feltöltés',
         check_all: 'Összes kijelölése',
     },
-    cognitive_profile: {
-        title_user: 'kognitív profilja',
-        chart: {
-            chart_title: 'Kognitív profil az elmúlt időszakban',
-        },
-        radar_chart: {
-            chart_title: 'Kognitív profil összehasonlítása',
-            profile: 'Saját profil',
-            avg_in_group: 'Átlagos értékek',
-            max_in_group: 'Maximum értékek',
-            min_in_group: 'Minimum értékek',
-        },
-        card: {
-            current_profile: 'Legfrissebb kognitív profil',
-            current_profile_description: 'A kognitív profilban szereplő képességek, és értékük ebben az időpontban ',
-            no_profile_data_message: 'Nincs elég adat, ezért nem lehet megjeleníteni a kognitív profilt.',
-            no_profile_data_action: 'Több játék játszása esetén összeáll a kognitív profil.',
-            abilities: 'Kognitív képességek',
-            values: 'Becsült értékek',
-        },
-        user_picker: {
-            choose_contact: 'Kognitív profil megtekintése',
-            choose_contact_description: 'Válaszd ki, kinek a kognitív profilját szeretnéd megtekinteni',
-            select: 'Megtekintés',
-        },
-        llm: {
-            prompt: 'Prompt',
-            prompt_description: 'Próbáld ki egyedi kérdés megadásával a kognitív profil elemzését.',
-            prompt_action: 'Profil kiértékelés a megadott kérdés alapján',
-            used_prompt: 'Használt prompt',
-            llm_text: 'Elemzés',
-            empty_description: 'Sajnos nem lehet elkészíteni az elemzést, mert nincs elég adat.',
-        },
-        date_picker: {
-            see_history: 'Megtekintés korábbi időpontban',
-            see_history_description: 'Válassz egy kezdő és egy végdátumot, hogy megtekinthesd a kognitív profilodat az adott időpontban.',
-            see_history_action: 'Kognitív profil megtekintése',
-        },
-        comparison: {
-            title: 'Kognitív profil elemzése',
-            no_data: 'Nincs elég adat az összehasonlításhoz.',
-            description: 'Válaszd ki, mely csoport adatait szeretnéd összehasonlítani a sajátoddal',
-            avg: 'Átlag',
-            min: 'Minimum',
-            max: 'Maximum',
-            comparison_type: 'Összehasonlítás típusa',
-            comparison_type_description: 'Válaszd ki, milyen módon legyenek összehasonlítva a kognitív profil adatok a többi felhasználó adataival.',
-            group_selection: 'Csoport kiválasztása',
-            submit: 'Összehasonlítás',
-            error_group_required: 'Válassz ki egy csoportot az összehasonlításhoz',
-            error_type_required: 'Válassz ki egy összehasonlítási típust',
-            error_no_group: 'Úgy látszik, egyetlen csoportnak sem vagy még tagja',
-            composite_filter_title: 'Felhasználók részletes szűrése',
-            composite_filter_description: 'Kontrollcsoport kijelölése több szűrő használatával',
-            data_own: 'Saját kognitív profil érték',
-            data_group: 'Csoport összesített értéke',
-        },
-        user_filter: {
-            title: 'Felhasználók szűrése',
-            description: 'Válaszd ki, milyen kritériumok alapján szeretnéd kiválasztani az összehasonlítás alapjául szolgáló felhasználói csoportot.',
-            age: 'Életkor',
-            age_min: 'Minimum kor',
-            age_max: 'Maximum kor',
-            ability: 'Kognitív képesség',
-            ability_min: 'Minimum érték',
-            ability_max: 'Maximum érték',
-            group: 'Felhasználói csoport',
-            group_selection: 'Csoport kiválasztása',
-            address: 'Lakóhely',
-            address_city: 'Város',
-            address_zip: 'Irányítószám',
-            submit: 'Szűrés',
-        },
-    },
+    cognitive_profile: cognitive_profile_text,
     date_picker: {
         time_interval: 'Időintervallum',
         title: 'Megtekintés korábbi időpontban',

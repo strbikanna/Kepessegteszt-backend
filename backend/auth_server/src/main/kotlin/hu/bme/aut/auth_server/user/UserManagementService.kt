@@ -176,6 +176,13 @@ class UserManagementService(
 
     }
 
+    @Transactional
+    fun removeUser(username: String) {
+        val userEntity = userRepository.findByUsername(username).orElseThrow()
+        updateContactBothSide(userEntity, listOf())
+        userRepository.delete(userEntity)
+    }
+
 
     private fun convertUserDto(userEntity: UserEntity): UserDto {
         return UserDto(

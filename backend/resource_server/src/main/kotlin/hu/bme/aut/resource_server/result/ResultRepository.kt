@@ -46,4 +46,6 @@ interface ResultRepository : JpaRepository<ResultEntity, Long> {
     fun countByUserIn(user: List<UserEntity>): Long
     override fun findAll(page: Pageable): Page<ResultEntity>
 
+    fun deleteAllByUser(user: UserEntity)
+
 }

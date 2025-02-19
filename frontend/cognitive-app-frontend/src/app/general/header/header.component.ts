@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, EventEmitter, HostListener, OnInit, Output} from '@angular/core';
 import {UserInfo} from "../../auth/userInfo";
 import {Role} from "../../utils/constants";
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 import {imagePaths} from "../../utils/app.image_resources";
 
 

@@ -19,6 +19,8 @@ import {
     AdminProfileDataComparisonPageComponent
 } from "../pages/admin/admin-profile-data-comparison/admin-profile-data-comparison-page.component";
 import {GroupManagementComponent} from "../pages/admin/group-management/group-management.component";
+import {PrivacyPolicyPageComponent} from "../general/privacy-policy-page/privacy-policy-page.component";
+import {DeleteAccountComponent} from "../pages/common/delete-account/delete-account.component";
 
 
 export const appRoutes: Routes = [
@@ -35,5 +37,7 @@ export const appRoutes: Routes = [
     {path: 'recommendation', component: RecommendationPageComponent, canActivate: [loggedInGuard], title: 'Játékok ajánlása'},
     {path: 'result', component: ResultPageComponent, canActivate: [loggedInGuard], title: 'Eredmények megtekintése'},
     {path: 'group-management', component: GroupManagementComponent, canActivate: [loggedInGuard, groupManagementGuard], title: 'Felhasználói csoportok kezelése'},
+    {path: 'privacy-policy', component: PrivacyPolicyPageComponent, title: 'Adatvédelmi irányelvek'},
+    {path: 'delete-account', component: DeleteAccountComponent, title: 'Felhasználói fiók eltávolítása', canActivate: [loggedInGuard]},
     {path: '**', component: NotFoundComponent}
 ];

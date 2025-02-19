@@ -4,7 +4,7 @@ import {BehaviorSubject, Observable, of} from "rxjs";
 import {ProfileDataComparisonService} from "../../../service/profile-data-comparison/profile-data-comparison.service";
 import {UserGroup} from "../../../model/user_group.model";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
-import {TEXTS} from "../../../utils/app.text_messages";
+import {TEXTS} from "../../../text/app.text_messages";
 import {AbilityService} from "../../../service/ability/ability.service";
 import {Ability} from "../../../model/ability.model";
 import {UserFilter} from "../../../common/user-filter/user-filter.model";

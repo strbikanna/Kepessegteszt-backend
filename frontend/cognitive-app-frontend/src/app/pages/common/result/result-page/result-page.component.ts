@@ -8,7 +8,7 @@ import {MatPaginator, MatPaginatorIntl, PageEvent} from "@angular/material/pagin
 import {PaginatorTranslator} from "../../../../common/paginator/paginator-translator";
 import {SortElement} from "../../../../common/sort-control/sort-control.component";
 import {AdminService} from "../../../../service/admin/admin.service";
-import {TEXTS} from "../../../../utils/app.text_messages";
+import {TEXTS} from "../../../../text/app.text_messages";
 import {UserInfo} from "../../../../auth/userInfo";
 import {AuthUser} from "../../../../model/user-contacts.model";
 import {ActivatedRoute, Router} from "@angular/router";

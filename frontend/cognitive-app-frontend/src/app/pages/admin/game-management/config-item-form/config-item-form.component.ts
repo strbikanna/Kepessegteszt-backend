@@ -8,7 +8,7 @@ import {
     Validators
 } from "@angular/forms";
 import {ConfigItem} from "../../../../model/config_item.model";
-import {TEXTS} from "../../../../utils/app.text_messages";
+import {TEXTS} from "../../../../text/app.text_messages";
 
 @Component({
     selector: 'app-config-item-form',

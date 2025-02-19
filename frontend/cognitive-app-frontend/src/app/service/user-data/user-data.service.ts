@@ -43,4 +43,8 @@ export class UserDataService {
     updateUserDataAuthServer(user: AuthUser): Observable<AuthUser> {
         return this.http.put<AuthUser>(this.authServerUrl + this.path + `/personal_data/${user.username}`, user)
     }
+
+    deleteUserForever(): Observable<any> {
+        return this.http.delete(this.httpService.baseUrl + this.path + '/me')
+    }
 }
