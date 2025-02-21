@@ -101,6 +101,7 @@ export const TEXTS = {
             role_request: 'Igényelt szerpkörök',
             ok: 'OK',
         },
+        user_by_name_start: 'Felhasználók listázása név kezdőbetű szerint',
         update_success_message: 'A felhasználó adatai sikeresen frissítve lettek',
         update_error_message: 'A felhasználó adatainak frissítése sikertelen volt',
     },

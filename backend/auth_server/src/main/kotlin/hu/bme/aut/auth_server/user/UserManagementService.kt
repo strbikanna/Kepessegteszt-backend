@@ -96,6 +96,16 @@ class UserManagementService(
         return users.toList()
     }
 
+    fun getUsersWithoutContactByNameStartsWith(nameString: String, pageNumber: Int, pageSize: Int): List<UserDto> {
+        return userRepository
+            .findByFirstNameLikeOrLastNameLike(
+                "${nameString}%", "${nameString}%",
+                PageRequest.of(pageNumber, pageSize, Sort.by("firstName").and(Sort.by("lastName")))
+            )
+            .toList()
+            .map { entity -> convertUserDto(entity) }
+    }
+
     @Transactional
     fun getAllByUsernames(usernames: List<String>, roles: List<Role>?): List<UserDto> {
         val users: MutableSet<UserDto> = mutableSetOf()
