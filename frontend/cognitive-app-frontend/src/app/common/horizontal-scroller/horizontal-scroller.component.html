@@ -1,0 +1,15 @@
+<div class="flex align-items-center">
+    <button *ngIf="currentIndex > 0" mat-icon-button (click)="stepLeft()" class="coloredButton"> <mat-icon>arrow_left</mat-icon> </button>
+
+    <div class="buttons-container">
+        <button *ngFor="let item of visibleButtons" mat-flat-button (click)="selectItem(item)"
+                class="{{selectedItem === item ? 'm-2 filledButton' : 'm-2 borderedButton'}}"
+        >
+            {{ item }}
+        </button>
+    </div>
+
+    <button *ngIf="currentIndex + visibleItems < items.length" mat-icon-button (click)="stepRight()" class="coloredButton"> <mat-icon>arrow_right</mat-icon> </button>
+</div>
+
+
