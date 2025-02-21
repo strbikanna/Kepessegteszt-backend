@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query
 
 interface OrganizationRepository : JpaRepository<Organization, Int>{
 
+    @Query("SELECT o FROM Organization o WHERE o.name LIKE %:name% ORDER BY o.name ASC")
     fun findByNameLikeOrderByNameAsc(name: String): List<Organization>
 
     @Query("SELECT m FROM Organization o " +

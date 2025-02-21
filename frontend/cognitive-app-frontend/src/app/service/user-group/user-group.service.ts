@@ -5,6 +5,8 @@ import {map, Observable} from "rxjs";
 import {Group, Organization} from "../../model/user-group";
 import {Address, User} from "../../model/user.model";
 import {UserInfo} from "../../auth/userInfo";
+import {UserGroup} from "../../model/user_group.model";
+import {log} from "echarts/types/src/util/log";
 
 @Injectable({
     providedIn: 'root'
@@ -38,9 +40,9 @@ export class UserGroupService {
         );
     }
 
-    searchGroup(name: string): Observable<Group[]> {
-        return this.http.get<Group[]>(`${this.httpService.baseUrl}/user_group/search/group?name=${name}`).pipe(
-            map(groups => groups.map(this.convertGroup))
+    searchUserGroup(name: string): Observable<UserGroup[]> {
+        return this.http.get<Group[]>(`${this.httpService.baseUrl}/user_group/search/all?name=${name}`).pipe(
+            map(groups => groups.map(this.convertOrgOrGroup))
         );
     }
 

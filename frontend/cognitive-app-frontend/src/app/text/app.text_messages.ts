@@ -210,6 +210,8 @@ export const TEXTS = {
     },
     group_management: {
         title: 'Csoportok kezelése',
+        page_description: 'Megtekintheted és kezelheted szervezeteid csoportjait, beleértve a tagok hozzáadását vagy eltávolítását, csoport adminisztrátorok kijelölését és új csoportok létrehozását. \n' +
+            '    Válassz egy csoportot a bal oldali hierarchikus nézetből a részletek megtekintéséhez, és tekintsd meg az adatait vagy változtasd tagjait, adminisztrátorait. ',
         group_tree_title: 'Intézmények és Csoportok',
         select_group_tooltip: 'Csoport kiválasztása a részletek megtekintéséhez',
         members: 'Tagok',
@@ -218,6 +220,9 @@ export const TEXTS = {
         remove_member: 'Eltávolítás a csoportból',
         remove_admin: 'Admin jogok visszavonása',
         create_group: 'Csoport létrehozása',
+        search_group: 'Csoport keresése',
+        search_group_placeholder: 'Csoport neve',
+        group_details: 'Itt jelennek meg a kiválasztott csoport részletes adatai',
         group_name: 'Csoport neve',
         parent_group_name: 'Csoport ebben a csoportban: ',
         parent_organization_name: 'Csoport ebben az intézményben: ',

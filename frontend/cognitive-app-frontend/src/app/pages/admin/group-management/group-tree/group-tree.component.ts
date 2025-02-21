@@ -1,10 +1,11 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {UserGroupService} from "../../../../service/user-group/user-group.service";
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
 import {BehaviorSubject, Observable} from "rxjs";
 import {TEXTS} from "../../../../text/app.text_messages";
 import {Group} from "../../../../model/user-group";
+import {UserGroup} from "../../../../model/user_group.model";
 
 
 interface GroupNode {
@@ -22,7 +23,7 @@ interface GroupNode {
     templateUrl: './group-tree.component.html',
     styleUrls: ['./group-tree.component.scss']
 })
-export class GroupTreeComponent implements OnInit {
+export class GroupTreeComponent implements OnInit, OnChanges {
 
     treeData: GroupNode[] = [];
     dataLoading = false;
@@ -33,12 +34,25 @@ export class GroupTreeComponent implements OnInit {
     dataSource = new MatTreeNestedDataSource<GroupNode>();
 
     @Output() onGroupIdSelectedForDetails: EventEmitter<number> = new EventEmitter<number>();
+    @Input() groups?: UserGroup[];
 
     constructor(private groupService: UserGroupService) {
     }
 
     ngOnInit() {
         this.dataLoading = true;
+        this.loadGroups();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes['groups']) {
+            this.loadGroups();
+        }else{
+            this.initData()
+        }
+    }
+
+    initData(){
         this.groupService.getAllOrganizations().subscribe(orgs => {
             this.treeData = orgs
                 .sort((a, b) => a.name.localeCompare(b.name))
@@ -55,6 +69,27 @@ export class GroupTreeComponent implements OnInit {
             this.dataSource.data = this.treeData;
             this.dataLoading = false;
         });
+    }
+
+    loadGroups() {
+        if (!this.groups) {
+            this.initData();
+            return;
+        }
+        this.treeData = this.groups
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map(org => {
+                return {
+                    id: org.id,
+                    name: org.name,
+                    level: 1,
+                    loading: false,
+                    hasChild: true,
+                    children: new BehaviorSubject<GroupNode[]>([])
+                }
+            });
+        this.dataSource.data = this.treeData;
+        this.dataLoading = false;
     }
 
     getChildNodes(node: GroupNode): Observable<GroupNode[]> | undefined {
@@ -103,7 +138,7 @@ export class GroupTreeComponent implements OnInit {
     hasChild = (_: number, node: GroupNode) => node.hasChild;
 
     iterablesForLevel(level: number): number[] {
-        return Array.from({length: level-1}, (v, k) => k + 1);
+        return Array.from({length: level - 1}, (v, k) => k + 1);
     }
 
     private groupsToChildNodes(groups: Group[], nodeLevel: number) {
