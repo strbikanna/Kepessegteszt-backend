@@ -18,34 +18,34 @@
                 <div class="mb-3">
                     <label for="firstName" class="form-label">Vezetéknév</label>
                     <input type="text" class="form-control" id="firstName" th:field="*{firstName}"
-                           placeholder="Írd be a vezetékneved" required>
+                           placeholder="Írd be a vezetékneved" required onchange="toggleRegisterButton()">
                 </div>
                 <div class="mb-3">
                     <label for="lastName" class="form-label">Keresztnév</label>
                     <input type="text" class="form-control" id="lastName" th:field="*{lastName}"
-                           placeholder="Írd be a keresztneved" required>
+                           placeholder="Írd be a keresztneved" required onchange="toggleRegisterButton()">
                 </div>
                 <div class="mb-3">
                     <label for="username" class="form-label">Felhasználónév</label>
                     <input th:if="!*{error}==true" type="text" class="form-control" id="username" th:field="*{username}"
-                           placeholder="Válassz felhasználónevet" required>
+                           placeholder="Válassz felhasználónevet" required onchange="toggleRegisterButton()">
                     <input th:if="*{error}" type="text" class="form-control alert-danger" id="username-error"
-                           th:field="*{username}" placeholder="Válassz felhasználónevet" required>
+                           th:field="*{username}" placeholder="Válassz felhasználónevet" required onchange="toggleRegisterButton()">
                     <p th:if="*{error}" class="text-danger"> Egyedi felhasználónevet válassz!</p>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email-cím</label>
                     <input type="email" class="form-control" id="email" th:field="*{email}"
-                           placeholder="Add meg az email-címed" required>
+                           placeholder="Add meg az email-címed" required onchange="toggleRegisterButton()">
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Jelszó</label>
                     <input type="password" class="form-control" id="password" th:field="*{password}"
-                           placeholder="Használj erős jelszót" required>
+                           placeholder="Használj erős jelszót" required onchange="toggleRegisterButton()">
                 </div>
                 <div class="mb-3">
                     <label for="userType" class="form-label">Milyen fiókot szeretnél létrehozni?</label>
-                    <select class="form-select" id="userType" th:field="*{role}">
+                    <select class="form-select" id="userType" th:field="*{role}" onclick="toggleRegisterButton()">
                         <option value="student">Diák</option>
                         <option value="teacher">Tanár</option>
                         <option value="parent">Szülő</option>

@@ -21,22 +21,22 @@
                     <h5>Add meg a vezetékneved</h5>
                     <label for="firstName" class="form-label">Vezetéknév</label>
                     <input type="text" class="form-control" id="firstName" th:field="*{firstName}"
-                           placeholder="Írd be a vezetékneved" required>
+                           placeholder="Írd be a vezetékneved" required onchange="toggleRegisterButton()">
                 </div>
                 <div class="mb-3">
                     <h5>Add meg a keresztneved</h5>
                     <label for="lastName" class="form-label">Keresztnév</label>
                     <input type="text" class="form-control" id="lastName" th:field="*{lastName}"
-                           placeholder="Írd be a keresztneved" required>
+                           placeholder="Írd be a keresztneved" required onchange="toggleRegisterButton()">
                 </div>
                 <div class="mb-3">
                     <h5>Válassz felhasználónevet </h5>
                         <p>Ez lesz a kódneved, amivel azonosítani fogunk az űrkalandorok között.</p>
                     <label for="username" class="form-label">Felhasználónév</label>
                     <input th:if="!*{error}==true" type="text" class="form-control" id="username" th:field="*{username}"
-                           placeholder="Válassz felhasználónevet" required>
+                           placeholder="Válassz felhasználónevet" required onchange="toggleRegisterButton()">
                     <input th:if="*{error}" type="text" class="form-control alert-danger" id="username-error"
-                           th:field="*{username}" placeholder="Válassz felhasználónevet" required>
+                           th:field="*{username}" placeholder="Válassz felhasználónevet" required onchange="toggleRegisterButton()">
                     <p th:if="*{error}" class="text-danger">Ez a név már foglalt. Találj ki egy másikat!</p>
                 </div>
                 <div class="mb-3">
@@ -44,13 +44,13 @@
                     <p>Ezzel tudjuk megerősíteni a regisztrációt.</p>
                     <label for="email" class="form-label">Email-cím</label>
                     <input type="email" class="form-control" id="email" th:field="*{email}"
-                           placeholder="Add meg az email-címed" required>
+                           placeholder="Add meg az email-címed" required onchange="toggleRegisterButton()">
                 </div>
                 <div class="mb-3">
                     <h5>És végül, válassz egy erős jelszót, amit csak te tudsz!</h5>
                     <label for="password" class="form-label">Jelszó</label>
                     <input type="password" class="form-control" id="password" th:field="*{password}"
-                           placeholder="Használj erős jelszót" required>
+                           placeholder="Használj erős jelszót" required onchange="toggleRegisterButton()">
                 </div>
                 <div class="mb-3">
                     <input class="form-check-input" type="checkbox" id="privacyPolicy" onclick="toggleRegisterButton()" required>
