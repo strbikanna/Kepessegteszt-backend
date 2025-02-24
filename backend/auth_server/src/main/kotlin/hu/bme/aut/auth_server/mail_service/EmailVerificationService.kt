@@ -61,4 +61,8 @@ class EmailVerificationService(
         emailRepository.save(verification)
         return verification
     }
+
+    fun removeVerificationEntity(verificationKey: String) {
+        emailRepository.deleteByVerificationKey(verificationKey)
+    }
 }

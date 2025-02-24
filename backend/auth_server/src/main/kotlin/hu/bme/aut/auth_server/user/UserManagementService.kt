@@ -76,22 +76,41 @@ class UserManagementService(
     }
 
     fun getUsersWithoutContact(pageNumber: Int, pageSize: Int, roles: List<Role>?): List<UserDto> {
-        val users : MutableSet<UserDto> = mutableSetOf()
-        if(roles.isNullOrEmpty()) return userRepository.findAll(PageRequest.of(pageNumber, pageSize, defaultSortOfUsers)).content.map { convertUserDto(it) }
+        val users: MutableSet<UserDto> = mutableSetOf()
+        if (roles.isNullOrEmpty()) return userRepository.findAll(
+            PageRequest.of(
+                pageNumber,
+                pageSize,
+                defaultSortOfUsers
+            )
+        ).content.map { convertUserDto(it) }
         roles.forEach { role ->
             users.addAll(
-                userRepository.findByRolesContaining(PageRequest.of(pageNumber, pageSize, defaultSortOfUsers), RoleEntity(role),).content
+                userRepository.findByRolesContaining(
+                    PageRequest.of(pageNumber, pageSize, defaultSortOfUsers),
+                    RoleEntity(role),
+                ).content
                     .map { convertUserDto(it) }
             )
         }
         return users.toList()
     }
 
+    fun getUsersWithoutContactByNameStartsWith(nameString: String, pageNumber: Int, pageSize: Int): List<UserDto> {
+        return userRepository
+            .findByFirstNameLikeOrLastNameLike(
+                "${nameString}%", "${nameString}%",
+                PageRequest.of(pageNumber, pageSize, Sort.by("firstName").and(Sort.by("lastName")))
+            )
+            .toList()
+            .map { entity -> convertUserDto(entity) }
+    }
+
     @Transactional
     fun getAllByUsernames(usernames: List<String>, roles: List<Role>?): List<UserDto> {
         val users: MutableSet<UserDto> = mutableSetOf()
-        if(roles.isNullOrEmpty()) return userRepository.findByUsernameIn(usernames).map { convertUserDto(it) }
-        roles.forEach {  role ->
+        if (roles.isNullOrEmpty()) return userRepository.findByUsernameIn(usernames).map { convertUserDto(it) }
+        roles.forEach { role ->
             users.addAll(
                 userRepository.findByUsernameInAndRolesContaining(usernames, RoleEntity(role))
                     .map { convertUserDto(it) }
@@ -180,7 +199,14 @@ class UserManagementService(
     fun removeUser(username: String) {
         val userEntity = userRepository.findByUsername(username).orElseThrow()
         updateContactBothSide(userEntity, listOf())
-        userRepository.delete(userEntity)
+        userEntity.roles.clear()
+        userRepository.save(userEntity)
+        try {
+            userRepository.delete(userEntity)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
     }
 
 

@@ -50,6 +50,14 @@ export class AdminService {
             );
     }
 
+    getAllByNameStartsWith(name: string): Observable<AuthUser[]> {
+        let params = new HttpParams().set('nameStartsWith', name);
+        return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/user/all/nameStartsWith`, {params: params})
+            .pipe(
+                retry(3)
+            );
+    }
+
     getAllByUsernames(usernames: string[]): Observable<AuthUser[]> {
         let params = new HttpParams().set('usernames', usernames.join(','));
         return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/user/all`, {params: params})

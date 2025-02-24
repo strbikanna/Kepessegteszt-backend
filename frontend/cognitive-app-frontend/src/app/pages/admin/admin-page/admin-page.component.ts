@@ -24,6 +24,7 @@ export class AdminPageComponent implements OnInit {
     lastPageEvent: PageEvent | undefined = undefined;
 
     text = TEXTS.admin_page;
+    nameStartLetters = ['A', 'Á', 'B', 'C', 'Cs', 'D', 'E', 'É', 'F',  'G', 'Gy', 'H', 'I', 'Í', 'J', 'K', 'L', 'M', 'N', 'Ny', 'O', 'Ó', 'Ö', 'Ő', 'P', 'Q', 'R', 'S', 'Sz', 'T', 'Ty', 'U', 'Ú', 'Ü', 'Ű', 'V', 'W', 'X', 'Y', 'Z', 'Zs'];
 
     users: Observable<AuthUser[]> = new Observable<AuthUser[]>();
 
@@ -42,6 +43,10 @@ export class AdminPageComponent implements OnInit {
      * Init paged user data
      */
     ngOnInit(): void {
+        this.initUsers()
+    }
+
+    initUsers(): void {
         this.users = this.service.getAllUsers(0, 10);
         this.service.getNumberOfUsers().subscribe(numberOfUsers => {
             this.dataLength = numberOfUsers;
@@ -131,6 +136,11 @@ export class AdminPageComponent implements OnInit {
     }
     onContactDeleted(contact: AuthUser){
         this.userToEdit?.contacts?.splice(this.userToEdit?.contacts?.indexOf(contact), 1);
+    }
+
+    searchByNameStartsWith(name: string){
+        this.users = this.service.getAllByNameStartsWith(name)
+
     }
     private showSuccessSnackbar() {
         this._snackbar.open(this.text.update_success_message, this.text.actions.ok,{duration: 5 * 1000} )

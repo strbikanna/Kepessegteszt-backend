@@ -50,6 +50,17 @@ class UserManagementController(
         return userService.getUsersWithoutContact(pageNumber, pageSize, null)
     }
 
+    @GetMapping("/all/nameStartsWith")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
+    fun getAllByNameStartsWith(
+        @RequestParam pageNumber: Int = 0,
+        @RequestParam pageSize: Int = 100,
+        @RequestParam nameStartsWith: String,
+    ): List<UserDto> {
+        return userService.getUsersWithoutContactByNameStartsWith(nameStartsWith, pageNumber, pageSize)
+    }
+
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")

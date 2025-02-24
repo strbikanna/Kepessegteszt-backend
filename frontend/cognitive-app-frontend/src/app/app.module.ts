@@ -91,6 +91,7 @@ import { TimestampPipe } from './utils/timestamp.pipe';
 import { PrivacyPolicyPageComponent } from './general/privacy-policy-page/privacy-policy-page.component';
 import { FooterComponent } from './general/footer/footer.component';
 import { DeleteAccountComponent } from './pages/common/delete-account/delete-account.component';
+import { HorizontalScrollerComponent } from './pages/admin/admin-page/horizontal-scroller/horizontal-scroller.component';
 
 @NgModule({
     declarations: [
@@ -144,7 +145,8 @@ import { DeleteAccountComponent } from './pages/common/delete-account/delete-acc
         TimestampPipe,
         PrivacyPolicyPageComponent,
         FooterComponent,
-        DeleteAccountComponent
+        DeleteAccountComponent,
+        HorizontalScrollerComponent
     ],
     imports: [
         BrowserModule,

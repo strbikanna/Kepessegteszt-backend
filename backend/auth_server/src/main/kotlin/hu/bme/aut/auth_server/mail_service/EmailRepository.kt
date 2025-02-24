@@ -5,4 +5,5 @@ import java.util.*
 
 interface EmailRepository : CrudRepository<EmailVerificationEntity, Int> {
     fun findByVerificationKey(key: String): Optional<EmailVerificationEntity>
+    fun deleteByVerificationKey(verificationKey: String)
 }
