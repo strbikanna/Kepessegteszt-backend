@@ -10,4 +10,7 @@ export const text_home = {
     description_scientist: 'Feltölthetsz játékokat a rendszerbe, amelyeket a diákok játszhatnak. Láthatod diákjaid minden játékmenetének részletes eredményét, megnézheted, hogy ezek alapján milyen képességekkel rendelkeznek, és az előrehaladásuk is idővel látszani fog.',
     description_admin: 'Tekintsd meg az összes felhasználó adatait, engedélyeit és a játékok teljes listáját!',
     login: 'Jelentkezz be a játékok eléréséhez!',
+    about: 'A Coglica Webappban megtekintheted a hozzád kapcsolódó adatokat. A részletes játékeredményeidet nyomon követheted, megnézheted az aktuális kognitív képesség értékeidet és a kognitív profilodról készült statisztikákat.',
+    feature_intro: 'A Coglica Appban mindez lehetséges',
+    featureList: ['Kognitív profil összeállítása', 'Kognitív profil elemzés', 'Automatikus és adaptív játékkonfigurációk', 'Folyamatos kihívások és fejlődési lehetőség', 'Játékeredmények visszakövetése és kiértékelése', 'Eredmények összehasonlítása más játékosokéval']
 }

@@ -92,6 +92,7 @@ import { PrivacyPolicyPageComponent } from './general/privacy-policy-page/privac
 import { FooterComponent } from './general/footer/footer.component';
 import { DeleteAccountComponent } from './pages/common/delete-account/delete-account.component';
 import { HorizontalScrollerComponent } from './pages/admin/admin-page/horizontal-scroller/horizontal-scroller.component';
+import { FeatureDescriptionComponent } from './general/feature-description/feature-description.component';
 
 @NgModule({
     declarations: [
@@ -146,7 +147,8 @@ import { HorizontalScrollerComponent } from './pages/admin/admin-page/horizontal
         PrivacyPolicyPageComponent,
         FooterComponent,
         DeleteAccountComponent,
-        HorizontalScrollerComponent
+        HorizontalScrollerComponent,
+        FeatureDescriptionComponent
     ],
     imports: [
         BrowserModule,
