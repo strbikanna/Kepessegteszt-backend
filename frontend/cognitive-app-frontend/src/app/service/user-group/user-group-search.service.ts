@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {SimpleHttpService} from "../../utils/simple-http.service";
 import {map, Observable} from "rxjs";
-import {User} from "../../model/user.model";
-import {UserGroup} from "../../model/user_group.model";
+import {User} from "../../model/user/user.model";
+import {UserGroup} from "../../model/user/user_group.model";
 
 @Injectable({
   providedIn: 'root'

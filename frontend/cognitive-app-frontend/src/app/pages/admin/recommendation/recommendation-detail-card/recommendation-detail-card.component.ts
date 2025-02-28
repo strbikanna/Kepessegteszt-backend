@@ -5,7 +5,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {
   AddUserToGroupDialogComponent
 } from "../../group-management/add-user-to-group-dialog/add-user-to-group-dialog.component";
-import {User} from "../../../../model/user.model";
+import {User} from "../../../../model/user/user.model";
 import {ConfirmDialogComponent} from "../../../../common/confirm-dialog/confirm-dialog.component";
 
 @Component({

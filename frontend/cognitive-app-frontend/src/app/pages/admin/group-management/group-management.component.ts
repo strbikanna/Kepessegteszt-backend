@@ -1,17 +1,17 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {Group, Organization} from "../../../model/user-group";
+import {Group, Organization} from "../../../model/user/user-group";
 import {TEXTS} from "../../../text/app.text_messages";
 import {UserGroupService} from "../../../service/user-group/user-group.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Location} from "@angular/common";
-import {Address, User} from "../../../model/user.model";
+import {Address, User} from "../../../model/user/user.model";
 import {Observable, of} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {AddUserToGroupDialogComponent} from "./add-user-to-group-dialog/add-user-to-group-dialog.component";
 import {CreateGroupDialogComponent} from "./create-group-dialog/create-group-dialog.component";
 import {CreateOrgDialogComponent} from "./create-org-dialog/create-org-dialog.component";
 import {UserInfo} from "../../../auth/userInfo";
-import {UserGroup} from "../../../model/user_group.model";
+import {UserGroup} from "../../../model/user/user_group.model";
 import {FormControl} from "@angular/forms";
 import {log} from "echarts/types/src/util/log";
 

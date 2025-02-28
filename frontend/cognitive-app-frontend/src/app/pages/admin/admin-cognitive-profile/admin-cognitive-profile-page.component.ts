@@ -4,10 +4,10 @@ import {CognitiveProfileService} from "../../../service/cognitive-profile/cognit
 import {CognitiveProfile} from "../../../model/cognitive_profile.model";
 import {DateRange} from "../../../common/date-picker/date-picker.component";
 import {TEXTS} from "../../../text/app.text_messages";
-import {User} from "../../../model/user.model";
+import {User} from "../../../model/user/user.model";
 import {BehaviorSubject} from "rxjs";
 import {Location} from "@angular/common";
-import {ProfileDescription} from "../../../model/ProfileDescription";
+import {ProfileDescription} from "../../../model/profile/profile_description";
 import {UserInfo} from "../../../auth/userInfo";
 
 @Component({

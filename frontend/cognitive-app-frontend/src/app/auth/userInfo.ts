@@ -1,7 +1,7 @@
 import {BehaviorSubject} from "rxjs";
-import {User} from "../model/user.model";
+import {User} from "../model/user/user.model";
 import {Role} from "../utils/constants";
-import {AuthUser} from "../model/user-contacts.model";
+import {AuthUser} from "../model/user/user-contacts.model";
 
 /**
  * Global class to spread current user info and authentication data.

@@ -1,5 +1,6 @@
 import {text_home} from "./app.text_home";
 import {cognitive_profile_text} from "./app.text_cognitive_profile";
+import {register_user} from "./app.text_register_user";
 
 /**
  * Texts displayed in application components.
@@ -15,6 +16,7 @@ export const TEXTS = {
         cognitive_profile: 'Kognitív profil',
         profile_comparison: 'Kognitív profil elemzés',
         user_management: 'Felhasználók kezelése',
+        user_registration: 'Felhasználók regisztrálása',
         game_management: 'Játékok kezelése',
         group_management: 'Intézmények és csoportok kezelése',
         result_management: 'Eredmények',
@@ -84,6 +86,7 @@ export const TEXTS = {
         nextPage: 'Következő oldal',
         previousPage: 'Előző oldal',
     },
+    register_user_page: register_user,
     admin_page: {
         user_data: {
             first_name: 'Keresztnév',

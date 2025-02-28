@@ -66,6 +66,13 @@ export class HeaderComponent implements OnInit{
     canSeeAdminCognitiveProfileCompare(){
         return this.canSeeAdminCognitiveProfile()
     }
+    canSeeUserRegistration(){
+        return UserInfo.currentUser?.roles.find(role =>
+            role.toUpperCase() === Role.TEACHER ||
+            role.toUpperCase() === Role.ADMIN ||
+            role.toUpperCase() === Role.SCIENTIST ||
+            role.toUpperCase() === Role.PARENT) && this.loginStatus
+    }
     canSeeUserManagement(){
         return UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.ADMIN) && this.loginStatus
     }
