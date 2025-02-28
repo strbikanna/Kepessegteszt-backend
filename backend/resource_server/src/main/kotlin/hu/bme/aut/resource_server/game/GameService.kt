@@ -2,6 +2,9 @@ package hu.bme.aut.resource_server.game
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.game.game_config.isSame
+import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
+import hu.bme.aut.resource_server.recommended_game.RecommenderService
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.PageRequest
@@ -12,7 +15,10 @@ import java.util.*
 
 @Service
 class GameService (
-    @Autowired private var gameRepository: GameRepository) {
+    @Autowired private var gameRepository: GameRepository,
+    @Autowired private var recommendedGameRepository: RecommendedGameRepository,
+    @Autowired private var recommenderService: RecommenderService
+) {
 
     @Value("\${app.thumbnail-location}")
     private lateinit var thumbnailLocation: String
@@ -55,17 +61,21 @@ class GameService (
      * If the url or the configDescription is different, then the old game is set to inactive and a new game is created
      * with higher version number.
      */
+    @Transactional
     fun updateGame(updatedGame: GameEntity): GameEntity {
         val oldGame = gameRepository.findById(updatedGame.id!!).orElseThrow()
         if(!sameConfigDescription(oldGame, updatedGame)) {
             oldGame.active = false
             gameRepository.save(oldGame)
+            deleteNotCompletedRecommendationsToGame(oldGame)
 
-            val newVersionedGame = copyGame(updatedGame).copy(
+            var newVersionedGame = copyGame(updatedGame).copy(
                 id = null,
                 version = oldGame.version + 1
             )
-            return gameRepository.save(newVersionedGame)
+            newVersionedGame = gameRepository.save(newVersionedGame)
+            recommenderService.createDefaultRecommendationsForGame(newVersionedGame.id!!)
+            return newVersionedGame
         } else {
             updatedGame.version = oldGame.version + 1
             return gameRepository.save(updatedGame)
@@ -119,6 +129,10 @@ class GameService (
             }
         }
         return true
+    }
+
+    private fun deleteNotCompletedRecommendationsToGame(game: GameEntity) {
+        recommendedGameRepository.deleteByGameAndCompletedIsFalse(game)
     }
 
 }

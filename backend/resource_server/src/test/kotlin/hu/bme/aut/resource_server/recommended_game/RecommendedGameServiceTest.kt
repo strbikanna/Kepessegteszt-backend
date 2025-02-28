@@ -65,6 +65,7 @@ class RecommendedGameServiceTest(
             createRecommendedGame().copy(
                 game = game3,
                 timestamp =  LocalDateTime.of(2024, 9, 1, 0, 0),
+                completed = false
             ),
             createRecommendedGame().copy(
                 game = game4,
@@ -75,7 +76,7 @@ class RecommendedGameServiceTest(
         val nextChoice = recommendedGameService.getNextChoiceForUser(user.username)
         assertEquals(2, nextChoice.size)
         assertTrue(nextChoice.any { it.gameId == game1.id })
-        assertTrue(nextChoice.any { it.gameId == game2.id })
+        assertTrue(nextChoice.any { it.gameId == game3.id })
     }
 
     private fun createRecommendedGame(): RecommendedGameEntity{
