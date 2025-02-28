@@ -196,6 +196,14 @@ class UserManagementService(
     }
 
     @Transactional
+    fun addContact(username: String, contactUsername: String) {
+        val userEntity = userRepository.findByUsername(username).orElseThrow()
+        val contactEntity = userRepository.findByUsername(contactUsername).orElseThrow()
+        userEntity.contacts.add(contactEntity)
+        userRepository.save(userEntity)
+    }
+
+    @Transactional
     fun removeUser(username: String) {
         val userEntity = userRepository.findByUsername(username).orElseThrow()
         updateContactBothSide(userEntity, listOf())
