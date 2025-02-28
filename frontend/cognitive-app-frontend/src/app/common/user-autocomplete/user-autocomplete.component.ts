@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TEXTS} from "../../text/app.text_messages";
-import {AuthUser} from "../../model/user-contacts.model";
+import {AuthUser} from "../../model/user/user-contacts.model";
 import {FormControl} from "@angular/forms";
 import {AdminService} from "../../service/admin/admin.service";
 

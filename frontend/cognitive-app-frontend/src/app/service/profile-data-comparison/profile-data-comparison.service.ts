@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {SimpleHttpService} from "../../utils/simple-http.service";
 import {filter, map, Observable, retry} from "rxjs";
-import {ProfileData} from "../../model/profile_data.model";
+import {ProfileData} from "../../model/profile/profile_data.model";
 import {Ability, AbilityType} from "../../model/ability.model";
-import {UserGroup} from "../../model/user_group.model";
+import {UserGroup} from "../../model/user/user_group.model";
 import {UserFilter} from "../../common/user-filter/user-filter.model";
-import {ProfileStatistics} from "../../model/profile-statistics.model";
-import {ProfileDescription} from "../../model/ProfileDescription";
+import {ProfileStatistics} from "../../model/profile/profile-statistics.model";
+import {ProfileDescription} from "../../model/profile/profile_description";
 import {TEXTS} from "../../text/app.text_messages";
 
 @Injectable({

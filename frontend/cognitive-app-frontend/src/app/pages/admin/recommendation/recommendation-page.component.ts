@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {User} from "../../../model/user.model";
+import {User} from "../../../model/user/user.model";
 import {Game} from "../../../model/game.model";
 import {RecommendationService} from "../../../service/recommendation/recommendation.service";
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
@@ -7,7 +7,7 @@ import {ConfigItem} from "../../../model/config_item.model";
 import {TEXTS} from "../../../text/app.text_messages";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Recommendation} from "../../../model/recommendation.model";
-import {AuthUser} from "../../../model/user-contacts.model";
+import {AuthUser} from "../../../model/user/user-contacts.model";
 import {Observable} from "rxjs";
 import {RecommendedGame} from "../../../model/recommended_game.model";
 import {Router} from "@angular/router";

@@ -4,8 +4,8 @@ import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
 import {BehaviorSubject, Observable} from "rxjs";
 import {TEXTS} from "../../../../text/app.text_messages";
-import {Group} from "../../../../model/user-group";
-import {UserGroup} from "../../../../model/user_group.model";
+import {Group} from "../../../../model/user/user-group";
+import {UserGroup} from "../../../../model/user/user_group.model";
 
 
 interface GroupNode {

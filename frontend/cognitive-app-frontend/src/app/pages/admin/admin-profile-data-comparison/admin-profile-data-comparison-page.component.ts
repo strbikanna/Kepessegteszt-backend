@@ -5,14 +5,14 @@ import {
 import {ProfileDataComparisonService} from "../../../service/profile-data-comparison/profile-data-comparison.service";
 import {FormBuilder} from "@angular/forms";
 import {AbilityService} from "../../../service/ability/ability.service";
-import {User} from "../../../model/user.model";
+import {User} from "../../../model/user/user.model";
 import {TEXTS} from "../../../text/app.text_messages";
-import {ProfileStatistics} from "../../../model/profile-statistics.model";
+import {ProfileStatistics} from "../../../model/profile/profile-statistics.model";
 import {BehaviorSubject, map, Observable} from "rxjs";
 import {CandlestickChartDataModel} from "../../../charts/candlestick-chart/candlestick-chart-data.model";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Location} from "@angular/common";
-import {ProfileDescription} from "../../../model/ProfileDescription";
+import {ProfileDescription} from "../../../model/profile/profile_description";
 import {imagePaths} from "../../../utils/app.image_resources";
 import {UserInfo} from "../../../auth/userInfo";
 

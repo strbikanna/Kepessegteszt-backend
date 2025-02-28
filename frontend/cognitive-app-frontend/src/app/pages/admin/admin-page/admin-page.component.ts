@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AdminService} from "../../../service/admin/admin.service";
 import {map, Observable} from "rxjs";
-import {AuthUser} from "../../../model/user-contacts.model";
+import {AuthUser} from "../../../model/user/user-contacts.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatPaginatorIntl, PageEvent} from "@angular/material/paginator";
 import {Role} from "../../../utils/constants";

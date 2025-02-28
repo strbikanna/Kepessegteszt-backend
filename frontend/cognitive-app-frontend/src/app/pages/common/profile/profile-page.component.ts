@@ -1,8 +1,8 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {UserInfo} from "../../../auth/userInfo";
-import {User} from "../../../model/user.model";
+import {User} from "../../../model/user/user.model";
 import {TEXTS} from "../../../text/app.text_messages";
-import {AuthUser} from "../../../model/user-contacts.model";
+import {AuthUser} from "../../../model/user/user-contacts.model";
 import {UserDataService} from "../../../service/user-data/user-data.service";
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
