@@ -1,0 +1,36 @@
+<h1>{{text.title}}</h1>
+<p class="description">{{text.description}}</p>
+<div class="flex justify-content-evenly">
+    <div>
+        <h3>{{text.float_abilities_list}}</h3>
+        <app-editable-ability-card *ngFor="let ability of floatAbilityList" [ability]="ability" (onUpdate)="updateAbility($event)"/>
+
+    </div>
+    <div>
+        <h3>{{text.enum_abilities_list}}</h3>
+        <app-editable-ability-card *ngFor="let ability of enumAbilityList" [ability]="ability" (onUpdate)="updateAbility($event)"/>
+    </div>
+</div>
+<div>
+    <h3>{{text.add}}</h3>
+    <form [formGroup]="newAbilityForm">
+        <mat-form-field>
+            <input matInput placeholder="{{text.ability_name}}" formControlName="name">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="{{text.ability_code}}" formControlName="code">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="{{text.ability_description}}" formControlName="description">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>{{text.ability_type}}</mat-label>
+            <mat-select formControlName="type">
+                <mat-option *ngFor="let type of [AbilityType.FLOAT, AbilityType.ENUM]" [value]="type">
+                    {{type === AbilityType.FLOAT ? text.ability_type_float : text.ability_type_enum}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="addAbility()">{{text.save}}</button>
+    </form>
+</div>

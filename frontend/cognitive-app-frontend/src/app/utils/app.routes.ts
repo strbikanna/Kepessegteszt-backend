@@ -22,10 +22,12 @@ import {GroupManagementComponent} from "../pages/admin/group-management/group-ma
 import {PrivacyPolicyPageComponent} from "../general/privacy-policy-page/privacy-policy-page.component";
 import {DeleteAccountComponent} from "../pages/common/delete-account/delete-account.component";
 import {UserRegisterComponent} from "../pages/admin/user-register/user-register.component";
+import {AbilityPageComponent} from "../pages/admin/ability-page/ability-page.component";
 
 
 export const appRoutes: Routes = [
     {path: 'admin', component: AdminPageComponent, canActivate: [adminAuthGuard], title: 'Felhasználók kezelése'},
+    {path: 'ability', component: AbilityPageComponent, canActivate: [adminAuthGuard], title: 'Kognitív képességek'},
     {path: 'game-management', component: GameManagementPageComponent, canActivate: [gameManagementGuard], title: 'Játékok kezelése'},
     {path: 'edit-game/:id', component: EditGameFormComponent, canActivate: [gameManagementGuard], title: 'Játék szerkesztése'},
     {path: 'edit-game', component: EditGameFormComponent, canActivate: [gameManagementGuard], title: 'Játék szerkesztése'},

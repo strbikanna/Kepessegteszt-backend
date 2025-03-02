@@ -93,6 +93,8 @@ import { FooterComponent } from './general/footer/footer.component';
 import { DeleteAccountComponent } from './pages/common/delete-account/delete-account.component';
 import { HorizontalScrollerComponent } from './pages/admin/admin-page/horizontal-scroller/horizontal-scroller.component';
 import { UserRegisterComponent } from './pages/admin/user-register/user-register.component';
+import { AbilityPageComponent } from './pages/admin/ability-page/ability-page.component';
+import { EditableAbilityCardComponent } from './pages/admin/ability-page/editable-ability-card/editable-ability-card.component';
 
 @NgModule({
     declarations: [
@@ -148,7 +150,9 @@ import { UserRegisterComponent } from './pages/admin/user-register/user-register
         FooterComponent,
         DeleteAccountComponent,
         HorizontalScrollerComponent,
-        UserRegisterComponent
+        UserRegisterComponent,
+        AbilityPageComponent,
+        EditableAbilityCardComponent
     ],
     imports: [
         BrowserModule,
