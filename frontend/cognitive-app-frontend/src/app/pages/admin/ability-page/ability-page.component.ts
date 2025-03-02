@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {TEXTS} from "../../../text/app.text_messages";
 import {AbilityService} from "../../../service/ability/ability.service";
 import {Ability, AbilityType} from "../../../model/ability.model";
-import {Observable} from "rxjs";
 import {FormBuilder, Validators} from "@angular/forms";
 
 @Component({
@@ -17,13 +16,6 @@ export class AbilityPageComponent implements  OnInit{
 
     constructor(private service: AbilityService, private fb: FormBuilder) {
     }
-
-    toUpdateAbility: Ability | undefined;
-    updateAbilityForm = this.fb.group({
-        code: [''],
-        name: [''],
-        description: [''],
-    });
 
     newAbilityForm = this.fb.group({
         code: ['', Validators.required],
@@ -42,11 +34,6 @@ export class AbilityPageComponent implements  OnInit{
             this.floatAbilityList = abilities.filter(a => a.type === AbilityType.FLOAT);
             this.enumAbilityList = abilities.filter(a => a.type === AbilityType.ENUM);
         });
-    }
-
-    setUpdateAbility(ability: Ability){
-        this.updateAbilityForm.setValue(ability);
-        this.toUpdateAbility = ability;
     }
 
     updateAbility(updatedAbility: Ability){
