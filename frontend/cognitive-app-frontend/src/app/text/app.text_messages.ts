@@ -17,6 +17,7 @@ export const TEXTS = {
         cognitive_profile: 'Kognitív profil',
         profile_comparison: 'Kognitív profil elemzés',
         user_management: 'Felhasználók kezelése',
+        ability_management: 'Kognitív képességek kezelése',
         user_registration: 'Felhasználók regisztrálása',
         game_management: 'Játékok kezelése',
         group_management: 'Intézmények és csoportok kezelése',
