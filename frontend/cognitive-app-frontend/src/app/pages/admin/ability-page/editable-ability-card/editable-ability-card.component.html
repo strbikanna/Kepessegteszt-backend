@@ -1,0 +1,35 @@
+<mat-card *ngIf="!isUpdateMode">
+    <mat-card-header>
+        <mat-card-title>{{ ability.name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <p>{{ text.ability_code }}: {{ ability.code }}</p>
+        <p>{{ text.ability_description }}: {{ ability.description }}</p>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="setUpdateMode(true)">{{ text.edit }}</button>
+    </mat-card-actions>
+</mat-card>
+
+<mat-card *ngIf="isUpdateMode">
+    <mat-card-header>
+        <mat-card-title>{{ text.edit }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <form [formGroup]="updateAbilityForm">
+            <mat-form-field>
+                <input matInput placeholder="{{text.ability_name}}" formControlName="name">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="{{text.ability_code}}" formControlName="code">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="{{text.ability_description}}" formControlName="description">
+            </mat-form-field>
+        </form>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button color="warn" (click)="setUpdateMode(false)">{{ text.cancel }}</button>
+        <button mat-raised-button color="primary" (click)="updateAbility()">{{ text.save }}</button>
+    </mat-card-actions>
+</mat-card>
