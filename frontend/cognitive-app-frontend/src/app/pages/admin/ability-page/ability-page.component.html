@@ -1,36 +1,49 @@
-<h1>{{text.title}}</h1>
-<p class="description">{{text.description}}</p>
+<h1>{{ text.title }}</h1>
+<p class="description">{{ text.description }}</p>
 <div class="flex justify-content-evenly">
-    <div>
-        <h3>{{text.float_abilities_list}}</h3>
-        <app-editable-ability-card *ngFor="let ability of floatAbilityList" [ability]="ability" (onUpdate)="updateAbility($event)"/>
-
+    <div class="w-5">
+        <h3>{{ text.float_abilities_list }}</h3>
+        <div class="mb-2" *ngFor="let ability of floatAbilityList">
+            <app-editable-ability-card [ability]="ability" (onUpdate)="updateAbility($event)"/>
+        </div>
     </div>
-    <div>
-        <h3>{{text.enum_abilities_list}}</h3>
-        <app-editable-ability-card *ngFor="let ability of enumAbilityList" [ability]="ability" (onUpdate)="updateAbility($event)"/>
+    <div class="w-5">
+        <h3>{{ text.enum_abilities_list }}</h3>
+        <div class="mb-2" *ngFor="let ability of enumAbilityList">
+            <app-editable-ability-card [ability]="ability" (onUpdate)="updateAbility($event)"/>
+        </div>
     </div>
 </div>
-<div>
-    <h3>{{text.add}}</h3>
+<mat-divider class="my-4"/>
+<div class="mt-3 mb-4">
+    <h3>{{ text.add }}</h3>
     <form [formGroup]="newAbilityForm">
-        <mat-form-field>
-            <input matInput placeholder="{{text.ability_name}}" formControlName="name">
-        </mat-form-field>
-        <mat-form-field>
-            <input matInput placeholder="{{text.ability_code}}" formControlName="code">
-        </mat-form-field>
-        <mat-form-field>
-            <input matInput placeholder="{{text.ability_description}}" formControlName="description">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>{{text.ability_type}}</mat-label>
-            <mat-select formControlName="type">
-                <mat-option *ngFor="let type of [AbilityType.FLOAT, AbilityType.ENUM]" [value]="type">
-                    {{type === AbilityType.FLOAT ? text.ability_type_float : text.ability_type_enum}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-        <button mat-raised-button color="primary" (click)="addAbility()">{{text.save}}</button>
+        <div class="flex align-items-center">
+            <mat-form-field class="mr-3 w-3">
+                <mat-label>{{ text.ability_name }}</mat-label>
+                <input matInput formControlName="name">
+            </mat-form-field>
+            <mat-form-field class="mr-3 w-3">
+                <mat-label>{{ text.ability_code }}</mat-label>
+                <input matInput formControlName="code">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ text.ability_type }}</mat-label>
+                <mat-select formControlName="type">
+                    <mat-option *ngFor="let type of [AbilityType.FLOAT, AbilityType.ENUM]" [value]="type">
+                        {{ type === AbilityType.FLOAT ? text.ability_type_float : text.ability_type_enum }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="lg:w-6 sm:w-12">
+                <mat-label>{{ text.ability_description }}</mat-label>
+                <textarea matInput formControlName="description"> </textarea>
+            </mat-form-field>
+        </div>
+        <div class="flex justify-content-end lg:w-7 sm:w-11">
+            <button mat-raised-button color="primary" (click)="addAbility()">{{ text.save }}</button>
+        </div>
     </form>
 </div>

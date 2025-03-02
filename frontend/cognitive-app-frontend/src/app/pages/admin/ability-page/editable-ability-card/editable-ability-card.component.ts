@@ -26,6 +26,10 @@ export class EditableAbilityCardComponent {
 
     setUpdateMode(mode: boolean) {
         this.isUpdateMode = mode;
+        this.updateAbilityForm.setValue({
+            name: this.ability.name,
+            description: this.ability.description,
+        });
     }
 
     updateAbility() {
