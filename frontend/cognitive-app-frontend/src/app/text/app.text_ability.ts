@@ -14,6 +14,6 @@ export const abilityPage = {
     ability_type_enum: "Diszkrét",
     edit: "Szerkesztés",
     add: "Új képesség hozzáadása",
-    save: "Hozzáadás",
+    save: "Mentés",
     cancel: "Mégsem",
 }
