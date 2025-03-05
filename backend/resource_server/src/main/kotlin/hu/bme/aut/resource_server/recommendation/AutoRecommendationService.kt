@@ -1,14 +1,10 @@
 package hu.bme.aut.resource_server.recommendation
 
-import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
 import hu.bme.aut.resource_server.profile_calculation.calculator.AbilityRateCalculatorService
-import hu.bme.aut.resource_server.profile_calculation.calculator.ScoreCalculator
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
-import hu.bme.aut.resource_server.profile_calculation.error.CalculationException
-import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.result.ResultEntity
-import hu.bme.aut.resource_server.user.UserEntity
+import hu.bme.aut.resource_server.suggest.SuggestApiService
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -28,8 +24,8 @@ class AutoRecommendationService(
     @Autowired private var dataService: ResultForCalculationDataService,
     @Autowired private var calculatorService: AbilityRateCalculatorService,
     @Autowired private var modelManager: ModelManager,
+    @Autowired private var suggestApiService: SuggestApiService
 ) {
-    val motivationRate = 0.7
 
     var log: Logger = LoggerFactory.getLogger(AutoRecommendationService::class.java)
 
@@ -114,37 +110,28 @@ class AutoRecommendationService(
 
     /**
      * Generates a recommendation for the given user and game.
-     * New unsaved [RecommendedGameEntity] is returned with the recommended level in the config.
-     * Recommendation happens based on
-     * 1. game model
-     * 2. best normalized result of the user
-     * 3. latest result of the user
+     * The recommendation is generated based on the user's profile and current config of the result.
      */
-    //TODO use neural network model
-    fun generateRecommendationForUser(user: UserEntity, game: GameEntity): RecommendedGameEntity {
-        log.info("Generating recommendation for user ${user.username} for game ${game.name}")
-        val expectedResult: Double?
-        if (!modelManager.existsModel(game.id!!)) {
-            log.trace("No model found for game ${game.name}.")
-            expectedResult = dataService.getBestResultOfUser(game, user)?.normalizedResult
-        } else {
-            val profileItems = user.profileFloat
-                .filter { game.affectedAbilities.contains(it.ability) }
-                .sortedBy { it.ability.code }
-                .map { it.abilityValue }
-            expectedResult = if (profileItems.size != game.affectedAbilities.size) null
-            else try {
-                modelManager.getEstimationForResult(game.id!!, profileItems)
-            } catch (e: CalculationException) {
-                null
-            }
+    suspend fun generateRecommendationForUser(resultId: Long): Map<String, Any> =
+    withContext(Dispatchers.Default) {
+        val result = dataService.getResultById(resultId)
+        val user = result.user
+        val game = dataService.getGameWithConfigItems(result.recommendedGame.game.id!!)
+        log.trace("Creating next recommendation based on result for user: ${user.username}; for game: ${game.name}")
+        if(game.configItems.isEmpty()){
+            log.info("No config items found for game ${game.name}")
+            return@withContext emptyMap()
         }
-
-        return RecommendedGameEntity(
-            recommendedTo = user,
-            game = game,
-            config = game.configItems.associateBy({ it.paramName }, { it.initialValue })
+        val success = isResultSuccess(result)
+        val nextRecommendation = suggestApiService.getSuggestedConfigForGame(
+            user.profileFloat,
+            game.affectedAbilities,
+            game.id!!,
+            result.recommendedGame.config,
+            success,
         )
+        log.info("Next recommendation created based on result for user: ${user.username}; for game: ${game.name}. Config: $nextRecommendation")
+        return@withContext nextRecommendation
     }
 
 }

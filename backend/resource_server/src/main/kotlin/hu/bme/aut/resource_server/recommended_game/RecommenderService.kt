@@ -53,7 +53,12 @@ class RecommenderService(
     }
 
     suspend fun createNextRecommendationByResult(gameResult: ResultEntity): Map<String, Any> {
-        return autoRecommender.createNextRecommendationBasedOnResult(gameResult.id!!)
+        val nextConfig = try {
+            autoRecommender.generateRecommendationForUser(gameResult.id!!)
+        } catch(e: Exception){
+            autoRecommender.createNextRecommendationBasedOnResult(gameResult.id!!)
+        }
+        return nextConfig
     }
 
     /**
@@ -115,26 +120,6 @@ class RecommenderService(
                 config = game.configItems.associateBy({ it.paramName }, { it.initialValue })
             )
         )
-    }
-
-    fun createNewRecommendations(username: String): List<RecommendedGameEntity> {
-        val games = gameRepository.findAllByActiveIsTrue()
-        val user = userRepository.findByUsername(username).orElseThrow()
-        val recommendations = mutableListOf<RecommendedGameEntity>()
-        try {
-            games.forEach { game ->
-                recommendations.add(autoRecommender.generateRecommendationForUser(user, game))
-            }
-            recommendedGameRepository.saveAll(recommendations)
-        } catch (e: RuntimeException) {
-            log.error("Error while generating recommendation for user $username", e)
-            return recommendations
-        }
-        return recommendations
-    }
-
-    fun deleteRecommendations(recommendations: List<RecommendedGameEntity>) {
-        recommendedGameRepository.deleteAll(recommendations)
     }
 
 }

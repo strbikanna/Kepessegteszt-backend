@@ -80,25 +80,10 @@ class RecommendedGameController(
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('STUDENT')")
     fun getAllSystemRecommended(authentication: Authentication): List<RecommendedGameDto> {
-        val systemRecommendedGames =
-            gameplayRecommenderService.getAllRecommendationToUser(authentication.name).toMutableList()
-        if (systemRecommendedGames.size < 1) {
-            systemRecommendedGames.addAll(gameplayRecommenderService.createNewRecommendations(authentication.name))
-        }
+        val systemRecommendedGames = gameplayRecommenderService.getAllRecommendationToUser(authentication.name).toMutableList()
         return systemRecommendedGames.map { it.toDto() }
     }
 
-    /**
-     * Deletes the current recommendations of the user and creates new ones.
-     */
-    @PostMapping("/system_recommended")
-    @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('STUDENT')")
-    fun generateNewRecommendations(authentication: Authentication): List<RecommendedGameDto> {
-        val currentActiveRecommendations = gameplayRecommenderService.getAllRecommendationToUser(authentication.name)
-        gameplayRecommenderService.deleteRecommendations(currentActiveRecommendations)
-        return gameplayRecommenderService.createNewRecommendations(authentication.name).map { it.toDto() }
-    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
