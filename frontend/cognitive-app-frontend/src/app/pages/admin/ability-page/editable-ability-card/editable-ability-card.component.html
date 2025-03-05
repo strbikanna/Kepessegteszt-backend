@@ -1,0 +1,38 @@
+<mat-card *ngIf="!isUpdateMode">
+    <mat-card-header>
+        <mat-card-title>{{ ability.name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="my-2">
+            <span class="textBold">{{ text.ability_code }}: </span> <span>{{ ability.code }}</span>
+        </div>
+        <div class="my-2">
+            <span class="textBold">{{ text.ability_description }}: </span> <span>{{ ability.description }}</span>
+        </div>
+    </mat-card-content>
+    <mat-card-actions class="flex justify-content-end">
+        <button mat-button color="primary" (click)="setUpdateMode(true)">{{ text.edit }}</button>
+    </mat-card-actions>
+</mat-card>
+
+<mat-card *ngIf="isUpdateMode">
+    <mat-card-header>
+        <mat-card-title>{{ text.edit }}: {{ability.code}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <form [formGroup]="updateAbilityForm" class="flex flex-column">
+            <mat-form-field>
+                <mat-label>{{ text.ability_name }}</mat-label>
+                <input matInput formControlName="name">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ text.ability_description }}</mat-label>
+                <textarea matInput formControlName="description"> </textarea>
+            </mat-form-field>
+        </form>
+    </mat-card-content>
+    <mat-card-actions class="flex justify-content-end">
+        <button mat-stroked-button color="primary" (click)="setUpdateMode(false)" class="mr-2">{{ text.cancel }}</button>
+        <button mat-raised-button color="primary" (click)="updateAbility()">{{ text.save }}</button>
+    </mat-card-actions>
+</mat-card>

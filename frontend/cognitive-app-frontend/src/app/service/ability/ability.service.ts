@@ -15,4 +15,10 @@ export class AbilityService {
   getAllAbilities() : Observable<Ability[]>{
     return this.http.get<Ability[]>(`${this.helper.baseUrl}${this.path}/all`);
   }
+  updateAbility(ability: Ability) : Observable<Ability>{
+    return this.http.put<Ability>(`${this.helper.baseUrl}${this.path}/${ability.code}`, ability);
+  }
+  saveAbility(ability: Ability) : Observable<Ability>{
+    return this.http.post<Ability>(`${this.helper.baseUrl}${this.path}`, ability);
+  }
 }
