@@ -4,6 +4,7 @@ import hu.bme.aut.auth_server.user.UserEntity
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.util.UriComponentsBuilder
 import java.time.LocalDateTime
 import java.util.*
@@ -62,6 +63,7 @@ class EmailVerificationService(
         return verification
     }
 
+    @Transactional
     fun removeVerificationEntity(verificationKey: String) {
         emailRepository.deleteByVerificationKey(verificationKey)
     }
