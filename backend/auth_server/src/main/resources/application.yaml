@@ -1,5 +1,9 @@
 server:
   port: 9000
+  error:
+    path: /error
+    whitelabel:
+      enabled: false
 
 spring:
   # database config, change it to your own database
