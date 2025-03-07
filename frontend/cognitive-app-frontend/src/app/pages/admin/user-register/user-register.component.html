@@ -1,0 +1,46 @@
+<h1 class="mt-0 mb-1">{{text.title}}</h1>
+<p class="description">{{text.description}}</p>
+<h2 class="mb-1">{{text.contacts_title}}</h2>
+<p class="description">{{text.contacts_description}}</p>
+<div class="flex flex-wrap w-full mt-2">
+    <mat-card *ngFor="let contact of contactList" class="mr-3">
+        <mat-card-header>
+            <mat-card-title>{{ contact.firstName }} {{ contact.lastName }}</mat-card-title>
+            <mat-card-subtitle>{{ contact.username }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>{{ contact.email }}</p>
+        </mat-card-content>
+    </mat-card>
+</div>
+<!-- form to add contact -->
+<h2>{{text.add_contact}}</h2>
+<div class="flex">
+    <form [formGroup]="userRegistrationForm" (ngSubmit)="registerUser()" class="flex flex-column contactForm">
+        <mat-form-field>
+            <mat-label>{{text.labels.last_name}}</mat-label>
+            <input matInput formControlName="lastName">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>{{text.labels.first_name}}</mat-label>
+            <input matInput formControlName="firstName">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>{{text.labels.username}}</mat-label>
+            <input matInput formControlName="username">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>{{text.labels.password}}</mat-label>
+            <input matInput formControlName="password" type="password">
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!userRegistrationForm.valid">{{text.labels.register}}</button>
+    </form>
+    <div *ngIf="registrationSuccess" class="registrationSuccess ml-8 w-4">
+        <mat-icon>check_circle</mat-icon>
+        <p class="ml-2">{{text.registration_success}}</p>
+    </div>
+    <div *ngIf="registrationError" class="registrationError ml-8">
+        <mat-icon>error</mat-icon>
+        <p class="ml-2 text-overflow-ellipsis">{{text.registration_error}}</p>
+    </div>
+</div>

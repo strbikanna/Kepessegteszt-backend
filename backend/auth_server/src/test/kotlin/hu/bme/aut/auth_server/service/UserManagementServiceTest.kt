@@ -4,6 +4,7 @@ import hu.bme.aut.auth_server.user.UserDto
 import hu.bme.aut.auth_server.user.UserEntity
 import hu.bme.aut.auth_server.user.UserManagementService
 import hu.bme.aut.auth_server.user.UserRepository
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -89,5 +90,28 @@ class UserManagementServiceTest(
         assertTrue(userRepository.findByUsername(testUserEntity1.username).isEmpty)
         val user2 = userManagementService.loadUserByUsernameWithContacts(testUserEntity2.username).get()
         assertTrue(user2.contacts.isEmpty())
+    }
+
+    @Test
+    fun shouldAddContact(){
+        var user3= UserEntity(
+            username = "test_user3",
+            firstName = "test_3",
+            lastName = "user_3",
+            email = "email_3",
+            password = "encodedPassword_3",
+            roles = mutableSetOf(),
+            contacts = mutableListOf(),
+            enabled = true
+        )
+        userManagementService.save(user3)
+        userManagementService.addContact(testUserEntity1.username, user3.username)
+        val user1 = userManagementService.loadUserByUsernameWithContacts(testUserEntity1.username).get()
+        user3 = userManagementService.loadUserByUsernameWithContacts(user3.username).get()
+        assertTrue(user1.contacts.any { it.id == user3.id })
+        assertEquals(2, user1.contacts.size)
+        assertTrue(user3.contacts.any { it.id == user1.id })
+        assertEquals(1, user3.contacts.size)
+
     }
 }

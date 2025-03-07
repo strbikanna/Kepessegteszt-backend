@@ -92,7 +92,11 @@ import { PrivacyPolicyPageComponent } from './general/privacy-policy-page/privac
 import { FooterComponent } from './general/footer/footer.component';
 import { DeleteAccountComponent } from './pages/common/delete-account/delete-account.component';
 import { HorizontalScrollerComponent } from './pages/admin/admin-page/horizontal-scroller/horizontal-scroller.component';
+import { UserRegisterComponent } from './pages/admin/user-register/user-register.component';
+import { AbilityPageComponent } from './pages/admin/ability-page/ability-page.component';
+import { EditableAbilityCardComponent } from './pages/admin/ability-page/editable-ability-card/editable-ability-card.component';
 import { FeatureDescriptionComponent } from './general/feature-description/feature-description.component';
+
 
 @NgModule({
     declarations: [
@@ -148,6 +152,9 @@ import { FeatureDescriptionComponent } from './general/feature-description/featu
         FooterComponent,
         DeleteAccountComponent,
         HorizontalScrollerComponent,
+        UserRegisterComponent,
+        AbilityPageComponent,
+        EditableAbilityCardComponent,
         FeatureDescriptionComponent
     ],
     imports: [

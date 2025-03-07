@@ -8,9 +8,17 @@
             <mat-icon>manage_accounts</mat-icon>
             <span>{{ text.user_management }}</span>
         </button>
-        <button mat-menu-item *ngIf="canSeeGroupManagement()" routerLink="/group-management">
+        <button mat-menu-item *ngIf="canSeeUserRegistration()" routerLink="/register-user" [routerLinkActive]="['activeLink']">
+            <mat-icon>person_add</mat-icon>
+            <span>{{ text.user_registration }}</span>
+        </button>
+        <button mat-menu-item *ngIf="canSeeGroupManagement()" routerLink="/group-management" [routerLinkActive]="['activeLink']">
             <mat-icon>group</mat-icon>
             <span>{{ text.group_management}}</span>
+        </button>
+        <button mat-menu-item *ngIf="canSeeUserManagement()" routerLink="/ability" [routerLinkActive]="['activeLink']">
+            <mat-icon>saved_search</mat-icon>
+            <span>{{ text.ability_management }}</span>
         </button>
 
         <p class="description ml-3">{{ text.section_title.profile }}</p>

@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {ProfileData} from "../../../model/profile_data.model";
+import {ProfileData} from "../../../model/profile/profile_data.model";
 import {BehaviorSubject, Observable, of} from "rxjs";
 import {ProfileDataComparisonService} from "../../../service/profile-data-comparison/profile-data-comparison.service";
-import {UserGroup} from "../../../model/user_group.model";
+import {UserGroup} from "../../../model/user/user_group.model";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {TEXTS} from "../../../text/app.text_messages";
 import {AbilityService} from "../../../service/ability/ability.service";

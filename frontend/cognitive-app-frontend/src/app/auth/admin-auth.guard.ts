@@ -1,5 +1,5 @@
 import {CanActivateFn, Router} from '@angular/router';
-import {User} from "../model/user.model";
+import {User} from "../model/user/user.model";
 import {Role} from "../utils/constants";
 import {UserInfo} from "./userInfo";
 import {inject} from "@angular/core";

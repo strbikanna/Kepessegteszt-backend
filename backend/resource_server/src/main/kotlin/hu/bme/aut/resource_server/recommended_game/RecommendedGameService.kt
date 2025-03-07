@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service
 class RecommendedGameService(
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
     @Autowired private var userRepository: UserRepository,
-    @Autowired private var gameRepository: GameRepository
+    @Autowired private var gameRepository: GameRepository,
 ) {
     /**
      * Get all recommendations to user which are not yet completed.
@@ -35,11 +35,19 @@ class RecommendedGameService(
     @Transactional
     fun getNextChoiceForUser(username: String): List<RecommendedGameDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
-        val latestCompleted = recommendedGameRepository.findLatestCompleted(user)
         val top2Distinct: MutableList<GameEntity> = mutableListOf()
-        latestCompleted.forEach {
-            if (top2Distinct.size < 2 && !top2Distinct.contains(it.game)) {
-                top2Distinct.add(it.game)
+        val neverPlayedGames = getNeverPlayedGames(user)
+        neverPlayedGames.forEach {
+            if (top2Distinct.size < 2 && !top2Distinct.contains(it) && it.active) {
+                top2Distinct.add(it)
+            }
+        }
+        if(top2Distinct.size < 2) {
+            val latestCompleted = recommendedGameRepository.findLatestCompleted(user)
+            latestCompleted.forEach {
+                if (top2Distinct.size < 2 && !top2Distinct.contains(it.game) && it.game.active) {
+                    top2Distinct.add(it.game)
+                }
             }
         }
         return top2Distinct.map { game ->
@@ -116,5 +124,10 @@ class RecommendedGameService(
         val allRecommendedBy = recommendedGameRepository.findAllByRecommender(user)
         recommendedGameRepository.deleteAll(allRecommendedTo)
         recommendedGameRepository.deleteAll(allRecommendedBy)
+    }
+
+    private fun getNeverPlayedGames(user: UserEntity): List<GameEntity> {
+        val neverCompletedRecommendations = recommendedGameRepository.findByRecommendedToAndNeverPlayed(user)
+        return neverCompletedRecommendations.map { it.game }
     }
 }

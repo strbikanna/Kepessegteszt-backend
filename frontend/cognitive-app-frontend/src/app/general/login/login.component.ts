@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {User} from "../../model/user.model";
+import {User} from "../../model/user/user.model";
 import {LoginService} from "./login.service";
 import {TEXTS} from "../../text/app.text_messages";
 import {UserInfo} from "../../auth/userInfo";
-import {AuthUser} from "../../model/user-contacts.model";
+import {AuthUser} from "../../model/user/user-contacts.model";
 
 @Component({
   selector: 'app-login',

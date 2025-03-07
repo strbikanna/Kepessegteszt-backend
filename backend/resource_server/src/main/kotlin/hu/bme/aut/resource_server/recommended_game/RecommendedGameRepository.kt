@@ -33,4 +33,14 @@ interface RecommendedGameRepository: JpaRepository<RecommendedGameEntity, Long> 
                 ") order by rg.timestamp asc"
     )
     fun findLatestCompleted(user: UserEntity): List<RecommendedGameEntity>
+
+    @Query(
+        "select rg from RecommendedGameEntity  rg " +
+                "where (select count(rg2) from RecommendedGameEntity rg2 " +
+                "where rg2.game = rg.game and rg2.recommendedTo = rg.recommendedTo and rg2.completed = true) = 0 " +
+                "and rg.recommendedTo = :user"
+    )
+    fun findByRecommendedToAndNeverPlayed(user: UserEntity) : List<RecommendedGameEntity>
+
+    fun deleteByGameAndCompletedIsFalse(game: GameEntity)
 }

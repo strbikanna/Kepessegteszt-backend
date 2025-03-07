@@ -2,7 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {AppConstants} from "../../utils/constants";
 import {Observable, retry} from "rxjs";
-import {AuthUser} from "../../model/user-contacts.model";
+import {AuthUser} from "../../model/user/user-contacts.model";
+import {UserRegistrationData} from "../../model/user/user_registration_data.model";
 import {UserInfo} from "../../auth/userInfo";
 
 @Injectable({
@@ -21,7 +22,7 @@ export class AdminService {
         if (UserInfo.isAdmin()) {
             let params = new HttpParams();
             params = params.append('nameText', name);
-            return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/user/search`, {params: params})
+            return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/${this.path}/search`, {params: params})
                 .pipe(
                     retry(3)
                 );
@@ -32,7 +33,7 @@ export class AdminService {
     searchContactsByName(name: string): Observable<AuthUser[]> | undefined {
         let params = new HttpParams();
         params = params.append('nameText', name);
-        return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/user/contacts/search`, {params: params})
+        return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/${this.path}/contacts/search`, {params: params})
             .pipe(
                 retry(3)
             );
@@ -44,7 +45,7 @@ export class AdminService {
             params = params.append('pageNumber', pageNumber);
             params = params.append('pageSize', pageSize);
         }
-        return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/user/all`, {params: params})
+        return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/${this.path}/all`, {params: params})
             .pipe(
                 retry(3)
             );
@@ -52,7 +53,7 @@ export class AdminService {
 
     getAllByNameStartsWith(name: string): Observable<AuthUser[]> {
         let params = new HttpParams().set('nameStartsWith', name);
-        return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/user/all/nameStartsWith`, {params: params})
+        return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/${this.path}/all/nameStartsWith`, {params: params})
             .pipe(
                 retry(3)
             );
@@ -60,37 +61,46 @@ export class AdminService {
 
     getAllByUsernames(usernames: string[]): Observable<AuthUser[]> {
         let params = new HttpParams().set('usernames', usernames.join(','));
-        return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/user/all`, {params: params})
+        return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/${this.path}/all`, {params: params})
             .pipe(
                 retry(3)
             );
     }
 
     getContactsOfUser(user: AuthUser): Observable<AuthUser[]> {
-        return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/user/${user.id}/contacts`)
+        return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/${this.path}/${user.id}/contacts`)
             .pipe(
                 retry(3)
             );
     }
 
     getContacts(): Observable<AuthUser[]> {
-        return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/user/impersonation_contacts`)
+        return this.http.get<AuthUser[]>(`${AppConstants.authServerUrl}/${this.path}/impersonation_contacts`)
             .pipe(
                 retry(3)
             );
     }
 
     getNumberOfUsers(): Observable<number> {
-        return this.http.get<number>(`${AppConstants.authServerUrl}/user/count`)
+        return this.http.get<number>(`${AppConstants.authServerUrl}/${this.path}/count`)
             .pipe(
                 retry(3)
             );
     }
 
+    private path = `user`;
+
     updateUserData(user: AuthUser): Observable<AuthUser> {
-        return this.http.put<AuthUser>(`${AppConstants.authServerUrl}/user/${user.id}`, user)
+        return this.http.put<AuthUser>(`${AppConstants.authServerUrl}/${this.path}/${user.id}`, user)
             .pipe(
                 retry(3)
+            );
+    }
+
+    registerUser(user: UserRegistrationData): Observable<AuthUser> {
+        return this.http.post<AuthUser>(`${AppConstants.authServerUrl}/${this.path}/register_contact`, user)
+            .pipe(
+                retry(2)
             );
     }
 }

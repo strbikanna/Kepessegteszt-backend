@@ -1,4 +1,4 @@
-import {Ability} from "./ability.model";
+import {Ability} from "../ability.model";
 
 export interface ProfileData{
     ability: Ability;

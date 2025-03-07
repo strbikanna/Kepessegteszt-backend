@@ -6,7 +6,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {TEXTS} from "../../../text/app.text_messages";
 import {UserInfo} from "../../../auth/userInfo";
 import {Role} from "../../../utils/constants";
-import {User} from "../../../model/user.model";
+import {User} from "../../../model/user/user.model";
 import {DateRange} from "../../../common/date-picker/date-picker.component";
 
 @Component({

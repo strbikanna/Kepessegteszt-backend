@@ -4,9 +4,9 @@ import {catchError, map, Observable, of, retry, tap,} from "rxjs";
 import {CognitiveProfile} from "../../model/cognitive_profile.model";
 import {Ability} from "../../model/ability.model";
 import {AppConstants} from "../../utils/constants";
-import {User} from "../../model/user.model";
+import {User} from "../../model/user/user.model";
 import {SimpleHttpService} from "../../utils/simple-http.service";
-import {ProfileDescription} from "../../model/ProfileDescription";
+import {ProfileDescription} from "../../model/profile/profile_description";
 import {TEXTS} from "../../text/app.text_messages";
 
 @Injectable({
