@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse
 import nl.basjes.parse.useragent.UserAgent
 import nl.basjes.parse.useragent.UserAgentAnalyzer
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
@@ -17,6 +18,9 @@ import org.springframework.stereotype.Service
 class LogoutSuccessHandler (
     @Autowired private var useragentAnalyzer: UserAgentAnalyzer
 ) : AuthenticationSuccessHandler {
+
+    @Value("\${server.servlet.context-path}")
+    private var contextPath: String = ""
 
     override fun onAuthenticationSuccess(
         request: HttpServletRequest?,
@@ -41,7 +45,7 @@ class LogoutSuccessHandler (
 
         if (isMobile) {
             // Redirect mobile users to a custom logout page with redirect uri param
-            response?.sendRedirect("/mobile-logout?$POST_LOGOUT_REDIRECT_URI=$redirectUri")
+            response?.sendRedirect("$contextPath/mobile-logout?$POST_LOGOUT_REDIRECT_URI=$redirectUri")
         } else {
             // Redirect web users back to the app
             response?.sendRedirect(redirectUri)
