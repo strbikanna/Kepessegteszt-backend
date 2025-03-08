@@ -4,6 +4,8 @@ server:
     path: /error
     whitelabel:
       enabled: false
+  servlet:
+    context-path:
 
 spring:
   # database config, change it to your own database
