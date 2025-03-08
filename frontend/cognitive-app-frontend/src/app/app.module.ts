@@ -95,6 +95,8 @@ import { HorizontalScrollerComponent } from './pages/admin/admin-page/horizontal
 import { UserRegisterComponent } from './pages/admin/user-register/user-register.component';
 import { AbilityPageComponent } from './pages/admin/ability-page/ability-page.component';
 import { EditableAbilityCardComponent } from './pages/admin/ability-page/editable-ability-card/editable-ability-card.component';
+import { FeatureDescriptionComponent } from './general/feature-description/feature-description.component';
+
 
 @NgModule({
     declarations: [
@@ -152,7 +154,8 @@ import { EditableAbilityCardComponent } from './pages/admin/ability-page/editabl
         HorizontalScrollerComponent,
         UserRegisterComponent,
         AbilityPageComponent,
-        EditableAbilityCardComponent
+        EditableAbilityCardComponent,
+        FeatureDescriptionComponent
     ],
     imports: [
         BrowserModule,
