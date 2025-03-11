@@ -8,6 +8,8 @@ import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -19,6 +21,8 @@ class RecommendedGameService(
     @Autowired private var userRepository: UserRepository,
     @Autowired private var gameRepository: GameRepository,
 ) {
+    var log: Logger = LoggerFactory.getLogger(RecommendedGameService::class.java)
+
     /**
      * Get all recommendations to user which are not yet completed.
      */
@@ -63,11 +67,14 @@ class RecommendedGameService(
      * Retrieve the configuration of a recommended game. If the configuration is not yet available, it waits for it to be available.
      */
     suspend fun getRecommendedGameConfig(recommendedGameId: Long): Map<String, Any> = withContext(Dispatchers.IO) {
+        log.info("Getting config for recommendation with id: $recommendedGameId")
         var rGame = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
         repeat(10) {
             if (rGame.config.isNotEmpty()) {
+                log.info("Config found for recommendation with id: $recommendedGameId")
                 return@withContext rGame.config
             }
+            log.info("Config not found for recommendation with id: $recommendedGameId. Waiting...")
             delay(300)
             rGame = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
         }

@@ -6,10 +6,9 @@ import hu.bme.aut.resource_server.recommended_game.RecommenderService
 import hu.bme.aut.resource_server.role.Role
 import hu.bme.aut.resource_server.utils.RoleName
 import jakarta.servlet.http.HttpServletResponse
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpHeaders
@@ -31,6 +30,7 @@ class ResultController(
     @Autowired private var authService: AuthService,
     @Autowired private var recommenderService: RecommenderService
 ) {
+    var log: Logger = LoggerFactory.getLogger(ResultController::class.java)
 
     /**
      * Endpoint to save results of a played game.
@@ -57,8 +57,12 @@ class ResultController(
         if (nextRecommendation == null) {
             nextRecommendation = recommenderService.createEmptyRecommendation(username, game.id!!)
         }
-        CoroutineScope(Dispatchers.Default).async {
-            val config = recommenderService.createNextRecommendationByResult(savedResult)
+        CoroutineScope(Dispatchers.Default).launch {
+            var config = recommenderService.createNextRecommendationByResult(savedResult)
+            if(config.isEmpty()){
+                log.info("Generated config was empty, creating default recommendation for user: $username")
+                config = recommenderService.createDefaultRecommendationToUserForGame(username, game.id!!).config
+            }
             nextRecommendation.config = config
             recommenderService.save(nextRecommendation)
         }
