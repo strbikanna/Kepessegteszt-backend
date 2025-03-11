@@ -3,7 +3,6 @@ package hu.bme.aut.resource_server.recommendation
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
 import hu.bme.aut.resource_server.profile_calculation.calculator.AbilityRateCalculatorService
-import hu.bme.aut.resource_server.profile_calculation.calculator.ScoreCalculator
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
 import hu.bme.aut.resource_server.profile_calculation.error.CalculationException
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
@@ -58,19 +57,22 @@ class AutoRecommendationService(
             val result = dataService.getResultById(resultId)
             val user = result.user
             val game = dataService.getGameWithConfigItems(result.recommendedGame.game.id!!)
-            log.trace("Creating next recommendation based on result for user: ${user.username}; for game: ${game.name}")
+            log.info("Creating next recommendation based on result for user: ${user.username}; for game: ${game.name}")
             if(game.configItems.isEmpty()){
                 log.info("No config items found for game ${game.name}")
                 return@withContext emptyMap()
             }
             val success = isResultSuccess(result)
             val nextRecommendation = result.recommendedGame.config.toMutableMap()
+            log.info("Current parameters: {}", nextRecommendation)
             val paramsToChange = game.configItems.filter { canChangeParam(nextRecommendation, it, success) }
+            log.info("Params to change: {}", paramsToChange)
             if(paramsToChange.isEmpty()){
                 return@withContext nextRecommendation
             }
             val nextParamIndex = Math.random().times(paramsToChange.size).toInt()
             val nextParamToChange: ConfigItem = paramsToChange.elementAt(nextParamIndex)
+            log.info("Next param to change: {}", nextParamToChange)
             val currValue = result.recommendedGame.config[nextParamToChange.paramName] as Int
 
             if (success) {
