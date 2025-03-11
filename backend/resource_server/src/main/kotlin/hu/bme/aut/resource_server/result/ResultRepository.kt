@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.result
 
+import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.user.UserEntity
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -44,6 +45,9 @@ interface ResultRepository : JpaRepository<ResultEntity, Long> {
     fun countByRecommendedGameGameIdIn(gameIds: List<Int>): Long
     fun countByPassed(passed: Boolean): Long
     fun countByUserIn(user: List<UserEntity>): Long
+
+    fun findByRecommendedGame(recommendedGame: RecommendedGameEntity): ResultEntity?
+
     override fun findAll(page: Pageable): Page<ResultEntity>
 
     fun deleteAllByUser(user: UserEntity)

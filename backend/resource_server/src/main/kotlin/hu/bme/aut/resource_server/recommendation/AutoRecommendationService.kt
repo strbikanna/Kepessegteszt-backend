@@ -62,7 +62,7 @@ class AutoRecommendationService(
                 return@withContext emptyMap()
             }
             val success = isResultSuccess(result)
-            val nextRecommendation = result.recommendedGame.config.toMutableMap()
+            val nextRecommendation = if(result.config.isEmpty()) result.recommendedGame.config.toMutableMap() else result.config
             log.info("Current parameters: {}", nextRecommendation)
             val paramsToChange = game.configItems.filter { canChangeParam(nextRecommendation, it, success) }
             log.info("Params to change: {}", paramsToChange)

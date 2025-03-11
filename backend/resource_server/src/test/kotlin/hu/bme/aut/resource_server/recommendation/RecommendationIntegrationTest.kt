@@ -53,7 +53,7 @@ class RecommendationIntegrationTest(
 
             return@runBlocking found
         }
-        assertTrue(config.isNotEmpty())
+        assertTrue(config!! .isNotEmpty())
     }
 
     private fun createRecommendedGame(): RecommendedGameEntity {

@@ -2,6 +2,8 @@ package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.GameRepository
+import hu.bme.aut.resource_server.recommendation.AutoRecommendationService
+import hu.bme.aut.resource_server.result.ResultRepository
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import jakarta.transaction.Transactional
@@ -20,6 +22,8 @@ class RecommendedGameService(
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
     @Autowired private var userRepository: UserRepository,
     @Autowired private var gameRepository: GameRepository,
+    @Autowired private var autoRecommendationService: AutoRecommendationService,
+    @Autowired private var resultRepository: ResultRepository
 ) {
     var log: Logger = LoggerFactory.getLogger(RecommendedGameService::class.java)
 
@@ -66,7 +70,7 @@ class RecommendedGameService(
     /**
      * Retrieve the configuration of a recommended game. If the configuration is not yet available, it waits for it to be available.
      */
-    suspend fun getRecommendedGameConfig(recommendedGameId: Long): Map<String, Any> = withContext(Dispatchers.IO) {
+    suspend fun getRecommendedGameConfig(recommendedGameId: Long): Map<String, Any>? = withContext(Dispatchers.IO) {
         log.info("Getting config for recommendation with id: $recommendedGameId")
         var rGame = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
         repeat(10) {
@@ -78,7 +82,20 @@ class RecommendedGameService(
             delay(300)
             rGame = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
         }
-        throw NoSuchElementException("No config found for recommendation.")
+        log.info("Config not found for recommendation with id: $recommendedGameId. Trying to generate one based on result.")
+        val resultToRGame = resultRepository.findByRecommendedGame(rGame)
+        if(resultToRGame != null){
+            return@withContext autoRecommendationService.createNextRecommendationBasedOnResult(resultToRGame.id!!)
+        }
+        log.info("No result found for recommendation with id: $recommendedGameId. Trying to return latest.")
+        return@withContext getLatestCompletedToUserAndGame(rGame.recommendedTo.username, rGame.game.id!!)?.config
+    }
+
+    fun getLatestCompletedToUserAndGame(username: String, gameId: Int): RecommendedGameEntity? {
+        val user = userRepository.findByUsername(username).orElseThrow()
+        val game = gameRepository.findById(gameId).orElseThrow()
+        return recommendedGameRepository.findLatestCompleted(user)
+            .find { it.game == game }
     }
 
     fun addRecommendation(recommendation: RecommendationDto, recommenderUsername: String): RecommendedGameEntity {
