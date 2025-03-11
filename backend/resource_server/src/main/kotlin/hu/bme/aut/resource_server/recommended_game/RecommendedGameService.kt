@@ -2,8 +2,6 @@ package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.GameRepository
-import hu.bme.aut.resource_server.recommendation.AutoRecommendationService
-import hu.bme.aut.resource_server.result.ResultRepository
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import jakarta.transaction.Transactional
@@ -22,8 +20,6 @@ class RecommendedGameService(
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
     @Autowired private var userRepository: UserRepository,
     @Autowired private var gameRepository: GameRepository,
-    @Autowired private var autoRecommendationService: AutoRecommendationService,
-    @Autowired private var resultRepository: ResultRepository
 ) {
     var log: Logger = LoggerFactory.getLogger(RecommendedGameService::class.java)
 
@@ -50,7 +46,7 @@ class RecommendedGameService(
                 top2Distinct.add(it)
             }
         }
-        if(top2Distinct.size < 2) {
+        if (top2Distinct.size < 2) {
             val latestCompleted = recommendedGameRepository.findLatestCompleted(user)
             latestCompleted.forEach {
                 if (top2Distinct.size < 2 && !top2Distinct.contains(it.game) && it.game.active) {
@@ -82,11 +78,6 @@ class RecommendedGameService(
             delay(300)
             rGame = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
         }
-        log.info("Config not found for recommendation with id: $recommendedGameId. Trying to generate one based on result.")
-        val resultToRGame = resultRepository.findByRecommendedGame(rGame)
-        if(resultToRGame != null){
-            return@withContext autoRecommendationService.createNextRecommendationBasedOnResult(resultToRGame.id!!)
-        }
         log.info("No result found for recommendation with id: $recommendedGameId. Trying to return latest.")
         return@withContext getLatestCompletedToUserAndGame(rGame.recommendedTo.username, rGame.game.id!!)?.config
     }
@@ -95,7 +86,7 @@ class RecommendedGameService(
         val user = userRepository.findByUsername(username).orElseThrow()
         val game = gameRepository.findById(gameId).orElseThrow()
         return recommendedGameRepository.findLatestCompleted(user)
-            .find { it.game == game }
+            .find { it.game.id == game.id && it.config.isNotEmpty() }
     }
 
     fun addRecommendation(recommendation: RecommendationDto, recommenderUsername: String): RecommendedGameEntity {
@@ -136,7 +127,7 @@ class RecommendedGameService(
 
     fun deleteRecommendedGame(recommendedGameId: Long) {
         val rGame = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
-        if(rGame.completed) {
+        if (rGame.completed) {
             throw IllegalArgumentException("Cannot delete completed recommendation, because it is completed already.")
         }
         recommendedGameRepository.deleteById(recommendedGameId)
