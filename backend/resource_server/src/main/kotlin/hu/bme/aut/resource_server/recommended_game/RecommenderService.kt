@@ -4,6 +4,8 @@ import hu.bme.aut.resource_server.game.GameRepository
 import hu.bme.aut.resource_server.recommendation.AutoRecommendationService
 import hu.bme.aut.resource_server.result.ResultEntity
 import hu.bme.aut.resource_server.user.UserRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -53,7 +55,16 @@ class RecommenderService(
     }
 
     suspend fun createNextRecommendationByResult(gameResult: ResultEntity): Map<String, Any> {
-        return autoRecommender.createNextRecommendationBasedOnResult(gameResult.id!!)
+        var nextConfig = autoRecommender.createNextRecommendationBasedOnResult(gameResult.id!!)
+        if(nextConfig.isEmpty()){
+            log.info("Generated config was empty, creating default recommendation for user: ${gameResult.user.username}")
+            nextConfig = withContext(Dispatchers.IO) {
+                recommendedGameRepository.findLatestCompleted(gameResult.user)
+            }
+                .find { it.game.id == gameResult.recommendedGame.game.id }
+                ?.config ?: emptyMap()
+        }
+        return nextConfig
     }
 
     /**

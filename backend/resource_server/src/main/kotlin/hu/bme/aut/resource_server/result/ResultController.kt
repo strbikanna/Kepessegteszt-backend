@@ -38,13 +38,13 @@ class ResultController(
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun saveResult(@RequestBody gameplayData: ResultDto, authentication: Authentication): Long {
-        authService.checkGameAccessAndThrow(authentication, gameplayData)
+    fun saveResult(@RequestBody resultData: ResultDto, authentication: Authentication): Long {
+        authService.checkGameAccessAndThrow(authentication, resultData)
         val username = authentication.name
         if (!profileSnapshotService.existsSnapshotToday(username)) {
             profileSnapshotService.saveSnapshotOfUser(username)
         }
-        val savedResult = resultService.save(gameplayData)
+        val savedResult = resultService.save(resultData)
         val game = resultService.getGameOfResult(savedResult.id!!)
         if (!game.active) {
             throw IllegalArgumentException("Game is not active");

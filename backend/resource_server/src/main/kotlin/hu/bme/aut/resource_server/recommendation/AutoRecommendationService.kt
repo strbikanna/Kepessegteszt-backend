@@ -67,10 +67,6 @@ class AutoRecommendationService(
             val paramsToChange = game.configItems.filter { canChangeParam(nextRecommendation, it, success) }
             log.info("Params to change: {}", paramsToChange)
             if(paramsToChange.isEmpty()){
-                if(nextRecommendation.isEmpty()){
-                    log.info("No params to change and no previous recommendation found. Creating default recommendation for user: ${user.username}; for game: ${game.name}")
-                    return@withContext game.configItems.associateBy({it.paramName}, {it.initialValue})
-                }
                 return@withContext nextRecommendation
             }
             val nextParamIndex = Math.random().times(paramsToChange.size).toInt()

@@ -24,14 +24,14 @@ class ResultService(
         recommendedGame.completed = true
         recommendedGameRepository.save(recommendedGame)
         val user = recommendedGame.recommendedTo
-        val gameplay = ResultEntity(
+        val result = ResultEntity(
             result = data.result,
             passed = isResultPassed(data.result),
             config = data.newConfig?.toMutableMap() ?: recommendedGame.config.toMutableMap(),
             user = user,
             recommendedGame = recommendedGame
         )
-        return resultRepository.save(gameplay)
+        return resultRepository.save(result)
     }
 
     @Transactional
