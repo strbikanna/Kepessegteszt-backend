@@ -112,7 +112,6 @@ class GameService (
             description = game.description,
             affectedAbilities = affectedAbilities,
             active = game.active,
-            configDescription = game.configDescription,
             thumbnailPath = game.thumbnailPath,
             version = game.version,
             configItems = game.configItems.map { it.copy(id=null) }.toMutableSet()

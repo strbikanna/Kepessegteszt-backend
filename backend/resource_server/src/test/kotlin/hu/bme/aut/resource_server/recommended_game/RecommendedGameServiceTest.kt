@@ -123,7 +123,6 @@ class RecommendedGameServiceTest(
             thumbnailPath = "test/files/assets",
             description = "Test game description",
             active = true,
-            configDescription = mutableMapOf("Level" to 0),
             affectedAbilities = mutableSetOf()
         )
     }
