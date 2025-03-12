@@ -58,20 +58,17 @@ class AutoRecommendationService(
             val game = dataService.getGameWithConfigItems(result.recommendedGame.game.id!!)
             log.info("Creating next recommendation based on result for user: ${user.username}; for game: ${game.name}")
             if(game.configItems.isEmpty()){
-                log.info("No config items found for game ${game.name}")
+                log.error("No config items found for game ${game.name}")
                 return@withContext emptyMap()
             }
             val success = isResultSuccess(result)
             val nextRecommendation = if(result.config.isEmpty()) result.recommendedGame.config.toMutableMap() else result.config
-            log.info("Current parameters: {}", nextRecommendation)
             val paramsToChange = game.configItems.filter { canChangeParam(nextRecommendation, it, success) }
-            log.info("Params to change: {}", paramsToChange)
             if(paramsToChange.isEmpty()){
                 return@withContext nextRecommendation
             }
             val nextParamIndex = Math.random().times(paramsToChange.size).toInt()
             val nextParamToChange: ConfigItem = paramsToChange.elementAt(nextParamIndex)
-            log.info("Next param to change: {}", nextParamToChange)
             val currValue = result.recommendedGame.config[nextParamToChange.paramName] as Int
 
             if (success) {
