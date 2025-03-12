@@ -50,7 +50,6 @@ class RecommenderService(
 
     fun save(recommendation: RecommendedGameEntity): RecommendedGameEntity {
         val saved = recommendedGameRepository.save(recommendation)
-        log.info("Recommendation saved: $saved")
         return saved
     }
 
