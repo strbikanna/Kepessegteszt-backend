@@ -58,8 +58,13 @@ class ResultController(
             nextRecommendation = recommenderService.createEmptyRecommendation(username, game.id!!)
         }
         CoroutineScope(Dispatchers.Default).launch {
-            var config = recommenderService.createNextRecommendationByResult(savedResult)
-            if(config.isEmpty()){
+            var config = try {
+                recommenderService.createNextRecommendationByResult(savedResult)
+            } catch (e: Exception) {
+                log.error("Error while creating next recommendation based on result: ${e.message}")
+                emptyMap()
+            }
+            if (config.isEmpty()) {
                 log.info("Generated config was empty, creating default recommendation for user: $username")
                 config = recommenderService.createDefaultRecommendationToUserForGame(username, game.id!!).config
             }
@@ -112,8 +117,8 @@ class ResultController(
     ): Deferred<List<ResultDetailsDto>> = CoroutineScope(Dispatchers.IO).async {
         val user = authService.getAuthUserWithRoles(authentication)
         val sort = resultService.convertSortBy(sortBy, sortOrder)
-        if(user.roles.any { it.roleName == RoleName.ADMIN }){
-            return@async if(usernames.isNullOrEmpty()){
+        if (user.roles.any { it.roleName == RoleName.ADMIN }) {
+            return@async if (usernames.isNullOrEmpty()) {
                 resultService.getAllFiltered(gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort))
             } else {
                 resultService.getAllFiltered(usernames, gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort))
@@ -140,13 +145,13 @@ class ResultController(
         @RequestParam usernames: List<String>? = null
     ): Deferred<Long> = CoroutineScope(Dispatchers.IO).async {
         val user = authService.getAuthUserWithRoles(authentication)
-        if(user.roles.none { Role.canGetContacts(it.roleName) }){
+        if (user.roles.none { Role.canGetContacts(it.roleName) }) {
             return@async resultService.getCountByFilters(listOf(authentication.name), gameIds, resultWin)
         }
         val contactUsernames = authService.getContactUsernames(authentication)
 
-        if(user.roles.any { it.roleName == RoleName.ADMIN }){
-            return@async if(usernames.isNullOrEmpty()){
+        if (user.roles.any { it.roleName == RoleName.ADMIN }) {
+            return@async if (usernames.isNullOrEmpty()) {
                 resultService.getCountByFilters(gameIds, resultWin)
             } else {
                 resultService.getCountByFilters(usernames, gameIds, resultWin)
