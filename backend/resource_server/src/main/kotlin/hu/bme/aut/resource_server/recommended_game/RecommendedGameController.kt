@@ -53,7 +53,7 @@ class RecommendedGameController(
         CoroutineScope(Dispatchers.Default).async {
             authService.checkGameConfigAccessAnThrow(id, authentication)
             val foundConfig = recommendedGameService.getRecommendedGameConfig(id)
-            return@async foundConfig ?: throw NoSuchElementException("No config found for recommendation.")
+            return@async foundConfig ?: emptyMap()
         }
 
     @GetMapping("/next_choice")

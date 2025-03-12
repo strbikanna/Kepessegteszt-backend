@@ -100,7 +100,7 @@ class AutoRecommendationService(
     }
 
     private fun isResultSuccess(result: ResultEntity): Boolean{
-        return result.result["passed"] as Boolean
+        return result.passed ?: false
     }
 
     private fun recommendEasier(configDescription: ConfigItem, currentValue: Int): Pair<String, Int> {

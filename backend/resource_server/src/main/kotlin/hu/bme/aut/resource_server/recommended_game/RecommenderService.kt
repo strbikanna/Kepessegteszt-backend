@@ -61,7 +61,7 @@ class RecommenderService(
             nextConfig = withContext(Dispatchers.IO) {
                 recommendedGameRepository.findLatestCompleted(gameResult.user)
             }
-                .find { it.game.id == gameResult.recommendedGame.game.id }
+                .find { it.game.id == gameResult.recommendedGame.game.id && it.config.isNotEmpty()}
                 ?.config ?: emptyMap()
         }
         return nextConfig
