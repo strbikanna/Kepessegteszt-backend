@@ -98,7 +98,7 @@ class GameServiceTest(
             paramName = "Level",
             description = "Level of the game",
             increment = 1,
-            paramOrder = 1
+            maxAbilityEffect = 1
         )
         val updatedGame = game1.copy(configItems = mutableSetOf(newConfigItem), name="UpdatedGame")
         gameService.updateGame(updatedGame)

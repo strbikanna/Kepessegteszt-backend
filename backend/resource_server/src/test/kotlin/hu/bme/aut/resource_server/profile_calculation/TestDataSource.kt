@@ -23,7 +23,7 @@ object TestDataSource {
             easiestValue = 20000,
             hardestValue = 5000,
             increment = -1000,
-            paramOrder = 2,
+            maxAbilityEffect = 2,
             description = "Time limit for each round",
         )
         val configItem2 = ConfigItem(
@@ -32,7 +32,7 @@ object TestDataSource {
             easiestValue = 5,
             hardestValue = 15,
             increment = 1,
-            paramOrder = 1,
+            maxAbilityEffect = 1,
             description = "Speed",
         )
         return GameEntity(

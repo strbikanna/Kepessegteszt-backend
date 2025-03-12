@@ -59,7 +59,7 @@ class RecommendationIntegrationTest(
     private fun createRecommendedGame(): RecommendedGameEntity {
         val configItem = ConfigItem(
             paramName = "Level",
-            paramOrder = 1,
+            maxAbilityEffect = 1,
             easiestValue = 1,
             hardestValue = 10,
             increment = 1,
