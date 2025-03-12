@@ -67,11 +67,9 @@ class RecommendedGameService(
      * Retrieve the configuration of a recommended game. If the configuration is not yet available, it waits for it to be available.
      */
     suspend fun getRecommendedGameConfig(recommendedGameId: Long): Map<String, Any>? = withContext(Dispatchers.IO) {
-        log.info("Getting config for recommendation with id: $recommendedGameId")
         var rGame = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
         repeat(10) {
             if (rGame.config.isNotEmpty()) {
-                log.info("Config found for recommendation with id: $recommendedGameId")
                 return@withContext rGame.config
             }
             log.info("Config not found for recommendation with id: $recommendedGameId. Waiting...")
