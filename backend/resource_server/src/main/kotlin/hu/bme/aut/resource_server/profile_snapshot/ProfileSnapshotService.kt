@@ -15,6 +15,10 @@ class ProfileSnapshotService(
     @Autowired private var floatProfileSnapshotRepository: FloatProfileSnapshotRepository,
     @Autowired private var enumProfileSnapshotRepository: EnumProfileSnapshotRepository,
 ) {
+    private companion object {
+        val MIN_ABILITY_ACCURACY_TO_SAVE = 0.8
+    }
+
     fun saveSnapshotOfUser(user: UserEntity){
         saveFloatProfile(user)
         saveEnumProfile(user)
@@ -26,12 +30,12 @@ class ProfileSnapshotService(
     fun saveSnapshotOfUserAbilities(user: UserEntity, abilities: List<AbilityEntity>){
         val floatProfile = user.profileFloat
         val floatProfileSnapshotItems = floatProfile
-            .filter { abilities.contains(it.ability) }
+            .filter { abilities.contains(it.ability) && canSaveProfileItem(it.abilityAccuracy) }
             .map { FloatProfileSnapshotItem(it, user) }
         floatProfileSnapshotRepository.saveAll(floatProfileSnapshotItems)
         val enumProfile = user.profileEnum
         val enumProfileSnapshotItems = enumProfile
-            .filter { abilities.contains(it.ability) }
+            .filter { abilities.contains(it.ability) && canSaveProfileItem(it.abilityAccuracy) }
             .map { EnumProfileSnapshotItem(it, user) }
         enumProfileSnapshotRepository.saveAll(enumProfileSnapshotItems)
     }
@@ -41,9 +45,9 @@ class ProfileSnapshotService(
      */
     private fun saveEnumProfile(user: UserEntity) {
         val enumProfile = user.profileEnum
-        val enumProfileSnapshotItems = enumProfile.map {
-            EnumProfileSnapshotItem(it, user)
-        }
+        val enumProfileSnapshotItems = enumProfile
+            .filter { canSaveProfileItem(it.abilityAccuracy) }
+            .map { EnumProfileSnapshotItem(it, user) }
         enumProfileSnapshotRepository.saveAll(enumProfileSnapshotItems)
     }
 
@@ -52,9 +56,9 @@ class ProfileSnapshotService(
      */
     private fun saveFloatProfile(user: UserEntity) {
         val floatProfile = user.profileFloat
-        val profileSnapshotItems = floatProfile.map {
-            FloatProfileSnapshotItem(it, user)
-        }
+        val profileSnapshotItems = floatProfile
+            .filter { canSaveProfileItem(it.abilityAccuracy) }
+            .map { FloatProfileSnapshotItem(it, user) }
         floatProfileSnapshotRepository.saveAll(profileSnapshotItems)
     }
 
@@ -110,4 +114,5 @@ class ProfileSnapshotService(
         enumProfileSnapshotRepository.deleteByUser(user)
     }
 
+    private fun canSaveProfileItem(abilityAccuracy: Double) = abilityAccuracy >= MIN_ABILITY_ACCURACY_TO_SAVE
 }
