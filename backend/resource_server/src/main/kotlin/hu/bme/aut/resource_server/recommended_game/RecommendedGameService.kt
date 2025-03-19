@@ -27,29 +27,47 @@ class RecommendedGameService(
      * Get all recommendations to user which are not yet completed.
      */
     @Transactional
-    fun getAllRecommendedToUser(username: String, pageIndex: Int = 0, pageSize: Int = 100): List<RecommendedGameDto> {
+    fun getAllRecommendedToUser(
+        username: String,
+        acceptedGameIds: List<Int>?,
+        pageIndex: Int = 0,
+        pageSize: Int = 100
+    ): List<RecommendedGameDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
         val sort = Sort.by(Sort.Order.desc("timestamp"))
-        return recommendedGameRepository
-            .findAllPagedByRecommendedToAndCompleted(user, false, PageRequest.of(pageIndex, pageSize, sort))
-            .filter { it.game.active }
-            .map { it.toDto() }
+        val recommendedGames =
+            if (acceptedGameIds != null) {
+                recommendedGameRepository.findAllPagedByRecommendedToAndCompletedAndGameIn(
+                    user, false, gameRepository.findAllById(acceptedGameIds), PageRequest.of(pageIndex, pageSize, sort)
+                )
+            } else {
+                recommendedGameRepository.findAllPagedByRecommendedToAndCompleted(
+                    user,
+                    false,
+                    PageRequest.of(pageIndex, pageSize, sort)
+                )
+            }
+        return recommendedGames.filter { it.game.active }.map { it.toDto() }
     }
 
     @Transactional
-    fun getNextChoiceForUser(username: String): List<RecommendedGameDto> {
+    fun getNextChoiceForUser(username: String, acceptedGameIds: List<Int>?): List<RecommendedGameDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
         val top2Distinct: MutableList<GameEntity> = mutableListOf()
         val neverPlayedGames = getNeverPlayedGames(user)
         neverPlayedGames.forEach {
-            if (top2Distinct.size < 2 && !top2Distinct.contains(it) && it.active) {
+            if (top2Distinct.size < 2 && !top2Distinct.contains(it)
+                && it.active && (acceptedGameIds?.contains(it.id) == true || acceptedGameIds == null)
+            ) {
                 top2Distinct.add(it)
             }
         }
         if (top2Distinct.size < 2) {
             val latestCompleted = recommendedGameRepository.findLatestCompleted(user)
             latestCompleted.forEach {
-                if (top2Distinct.size < 2 && !top2Distinct.contains(it.game) && it.game.active) {
+                if (top2Distinct.size < 2 && !top2Distinct.contains(it.game)
+                    && it.game.active && (acceptedGameIds?.contains(it.game.id) == true || acceptedGameIds == null)
+                ) {
                     top2Distinct.add(it.game)
                 }
             }

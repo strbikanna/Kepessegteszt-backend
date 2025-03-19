@@ -26,6 +26,7 @@ class RecommendedGameController(
     fun getRecommendedGamesToUser(
         @RequestParam(required = false) pageIndex: Int?,
         @RequestParam(required = false) pageSize: Int?,
+        @RequestParam(required = false) acceptedGameIds: List<Int>?,
         authentication: Authentication
     ): List<RecommendedGameDto> {
         recommenderService.createDefaultRecommendationsForUser(authentication.name)
@@ -58,7 +59,10 @@ class RecommendedGameController(
 
     @GetMapping("/next_choice")
     @ResponseStatus(HttpStatus.OK)
-    fun getNextChoiceForUser(authentication: Authentication): List<RecommendedGameDto> {
+    fun getNextChoiceForUser(
+        @RequestParam(required = false) acceptedGameIds: List<Int>?,
+        authentication: Authentication
+    ): List<RecommendedGameDto> {
         return recommendedGameService.getNextChoiceForUser(authentication.name)
     }
 
