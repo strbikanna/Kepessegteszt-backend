@@ -9,6 +9,7 @@ import {BehaviorSubject} from "rxjs";
 import {Location} from "@angular/common";
 import {ProfileDescription} from "../../../model/profile/profile_description";
 import {UserInfo} from "../../../auth/userInfo";
+import {ProfileData} from "../../../model/profile/profile_data.model";
 
 @Component({
     selector: 'app-admin-cognitive-profile',
@@ -19,7 +20,7 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
     text = TEXTS.cognitive_profile
     protected chosenUsername?: string;
     protected name?: string;
-    protected currProfileData?: CognitiveProfile;
+    protected currProfileData?: ProfileData[];
     protected profileDescription?: ProfileDescription;
     protected profileHistoryData: BehaviorSubject<CognitiveProfile[]> = new BehaviorSubject<CognitiveProfile[]>([]);
     protected loadingProfile = true;
