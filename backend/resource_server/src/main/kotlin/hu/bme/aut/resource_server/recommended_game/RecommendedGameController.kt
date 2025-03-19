@@ -31,9 +31,9 @@ class RecommendedGameController(
     ): List<RecommendedGameDto> {
         recommenderService.createDefaultRecommendationsForUser(authentication.name)
         return if (pageIndex == null || pageSize == null)
-            recommendedGameService.getAllRecommendedToUser(authentication.name)
+            recommendedGameService.getAllRecommendedToUser(authentication.name, acceptedGameIds)
         else
-            recommendedGameService.getAllRecommendedToUser(authentication.name, pageIndex, pageSize)
+            recommendedGameService.getAllRecommendedToUser(authentication.name, acceptedGameIds, pageIndex, pageSize)
     }
 
     @GetMapping("/search")
@@ -63,7 +63,7 @@ class RecommendedGameController(
         @RequestParam(required = false) acceptedGameIds: List<Int>?,
         authentication: Authentication
     ): List<RecommendedGameDto> {
-        return recommendedGameService.getNextChoiceForUser(authentication.name)
+        return recommendedGameService.getNextChoiceForUser(authentication.name, acceptedGameIds)
     }
 
     @PostMapping("/recommend")
