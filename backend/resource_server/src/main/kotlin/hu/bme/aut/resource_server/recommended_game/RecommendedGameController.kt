@@ -88,11 +88,7 @@ class RecommendedGameController(
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('STUDENT')")
     fun getAllSystemRecommended(authentication: Authentication): List<RecommendedGameDto> {
-        val systemRecommendedGames =
-            gameplayRecommenderService.getAllRecommendationToUser(authentication.name).toMutableList()
-        if (systemRecommendedGames.size < 1) {
-            systemRecommendedGames.addAll(gameplayRecommenderService.createNewRecommendations(authentication.name))
-        }
+        val systemRecommendedGames = gameplayRecommenderService.getAllRecommendationToUser(authentication.name).toMutableList()
         return systemRecommendedGames.map { it.toDto() }
     }
 
