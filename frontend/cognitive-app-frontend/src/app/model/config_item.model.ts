@@ -5,7 +5,7 @@ export interface ConfigItem {
     hardestValue: number;
     easiestValue: number;
     increment: number;
-    paramOrder: number;
+    maxAbilityEffect: number;
     description: string;
 }
 
@@ -16,6 +16,6 @@ export function isSameConfigItem(a: ConfigItem, b: ConfigItem): boolean {
         a.hardestValue === b.hardestValue &&
         a.easiestValue === b.easiestValue &&
         a.increment === b.increment &&
-        a.paramOrder === b.paramOrder &&
+        a.maxAbilityEffect === b.maxAbilityEffect &&
         a.description === b.description
 }

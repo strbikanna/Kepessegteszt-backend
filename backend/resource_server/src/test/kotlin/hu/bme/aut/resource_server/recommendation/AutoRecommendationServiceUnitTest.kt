@@ -133,8 +133,8 @@ private lateinit var autoRecommendationService : AutoRecommendationService
     fun `Should change the 2nd param if the first has max value and result is success`(){
         val previousRecommendation = TestDataSource.createRecommendationForUser(user, game).copy(timestamp = LocalDateTime.now().minusDays(1))
         val modifiedConfig = previousRecommendation.config.toMutableMap()
-        val firstOrderParam = game.configItems.find { it.paramOrder == 1 }!!
-        val secondOrderParam = game.configItems.find { it.paramOrder == 2 }!!
+        val firstOrderParam = game.configItems.find { it.maxAbilityEffect == 1 }!!
+        val secondOrderParam = game.configItems.find { it.maxAbilityEffect == 2 }!!
         modifiedConfig[firstOrderParam.paramName] = firstOrderParam.hardestValue
         val latestRecommendation = TestDataSource.createRecommendationForUser(user, game)
             .copy(timestamp = LocalDateTime.now(), config = modifiedConfig)
@@ -157,8 +157,8 @@ private lateinit var autoRecommendationService : AutoRecommendationService
     fun `Should recommend easier when result is NOT success`(){
         val previousRecommendation = TestDataSource.createRecommendationForUser(user, game).copy(timestamp = LocalDateTime.now().minusDays(1))
         val modifiedConfig = previousRecommendation.config.toMutableMap()
-        val firstParam = game.configItems.find { it.paramOrder == 1 }!!
-        val secondParam = game.configItems.find { it.paramOrder == 2 }!!
+        val firstParam = game.configItems.find { it.maxAbilityEffect == 1 }!!
+        val secondParam = game.configItems.find { it.maxAbilityEffect == 2 }!!
         modifiedConfig[firstParam.paramName] = firstParam.hardestValue
         val latestRecommendation = TestDataSource.createRecommendationForUser(user, game)
             .copy(timestamp = LocalDateTime.now(), config = modifiedConfig)
@@ -204,8 +204,8 @@ private lateinit var autoRecommendationService : AutoRecommendationService
         val latestRecommendation = TestDataSource.createRecommendationForUser(user, game).copy(timestamp = LocalDateTime.now(),
             config = game.configItems.associate { it.paramName to it.initialValue }.toMutableMap())
         val result = TestDataSource.createGameplayResultForUser(user, latestRecommendation).copy(result = mapOf("passed" to true))
-        val firstOrderParam = game.configItems.find { it.paramOrder == 1 }!!
-        val secondOrderParam = game.configItems.find { it.paramOrder == 2 }!!
+        val firstOrderParam = game.configItems.find { it.maxAbilityEffect == 1 }!!
+        val secondOrderParam = game.configItems.find { it.maxAbilityEffect == 2 }!!
         `when`(mockDataService.getResultById(1)).thenReturn(result)
         `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
         runBlocking {
@@ -223,7 +223,7 @@ private lateinit var autoRecommendationService : AutoRecommendationService
                 ConfigItem(
                     id = 1,
                     paramName = "height",
-                    paramOrder = 2,
+                    maxAbilityEffect = 2,
                     initialValue = 8,
                     increment = 1,
                     easiestValue = 6,
@@ -233,7 +233,7 @@ private lateinit var autoRecommendationService : AutoRecommendationService
                 ConfigItem(
                     id = 2,
                     paramName = "width",
-                    paramOrder = 3,
+                    maxAbilityEffect = 3,
                     initialValue = 8,
                     increment = 1,
                     easiestValue = 6,
@@ -243,7 +243,7 @@ private lateinit var autoRecommendationService : AutoRecommendationService
                 ConfigItem(
                     id = 3,
                     paramName = "time_limit",
-                    paramOrder = 4,
+                    maxAbilityEffect = 4,
                     initialValue = 180000,
                     increment = 30000,
                     easiestValue = 300000,

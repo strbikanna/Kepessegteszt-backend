@@ -49,8 +49,7 @@ class RecommenderService(
     }
 
     fun save(recommendation: RecommendedGameEntity): RecommendedGameEntity {
-        val saved = recommendedGameRepository.save(recommendation)
-        return saved
+        return recommendedGameRepository.save(recommendation)
     }
 
     suspend fun createNextRecommendationByResult(gameResult: ResultEntity): Map<String, Any> {

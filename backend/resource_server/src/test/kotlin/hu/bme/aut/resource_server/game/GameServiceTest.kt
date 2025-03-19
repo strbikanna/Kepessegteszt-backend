@@ -33,8 +33,6 @@ class GameServiceTest(
     }
 
     fun initRepo() {
-        val config1 = mutableMapOf<String, Any>("Level" to 0)
-        val config2 = mutableMapOf<String, Any>("Level" to 3, "Ability" to "Gf")
         game1 = GameEntity(
             version = 1,
             name = "TestGame1",
@@ -48,7 +46,6 @@ class GameServiceTest(
                 "test_game_icon.png"
             ).toString(),
             active = true,
-            configDescription = config1,
             affectedAbilities = mutableSetOf(testUtilsService.abilityColorsense)
         )
         game2 = GameEntity(
@@ -64,7 +61,6 @@ class GameServiceTest(
                 "test_game_icon.png"
             ).toString(),
             active = true,
-            configDescription = config2,
             affectedAbilities = mutableSetOf(testUtilsService.abilityGf, testUtilsService.abilityGq)
         )
         gameRepository.save(game1)
@@ -102,7 +98,7 @@ class GameServiceTest(
             paramName = "Level",
             description = "Level of the game",
             increment = 1,
-            paramOrder = 1
+            maxAbilityEffect = 1
         )
         val updatedGame = game1.copy(configItems = mutableSetOf(newConfigItem), name="UpdatedGame")
         gameService.updateGame(updatedGame)
