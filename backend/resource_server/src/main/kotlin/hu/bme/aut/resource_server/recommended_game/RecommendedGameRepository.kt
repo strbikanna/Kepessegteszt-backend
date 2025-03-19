@@ -17,6 +17,7 @@ interface RecommendedGameRepository: JpaRepository<RecommendedGameEntity, Long> 
     fun findAllByRecommendedToAndGameAndCompleted(recommendedTo: UserEntity, game:GameEntity, completed: Boolean): List<RecommendedGameEntity>
     fun findAllByRecommendedToAndCompleted(recommendedTo: UserEntity, completed: Boolean): List<RecommendedGameEntity>
     fun findAllPagedByRecommendedToAndCompleted(recommendedTo: UserEntity, completed: Boolean, page: Pageable): List<RecommendedGameEntity>
+    fun findAllPagedByRecommendedToAndCompletedAndGameIn(recommendedTo: UserEntity, completed: Boolean, games: List<GameEntity>, page: Pageable): List<RecommendedGameEntity>
     fun findAllPagedByRecommendedToAndCompletedAndGame(recommendedTo: UserEntity, completed: Boolean, game:GameEntity, page: Pageable): List<RecommendedGameEntity>
     fun findAllPagedByRecommendedToAndGame(recommendedTo: UserEntity, game:GameEntity, page: Pageable): List<RecommendedGameEntity>
     fun findAllPagedByRecommendedTo(recommendedTo: UserEntity, page: Pageable): List<RecommendedGameEntity>

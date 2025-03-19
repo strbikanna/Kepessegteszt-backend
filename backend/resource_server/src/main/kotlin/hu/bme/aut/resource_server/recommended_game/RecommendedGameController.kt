@@ -26,13 +26,14 @@ class RecommendedGameController(
     fun getRecommendedGamesToUser(
         @RequestParam(required = false) pageIndex: Int?,
         @RequestParam(required = false) pageSize: Int?,
+        @RequestParam(required = false) acceptedGameIds: List<Int>?,
         authentication: Authentication
     ): List<RecommendedGameDto> {
         recommenderService.createDefaultRecommendationsForUser(authentication.name)
         return if (pageIndex == null || pageSize == null)
-            recommendedGameService.getAllRecommendedToUser(authentication.name)
+            recommendedGameService.getAllRecommendedToUser(authentication.name, acceptedGameIds)
         else
-            recommendedGameService.getAllRecommendedToUser(authentication.name, pageIndex, pageSize)
+            recommendedGameService.getAllRecommendedToUser(authentication.name, acceptedGameIds, pageIndex, pageSize)
     }
 
     @GetMapping("/search")
@@ -58,8 +59,11 @@ class RecommendedGameController(
 
     @GetMapping("/next_choice")
     @ResponseStatus(HttpStatus.OK)
-    fun getNextChoiceForUser(authentication: Authentication): List<RecommendedGameDto> {
-        return recommendedGameService.getNextChoiceForUser(authentication.name)
+    fun getNextChoiceForUser(
+        @RequestParam(required = false) acceptedGameIds: List<Int>?,
+        authentication: Authentication
+    ): List<RecommendedGameDto> {
+        return recommendedGameService.getNextChoiceForUser(authentication.name, acceptedGameIds)
     }
 
     @PostMapping("/recommend")
@@ -84,11 +88,7 @@ class RecommendedGameController(
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('STUDENT')")
     fun getAllSystemRecommended(authentication: Authentication): List<RecommendedGameDto> {
-        val systemRecommendedGames =
-            gameplayRecommenderService.getAllRecommendationToUser(authentication.name).toMutableList()
-        if (systemRecommendedGames.size < 1) {
-            systemRecommendedGames.addAll(gameplayRecommenderService.createNewRecommendations(authentication.name))
-        }
+        val systemRecommendedGames = gameplayRecommenderService.getAllRecommendationToUser(authentication.name).toMutableList()
         return systemRecommendedGames.map { it.toDto() }
     }
 
