@@ -13,7 +13,7 @@
                         i</div>
                     <mat-chip>{{ item.value }}</mat-chip>
                 </div>
-                <small>{{ text.ability_value_accuracy }} {{ item.accuracy / 100 | percent }}</small>
+                <small>{{ text.ability_value_accuracy }} {{ item.accuracy * 100 | percent }}</small>
                 <mat-divider class="mt-2"></mat-divider>
             </div>
         </div>

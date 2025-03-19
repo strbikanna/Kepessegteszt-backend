@@ -50,7 +50,7 @@ export class CognitiveProfilePageComponent implements OnInit {
                 this.profileDataHistory.next(profiles)
                 this.currentProfileData =
                     Array.from(profiles[profiles.length - 1].profileItems.entries()).map(([key, value]) => {
-                        return {ability: key, value: value, accuracy: 0}
+                        return {ability: key, value: value, accuracy: 1.0}
                     })
                 this.profileTimestamp = profiles[profiles.length - 1].timestamp
             }
