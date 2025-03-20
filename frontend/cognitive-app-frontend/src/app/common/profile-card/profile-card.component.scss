@@ -1,20 +1,36 @@
-.profile-data-container{
-  display:flex;
+.profile-data-container {
+  display: flex;
   flex-direction: row;
 }
-mat-card{
+
+mat-card {
   height: 100%;
 }
-.data-holder{
-  display:flex;
+
+.data-holder {
+  display: flex;
   align-items: center;
-  mat-chip{
+
+  mat-chip {
     margin-left: 2em;
     padding-inline: 0.5em;
     background-color: #C3ACD0;
   }
 }
-#ability-description{
+
+.info {
+  cursor: pointer;
+  border: 1px solid dimgrey;
+  border-radius: 100%;
+  width: 1.2em;
+  height: 1em;
+  text-align: center;
+  font-size: 0.7em;
+  padding-bottom: 0.2em;
+  margin-left: 0.4em;
+}
+
+#ability-description {
   color: dimgrey;
   font-size: medium;
   word-break: break-all;

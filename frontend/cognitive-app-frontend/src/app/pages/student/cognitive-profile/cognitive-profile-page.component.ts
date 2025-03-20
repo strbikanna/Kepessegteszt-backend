@@ -8,6 +8,7 @@ import {UserInfo} from "../../../auth/userInfo";
 import {Role} from "../../../utils/constants";
 import {User} from "../../../model/user/user.model";
 import {DateRange} from "../../../common/date-picker/date-picker.component";
+import {ProfileData} from "../../../model/profile/profile_data.model";
 
 @Component({
     selector: 'app-cognitive-profile',
@@ -16,7 +17,7 @@ import {DateRange} from "../../../common/date-picker/date-picker.component";
 })
 export class CognitiveProfilePageComponent implements OnInit {
 
-    currentProfileData!: CognitiveProfile
+    currentProfileData!: ProfileData[]
     profileDescription: string = ''
     profileDataHistory: BehaviorSubject<CognitiveProfile[]> = new BehaviorSubject<CognitiveProfile[]>([])
     text = TEXTS.cognitive_profile
@@ -24,6 +25,7 @@ export class CognitiveProfilePageComponent implements OnInit {
     loading = true
     loadingProfile = true
     loadingDescription = true
+    profileTimestamp = new Date()
 
     constructor(private service: CognitiveProfileService) {}
 
@@ -44,10 +46,13 @@ export class CognitiveProfilePageComponent implements OnInit {
 
     onDateChosen(dateRange: DateRange) {
         const profilesBetween = this.service.getProfilesBetween(dateRange.start, dateRange.end)
-
         profilesBetween.subscribe(profiles => {
                 this.profileDataHistory.next(profiles)
-                this.currentProfileData = profiles[profiles.length - 1]
+                this.currentProfileData =
+                    Array.from(profiles[profiles.length - 1].profileItems.entries()).map(([key, value]) => {
+                        return {ability: key, value: value, accuracy: 1.0}
+                    })
+                this.profileTimestamp = profiles[profiles.length - 1].timestamp
             }
         )
     }

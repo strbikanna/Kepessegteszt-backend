@@ -11,8 +11,6 @@ import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserService
 import jakarta.transaction.Transactional
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -29,7 +27,10 @@ class UserProfileUpdaterService(
     /**
      * Unit of deviation difference's effect on ability value.
      */
-    private final val deviationDiffMultiplicator = 0.15
+    private companion object{
+        const val DEVIATION_DIFF_MULTIPLICATOR = 0.15
+        const val ABILITY_ACCURACY_INCREMENT = 0.1
+    }
 
     /**
      * Updates the user profiles by the normalized results of the game with the given id.
@@ -44,6 +45,24 @@ class UserProfileUpdaterService(
     }
 
     /**
+     * Updates the users float profile by the given ability and value.
+     * Ability accuracy is incremented by 0.1.
+     * @param username the username of the user
+     * @param ability the ability to update
+     * @param updatedValue the new value of the ability
+     */
+    @Transactional
+    fun updateUserProfile(username: String, ability: AbilityEntity, updatedValue: Double){
+        val user = userService.getUserEntityWithProfileByUsername(username)
+        val updateableProfileItem = user.profileFloat.find { it.ability.code == ability.code }
+        updateableProfileItem?.let {
+            it.abilityValue = updatedValue
+            it.abilityAccuracy += ABILITY_ACCURACY_INCREMENT
+        }
+        userService.saveUser(user)
+    }
+
+    /**
      * Updates the user profiles by the first (and only) affected ability of the game.
      * The new ability value is calculated by the following formula:
      * newAbilityValue = 1 + (normalizedResult - mean) / deviation * 0.15
@@ -52,7 +71,7 @@ class UserProfileUpdaterService(
         val normalizedResults = resultDataService.getAllNormalizedResultsOfGame(game)
         normalizedResults.forEach { result ->
             val difference = result.normalizedResult!! - normalizationValue.mean
-            val abilityValue = 1 + (difference/normalizationValue.deviation) * deviationDiffMultiplicator
+            val abilityValue = 1 + (difference/normalizationValue.deviation) * DEVIATION_DIFF_MULTIPLICATOR
             val user = userService.getUserEntityWithProfileByUsername(result.user.username)
             saveNewAbilityValueOfUser(user, ability, abilityValue)
         }
@@ -93,7 +112,7 @@ class UserProfileUpdaterService(
         val abilityContributions = abilityRateCalculatorService.calculateRates(inputForCalculation.first, inputForCalculation.second)
         normalizedResults.forEach { result ->
             val difference = result.normalizedResult!! - normalizationValue.mean
-            val abilityValue = 1 + difference/normalizationValue.deviation * deviationDiffMultiplicator
+            val abilityValue = 1 + difference/normalizationValue.deviation * DEVIATION_DIFF_MULTIPLICATOR
             abilities.forEachIndexed { index, ability ->
                 saveNewAbilityValueOfUser(result.user, ability, abilityValue, abilityContributions[index])
             }
