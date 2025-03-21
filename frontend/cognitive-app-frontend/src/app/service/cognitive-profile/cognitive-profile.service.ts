@@ -127,6 +127,14 @@ export class CognitiveProfileService {
         )
     }
 
+    updateCurrentProfile(profileData: ProfileData[]): Observable<ProfileData[]> {
+        return of(profileData);
+        // return this.http.put<ProfileData[]>(`${this.helper.baseUrl}${this.profileEndpoint}`, profileData).pipe(
+        //     catchError(this.helper.handleHttpError)
+        // )
+
+    }
+
 
     /**
      * converts server data to client side model
