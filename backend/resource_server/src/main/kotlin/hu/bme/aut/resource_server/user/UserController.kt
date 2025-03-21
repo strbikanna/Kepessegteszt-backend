@@ -43,6 +43,17 @@ class UserController(
         userService.getUserDtoWithProfileByUsername(username).profile.toList()
     }
 
+    @PutMapping("/profile")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_TEACHER', 'ROLE_ADMIN')")
+    fun updateUserProfile(
+        authentication: Authentication,
+        @RequestParam username: String,
+        @RequestBody profile: List<ProfileItem>
+    ) : Deferred<List<ProfileItem>> = authService.doIfIsContact(authentication, username) {
+        userService.getUserDtoWithProfileByUsername(username).profile.toList()
+    }
+
     @GetMapping("/groups")
     @ResponseStatus(HttpStatus.OK)
     fun getGroupsOfUser(authentication: Authentication): List<UserGroupDto> {
