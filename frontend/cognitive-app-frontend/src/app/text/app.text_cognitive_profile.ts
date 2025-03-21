@@ -93,5 +93,6 @@ export const cognitive_profile_text = {
         value_no: 'Nem',
         value_possible: 'Lehetséges',
         value_inclined: 'Hajlamos',
+        save: 'Mentés',
     }
 }

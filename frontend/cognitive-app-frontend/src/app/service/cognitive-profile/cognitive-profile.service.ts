@@ -127,11 +127,10 @@ export class CognitiveProfileService {
         )
     }
 
-    updateCurrentProfile(profileData: ProfileData[]): Observable<ProfileData[]> {
-        return of(profileData);
-        // return this.http.put<ProfileData[]>(`${this.helper.baseUrl}${this.profileEndpoint}`, profileData).pipe(
-        //     catchError(this.helper.handleHttpError)
-        // )
+    updateCurrentProfile(profileData: ProfileData[], username: string): Observable<ProfileData[]> {
+        return this.http.put<ProfileData[]>(`${this.helper.baseUrl}${this.profileEndpoint}?username=${username}`, profileData).pipe(
+            catchError(this.helper.handleHttpError)
+        )
 
     }
 
