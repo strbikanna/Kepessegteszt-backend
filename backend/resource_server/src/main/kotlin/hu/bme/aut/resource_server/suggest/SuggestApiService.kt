@@ -36,19 +36,16 @@ class SuggestApiService {
             .filter { gameAbilities.contains(it.ability) }
             .sortedBy { it.ability.code }
 
-        val orderedConfig = previousConfig.toSortedMap()
-
         val requestDto = SuggestRequestDto(
             abilities = relevantAbilitiesOrdered.map { it.abilityValue },
-            previousParams = orderedConfig.map { it.value as Int },
+            previousParams = previousConfig.map { it.key to it.value as Int }.toMap(),
             resultSuccess = isResultSuccess,
-            abilityAccuracy = abilityAccuracy
         )
 
         val nextConfig = CoroutineScope(Dispatchers.IO).async {
             val response = try {
                 webclient.post()
-                    .uri("/game/$gameId/suggest")
+                    .uri("/games/$gameId/suggest")
                     .bodyValue(requestDto)
                     .retrieve()
                     .bodyToMono(SuggestResponseDto::class.java)
@@ -57,13 +54,7 @@ class SuggestApiService {
                 throw ApiCallException("Failed to get suggestion from suggest-api", e)
             }
 
-            if (response != null) {
-                val configKeys = orderedConfig.keys
-                val configValues = response.config
-                configKeys.zip(configValues).toMap()
-            } else {
-                throw ApiCallException("Failed to get suggestion from suggest-api")
-            }
+            response?.config ?: throw ApiCallException("Next config is missing")
 
         }
         return nextConfig.await()

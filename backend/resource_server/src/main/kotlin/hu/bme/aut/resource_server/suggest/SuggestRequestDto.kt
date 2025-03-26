@@ -7,11 +7,8 @@ data class SuggestRequestDto(
     val abilities: List<Double>,
 
     @JsonProperty("prev_params")
-    val previousParams: List<Int>,
+    val previousParams: Map<String, Int>,
 
     @JsonProperty("result")
     val resultSuccess: Boolean,
-
-    @JsonProperty("ability_accuracy")
-    val abilityAccuracy: Double
 )
