@@ -14,8 +14,8 @@ import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest
 @ActiveProfiles("test")
-class AutoRecommendationServiceIntTest(
-    @Autowired val autoRecommendationService: AutoRecommendationService,
+class AutoRecommendationStrategyIntTest(
+    @Autowired val autoRecommendationStrategy: AutoRecommendationStrategy,
     @Autowired val testService: TestUtilsService
 ) {
     @BeforeEach
@@ -28,7 +28,7 @@ class AutoRecommendationServiceIntTest(
     fun shouldRunTransactionalSuspendFunction(){
         val result = createResult()
         runBlocking {
-            val recommendation = autoRecommendationService.createNextRecommendationBasedOnResult(result.id!!)
+            val recommendation = autoRecommendationStrategy.generateRecommendationByResult(result.id!!)
             //empty because game has no config items
             assertTrue(recommendation.isEmpty())
         }
@@ -50,7 +50,7 @@ class AutoRecommendationServiceIntTest(
         testService.gameRepository.save(game)
         testService.recommendedGameRepository.save(currRecommendation)
         runBlocking {
-            val recommendation = autoRecommendationService.createNextRecommendationBasedOnResult(result.id!!)
+            val recommendation = autoRecommendationStrategy.generateRecommendationByResult(result.id!!)
             assertTrue(recommendation.isNotEmpty())
             assertEquals(1, game.configItems.filter{recommendation[it.paramName] == it.initialValue + it.increment}.size)
         }

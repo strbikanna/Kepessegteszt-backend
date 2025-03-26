@@ -1,9 +1,13 @@
 package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.game.GameRepository
-import hu.bme.aut.resource_server.recommendation.AutoRecommendationService
+import hu.bme.aut.resource_server.recommendation.AutoRecommendationStrategy
+import hu.bme.aut.resource_server.recommendation.ExistingRecommendationStrategy
+import hu.bme.aut.resource_server.recommendation.RecommendationStrategy
 import hu.bme.aut.resource_server.result.ResultEntity
+import hu.bme.aut.resource_server.recommendation.SuggestApiStrategy
 import hu.bme.aut.resource_server.user.UserRepository
+import jakarta.annotation.PostConstruct
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,11 +17,24 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class RecommenderService(
     @Autowired private var gameRepository: GameRepository,
-    @Autowired private var autoRecommender: AutoRecommendationService,
+    @Autowired private var autoRecommendationStrategy: AutoRecommendationStrategy,
+    @Autowired private var suggestApiStrategy: SuggestApiStrategy,
+    @Autowired private var existingRecommendationStrategy: ExistingRecommendationStrategy,
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
     @Autowired private var userRepository: UserRepository
 ) {
     val log: Logger = LoggerFactory.getLogger(RecommenderService::class.java)
+
+    private lateinit var recommendationStrategies: List<RecommendationStrategy>
+
+    @PostConstruct
+    fun initRecommendationStrategies() {
+        recommendationStrategies = listOf(
+            existingRecommendationStrategy,
+            //suggestApiStrategy,
+            autoRecommendationStrategy
+        )
+    }
 
     /**
      * Get all recommendations to user which are not yet completed and the game is active.
@@ -53,12 +70,23 @@ class RecommenderService(
     }
 
     suspend fun createNextRecommendationByResult(gameResult: ResultEntity): Map<String, Any> {
-        val nextConfig = try {
-            autoRecommender.generateRecommendationForUser(gameResult.id!!)
-        } catch(e: Exception){
-            autoRecommender.createNextRecommendationBasedOnResult(gameResult.id!!)
+        recommendationStrategies.forEach {
+            try {
+                val config = it.generateRecommendationByResult(
+                    gameResult.recommendedGame.recommendedTo.username,
+                    gameResult.recommendedGame.game.id!!,
+                    gameResult.config,
+                    isResultSuccess(gameResult)
+                )
+                if(config.isNotEmpty()){
+                    return config
+                }
+            } catch(e: Exception) {
+                log.error("Error while generating recommendation by result: $e")
+            }
         }
-        return nextConfig
+        //none of the recommendations were successful
+        return emptyMap()
     }
 
     /**
@@ -120,6 +148,10 @@ class RecommenderService(
                 config = game.configItems.associateBy({ it.paramName }, { it.initialValue })
             )
         )
+    }
+
+    private fun isResultSuccess(result: ResultEntity): Boolean {
+        return result.result["passed"] as Boolean? ?: false
     }
 
 }

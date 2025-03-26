@@ -3,8 +3,6 @@ package hu.bme.aut.resource_server.recommendation
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
 import hu.bme.aut.resource_server.profile_calculation.calculator.AbilityRateCalculatorService
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
-import hu.bme.aut.resource_server.result.ResultEntity
-import hu.bme.aut.resource_server.suggest.SuggestApiService
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -20,27 +18,11 @@ import org.springframework.stereotype.Service
  * It uses the [ModelManager] to get the recommendation model for the game.
  */
 @Service
-class AutoRecommendationService(
+class AutoRecommendationStrategy(
     @Autowired private var dataService: ResultForCalculationDataService,
-    @Autowired private var calculatorService: AbilityRateCalculatorService,
-    @Autowired private var modelManager: ModelManager,
-    @Autowired private var suggestApiService: SuggestApiService
-) {
+): RecommendationStrategy {
 
-    var log: Logger = LoggerFactory.getLogger(AutoRecommendationService::class.java)
-
-    suspend fun createRecommendationModel(gameId: Int) {
-        log.trace("Creating recommendation model for game with id: $gameId")
-        val game = dataService.getGameWithAbilities(gameId)
-        val normalizedResults = dataService.getAllNormalizedResultsOfGame(game)
-        val abilities = game.affectedAbilities
-        val modelInput =
-            withContext(Dispatchers.IO) {
-                calculatorService.getAbilityValuesAndValuesFromResultsStructured(normalizedResults, abilities.toList())
-            }
-        modelManager.createNewModel(gameId, modelInput.first, modelInput.second)
-        log.info("Recommendation model created for game with id: $gameId")
-    }
+    var log: Logger = LoggerFactory.getLogger(AutoRecommendationStrategy::class.java)
 
     /**
      * Creates a new recommendation based on the current result and the previous and current recommendation.
@@ -49,34 +31,36 @@ class AutoRecommendationService(
      * After reaching max or min, the next parameter is changed and the value is set to the initial value.
      */
     @Transactional
-    suspend fun createNextRecommendationBasedOnResult(resultId: Long): Map<String, Any> =
+    override suspend fun generateRecommendationByResult(
+        username: String,
+        gameId: Int,
+        previousConfig: Map<String, Any>,
+        isResultSuccess: Boolean,
+    ): Map<String, Any> =
         withContext(Dispatchers.Default) {
-            val result = dataService.getResultById(resultId)
-            val user = result.user
-            val game = dataService.getGameWithConfigItems(result.recommendedGame.game.id!!)
-            log.trace("Creating next recommendation based on result for user: ${user.username}; for game: ${game.name}")
+            val game = dataService.getGameWithConfigItems(gameId)
+            log.trace("Creating next recommendation based on result for user: ${username}; for game: ${game.name}")
             if(game.configItems.isEmpty()){
                 log.info("No config items found for game ${game.name}")
                 return@withContext emptyMap()
             }
-            val success = isResultSuccess(result)
-            val nextRecommendation = result.recommendedGame.config.toMutableMap()
-            val paramsToChange = game.configItems.filter { canChangeParam(nextRecommendation, it, success) }
+            val nextRecommendation = previousConfig.toMutableMap()
+            val paramsToChange = game.configItems.filter { canChangeParam(nextRecommendation, it, isResultSuccess) }
             if(paramsToChange.isEmpty()){
                 return@withContext nextRecommendation
             }
             val nextParamIndex = Math.random().times(paramsToChange.size).toInt()
             val nextParamToChange: ConfigItem = paramsToChange.elementAt(nextParamIndex)
-            val currValue = result.recommendedGame.config[nextParamToChange.paramName] as Int
+            val currValue = previousConfig[nextParamToChange.paramName] as Int
 
-            if (success) {
+            if (isResultSuccess) {
                 val harderRecommendationParam = recommendHarder(nextParamToChange, currValue)
                 nextRecommendation[harderRecommendationParam.first] = harderRecommendationParam.second
             } else {
                 val easierRecommendationParam = recommendEasier(nextParamToChange, currValue)
                 nextRecommendation[easierRecommendationParam.first] = easierRecommendationParam.second
             }
-            log.info("Next recommendation created based on result for user: ${user.username}; for game: ${game.name}. Config: $nextRecommendation")
+            log.info("Next recommendation created based on result for user: ${username}; for game: ${game.name}. Config: $nextRecommendation")
             return@withContext nextRecommendation
         }
 
@@ -94,10 +78,6 @@ class AutoRecommendationService(
         }
     }
 
-    private fun isResultSuccess(result: ResultEntity): Boolean{
-        return result.result["passed"] as Boolean
-    }
-
     private fun recommendEasier(configDescription: ConfigItem, currentValue: Int): Pair<String, Int> {
         if (currentValue == configDescription.easiestValue) return Pair(configDescription.paramName, currentValue)
         return Pair(configDescription.paramName, currentValue - configDescription.increment)
@@ -108,30 +88,5 @@ class AutoRecommendationService(
         return Pair(configDescription.paramName, currentValue + configDescription.increment)
     }
 
-    /**
-     * Generates a recommendation for the given user and game.
-     * The recommendation is generated based on the user's profile and current config of the result.
-     */
-    suspend fun generateRecommendationForUser(resultId: Long): Map<String, Any> =
-    withContext(Dispatchers.Default) {
-        val result = dataService.getResultById(resultId)
-        val user = result.user
-        val game = dataService.getGameWithConfigItems(result.recommendedGame.game.id!!)
-        log.trace("Creating next recommendation based on result for user: ${user.username}; for game: ${game.name}")
-        if(game.configItems.isEmpty()){
-            log.info("No config items found for game ${game.name}")
-            return@withContext emptyMap()
-        }
-        val success = isResultSuccess(result)
-        val nextRecommendation = suggestApiService.getSuggestedConfigForGame(
-            user.profileFloat,
-            game.affectedAbilities,
-            game.id!!,
-            result.recommendedGame.config,
-            success,
-        )
-        log.info("Next recommendation created based on result for user: ${user.username}; for game: ${game.name}. Config: $nextRecommendation")
-        return@withContext nextRecommendation
-    }
 
 }

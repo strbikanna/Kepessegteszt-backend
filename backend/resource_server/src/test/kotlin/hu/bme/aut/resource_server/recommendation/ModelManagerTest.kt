@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.recommendation
 
+import hu.bme.aut.resource_server.profile_calculation.ModelManager
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assumptions.assumeTrue

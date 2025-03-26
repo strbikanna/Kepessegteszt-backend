@@ -2,7 +2,7 @@ package hu.bme.aut.resource_server.profile_calculation.calculator
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
-import hu.bme.aut.resource_server.recommendation.ModelManager
+import hu.bme.aut.resource_server.profile_calculation.ModelManager
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import jakarta.transaction.Transactional

@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.recommendation
+package hu.bme.aut.resource_server.profile_calculation
 
 import hu.bme.aut.resource_server.profile_calculation.error.CalculationException
 import jep.JepException
