@@ -94,15 +94,8 @@ class RecommendedGameService(
             delay(300)
             rGame = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
         }
-        log.info("No result found for recommendation with id: $recommendedGameId. Trying to return latest.")
-        return@withContext getLatestCompletedToUserAndGame(rGame.recommendedTo.username, rGame.game.id!!)?.config
-    }
-
-    fun getLatestCompletedToUserAndGame(username: String, gameId: Int): RecommendedGameEntity? {
-        val user = userRepository.findByUsername(username).orElseThrow()
-        val game = gameRepository.findById(gameId).orElseThrow()
-        return recommendedGameRepository.findLatestCompleted(user)
-            .find { it.game.id == game.id && it.config.isNotEmpty() }
+        log.info("No result found for recommendation with id: $recommendedGameId.")
+        return@withContext emptyMap()
     }
 
     fun addRecommendation(recommendation: RecommendationDto, recommenderUsername: String): RecommendedGameEntity {

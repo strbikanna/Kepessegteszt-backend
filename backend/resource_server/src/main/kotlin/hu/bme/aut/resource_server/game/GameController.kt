@@ -53,11 +53,7 @@ class GameController(
     @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST')")
     fun updateGame(@RequestBody gameEntity: GameEntity, @PathVariable gameId: Int): GameEntity {
         if(gameId == gameEntity.id) {
-            val updated = gameService.updateGame(gameEntity)
-            if(updated.id != gameId){
-                recommenderService.createDefaultRecommendationsForGame(updated.id!!)
-            }
-            return updated
+            return gameService.updateGame(gameEntity)
         } else{
             throw IllegalArgumentException("Game IDs don't match.")
         }

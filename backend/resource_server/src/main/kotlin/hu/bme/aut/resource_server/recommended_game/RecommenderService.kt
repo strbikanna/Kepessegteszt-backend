@@ -1,11 +1,8 @@
 package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.game.GameRepository
-import hu.bme.aut.resource_server.recommendation.AutoRecommendationStrategy
-import hu.bme.aut.resource_server.recommendation.ExistingRecommendationStrategy
-import hu.bme.aut.resource_server.recommendation.RecommendationStrategy
+import hu.bme.aut.resource_server.recommendation.*
 import hu.bme.aut.resource_server.result.ResultEntity
-import hu.bme.aut.resource_server.recommendation.SuggestApiStrategy
 import hu.bme.aut.resource_server.user.UserRepository
 import jakarta.annotation.PostConstruct
 import org.slf4j.Logger
@@ -19,7 +16,8 @@ class RecommenderService(
     @Autowired private var gameRepository: GameRepository,
     @Autowired private var autoRecommendationStrategy: AutoRecommendationStrategy,
     @Autowired private var suggestApiStrategy: SuggestApiStrategy,
-    @Autowired private var existingRecommendationStrategy: ExistingRecommendationStrategy,
+    @Autowired private var latestRecommendationStrategy: LatestRecommendationStrategy,
+    @Autowired private var defaultRecommendationStrategy: DefaultRecommendationStrategy,
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
     @Autowired private var userRepository: UserRepository
 ) {
@@ -30,10 +28,11 @@ class RecommenderService(
     @PostConstruct
     fun initRecommendationStrategies() {
         recommendationStrategies = listOf(
-            existingRecommendationStrategy,
             //suggestApiStrategy,
-            autoRecommendationStrategy
-        )
+            autoRecommendationStrategy,
+            latestRecommendationStrategy,
+            defaultRecommendationStrategy
+            )
     }
 
     /**
@@ -85,14 +84,6 @@ class RecommenderService(
         }
         //none of the recommendations were successful
         return emptyMap()
-        log.info("Generated config was empty, creating default recommendation for user: ${gameResult.user.username}")
-        val nextConfig = withContext(Dispatchers.IO) {
-            recommendedGameRepository.findLatestCompleted(gameResult.user)
-        }
-            .find { it.game.id == gameResult.recommendedGame.game.id && it.config.isNotEmpty() }
-            ?.config ?: emptyMap()
-
-        return nextConfig
     }
 
     /**
@@ -158,26 +149,6 @@ class RecommenderService(
 
     private fun isResultSuccess(result: ResultEntity): Boolean {
         return result.result["passed"] as Boolean? ?: false
-    }
-
-    fun createNewRecommendations(username: String): List<RecommendedGameEntity> {
-        val games = gameRepository.findAllByActiveIsTrue()
-        val user = userRepository.findByUsername(username).orElseThrow()
-        val recommendations = mutableListOf<RecommendedGameEntity>()
-        try {
-            games.forEach { game ->
-                recommendations.add(autoRecommender.generateRecommendationForUser(user, game))
-            }
-            recommendedGameRepository.saveAll(recommendations)
-        } catch (e: RuntimeException) {
-            log.error("Error while generating recommendation for user $username", e)
-            return recommendations
-        }
-        return recommendations
-    }
-
-    fun deleteRecommendations(recommendations: List<RecommendedGameEntity>) {
-        recommendedGameRepository.deleteAll(recommendations)
     }
 
 }

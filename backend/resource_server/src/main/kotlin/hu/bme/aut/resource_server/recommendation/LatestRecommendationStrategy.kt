@@ -8,9 +8,8 @@ import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service
 
 @Service
-class ExistingRecommendationStrategy(
+class LatestRecommendationStrategy(
     private var recommendedGameRepository: RecommendedGameRepository,
-    private var gameRepository: GameRepository,
     private var userRepository: UserRepository
 ) : RecommendationStrategy {
 
@@ -21,11 +20,10 @@ class ExistingRecommendationStrategy(
         previousConfig: Map<String, Any>,
         isResultSuccess: Boolean
     ): Map<String, Any> = withContext(Dispatchers.IO) {
-        val game = gameRepository.findById(gameId).orElseThrow()
         val user = userRepository.findByUsername(username).orElseThrow()
-        return@withContext recommendedGameRepository
-            .findByRecommendedToAndGameAndCompletedAndRecommender(user, game, false, null)
-            .firstOrNull()?.config ?: emptyMap()
+        return@withContext recommendedGameRepository.findLatestCompleted(user)
+            .find { it.game.id == gameId && it.config.isNotEmpty() }
+            ?.config ?: emptyMap()
 
     }
 }
