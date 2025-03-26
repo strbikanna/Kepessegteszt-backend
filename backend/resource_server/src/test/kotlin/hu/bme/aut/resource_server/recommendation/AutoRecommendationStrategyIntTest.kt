@@ -24,11 +24,18 @@ class AutoRecommendationStrategyIntTest(
         testService.fillAbilityRepository()
     }
 
+    private var username : String = "test_user"
+
     @Test
     fun shouldRunTransactionalSuspendFunction(){
         val result = createResult()
         runBlocking {
-            val recommendation = autoRecommendationStrategy.generateRecommendationByResult(result.id!!)
+            val recommendation = autoRecommendationStrategy.generateRecommendationByResult(
+                username,
+                result.recommendedGame.game.id!!,
+                result.config,
+                true
+            )
             //empty because game has no config items
             assertTrue(recommendation.isEmpty())
         }
@@ -50,7 +57,12 @@ class AutoRecommendationStrategyIntTest(
         testService.gameRepository.save(game)
         testService.recommendedGameRepository.save(currRecommendation)
         runBlocking {
-            val recommendation = autoRecommendationStrategy.generateRecommendationByResult(result.id!!)
+            val recommendation = autoRecommendationStrategy.generateRecommendationByResult(
+                username,
+                game.id!!,
+                config,
+                true
+            )
             assertTrue(recommendation.isNotEmpty())
             assertEquals(1, game.configItems.filter{recommendation[it.paramName] == it.initialValue + it.increment}.size)
         }
@@ -58,6 +70,7 @@ class AutoRecommendationStrategyIntTest(
 
     private fun createResult(): ResultEntity{
         val user = testService.createUnsavedTestUser()
+        username = user.username
         testService.saveUser(user)
         val result = testService.createGamePlayResult(user)
         testService.resultRepository.save(result)

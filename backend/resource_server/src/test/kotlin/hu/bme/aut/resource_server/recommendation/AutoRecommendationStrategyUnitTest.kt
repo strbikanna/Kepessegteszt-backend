@@ -3,7 +3,6 @@ package hu.bme.aut.resource_server.recommendation
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
 import hu.bme.aut.resource_server.profile.FloatProfileItem
-import hu.bme.aut.resource_server.profile_calculation.ModelManager
 import hu.bme.aut.resource_server.profile_calculation.TestDataSource
 import hu.bme.aut.resource_server.profile_calculation.calculator.AbilityRateCalculatorService
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
@@ -26,11 +25,6 @@ class AutoRecommendationStrategyUnitTest {
 @Mock
 private lateinit var mockDataService: ResultForCalculationDataService
 
-@Mock
-private lateinit var mockCalculatorService: AbilityRateCalculatorService
-
-@Mock
-private lateinit var mockModelManager: ModelManager
 
 
 private lateinit var autoRecommendationService : AutoRecommendationStrategy
@@ -41,7 +35,7 @@ private lateinit var autoRecommendationService : AutoRecommendationStrategy
     private lateinit var latestResult : ResultForCalculationEntity
     @BeforeEach
     fun init(){
-        autoRecommendationService = AutoRecommendationStrategy(mockDataService, mockCalculatorService, mockModelManager)
+        autoRecommendationService = AutoRecommendationStrategy(mockDataService)
         game = TestDataSource.createGameForTest()
         game.id = 1
         user = TestDataSource.createUsersForTestWithEmptyProfile(1)[0]
@@ -65,65 +59,19 @@ private lateinit var autoRecommendationService : AutoRecommendationStrategy
         )
     }
 
-    @Test
-    fun shouldRecommendBasedOnResult_WhenModelNotExists(){
-        Mockito.`when`(mockModelManager.existsModel(game.id!!)).thenReturn(false)
-        Mockito.`when`(mockDataService.getBestResultOfUser(game, user)).thenReturn(bestResult)
-        //levelPoints based on normalized result = 0.7 - 0.5 * 0.7 = 0.35
-        //recommendedLevel = 0.35 * 10 * 2 = 7
-        val recommendation = autoRecommendationService.generateRecommendationForUser(user, game)
-        assertEquals(7, recommendation.config["level"])
-        assertEquals(game, recommendation.game)
-        assertEquals(user, recommendation.recommendedTo)
-    }
-    @Test
-    fun shouldRecommendBasedOnModel_WhenModelExists(){
-        Mockito.`when`(mockModelManager.existsModel(game.id!!)).thenReturn(true)
-        Mockito.`when`(mockModelManager.getEstimationForResult(game.id!!, listOf(0.5))).thenReturn(0.3)
-        //levelPoints based on normalized result = 0.3 - 0.7 * 0.5 = -0.05
-        //recommendedLevel = 1
-        val recommendation = autoRecommendationService.generateRecommendationForUser(user, game)
-        assertEquals(1, recommendation.config["level"])
-        assertEquals(game, recommendation.game)
-        assertEquals(user, recommendation.recommendedTo)
-    }
-
-    @Test
-    fun shouldRecommendBasedOnLatestResult_WhenBestResultAndModelNotExists(){
-        Mockito.`when`(mockModelManager.existsModel(game.id!!)).thenReturn(false)
-        Mockito.`when`(mockDataService.getBestResultOfUser(game, user)).thenReturn(null)
-        Mockito.`when`(mockDataService.getLatestResultOfUser(game, user)).thenReturn(latestResult)
-        //max score of level = 10+9 = 19
-        //score = 8+8 = 16
-        //successRatio = 16/19 = 0.84
-        //successRation is exceeding 0.7 motivation value, so recommendedLevel = 3
-        val recommendation = autoRecommendationService.generateRecommendationForUser(user, game)
-        assertEquals(3, recommendation.config["level"])
-        assertEquals(game, recommendation.game)
-        assertEquals(user, recommendation.recommendedTo)
-    }
-
-    @Test
-    fun shouldRecommendLevel1_WhenNothingExists(){
-        Mockito.`when`(mockModelManager.existsModel(game.id!!)).thenReturn(false)
-        Mockito.`when`(mockDataService.getBestResultOfUser(game, user)).thenReturn(null)
-        Mockito.`when`(mockDataService.getLatestResultOfUser(game, user)).thenReturn(null)
-        val recommendation = autoRecommendationService.generateRecommendationForUser(user, game)
-        assertEquals(1, recommendation.config["level"])
-        assertEquals(game, recommendation.game)
-        assertEquals(user, recommendation.recommendedTo)
-    }
 
     @Test
     fun `Should Recommend Harder When Result Is Success`(){
         val latestRecommendation = TestDataSource.createRecommendationForUser(user, game).copy(timestamp = LocalDateTime.now())
-        val modifiedConfig = latestRecommendation.config.toMutableMap()
-        modifiedConfig["speed"] = 9
         val result = TestDataSource.createGameplayResultForUser(user, latestRecommendation).copy(result = mapOf("passed" to true))
-        `when`(mockDataService.getResultById(1)).thenReturn(result)
         `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
         runBlocking {
-            val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(1)
+            val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(
+                user.username,
+                game.id!!,
+                result.config,
+                true
+            )
             assertEquals(1,
                 game.configItems.filter{nextRecommendation.get(it.paramName) == it.initialValue + it.increment}.size
             )
@@ -139,11 +87,14 @@ private lateinit var autoRecommendationService : AutoRecommendationStrategy
         modifiedConfig[firstOrderParam.paramName] = firstOrderParam.hardestValue
         val latestRecommendation = TestDataSource.createRecommendationForUser(user, game)
             .copy(timestamp = LocalDateTime.now(), config = modifiedConfig)
-        val result = TestDataSource.createGameplayResultForUser(user, latestRecommendation).copy(result = mapOf("passed" to true))
-        `when`(mockDataService.getResultById(1)).thenReturn(result)
         `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
         runBlocking {
-            val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(1)
+            val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(
+                user.username,
+                game.id!!,
+                latestRecommendation.config,
+                true
+            )
             assertEquals(firstOrderParam.hardestValue, nextRecommendation[firstOrderParam.paramName])
             assertEquals(secondOrderParam.initialValue + secondOrderParam.increment, nextRecommendation[secondOrderParam.paramName])
             assertEquals(2, nextRecommendation.size)
@@ -163,11 +114,14 @@ private lateinit var autoRecommendationService : AutoRecommendationStrategy
         modifiedConfig[firstParam.paramName] = firstParam.hardestValue
         val latestRecommendation = TestDataSource.createRecommendationForUser(user, game)
             .copy(timestamp = LocalDateTime.now(), config = modifiedConfig)
-        val result = TestDataSource.createGameplayResultForUser(user, latestRecommendation).copy(result = mapOf("passed" to false))
-        `when`(mockDataService.getResultById(1)).thenReturn(result)
         `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
         runBlocking {
-            val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(1)
+            val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(
+                user.username,
+                game.id!!,
+                latestRecommendation.config,
+                false
+            )
             assertTrue(
                 nextRecommendation[firstParam.paramName] == firstParam.hardestValue - firstParam.increment
                         && nextRecommendation[secondParam.paramName] == secondParam.initialValue
@@ -183,11 +137,14 @@ private lateinit var autoRecommendationService : AutoRecommendationStrategy
     fun `should change param even if that is on min value when success`(){
         val latestRecommendation = TestDataSource.createRecommendationForUser(user, game).copy(timestamp = LocalDateTime.now(),
             config = game.configItems.associate { it.paramName to it.easiestValue }.toMutableMap())
-        val result = TestDataSource.createGameplayResultForUser(user, latestRecommendation).copy(result = mapOf("passed" to true))
-        `when`(mockDataService.getResultById(1)).thenReturn(result)
         `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
         runBlocking {
-            val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(1)
+            val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(
+                user.username,
+                game.id!!,
+                latestRecommendation.config,
+                true
+            )
             assertEquals(2, nextRecommendation.size)
             assertEquals(
                 1,
@@ -204,13 +161,16 @@ private lateinit var autoRecommendationService : AutoRecommendationStrategy
         game = game.copy(configItems = game.configItems.map { it.copy(increment = 0) }.toMutableSet())
         val latestRecommendation = TestDataSource.createRecommendationForUser(user, game).copy(timestamp = LocalDateTime.now(),
             config = game.configItems.associate { it.paramName to it.initialValue }.toMutableMap())
-        val result = TestDataSource.createGameplayResultForUser(user, latestRecommendation).copy(result = mapOf("passed" to true))
         val firstOrderParam = game.configItems.find { it.paramOrder == 1 }!!
         val secondOrderParam = game.configItems.find { it.paramOrder == 2 }!!
-        `when`(mockDataService.getResultById(1)).thenReturn(result)
         `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
         runBlocking {
-            val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(1)
+            val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(
+                user.username,
+                game.id!!,
+                latestRecommendation.config,
+                true
+            )
             assertEquals(2, nextRecommendation.size)
             assertEquals(firstOrderParam.initialValue, nextRecommendation[firstOrderParam.paramName])
             assertEquals(secondOrderParam.initialValue, nextRecommendation[secondOrderParam.paramName])
@@ -255,11 +215,14 @@ private lateinit var autoRecommendationService : AutoRecommendationStrategy
         )
         val latestRecommendation = TestDataSource.createRecommendationForUser(user, negyszogBlokkok).copy(timestamp = LocalDateTime.now(),
             config = negyszogBlokkok.configItems.associate { it.paramName to it.initialValue }.toMutableMap())
-        val result = TestDataSource.createGameplayResultForUser(user, latestRecommendation).copy(result = mapOf("passed" to true))
-        `when`(mockDataService.getResultById(1)).thenReturn(result)
         `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(negyszogBlokkok)
         runBlocking {
-            val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(1)
+            val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(
+                user.username,
+                negyszogBlokkok.id!!,
+                latestRecommendation.config,
+                true
+            )
             assertEquals(3, nextRecommendation.size)
             assertEquals(1, negyszogBlokkok.configItems.filter{ nextRecommendation[it.paramName] == it.initialValue + it.increment}.size)
         }

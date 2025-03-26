@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController
 class ProfileCalculationController(
     @Autowired private var profileUpdaterService: UserProfileUpdaterService,
     @Autowired private var resultProcessingService: GameResultProcessingService,
-    @Autowired private var autoRecommendationStrategy: AutoRecommendationStrategy,
     @Autowired private var dataService: ResultForCalculationDataService
 ) {
 
