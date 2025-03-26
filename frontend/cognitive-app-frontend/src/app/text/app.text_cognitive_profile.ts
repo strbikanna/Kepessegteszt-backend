@@ -18,6 +18,7 @@ export const cognitive_profile_text = {
         no_profile_data_action: 'Több játék játszása esetén összeáll a kognitív profil.',
         abilities: 'Kognitív képességek',
         values: 'Becsült értékek',
+        ability_value_accuracy: 'Kognitív profil érték pontosság: ',
     },
     user_picker: {
         choose_contact: 'Kognitív profil megtekintése',

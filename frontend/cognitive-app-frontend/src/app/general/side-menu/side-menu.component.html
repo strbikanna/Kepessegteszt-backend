@@ -16,6 +16,10 @@
             <mat-icon>group</mat-icon>
             <span>{{ text.group_management}}</span>
         </button>
+        <button mat-menu-item *ngIf="canSeeUserManagement()" routerLink="/ability" [routerLinkActive]="['activeLink']">
+            <mat-icon>saved_search</mat-icon>
+            <span>{{ text.ability_management }}</span>
+        </button>
 
         <p class="description ml-3">{{ text.section_title.profile }}</p>
         <mat-divider/>

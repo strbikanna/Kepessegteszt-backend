@@ -25,6 +25,10 @@
                 <mat-icon>person_add</mat-icon>
                 <span>{{ text.user_registration }}</span>
             </button>
+            <button mat-menu-item *ngIf="canSeeUserManagement()" routerLink="/ability" [routerLinkActive]="['activeLink']">
+                <mat-icon>saved_search</mat-icon>
+                <span>{{ text.ability_management }}</span>
+            </button>
             <button mat-menu-item *ngIf="canSeeGroupManagement()" routerLink="/group-management">
                 <mat-icon>group</mat-icon>
                 <span>{{ text.group_management}}</span>

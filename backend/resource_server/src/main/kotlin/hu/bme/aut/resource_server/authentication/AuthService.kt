@@ -42,16 +42,15 @@ class AuthService(
     }
 
     /**
-     * Checks if the gameplay is authorized to save results for the user.
-     * @throws IllegalAccessException if the game_id in the token is either not present
-     * or not matching any game in the database.
+     * Checks if the user is authorized to save results for the gameplay.
+     * @throws IllegalAccessException if the recommendation is not meant for this user.
      */
     @Transactional
     fun checkGameAccessAndThrow(authentication: Authentication, gameplay: ResultDto) {
         val username = authentication.name
         val dbGamePlay = recommendedGameRepository.findById(gameplay.gameplayId).orElseThrow()
         if (username != dbGamePlay.recommendedTo.username) {
-            throw IllegalAccessException("This gameplay is not authorized to save result for this user.")
+            throw IllegalAccessException("This user is not authorized to save result for this gameplay.")
         }
     }
 

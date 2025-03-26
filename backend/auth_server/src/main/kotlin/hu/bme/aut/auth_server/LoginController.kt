@@ -4,16 +4,15 @@ import hu.bme.aut.auth_server.mail_service.EmailService
 import hu.bme.aut.auth_server.mail_service.EmailVerificationService
 import hu.bme.aut.auth_server.user.UserEntity
 import hu.bme.aut.auth_server.user.UserRegistrationService
+import hu.bme.aut.auth_server.utils.MOBILE_DEVICES
+import hu.bme.aut.auth_server.utils.POST_LOGOUT_REDIRECT_URI
 import nl.basjes.parse.useragent.UserAgent
 import nl.basjes.parse.useragent.UserAgentAnalyzer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.*
 import java.sql.SQLIntegrityConstraintViolationException
 
 @Controller
@@ -24,11 +23,18 @@ class LoginController(
     @Autowired private var useragentAnalyzer: UserAgentAnalyzer
 ) {
 
-    private val MOBILE_DEVICES = setOf("Phone", "Tablet", "Mobile")
-
     @GetMapping("/login")
     fun loginPage(): String {
         return "login"
+    }
+
+    @GetMapping("/mobile-logout")
+    fun logout(
+        @RequestParam(POST_LOGOUT_REDIRECT_URI) redirectUri: String,
+        model: Model
+    ): String{
+        model.addAttribute(POST_LOGOUT_REDIRECT_URI, redirectUri)
+        return "mobile-logout"
     }
 
     @GetMapping("/register")

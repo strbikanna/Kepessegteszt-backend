@@ -53,7 +53,11 @@ class AuthServerConfig {
      */
     @Bean
     @Order(1)
-    fun authServerSecurityFilterChain(http: HttpSecurity, userInfoMapper: UserInfoMapper): SecurityFilterChain {
+    fun authServerSecurityFilterChain(
+        http: HttpSecurity,
+        userInfoMapper: UserInfoMapper,
+        logoutSuccessHandler: LogoutSuccessHandler
+    ): SecurityFilterChain {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http)
 
         //openID 1.0 connection with custom userinfo endpoint
@@ -62,7 +66,11 @@ class AuthServerConfig {
                 oidc.userInfoEndpoint { userinfo ->
                     userinfo.userInfoMapper { context -> userInfoMapper.mapUserInfo(context) }
                 }
+                oidc.logoutEndpoint { logout ->
+                    logout.logoutResponseHandler(logoutSuccessHandler)
+                }
             }
+
 
         http
             .cors(withDefaults())
@@ -76,6 +84,9 @@ class AuthServerConfig {
                     )
             } // Accept access tokens for User Management and/or Client Registration
             .oauth2ResourceServer { it.jwt(withDefaults()) }
+            .logout {logout ->
+                logout.logoutSuccessUrl("/custom-logout-page") // Redirect to the custom logout page
+            }
 
         return http.build()
     }
@@ -91,7 +102,7 @@ class AuthServerConfig {
                 .cors(withDefaults())
                 .sessionManagement { SessionCreationPolicy.STATELESS }
                 .authorizeHttpRequests {
-                    it.requestMatchers("/register").permitAll()
+                    it.requestMatchers("/register", "/mobile-logout").permitAll()
                     it.requestMatchers("/v3/api-docs").permitAll()
                     it.requestMatchers("/swagger-ui/**").permitAll()
                     it.requestMatchers("/v3/api-docs/swagger-config").permitAll()

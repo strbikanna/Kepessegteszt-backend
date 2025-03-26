@@ -20,23 +20,11 @@ export class ProfileDataComparisonService {
   getProfileData(userName?: string): Observable<ProfileData[]> {
     const route = userName ? '/user/profile/inspect' : '/user/profile';
     const params = userName ? new HttpParams().set('username', userName) : new HttpParams();
-    return this.http.get(this.httpService.baseUrl + route, {params: params}).pipe(
+    return this.http.get<ProfileData[]>(this.httpService.baseUrl + route, {params: params}).pipe(
         map((response: any) =>{
             return response.filter(
                 (item: any) => item.ability.type === AbilityType.FLOAT.valueOf()
             )
-                .map((item : any) => {
-              const profileData: ProfileData = {
-                ability: {
-                  code: item.ability.code,
-                  name: item.ability.name,
-                  description: item.ability.description,
-                  type: item.ability.type
-                },
-                value: item.value
-              }
-                return profileData;
-            })
         })
     )
   }

@@ -48,6 +48,9 @@ class UserService(
             updatedEntity
         )
     }
+    fun saveUser(user: UserEntity){
+        userRepository.save(user)
+    }
 
     @Transactional
     fun removeUserForever(username: String){

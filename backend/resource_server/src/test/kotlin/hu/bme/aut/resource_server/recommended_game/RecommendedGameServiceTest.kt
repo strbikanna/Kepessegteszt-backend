@@ -2,10 +2,11 @@ package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.TestUtilsService
 import hu.bme.aut.resource_server.game.GameEntity
-import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
+import kotlinx.coroutines.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
@@ -24,6 +25,7 @@ class RecommendedGameServiceTest(
         testService.fillAbilityRepository()
         testService.saveUser(user)
     }
+
     private val user = testService.createUnsavedTestUser()
 
     @Test
@@ -36,40 +38,40 @@ class RecommendedGameServiceTest(
         val rGameList = listOf(
             createRecommendedGame().copy(
                 game = game1,
-                timestamp =  LocalDateTime.of(2024, 10, 1, 0, 0),
+                timestamp = LocalDateTime.of(2024, 10, 1, 0, 0),
                 completed = false
             ),
             createRecommendedGame().copy(
                 game = game2,
-                timestamp =  LocalDateTime.of(2024, 10, 2, 0, 0),
+                timestamp = LocalDateTime.of(2024, 10, 2, 0, 0),
                 completed = false
             ),
             createRecommendedGame().copy(
                 game = game3,
-                timestamp =  LocalDateTime.of(2024, 9, 2, 0, 0),
+                timestamp = LocalDateTime.of(2024, 9, 2, 0, 0),
                 completed = false
             ),
             createRecommendedGame().copy(
                 game = game4,
-                timestamp =  LocalDateTime.of(2024, 9, 22, 0, 0),
+                timestamp = LocalDateTime.of(2024, 9, 22, 0, 0),
                 completed = false
             ),
             createRecommendedGame().copy(
                 game = game1,
-                timestamp =  LocalDateTime.of(2024, 8, 1, 0, 0),
+                timestamp = LocalDateTime.of(2024, 8, 1, 0, 0),
             ),
             createRecommendedGame().copy(
                 game = game2,
-                timestamp =  LocalDateTime.of(2024, 8, 5, 0, 0),
+                timestamp = LocalDateTime.of(2024, 8, 5, 0, 0),
             ),
             createRecommendedGame().copy(
                 game = game3,
-                timestamp =  LocalDateTime.of(2024, 9, 1, 0, 0),
+                timestamp = LocalDateTime.of(2024, 9, 1, 0, 0),
                 completed = false
             ),
             createRecommendedGame().copy(
                 game = game4,
-                timestamp =  LocalDateTime.of(2024, 9, 5, 0, 0),
+                timestamp = LocalDateTime.of(2024, 9, 5, 0, 0),
             ),
         )
         testService.recommendedGameRepository.saveAll(rGameList)
@@ -79,7 +81,32 @@ class RecommendedGameServiceTest(
         assertTrue(nextChoice.any { it.gameId == game3.id })
     }
 
-    private fun createRecommendedGame(): RecommendedGameEntity{
+    @Test
+    fun shouldReturnConfigOfGameEvenIfDelayed() {
+        val rGame = createRecommendedGame()
+        testService.recommendedGameRepository.save(rGame)
+        val config = runBlocking {
+            println("Starting")
+            CoroutineScope(Dispatchers.Default).launch {
+                println("Delay...")
+                delay(500)
+                println("Saving config")
+                val delayedConfig = mapOf("Level" to 1)
+                val savedRGame = testService.recommendedGameRepository.findById(rGame.id!!).get()
+                savedRGame.config = delayedConfig
+                testService.recommendedGameRepository.save(savedRGame)
+                println("Config saved")
+            }
+            val found = CoroutineScope(Dispatchers.Default).async {
+                recommendedGameService.getRecommendedGameConfig(rGame.id!!)
+            }.await()
+
+            return@runBlocking found
+        }
+        assertEquals(mapOf("Level" to 1), config)
+    }
+
+    private fun createRecommendedGame(): RecommendedGameEntity {
         val game = testService.createAndSaveGame()
         return RecommendedGameEntity(
             game = game,
@@ -88,14 +115,14 @@ class RecommendedGameServiceTest(
             completed = true
         )
     }
-    private fun createGame(): GameEntity{
+
+    private fun createGame(): GameEntity {
         return GameEntity(
             version = 1,
             name = "Test game",
             thumbnailPath = "test/files/assets",
             description = "Test game description",
             active = true,
-            configDescription = mutableMapOf("Level" to 0),
             affectedAbilities = mutableSetOf()
         )
     }

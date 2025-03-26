@@ -22,12 +22,21 @@ data class EnumProfileItem(
 
     @Column
     @Enumerated(value= EnumType.STRING)
-    var abilityValue: EnumAbilityValue = EnumAbilityValue.UNKNOWN
+    var abilityValue: EnumAbilityValue = EnumAbilityValue.UNKNOWN,
+
+    /**
+     * The accuracy of the ability value.
+     * @max 1.0
+     * @min 0.0
+     */
+    @Column
+    var abilityAccuracy: Double = 0.0
 ){
     fun toProfileItem(): ProfileItem {
         return ProfileItem(
             ability = ability,
-            value = abilityValue
+            value = abilityValue,
+            accuracy = abilityAccuracy
         )
     }
 }

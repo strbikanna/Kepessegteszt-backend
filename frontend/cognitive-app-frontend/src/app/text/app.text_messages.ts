@@ -1,6 +1,7 @@
 import {text_home} from "./app.text_home";
 import {cognitive_profile_text} from "./app.text_cognitive_profile";
 import {register_user} from "./app.text_register_user";
+import {abilityPage} from "./app.text_ability";
 
 /**
  * Texts displayed in application components.
@@ -16,6 +17,7 @@ export const TEXTS = {
         cognitive_profile: 'Kognitív profil',
         profile_comparison: 'Kognitív profil elemzés',
         user_management: 'Felhasználók kezelése',
+        ability_management: 'Kognitív képességek kezelése',
         user_registration: 'Felhasználók regisztrálása',
         game_management: 'Játékok kezelése',
         group_management: 'Intézmények és csoportok kezelése',
@@ -32,6 +34,7 @@ export const TEXTS = {
         message: 'Bejelentkezhetsz a következő felhasználók nevében, vagy maradhatsz a saját fiókodban.',
         cancel: 'Maradok a saját fiókomban',
     },
+    ability_page: abilityPage,
     games: {
         menu: {
             teacher_recommendation: 'Tanári ajánlások',
@@ -136,7 +139,7 @@ export const TEXTS = {
         network_error: 'Valószínűleg nincs internetkapcsolat.',
         unauthorized_error: 'Nincs jogosultságod a kért művelet végrehajtásához.',
         invalid_values: 'A megadott értékek nem megfelelőek.',
-        invalid_param_order: 'Ez a sorszám már létezik.',
+        invalid_max_ability_effect: 'Ez a szorzó nem megfelelő.',
     },
     actions: {
         cancel: 'Mégse',
@@ -204,8 +207,8 @@ export const TEXTS = {
             hardest_value: 'Legnehezebb érték',
             easiest_value: 'Legkönnyebb érték',
             increment: 'Léptetés',
-            param_order: 'Paraméter sorszáma',
-            param_order_description: 'Azt fejezi ki, hogy mennyire befolyásolja a játékbeállítást, minél kisebb a szám, annál relevánsabb a paraméter.',
+            max_ability_effect: 'Paraméter hatása a játék nehézségére',
+            max_ability_effect_description: 'Azt fejezi ki, hogy mennyire befolyásolja a játék megoldásához szükséges kognitív képességet. Ez egy szorzó, amivel a legnehezebb beállítás esetén növekszik a szükséges képesség.',
             description: 'Leírás',
             description_placeholder: 'Opcionális leírás a paraméterről',
         },

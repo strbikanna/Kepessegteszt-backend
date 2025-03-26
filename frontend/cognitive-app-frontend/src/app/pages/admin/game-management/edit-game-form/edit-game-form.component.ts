@@ -36,7 +36,6 @@ export class EditGameFormComponent implements OnInit {
     protected text = TEXTS.game_management.edit_form
     protected thumbnail: string = ''
     protected actionText = TEXTS.actions
-    usedParamOrders: number[] = []
 
     constructor(private service: GameManagementService,
                 private abilityService: AbilityService,
@@ -150,7 +149,7 @@ export class EditGameFormComponent implements OnInit {
                 hardestValue: 10,
                 easiestValue: 1,
                 increment: 1,
-                paramOrder: countOfConfigItems + 1,
+                maxAbilityEffect: countOfConfigItems + 1,
                 description: ''
             }
         )
@@ -163,10 +162,7 @@ export class EditGameFormComponent implements OnInit {
     }
 
     onUpdateConfigItem(index: number, configItem: ConfigItem) {
-        let oldConfigItem = this.gameForm.controls.configItems.at(index).value
-        this.usedParamOrders = this.usedParamOrders.filter(order => order !== oldConfigItem?.paramOrder)
         this.gameForm.controls.configItems.at(index).setValue(configItem)
-        this.usedParamOrders.push(configItem.paramOrder)
     }
 
     get configItemsForm() {
@@ -226,7 +222,6 @@ export class EditGameFormComponent implements OnInit {
                 formControls.configItems.push(control)
             })
             this.thumbnail = game.thumbnail
-            this.usedParamOrders = game.configItems.map(item => item.paramOrder)
             this.loading = false;
             this.abilityService.getAllAbilities().subscribe(abilities => {
                 this.setFormAbilities(abilities)

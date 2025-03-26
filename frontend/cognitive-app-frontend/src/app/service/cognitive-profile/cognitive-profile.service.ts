@@ -3,11 +3,10 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {catchError, map, Observable, of, retry, tap,} from "rxjs";
 import {CognitiveProfile} from "../../model/cognitive_profile.model";
 import {Ability} from "../../model/ability.model";
-import {AppConstants} from "../../utils/constants";
-import {User} from "../../model/user/user.model";
 import {SimpleHttpService} from "../../utils/simple-http.service";
 import {ProfileDescription} from "../../model/profile/profile_description";
 import {TEXTS} from "../../text/app.text_messages";
+import {ProfileData} from "../../model/profile/profile_data.model";
 
 @Injectable({
     providedIn: 'root'
@@ -75,11 +74,10 @@ export class CognitiveProfileService {
     /**
      * returns the actual cognitive profile of the user logged in
      */
-    getCurrentProfile(): Observable<CognitiveProfile> {
-        return this.http.get<CognitiveProfile>(`${this.helper.baseUrl}${this.profileEndpoint}`).pipe(
+    getCurrentProfile(): Observable<ProfileData[]> {
+        return this.http.get<ProfileData[]>(`${this.helper.baseUrl}${this.profileEndpoint}`).pipe(
             retry(3),
             catchError(this.helper.handleHttpError),
-            map((res: any) => this.convertToCognitiveProfile(res)[0])
         )
 
     }
@@ -88,13 +86,12 @@ export class CognitiveProfileService {
      * returns the actual cognitive profile of the given user
      * @param username
      */
-    getCurrentProfileOfOtherUser(username: string): Observable<CognitiveProfile> {
+    getCurrentProfileOfOtherUser(username: string): Observable<ProfileData[]> {
         let params = new HttpParams()
         params = params.set('username', username)
-        return this.http.get<CognitiveProfile>(`${this.helper.baseUrl}${this.profileEndpoint}${this.inspectPath}`, {params: params}).pipe(
+        return this.http.get<ProfileData[]>(`${this.helper.baseUrl}${this.profileEndpoint}${this.inspectPath}`, {params: params}).pipe(
             retry(3),
             catchError(this.helper.handleHttpError),
-            map((res: any) => this.convertToCurrentProfile(res))
         )
     }
 
@@ -157,16 +154,5 @@ export class CognitiveProfileService {
             }
         })
         return model
-    }
-
-    private convertToCurrentProfile(items: any[]): CognitiveProfile {
-        let profileItems = new Map<Ability, any>()
-        items.forEach(item => {
-            profileItems.set(item.ability, item.value)
-        })
-        return {
-            timestamp: new Date(),
-            profileItems: profileItems
-        }
     }
 }

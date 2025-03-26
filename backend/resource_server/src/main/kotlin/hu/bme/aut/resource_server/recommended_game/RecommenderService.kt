@@ -64,9 +64,7 @@ class RecommenderService(
     }
 
     fun save(recommendation: RecommendedGameEntity): RecommendedGameEntity {
-        val saved = recommendedGameRepository.save(recommendation)
-        log.info("Recommendation saved: $saved")
-        return saved
+        return recommendedGameRepository.save(recommendation)
     }
 
     suspend fun createNextRecommendationByResult(gameResult: ResultEntity): Map<String, Any> {
@@ -78,15 +76,23 @@ class RecommenderService(
                     gameResult.config,
                     isResultSuccess(gameResult)
                 )
-                if(config.isNotEmpty()){
+                if (config.isNotEmpty()) {
                     return config
                 }
-            } catch(e: Exception) {
+            } catch (e: Exception) {
                 log.error("Error while generating recommendation by result: $e")
             }
         }
         //none of the recommendations were successful
         return emptyMap()
+        log.info("Generated config was empty, creating default recommendation for user: ${gameResult.user.username}")
+        val nextConfig = withContext(Dispatchers.IO) {
+            recommendedGameRepository.findLatestCompleted(gameResult.user)
+        }
+            .find { it.game.id == gameResult.recommendedGame.game.id && it.config.isNotEmpty() }
+            ?.config ?: emptyMap()
+
+        return nextConfig
     }
 
     /**
@@ -152,6 +158,26 @@ class RecommenderService(
 
     private fun isResultSuccess(result: ResultEntity): Boolean {
         return result.result["passed"] as Boolean? ?: false
+    }
+
+    fun createNewRecommendations(username: String): List<RecommendedGameEntity> {
+        val games = gameRepository.findAllByActiveIsTrue()
+        val user = userRepository.findByUsername(username).orElseThrow()
+        val recommendations = mutableListOf<RecommendedGameEntity>()
+        try {
+            games.forEach { game ->
+                recommendations.add(autoRecommender.generateRecommendationForUser(user, game))
+            }
+            recommendedGameRepository.saveAll(recommendations)
+        } catch (e: RuntimeException) {
+            log.error("Error while generating recommendation for user $username", e)
+            return recommendations
+        }
+        return recommendations
+    }
+
+    fun deleteRecommendations(recommendations: List<RecommendedGameEntity>) {
+        recommendedGameRepository.deleteAll(recommendations)
     }
 
 }

@@ -41,7 +41,7 @@ class AutoRecommendationStrategy(
             val game = dataService.getGameWithConfigItems(gameId)
             log.trace("Creating next recommendation based on result for user: ${username}; for game: ${game.name}")
             if(game.configItems.isEmpty()){
-                log.info("No config items found for game ${game.name}")
+                log.error("No config items found for game ${game.name}")
                 return@withContext emptyMap()
             }
             val nextRecommendation = previousConfig.toMutableMap()

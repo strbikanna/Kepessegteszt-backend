@@ -34,11 +34,6 @@ data class GameEntity(
     @Column(name ="_active")
     var active: Boolean,
 
-    //TODO remove when normalization is refactored
-    @Type(JsonType::class)
-    @JsonIgnore
-    val configDescription: MutableMap<String, Any> = mutableMapOf(),
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "GAME_ABILITIES",

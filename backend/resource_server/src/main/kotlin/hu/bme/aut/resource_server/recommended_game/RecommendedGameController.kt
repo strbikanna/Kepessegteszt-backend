@@ -1,7 +1,10 @@
 package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.authentication.AuthService
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
@@ -23,13 +26,14 @@ class RecommendedGameController(
     fun getRecommendedGamesToUser(
         @RequestParam(required = false) pageIndex: Int?,
         @RequestParam(required = false) pageSize: Int?,
+        @RequestParam(required = false) acceptedGameIds: List<Int>?,
         authentication: Authentication
     ): List<RecommendedGameDto> {
         recommenderService.createDefaultRecommendationsForUser(authentication.name)
         return if (pageIndex == null || pageSize == null)
-            recommendedGameService.getAllRecommendedToUser(authentication.name)
+            recommendedGameService.getAllRecommendedToUser(authentication.name, acceptedGameIds)
         else
-            recommendedGameService.getAllRecommendedToUser(authentication.name, pageIndex, pageSize)
+            recommendedGameService.getAllRecommendedToUser(authentication.name, acceptedGameIds, pageIndex, pageSize)
     }
 
     @GetMapping("/search")
@@ -49,13 +53,17 @@ class RecommendedGameController(
     fun getRecommendedGameConfig(@PathVariable id: Long, authentication: Authentication): Deferred<Map<String, Any>> =
         CoroutineScope(Dispatchers.Default).async {
             authService.checkGameConfigAccessAnThrow(id, authentication)
-            return@async recommendedGameService.getRecommendedGameConfig(id)
+            val foundConfig = recommendedGameService.getRecommendedGameConfig(id)
+            return@async foundConfig ?: emptyMap()
         }
 
     @GetMapping("/next_choice")
     @ResponseStatus(HttpStatus.OK)
-    fun getNextChoiceForUser(authentication: Authentication): List<RecommendedGameDto> {
-        return recommendedGameService.getNextChoiceForUser(authentication.name)
+    fun getNextChoiceForUser(
+        @RequestParam(required = false) acceptedGameIds: List<Int>?,
+        authentication: Authentication
+    ): List<RecommendedGameDto> {
+        return recommendedGameService.getNextChoiceForUser(authentication.name, acceptedGameIds)
     }
 
     @PostMapping("/recommend")
