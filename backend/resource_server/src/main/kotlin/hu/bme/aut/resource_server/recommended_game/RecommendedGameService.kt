@@ -88,7 +88,7 @@ class RecommendedGameService(
         var rGame = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
         repeat(10) {
             if (rGame.config.isNotEmpty()) {
-                return@withContext rGame.config
+                return@withContext rGame.game.validateConfig(rGame.config)
             }
             log.info("Config not found for recommendation with id: $recommendedGameId. Waiting...")
             delay(300)
