@@ -1,6 +1,7 @@
 package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.authentication.AuthService
+import hu.bme.aut.resource_server.recommendation.RecommenderService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers

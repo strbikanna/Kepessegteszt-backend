@@ -1,0 +1,1 @@
+alter table game add column game_type varchar(20) not null default 'default';

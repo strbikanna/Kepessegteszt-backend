@@ -3,7 +3,7 @@ package hu.bme.aut.resource_server.game
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.game.game_config.isSame
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
-import hu.bme.aut.resource_server.recommended_game.RecommenderService
+import hu.bme.aut.resource_server.recommendation.RecommenderService
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -69,10 +69,10 @@ class GameService (
             gameRepository.save(oldGame)
             deleteNotCompletedRecommendationsToGame(oldGame)
 
-            var newVersionedGame = copyGame(updatedGame).copy(
-                id = null,
-                version = oldGame.version + 1
-            )
+            var newVersionedGame = copyGame(updatedGame).also {
+                it.id = null
+                it.version = oldGame.version + 1
+            }
             newVersionedGame = gameRepository.save(newVersionedGame)
             recommenderService.createDefaultRecommendationsForGame(newVersionedGame.id!!)
             return newVersionedGame
@@ -97,9 +97,9 @@ class GameService (
         file.outputStream().use {
             it.write(thumbnail.bytes)
         }
-        val updatedGame = game.copy(
-            thumbnailPath = "$gameImageLocation/${fileName}.png",
-        )
+        val updatedGame = game.also {
+            it.thumbnailPath = "$gameImageLocation/${fileName}.png"
+        }
         return gameRepository.save(updatedGame)
     }
 

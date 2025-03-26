@@ -1,6 +1,5 @@
 package hu.bme.aut.resource_server.recommendation
 
-import hu.bme.aut.resource_server.game.GameRepository
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.user.UserRepository
 import kotlinx.coroutines.Dispatchers

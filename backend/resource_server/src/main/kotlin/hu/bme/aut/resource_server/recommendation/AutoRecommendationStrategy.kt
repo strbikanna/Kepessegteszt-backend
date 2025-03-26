@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 /**
- * This service is responsible for generating recommendations for users.
- * It uses the [ResultForCalculationDataService] to get the results of the user and the [AbilityRateCalculatorService]
- * to calculate the ability values from the results.
- * It uses the [ModelManager] to get the recommendation model for the game.
+ * This service is responsible for generating recommendations for users based on the result and the information in the games config items.
  */
 @Service
 class AutoRecommendationStrategy(
@@ -25,10 +22,9 @@ class AutoRecommendationStrategy(
     var log: Logger = LoggerFactory.getLogger(AutoRecommendationStrategy::class.java)
 
     /**
-     * Creates a new recommendation based on the current result and the previous and current recommendation.
-     * The config parameters are changed in their defined order.
+     * Creates a new recommendation based on the current result and the current config.
      * The config params are incremented to max if the result was successful, decremented otherwise.
-     * After reaching max or min, the next parameter is changed and the value is set to the initial value.
+     * The recommendation is created by randomly selecting a config item to change.
      */
     @Transactional
     override suspend fun generateRecommendationByResult(
