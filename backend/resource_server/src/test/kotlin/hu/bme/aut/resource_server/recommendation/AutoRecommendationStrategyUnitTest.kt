@@ -78,60 +78,8 @@ private lateinit var autoRecommendationService : AutoRecommendationStrategy
         }
     }
 
-    @Test
-    fun `Should change the 2nd param if the first has max value and result is success`(){
-        val previousRecommendation = TestDataSource.createRecommendationForUser(user, game).copy(timestamp = LocalDateTime.now().minusDays(1))
-        val modifiedConfig = previousRecommendation.config.toMutableMap()
-        val firstOrderParam = game.configItems.find { it.paramOrder == 1 }!!
-        val secondOrderParam = game.configItems.find { it.paramOrder == 2 }!!
-        modifiedConfig[firstOrderParam.paramName] = firstOrderParam.hardestValue
-        val latestRecommendation = TestDataSource.createRecommendationForUser(user, game)
-            .copy(timestamp = LocalDateTime.now(), config = modifiedConfig)
-        `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
-        runBlocking {
-            val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(
-                user.username,
-                game.id!!,
-                latestRecommendation.config,
-                true
-            )
-            assertEquals(firstOrderParam.hardestValue, nextRecommendation[firstOrderParam.paramName])
-            assertEquals(secondOrderParam.initialValue + secondOrderParam.increment, nextRecommendation[secondOrderParam.paramName])
-            assertEquals(2, nextRecommendation.size)
-        }
 
-    }
 
-    //Current config is: first order param: max value, second order param: initial value
-    //Result is not success
-    //Expected: any of them decreased by increment
-    @Test
-    fun `Should recommend easier when result is NOT success`(){
-        val previousRecommendation = TestDataSource.createRecommendationForUser(user, game).copy(timestamp = LocalDateTime.now().minusDays(1))
-        val modifiedConfig = previousRecommendation.config.toMutableMap()
-        val firstParam = game.configItems.find { it.paramOrder == 1 }!!
-        val secondParam = game.configItems.find { it.paramOrder == 2 }!!
-        modifiedConfig[firstParam.paramName] = firstParam.hardestValue
-        val latestRecommendation = TestDataSource.createRecommendationForUser(user, game)
-            .copy(timestamp = LocalDateTime.now(), config = modifiedConfig)
-        `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
-        runBlocking {
-            val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(
-                user.username,
-                game.id!!,
-                latestRecommendation.config,
-                false
-            )
-            assertTrue(
-                nextRecommendation[firstParam.paramName] == firstParam.hardestValue - firstParam.increment
-                        && nextRecommendation[secondParam.paramName] == secondParam.initialValue
-                        ||
-                        nextRecommendation[firstParam.paramName] == firstParam.hardestValue &&
-                        nextRecommendation[secondParam.paramName] == secondParam.initialValue - secondParam.increment
-            )
-            assertEquals(2, nextRecommendation.size)
-        }
-    }
 
     @Test
     fun `should change param even if that is on min value when success`(){
@@ -158,11 +106,11 @@ private lateinit var autoRecommendationService : AutoRecommendationStrategy
      */
     @Test
     fun `should work with 0 increment`(){
-        game = game.copy(configItems = game.configItems.map { it.copy(increment = 0) }.toMutableSet())
+        game = game.also{ it.configItems = game.configItems.map { configItem -> configItem.copy(increment = 0) }.toMutableSet()}
         val latestRecommendation = TestDataSource.createRecommendationForUser(user, game).copy(timestamp = LocalDateTime.now(),
             config = game.configItems.associate { it.paramName to it.initialValue }.toMutableMap())
-        val firstOrderParam = game.configItems.find { it.paramOrder == 1 }!!
-        val secondOrderParam = game.configItems.find { it.paramOrder == 2 }!!
+        val firstOrderParam = game.configItems.find { it.paramName == "speed" }!!
+        val secondOrderParam = game.configItems.find { it.paramName == "timeLimit" }!!
         `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(game)
         runBlocking {
             val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(
@@ -179,12 +127,12 @@ private lateinit var autoRecommendationService : AutoRecommendationStrategy
 
     @Test
     fun `should work with Negyszog Blokkok`(){
-        val negyszogBlokkok = game.copy(
-            configItems = mutableSetOf(
+        val negyszogBlokkok = game.also {
+            it.configItems = mutableSetOf(
                 ConfigItem(
                     id = 1,
                     paramName = "height",
-                    paramOrder = 2,
+                    maxAbilityEffect = 1.0,
                     initialValue = 8,
                     increment = 1,
                     easiestValue = 6,
@@ -194,7 +142,7 @@ private lateinit var autoRecommendationService : AutoRecommendationStrategy
                 ConfigItem(
                     id = 2,
                     paramName = "width",
-                    paramOrder = 3,
+                    maxAbilityEffect = 2.0,
                     initialValue = 8,
                     increment = 1,
                     easiestValue = 6,
@@ -204,7 +152,7 @@ private lateinit var autoRecommendationService : AutoRecommendationStrategy
                 ConfigItem(
                     id = 3,
                     paramName = "time_limit",
-                    paramOrder = 4,
+                    maxAbilityEffect = 1.0,
                     initialValue = 180000,
                     increment = 30000,
                     easiestValue = 300000,
@@ -212,7 +160,7 @@ private lateinit var autoRecommendationService : AutoRecommendationStrategy
                     description = ""
                 )
             )
-        )
+        }
         val latestRecommendation = TestDataSource.createRecommendationForUser(user, negyszogBlokkok).copy(timestamp = LocalDateTime.now(),
             config = negyszogBlokkok.configItems.associate { it.paramName to it.initialValue }.toMutableMap())
         `when`(mockDataService.getGameWithConfigItems(1)).thenReturn(negyszogBlokkok)

@@ -26,7 +26,7 @@ open class GameEntity(
     var version: Int,
 
     @Column(name ="_name")
-    val name: String,
+    var name: String,
 
     @Column(name ="_description")
     val description: String,
@@ -48,7 +48,7 @@ open class GameEntity(
     @OneToMany
     @JoinColumn(name = "game_id")
     @Cascade(CascadeType.ALL)
-    val configItems: MutableSet<ConfigItem> = mutableSetOf()
+    var configItems: MutableSet<ConfigItem> = mutableSetOf()
 ){
     open fun validateConfig(config: Map<String, Any>): Map<String, Any>{
         return config

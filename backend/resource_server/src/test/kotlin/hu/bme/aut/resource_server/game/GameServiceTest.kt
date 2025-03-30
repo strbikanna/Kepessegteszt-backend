@@ -75,7 +75,7 @@ class GameServiceTest(
 
     @Test
     fun testUpdateGame() {
-        val updatedGame = game1.copy(name = "UpdatedGame")
+        val updatedGame = game1.also { it.name = "UpdatedGame"}
         gameService.updateGame(updatedGame)
     }
 
@@ -98,9 +98,12 @@ class GameServiceTest(
             paramName = "Level",
             description = "Level of the game",
             increment = 1,
-            maxAbilityEffect = 1
+            maxAbilityEffect = 1.0
         )
-        val updatedGame = game1.copy(configItems = mutableSetOf(newConfigItem), name="UpdatedGame")
+        val updatedGame = game1.also{
+            it.configItems = mutableSetOf(newConfigItem)
+            it.name="UpdatedGame"
+        }
         gameService.updateGame(updatedGame)
         val allRecommendations = testUtilsService.recommendedGameRepository.findAll()
         assertTrue(allRecommendations.none { it.game == game1 })

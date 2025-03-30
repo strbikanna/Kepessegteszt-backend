@@ -17,7 +17,7 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles("test")
 class RecommendationIntegrationTest(
     @Autowired private val recommendedGameService: RecommendedGameService,
-    @Autowired private var autoRecommendationService: AutoRecommendationService,
+    @Autowired private var autoRecommendationService: AutoRecommendationStrategy,
     @Autowired private val testService: TestUtilsService
 ) {
     private val user = testService.createUnsavedTestUser()
@@ -42,7 +42,12 @@ class RecommendationIntegrationTest(
                 println("Delay...")
                 delay(500)
                 println("Saving config")
-                val createdConfig = autoRecommendationService.createNextRecommendationBasedOnResult(result.id!!)
+                val createdConfig = autoRecommendationService.generateRecommendationByResult(
+                    user.username,
+                    newRGame.game.id!!,
+                    result.config,
+                    true
+                )
                 newRGame.config = createdConfig
                 testService.recommendedGameRepository.save(newRGame)
                 println("Config saved")
@@ -59,7 +64,7 @@ class RecommendationIntegrationTest(
     private fun createRecommendedGame(): RecommendedGameEntity {
         val configItem = ConfigItem(
             paramName = "Level",
-            maxAbilityEffect = 1,
+            maxAbilityEffect = 1.5,
             easiestValue = 1,
             hardestValue = 10,
             increment = 1,

@@ -29,6 +29,7 @@ class RecommendedGameRepositoryTest(
         recommendedGameRepository.deleteAll()
         testUtilsService.emptyRepositories()
         userRepository.deleteAll()
+        testUtilsService.fillAbilityRepository()
     }
 
     @Transactional
@@ -67,7 +68,9 @@ class RecommendedGameRepositoryTest(
         testUtilsService.saveUser(testUser2)
         testUtilsService.saveUser(testUser3)
         val testGame = testUtilsService.createAndSaveGame()
-        val testGame2 = testGame.copy(name = "Test game2", id = testGame.id!!+1)
+        val testGame2 = testUtilsService.createAndSaveGame().also {
+            it.name = "Test game2"
+        }
         testUtilsService.gameRepository.save(testGame2)
         val recommendedGame1 = RecommendedGameEntity(
                 timestamp = LocalDateTime.now(), config = mapOf("level" to 10), recommender = testUser2, recommendedTo = testUser, game = testGame)
@@ -102,7 +105,9 @@ class RecommendedGameRepositoryTest(
         testUtilsService.saveUser(testUser2)
         testUtilsService.saveUser(testUser3)
         val testGame = testUtilsService.createAndSaveGame()
-        val testGame2 = testGame.copy(name = "Test game2", id = testGame.id!!+1)
+        val testGame2 = testUtilsService.createAndSaveGame().also{
+            it.name = "Test game2"
+        }
         testUtilsService.gameRepository.save(testGame2)
         val recommendedGame1 = RecommendedGameEntity(
                 timestamp = LocalDateTime.now(), config = mapOf("level" to 10), recommender = testUser2, recommendedTo = testUser, game = testGame)

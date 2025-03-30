@@ -34,7 +34,8 @@ class RecommendedGameServiceTest(
         val game2 = createGame()
         val game3 = createGame()
         val game4 = createGame()
-        testService.gameRepository.saveAll(listOf(game1, game2, game3, game4))
+        val savedGames = testService.gameRepository.saveAll(listOf(game1, game2, game3, game4))
+        val acceptedIs = savedGames.map { it.id!! }
         val rGameList = listOf(
             createRecommendedGame().copy(
                 game = game1,
@@ -75,7 +76,7 @@ class RecommendedGameServiceTest(
             ),
         )
         testService.recommendedGameRepository.saveAll(rGameList)
-        val nextChoice = recommendedGameService.getNextChoiceForUser(user.username)
+        val nextChoice = recommendedGameService.getNextChoiceForUser(user.username, acceptedIs)
         assertEquals(2, nextChoice.size)
         assertTrue(nextChoice.any { it.gameId == game1.id })
         assertTrue(nextChoice.any { it.gameId == game3.id })
@@ -96,6 +97,26 @@ class RecommendedGameServiceTest(
                 savedRGame.config = delayedConfig
                 testService.recommendedGameRepository.save(savedRGame)
                 println("Config saved")
+            }
+            val found = CoroutineScope(Dispatchers.Default).async {
+                recommendedGameService.getRecommendedGameConfig(rGame.id!!)
+            }.await()
+
+            return@runBlocking found
+        }
+        assertEquals(mapOf("Level" to 1), config)
+    }
+
+    @Test
+    fun shouldGetConfigOfDefaultGame(){
+        val rGame = createRecommendedGame()
+        testService.recommendedGameRepository.save(rGame)
+        val config = runBlocking {
+            CoroutineScope(Dispatchers.Default).launch {
+                val config = mapOf("Level" to 1)
+                val savedRGame = testService.recommendedGameRepository.findById(rGame.id!!).get()
+                savedRGame.config = config
+                testService.recommendedGameRepository.save(savedRGame)
             }
             val found = CoroutineScope(Dispatchers.Default).async {
                 recommendedGameService.getRecommendedGameConfig(rGame.id!!)
