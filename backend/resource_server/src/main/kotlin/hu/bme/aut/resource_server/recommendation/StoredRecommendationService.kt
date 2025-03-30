@@ -8,7 +8,7 @@ import org.springframework.core.io.ClassPathResource
 object StoredRecommendationService {
 
     @Value("\${recommendation.location}")
-    private lateinit var storedRecommendationLocation: String
+    private var storedRecommendationLocation: String = "block_descriptions"
 
     fun getStoredRecommendationById(id: Int): Map<String, Any>{
         val resource = ClassPathResource("$storedRecommendationLocation/$id.json")
