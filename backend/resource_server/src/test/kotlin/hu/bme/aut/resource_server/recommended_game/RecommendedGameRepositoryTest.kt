@@ -1,6 +1,8 @@
 package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.TestUtilsService
+import hu.bme.aut.resource_server.game.StoredConfigGameEntity
+import hu.bme.aut.resource_server.game.game_config.ConfigItem
 import hu.bme.aut.resource_server.role.Role
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
