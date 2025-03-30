@@ -23,6 +23,9 @@ import {PrivacyPolicyPageComponent} from "../general/privacy-policy-page/privacy
 import {DeleteAccountComponent} from "../pages/common/delete-account/delete-account.component";
 import {UserRegisterComponent} from "../pages/admin/user-register/user-register.component";
 import {AbilityPageComponent} from "../pages/admin/ability-page/ability-page.component";
+import {
+    CognitiveProfileEditPageComponent
+} from "../pages/admin/cognitive-profile-edit-page/cognitive-profile-edit-page.component";
 
 
 export const appRoutes: Routes = [
@@ -37,6 +40,7 @@ export const appRoutes: Routes = [
     {path: 'profile-compare-admin', component: AdminProfileDataComparisonPageComponent, canActivate: [loggedInGuard, adminCognitiveProfileGuard], title: 'Profil összehasonlítás'},
     {path: 'cognitive-profile', component: CognitiveProfilePageComponent, canActivate: [loggedInGuard], title: 'Kognitív profil'},
     {path: 'cognitive-profile-admin', component: AdminCognitiveProfilePageComponent, canActivate: [loggedInGuard, adminCognitiveProfileGuard], title: 'Kognitív profil'},
+    {path: 'cognitive-profile-edit', component: CognitiveProfileEditPageComponent, canActivate: [loggedInGuard, adminCognitiveProfileGuard], title: 'Kognitív profil szerkesztése'},
     {path: 'recommendation', component: RecommendationPageComponent, canActivate: [loggedInGuard], title: 'Játékok ajánlása'},
     {path: 'result', component: ResultPageComponent, canActivate: [loggedInGuard], title: 'Eredmények megtekintése'},
     {path: 'group-management', component: GroupManagementComponent, canActivate: [loggedInGuard, groupManagementGuard], title: 'Felhasználói csoportok kezelése'},

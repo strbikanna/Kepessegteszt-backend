@@ -4,6 +4,9 @@ import {AuthUser} from "../../model/user/user-contacts.model";
 import {FormControl} from "@angular/forms";
 import {AdminService} from "../../service/admin/admin.service";
 
+/**
+ * This component is used to search for contact users and select them.
+ */
 @Component({
     selector: 'app-user-autocomplete',
     templateUrl: './user-autocomplete.component.html',

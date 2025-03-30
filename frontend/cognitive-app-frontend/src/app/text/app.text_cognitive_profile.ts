@@ -73,4 +73,26 @@ export const cognitive_profile_text = {
         address_zip: 'Irányítószám',
         submit: 'Szűrés',
     },
+    profile_edit: {
+        title_edit: 'Kognitív profil szerkesztése',
+        title_user: 'kognitív profilja',
+        choose_contact: 'Kognitív profil megtekintése és szerkesztése',
+        choose_contact_description: 'Válaszd ki, kinek a kognitív profilját szeretnéd megtekinteni, ezután megjelennek a szerkeszthető értékek',
+        description_edit: 'A felhasználó korábban mért képességértékei megadhatók, így ez lesz az aktuális kognitív profil.' +
+            ' Minden képességhez beállítható a feltételezett érték.' +
+            ' Ez befolyásolja a játékajánlásokat is. Az is megadható, hogy mennyire valószínű a beállított érték.',
+        enum_profile_form: 'Speciális képességek',
+        enum_profile_form_description: 'Ezekről a képességekről azt lehet megmondani, hogy rendelkezik-e vele a felhasználó.',
+        float_profile_form: 'Általános mért képességek',
+        float_profile_form_description: 'Ezekről a képességekről megállapítható számszerű érték. 1.0 jelenti az átlagosnak tekinthető értéket.',
+        value: 'Kognitív képesség érték',
+        accuracy: 'Pontosság',
+        accuracy_validation_error: 'A pontosság értéke 0 és 1 között lehet.',
+        value_unknown: 'Ismeretlen',
+        value_yes: 'Igen',
+        value_no: 'Nem',
+        value_possible: 'Lehetséges',
+        value_inclined: 'Hajlamos',
+        save: 'Mentés',
+    }
 }
