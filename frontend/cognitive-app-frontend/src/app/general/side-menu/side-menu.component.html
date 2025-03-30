@@ -33,6 +33,11 @@
             <mat-icon>psychology</mat-icon>
             <span>{{ text.cognitive_profile }}</span>
         </button>
+        <button mat-menu-item *ngIf="canSeeAdminCognitiveProfile()" routerLink="/cognitive-profile-edit"
+                [routerLinkActive]="['activeLink']">
+            <mat-icon>tune</mat-icon>
+            <span>{{ text.cognitive_profile_edit }}</span>
+        </button>
         <button mat-menu-item *ngIf="loginStatus && isStudent" routerLink="/profile-compare"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>analytics</mat-icon>

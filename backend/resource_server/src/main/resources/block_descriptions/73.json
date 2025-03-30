@@ -1,0 +1,23 @@
+{"id":  73,
+    "difficulty": "EXTREME",
+    "blackBlocks": [
+      {
+        "block": 1,
+        "x": 5,
+        "y": 3,
+        "orientation": "HORIZONTAL"
+      },
+      {
+        "block": 2,
+        "x": 3,
+        "y": 3,
+        "orientation": "HORIZONTAL"
+      },
+      {
+        "block": 3,
+        "x": 4,
+        "y": 4,
+        "orientation": "VERTICAL"
+      }
+    ]
+  }

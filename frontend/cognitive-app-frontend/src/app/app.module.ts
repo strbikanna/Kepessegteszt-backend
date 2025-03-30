@@ -96,6 +96,7 @@ import { UserRegisterComponent } from './pages/admin/user-register/user-register
 import { AbilityPageComponent } from './pages/admin/ability-page/ability-page.component';
 import { EditableAbilityCardComponent } from './pages/admin/ability-page/editable-ability-card/editable-ability-card.component';
 import { FeatureDescriptionComponent } from './general/feature-description/feature-description.component';
+import { CognitiveProfileEditPageComponent } from './pages/admin/cognitive-profile-edit-page/cognitive-profile-edit-page.component';
 
 
 @NgModule({
@@ -155,7 +156,8 @@ import { FeatureDescriptionComponent } from './general/feature-description/featu
         UserRegisterComponent,
         AbilityPageComponent,
         EditableAbilityCardComponent,
-        FeatureDescriptionComponent
+        FeatureDescriptionComponent,
+        CognitiveProfileEditPageComponent
     ],
     imports: [
         BrowserModule,
