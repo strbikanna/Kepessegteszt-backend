@@ -58,15 +58,11 @@ class ResultController(
             nextRecommendation = recommenderService.createEmptyRecommendation(username, game.id!!)
         }
         CoroutineScope(Dispatchers.Default).launch {
-            var config = try {
+            val config = try {
                 recommenderService.createNextRecommendationByResult(savedResult)
             } catch (e: Exception) {
                 log.error("Error while creating next recommendation based on result: ${e.message}")
                 emptyMap()
-            }
-            if (config.isEmpty()) {
-                log.info("Generated config was empty, creating default recommendation for user: $username")
-                config = recommenderService.createDefaultRecommendationToUserForGame(username, game.id!!).config
             }
             nextRecommendation.config = config
             recommenderService.save(nextRecommendation)

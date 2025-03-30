@@ -1,7 +1,6 @@
 package hu.bme.aut.resource_server.recommendation
 
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
-import hu.bme.aut.resource_server.profile_calculation.calculator.AbilityRateCalculatorService
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers

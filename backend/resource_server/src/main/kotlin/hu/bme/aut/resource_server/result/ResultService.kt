@@ -160,8 +160,8 @@ class ResultService(
         resultRepository.deleteAllByUser(user)
     }
 
-    private fun isResultPassed(result: Map<String, Any>): Boolean? {
-        return result["passed"] as Boolean?
+    private fun isResultPassed(result: Map<String, Any>): Boolean {
+        return result["passed"] as Boolean? ?: false
     }
 
     private fun convertToDto(result: ResultEntity): ResultDetailsDto {

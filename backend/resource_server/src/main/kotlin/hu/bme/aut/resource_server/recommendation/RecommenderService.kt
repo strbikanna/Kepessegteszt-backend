@@ -33,7 +33,7 @@ class RecommenderService(
             autoRecommendationStrategy,
             latestRecommendationStrategy,
             defaultRecommendationStrategy
-            )
+        )
     }
 
     /**
@@ -74,7 +74,7 @@ class RecommenderService(
                     gameResult.recommendedGame.recommendedTo.username,
                     gameResult.recommendedGame.game.id!!,
                     gameResult.config,
-                    isResultSuccess(gameResult)
+                    gameResult.passed
                 )
                 if (config.isNotEmpty()) {
                     return config
@@ -83,7 +83,7 @@ class RecommenderService(
                 log.error("Error while generating recommendation by result: $e")
             }
         }
-        //none of the recommendations were successful
+        //none of the recommendations were successful, technically never should happen
         return emptyMap()
     }
 
@@ -146,10 +146,6 @@ class RecommenderService(
                 config = game.configItems.associateBy({ it.paramName }, { it.initialValue })
             )
         )
-    }
-
-    private fun isResultSuccess(result: ResultEntity): Boolean {
-        return result.result["passed"] as Boolean? ?: false
     }
 
 }
