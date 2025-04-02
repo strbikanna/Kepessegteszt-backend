@@ -23,17 +23,17 @@
             <mat-label>{{texts.increment}}</mat-label>
             <input matInput type="number" formControlName="increment">
         </mat-form-field>
-        <mat-form-field class="paramOrderField">
+        <mat-form-field class="maxAbilityEffectField">
             <mat-label>{{texts.max_ability_effect}}</mat-label>
-            <input matInput type="number" formControlName="paramOrder">
-            <mat-hint>{{texts.max_ability_effect_description}}</mat-hint>
-            <mat-error *ngIf="configItemForm.controls.maxAbilityEffect.errors?.['invalidParamOrder']">
+            <input matInput type="number" formControlName="maxAbilityEffect">
+            <mat-hint class="h-10rem">{{texts.max_ability_effect_description}}</mat-hint>
+            <mat-error *ngIf="configItemForm.controls.maxAbilityEffect.errors">
                 {{errorMessages.invalid_max_ability_effect}}
             </mat-error>
         </mat-form-field>
     </div>
     <div>
-        <mat-form-field class="textField">
+        <mat-form-field class="textField mt-4">
             <mat-label>{{texts.description}}</mat-label>
             <textarea matInput placeholder="{{texts.description_placeholder}}" formControlName="description"></textarea>
         </mat-form-field>

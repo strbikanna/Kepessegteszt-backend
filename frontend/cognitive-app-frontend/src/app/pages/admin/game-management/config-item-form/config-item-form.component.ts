@@ -106,7 +106,7 @@ export class ConfigItemFormComponent implements ControlValueAccessor, OnInit{
             hardestValue: control.get('hardestValue')?.value!!,
             easiestValue: control.get('easiestValue')?.value!!,
             increment: control.get('increment')?.value!!,
-            maxAbilityEffect: control.get('paramOrder')?.value!!,
+            maxAbilityEffect: control.get('maxAbilityEffect')?.value!!,
             description: control.get('description')?.value ?? ''
         };
     }

@@ -140,7 +140,6 @@ export class EditGameFormComponent implements OnInit {
     }
 
     addConfigItem() {
-        const countOfConfigItems = this.gameForm.controls.configItems.length
         const control = new FormControl<ConfigItem>(
             {
                 id: undefined,
@@ -149,7 +148,7 @@ export class EditGameFormComponent implements OnInit {
                 hardestValue: 10,
                 easiestValue: 1,
                 increment: 1,
-                maxAbilityEffect: countOfConfigItems + 1,
+                maxAbilityEffect: 1,
                 description: ''
             }
         )
