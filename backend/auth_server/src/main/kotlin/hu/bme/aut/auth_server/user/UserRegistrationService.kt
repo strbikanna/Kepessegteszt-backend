@@ -20,7 +20,7 @@ class UserRegistrationService(
      * Encodes the password.
      * @throws IllegalArgumentException if the username is already taken.
      */
-    fun saveUserOrThrowException(userData: RegistrationData): UserEntity {
+    fun saveUserOrThrowException(userData: RegistrationData, isEnabled: Boolean = false): UserEntity {
         if(userRepository.existsByUsername(userData.username)) {
             throw IllegalArgumentException("Username already taken")
         }
@@ -33,7 +33,7 @@ class UserRegistrationService(
             password = encodedPassword,
             roles = mutableSetOf(mapRole(userData.role)),
             contacts = mutableListOf(),
-            enabled = false
+            enabled = isEnabled
         )
         userRepository.save(userEntity)
         return userEntity
