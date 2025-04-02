@@ -105,7 +105,7 @@ class UserManagementController(
         regData.lastName = contactUser.lastName
         regData.password = contactUser.password
         regData.role = "STUDENT"
-        val savedUser = userRegistrationService.saveUserOrThrowException(regData)
+        val savedUser = userRegistrationService.saveUserOrThrowException(regData, isEnabled = true)
         userService.addContact(username, savedUser.username)
         return userService.getUserDto(savedUser.username)
     }
