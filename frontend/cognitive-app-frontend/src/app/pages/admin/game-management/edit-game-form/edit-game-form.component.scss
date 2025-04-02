@@ -10,7 +10,6 @@ form {
   flex-direction: column;
   width: max-content;
   min-width: 60%;
-
 }
 
 #active {
@@ -59,5 +58,10 @@ form {
 .submit-button {
   min-width: 20%;
   margin-inline: 2em;
+}
+
+.abilitiesContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
