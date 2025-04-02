@@ -73,10 +73,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "cognitive-app-frontend:build:production"
+              "buildTarget": "cognitive-app-frontend:build:production"
             },
             "development": {
-              "browserTarget": "cognitive-app-frontend:build:development"
+              "buildTarget": "cognitive-app-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -84,7 +84,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "cognitive-app-frontend:build"
+            "buildTarget": "cognitive-app-frontend:build"
           }
         },
         "test": {
