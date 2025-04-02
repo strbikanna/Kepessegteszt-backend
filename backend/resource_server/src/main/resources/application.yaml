@@ -44,12 +44,7 @@ llms:
     model-name: gemini-1.5-flash
 
 app:
-  python:
-    # Indicates if Python environment is present
-    exists: true
-    # Path to python module, set local file path
-    source-location: C:/Users/annav/Projekte/Kepessegteszt-backend/backend/resource_server/python_module
-    models-location: C:/Users/annav/Projekte/Kepessegteszt-backend/backend/resource_server/python_module/modellek/
+  suggest-api: http://localhost:8080/suggest
   thumbnail-location: C:/Users/annav/Projekte/Kepessegteszt-backend/backend/resource_server/thumbnails
   # Path to static files, set local port of resource server if needed
   image-path: http://localhost:8090/game_images

@@ -1,6 +1,6 @@
 package hu.bme.aut.resource_server.game
 
-import hu.bme.aut.resource_server.recommended_game.RecommenderService
+import hu.bme.aut.resource_server.recommendation.RecommenderService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -53,11 +53,7 @@ class GameController(
     @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST')")
     fun updateGame(@RequestBody gameEntity: GameEntity, @PathVariable gameId: Int): GameEntity {
         if(gameId == gameEntity.id) {
-            val updated = gameService.updateGame(gameEntity)
-            if(updated.id != gameId){
-                recommenderService.createDefaultRecommendationsForGame(updated.id!!)
-            }
-            return updated
+            return gameService.updateGame(gameEntity)
         } else{
             throw IllegalArgumentException("Game IDs don't match.")
         }

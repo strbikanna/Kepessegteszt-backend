@@ -15,7 +15,10 @@ import org.hibernate.annotations.Type
  */
 @Entity
 @Table(name = "GAME")
-data class GameEntity(
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "game_type")
+@DiscriminatorValue("default")
+open class GameEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null,
@@ -23,13 +26,13 @@ data class GameEntity(
     var version: Int,
 
     @Column(name ="_name")
-    val name: String,
+    var name: String,
 
     @Column(name ="_description")
     val description: String,
 
     @JsonProperty("thumbnail")
-    val thumbnailPath: String,
+    var thumbnailPath: String,
 
     @Column(name ="_active")
     var active: Boolean,
@@ -45,5 +48,9 @@ data class GameEntity(
     @OneToMany
     @JoinColumn(name = "game_id")
     @Cascade(CascadeType.ALL)
-    val configItems: MutableSet<ConfigItem> = mutableSetOf()
-)
+    var configItems: MutableSet<ConfigItem> = mutableSetOf()
+){
+    open fun validateConfig(config: Map<String, Any>): Map<String, Any>{
+        return config
+    }
+}

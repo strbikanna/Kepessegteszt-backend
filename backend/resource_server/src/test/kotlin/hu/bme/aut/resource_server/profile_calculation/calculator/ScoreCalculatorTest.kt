@@ -23,9 +23,7 @@ class ScoreCalculatorTest {
             ),
             config = game.configItems.associate { it.paramName to it.initialValue }.toMutableMap()
         )
-        winGame = TestDataSource.createGameForTest().copy(
-
-        )
+        winGame = TestDataSource.createGameForTest()
     }
 
 

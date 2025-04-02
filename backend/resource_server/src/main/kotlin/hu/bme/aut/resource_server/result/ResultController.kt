@@ -2,7 +2,7 @@ package hu.bme.aut.resource_server.result
 
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
-import hu.bme.aut.resource_server.recommended_game.RecommenderService
+import hu.bme.aut.resource_server.recommendation.RecommenderService
 import hu.bme.aut.resource_server.role.Role
 import hu.bme.aut.resource_server.utils.RoleName
 import jakarta.servlet.http.HttpServletResponse
@@ -58,15 +58,11 @@ class ResultController(
             nextRecommendation = recommenderService.createEmptyRecommendation(username, game.id!!)
         }
         CoroutineScope(Dispatchers.Default).launch {
-            var config = try {
+            val config = try {
                 recommenderService.createNextRecommendationByResult(savedResult)
             } catch (e: Exception) {
                 log.error("Error while creating next recommendation based on result: ${e.message}")
                 emptyMap()
-            }
-            if (config.isEmpty()) {
-                log.info("Generated config was empty, creating default recommendation for user: $username")
-                config = recommenderService.createDefaultRecommendationToUserForGame(username, game.id!!).config
             }
             nextRecommendation.config = config
             recommenderService.save(nextRecommendation)

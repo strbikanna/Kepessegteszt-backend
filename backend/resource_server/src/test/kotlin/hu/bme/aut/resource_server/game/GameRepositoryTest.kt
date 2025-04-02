@@ -2,6 +2,7 @@ package hu.bme.aut.resource_server.game
 
 
 import hu.bme.aut.resource_server.TestUtilsService
+import hu.bme.aut.resource_server.game.game_config.ConfigItem
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -79,5 +80,20 @@ class GameRepositoryTest(
         assertEquals(gameRepository.findAll().toList().size, 1)
         gameRepository.deleteById(game.id!!)
         assertEquals(gameRepository.findAll().toList().size, 0)
+    }
+
+    @Test
+    fun shouldSaveAndGetStoredConfigGame(){
+        val storedConfigGame = StoredConfigGameEntity(
+            version = 1,
+            name = "Test game",
+            description = "Test description",
+            thumbnailPath = "test.png",
+            active = true,
+            configItems = mutableSetOf()
+        )
+        val savedGame = testUtilsService.gameRepository.save(storedConfigGame)
+        val foundGame = testUtilsService.gameRepository.findById(savedGame.id!!).orElseThrow()
+        assertTrue(foundGame is StoredConfigGameEntity)
     }
 }

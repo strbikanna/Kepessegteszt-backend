@@ -1,11 +1,11 @@
-package hu.bme.aut.resource_server.recommended_game
+package hu.bme.aut.resource_server.recommendation
 
 import hu.bme.aut.resource_server.game.GameRepository
-import hu.bme.aut.resource_server.recommendation.AutoRecommendationService
+import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
+import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.result.ResultEntity
 import hu.bme.aut.resource_server.user.UserRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import jakarta.annotation.PostConstruct
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,11 +15,26 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class RecommenderService(
     @Autowired private var gameRepository: GameRepository,
-    @Autowired private var autoRecommender: AutoRecommendationService,
+    @Autowired private var autoRecommendationStrategy: AutoRecommendationStrategy,
+    @Autowired private var suggestApiStrategy: SuggestApiStrategy,
+    @Autowired private var latestRecommendationStrategy: LatestRecommendationStrategy,
+    @Autowired private var defaultRecommendationStrategy: DefaultRecommendationStrategy,
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
     @Autowired private var userRepository: UserRepository
 ) {
     val log: Logger = LoggerFactory.getLogger(RecommenderService::class.java)
+
+    private lateinit var recommendationStrategies: List<RecommendationStrategy>
+
+    @PostConstruct
+    fun initRecommendationStrategies() {
+        recommendationStrategies = listOf(
+            //suggestApiStrategy,
+            autoRecommendationStrategy,
+            latestRecommendationStrategy,
+            defaultRecommendationStrategy
+        )
+    }
 
     /**
      * Get all recommendations to user which are not yet completed and the game is active.
@@ -53,16 +68,23 @@ class RecommenderService(
     }
 
     suspend fun createNextRecommendationByResult(gameResult: ResultEntity): Map<String, Any> {
-        var nextConfig = autoRecommender.createNextRecommendationBasedOnResult(gameResult.id!!)
-        if(nextConfig.isEmpty()){
-            log.info("Generated config was empty, creating default recommendation for user: ${gameResult.user.username}")
-            nextConfig = withContext(Dispatchers.IO) {
-                recommendedGameRepository.findLatestCompleted(gameResult.user)
+        recommendationStrategies.forEach {
+            try {
+                val config = it.generateRecommendationByResult(
+                    gameResult.recommendedGame.recommendedTo.username,
+                    gameResult.recommendedGame.game.id!!,
+                    gameResult.config,
+                    gameResult.passed
+                )
+                if (config.isNotEmpty()) {
+                    return config
+                }
+            } catch (e: Exception) {
+                log.error("Error while generating recommendation by result: $e")
             }
-                .find { it.game.id == gameResult.recommendedGame.game.id && it.config.isNotEmpty()}
-                ?.config ?: emptyMap()
         }
-        return nextConfig
+        //none of the recommendations were successful, technically never should happen
+        return emptyMap()
     }
 
     /**
@@ -124,26 +146,6 @@ class RecommenderService(
                 config = game.configItems.associateBy({ it.paramName }, { it.initialValue })
             )
         )
-    }
-
-    fun createNewRecommendations(username: String): List<RecommendedGameEntity> {
-        val games = gameRepository.findAllByActiveIsTrue()
-        val user = userRepository.findByUsername(username).orElseThrow()
-        val recommendations = mutableListOf<RecommendedGameEntity>()
-        try {
-            games.forEach { game ->
-                recommendations.add(autoRecommender.generateRecommendationForUser(user, game))
-            }
-            recommendedGameRepository.saveAll(recommendations)
-        } catch (e: RuntimeException) {
-            log.error("Error while generating recommendation for user $username", e)
-            return recommendations
-        }
-        return recommendations
-    }
-
-    fun deleteRecommendations(recommendations: List<RecommendedGameEntity>) {
-        recommendedGameRepository.deleteAll(recommendations)
     }
 
 }

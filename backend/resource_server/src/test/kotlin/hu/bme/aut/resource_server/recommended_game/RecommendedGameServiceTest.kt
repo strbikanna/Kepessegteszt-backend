@@ -2,6 +2,11 @@ package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.TestUtilsService
 import hu.bme.aut.resource_server.game.GameEntity
+import hu.bme.aut.resource_server.game.StoredConfigGameEntity
+import hu.bme.aut.resource_server.game.game_config.ConfigItem
+import hu.bme.aut.resource_server.role.Role
+import hu.bme.aut.resource_server.user.UserEntity
+import hu.bme.aut.resource_server.utils.RoleName
 import kotlinx.coroutines.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -34,7 +39,8 @@ class RecommendedGameServiceTest(
         val game2 = createGame()
         val game3 = createGame()
         val game4 = createGame()
-        testService.gameRepository.saveAll(listOf(game1, game2, game3, game4))
+        val savedGames = testService.gameRepository.saveAll(listOf(game1, game2, game3, game4))
+        val acceptedIs = savedGames.map { it.id!! }
         val rGameList = listOf(
             createRecommendedGame().copy(
                 game = game1,
@@ -75,7 +81,7 @@ class RecommendedGameServiceTest(
             ),
         )
         testService.recommendedGameRepository.saveAll(rGameList)
-        val nextChoice = recommendedGameService.getNextChoiceForUser(user.username)
+        val nextChoice = recommendedGameService.getNextChoiceForUser(user.username, acceptedIs)
         assertEquals(2, nextChoice.size)
         assertTrue(nextChoice.any { it.gameId == game1.id })
         assertTrue(nextChoice.any { it.gameId == game3.id })
@@ -104,6 +110,72 @@ class RecommendedGameServiceTest(
             return@runBlocking found
         }
         assertEquals(mapOf("Level" to 1), config)
+    }
+
+    @Test
+    fun shouldGetConfigOfDefaultGame() {
+        val rGame = createRecommendedGame()
+        testService.recommendedGameRepository.save(rGame)
+        val config = runBlocking {
+            CoroutineScope(Dispatchers.Default).launch {
+                val config = mapOf("Level" to 1)
+                val savedRGame = testService.recommendedGameRepository.findById(rGame.id!!).get()
+                savedRGame.config = config
+                testService.recommendedGameRepository.save(savedRGame)
+            }
+            val found = CoroutineScope(Dispatchers.Default).async {
+                recommendedGameService.getRecommendedGameConfig(rGame.id!!)
+            }.await()
+
+            return@runBlocking found
+        }
+        assertEquals(mapOf("Level" to 1), config)
+    }
+
+    @Test
+    fun shouldGetStoredConfigOfGame() {
+        val storedConfigGame = StoredConfigGameEntity(
+            version = 1,
+            name = "Test game",
+            description = "Test game description",
+            thumbnailPath = "test.jpg",
+            active = true,
+            configItems = mutableSetOf(
+                ConfigItem(
+                    paramName = "level",
+                    initialValue = 1,
+                    hardestValue = 88,
+                    increment = 1,
+                    easiestValue = 1,
+                    description = "Level of the game",
+                    maxAbilityEffect = 2.0
+                )
+            )
+        )
+        val savedGame = testService.gameRepository.save(storedConfigGame)
+        val rGame = RecommendedGameEntity(
+            game = savedGame,
+            recommendedTo = user,
+            config = mapOf(),
+            completed = false
+        )
+        testService.recommendedGameRepository.save(rGame)
+        val config = runBlocking {
+            CoroutineScope(Dispatchers.Default).launch {
+                val config = mapOf("level" to 1)
+                val savedRGame = testService.recommendedGameRepository.findById(rGame.id!!).get()
+                savedRGame.config = config
+                testService.recommendedGameRepository.save(savedRGame)
+            }
+            val found = CoroutineScope(Dispatchers.Default).async {
+                recommendedGameService.getRecommendedGameConfig(rGame.id!!)
+            }.await()
+
+            return@runBlocking found
+        }
+        assertEquals(1, config!!["id"])
+        assertEquals("EASY", config["difficulty"])
+
     }
 
     private fun createRecommendedGame(): RecommendedGameEntity {

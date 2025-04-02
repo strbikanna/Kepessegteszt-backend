@@ -1,6 +1,7 @@
 package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.authentication.AuthService
+import hu.bme.aut.resource_server.recommendation.RecommenderService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -92,17 +93,6 @@ class RecommendedGameController(
         return systemRecommendedGames.map { it.toDto() }
     }
 
-    /**
-     * Deletes the current recommendations of the user and creates new ones.
-     */
-    @PostMapping("/system_recommended")
-    @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('STUDENT')")
-    fun generateNewRecommendations(authentication: Authentication): List<RecommendedGameDto> {
-        val currentActiveRecommendations = gameplayRecommenderService.getAllRecommendationToUser(authentication.name)
-        gameplayRecommenderService.deleteRecommendations(currentActiveRecommendations)
-        return gameplayRecommenderService.createNewRecommendations(authentication.name).map { it.toDto() }
-    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
