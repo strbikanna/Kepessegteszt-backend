@@ -66,6 +66,11 @@
             <mat-icon>reviews</mat-icon>
             <span>{{ text.game_recommendation }}</span>
         </button>
+        <mat-divider/>
+        <button mat-menu-item routerLink="/delete-account" [routerLinkActive]="['activeLink']">
+            <mat-icon color="warn">close</mat-icon>
+            <span>{{ text.delete_account }}</span>
+        </button>
 
     </mat-drawer>
 </mat-drawer-container>
