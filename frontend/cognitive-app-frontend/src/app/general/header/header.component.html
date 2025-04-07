@@ -13,23 +13,23 @@
     </div>
     <mat-menu #menu="matMenu" class="w-12">
         <div *ngIf="displayMobileMenu()">
-            <button mat-menu-item *ngIf="loginStatus && isStudent" routerLink="/cognitive-profile">
+            <button mat-menu-item *ngIf="hasAccessToOwnCognitiveProfile()" routerLink="/cognitive-profile">
                 <mat-icon>psychology</mat-icon>
                 <span>{{ text.cognitive_profile }}</span>
             </button>
-            <button mat-menu-item *ngIf="canSeeUserManagement()" routerLink="/admin">
+            <button mat-menu-item *ngIf="hasAccessToUserManagement()" routerLink="/admin">
                 <mat-icon>manage_accounts</mat-icon>
                 <span>{{ text.user_management }}</span>
             </button>
-            <button mat-menu-item *ngIf="canSeeUserRegistration()" routerLink="/register-user">
+            <button mat-menu-item *ngIf="hasAccessToUserRegistration()" routerLink="/register-user">
                 <mat-icon>person_add</mat-icon>
                 <span>{{ text.user_registration }}</span>
             </button>
-            <button mat-menu-item *ngIf="canSeeUserManagement()" routerLink="/ability" [routerLinkActive]="['activeLink']">
+            <button mat-menu-item *ngIf="hasAccessToUserManagement()" routerLink="/ability" [routerLinkActive]="['activeLink']">
                 <mat-icon>saved_search</mat-icon>
                 <span>{{ text.ability_management }}</span>
             </button>
-            <button mat-menu-item *ngIf="canSeeGroupManagement()" routerLink="/group-management">
+            <button mat-menu-item *ngIf="hasAccessToGroupManagement()" routerLink="/group-management">
                 <mat-icon>group</mat-icon>
                 <span>{{ text.group_management}}</span>
             </button>
@@ -37,27 +37,27 @@
                 <mat-icon>fact_check</mat-icon>
                 <span>{{ text.result_management }}</span>
             </button>
-            <button mat-menu-item *ngIf="loginStatus && isStudent" routerLink="/profile-compare">
+            <button mat-menu-item *ngIf="hasAccessToOwnCognitiveProfileCompare()" routerLink="/profile-compare">
                 <mat-icon>analytics</mat-icon>
-                <span>{{ text.profile_comparison }}</span>
+                <span>{{ text.own_profile_comparison }}</span>
             </button>
-            <button mat-menu-item *ngIf="canSeeAdminCognitiveProfileCompare()" routerLink="/profile-compare-admin">
+            <button mat-menu-item *ngIf="hasAccessToAdminCognitiveProfileCompare()" routerLink="/profile-compare-admin">
                 <mat-icon>query_stats</mat-icon>
                 <span>{{ text.profile_comparison }}</span>
             </button>
-            <button mat-menu-item *ngIf="canSeeGameManagement()" routerLink="/game-management">
+            <button mat-menu-item *ngIf="hasAccessToGameManagement()" routerLink="/game-management">
                 <mat-icon>sports_esports</mat-icon>
                 <span>{{ text.game_management }}</span>
             </button>
-            <button mat-menu-item *ngIf="canSeeRecommendations()" routerLink="/recommendation">
+            <button mat-menu-item *ngIf="hasAccessToRecommendations()" routerLink="/recommendation">
                 <mat-icon>reviews</mat-icon>
                 <span>{{ text.game_recommendation }}</span>
             </button>
-            <button mat-menu-item *ngIf="canSeeAdminCognitiveProfile()" routerLink="/cognitive-profile-admin">
+            <button mat-menu-item *ngIf="hasAccessToAdminCognitiveProfile()" routerLink="/cognitive-profile-admin">
                 <mat-icon>psychology</mat-icon>
                 <span>{{ text.cognitive_profile }}</span>
             </button>
-            <button mat-menu-item *ngIf="canSeeAdminCognitiveProfile()" routerLink="/cognitive-profile-edit">
+            <button mat-menu-item *ngIf="hasAccessToAdminCognitiveProfile()" routerLink="/cognitive-profile-edit">
                 <mat-icon>tune</mat-icon>
                 <span>{{ text.cognitive_profile_edit }}</span>
             </button>

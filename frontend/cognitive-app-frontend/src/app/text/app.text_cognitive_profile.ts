@@ -80,14 +80,17 @@ export const cognitive_profile_text = {
         choose_contact_description: 'Válaszd ki, kinek a kognitív profilját szeretnéd megtekinteni, ezután megjelennek a szerkeszthető értékek',
         description_edit: 'A felhasználó korábban mért képességértékei megadhatók, így ez lesz az aktuális kognitív profil.' +
             ' Minden képességhez beállítható a feltételezett érték.' +
-            ' Ez befolyásolja a játékajánlásokat is. Az is megadható, hogy mennyire valószínű a beállított érték.',
+            ' Ez befolyásolja a játékajánlásokat is. Az is megadható, hogy mennyire valószínű a beállított érték. ' +
+            'A pontosság 0 és 1 közötti érték, ahol 0 a legnagyobb bizonytalanságot és 1 a teljes bizonyosságot fejezi ki.' ,
         enum_profile_form: 'Speciális képességek',
         enum_profile_form_description: 'Ezekről a képességekről azt lehet megmondani, hogy rendelkezik-e vele a felhasználó.',
         float_profile_form: 'Általános mért képességek',
         float_profile_form_description: 'Ezekről a képességekről megállapítható számszerű érték. 1.0 jelenti az átlagosnak tekinthető értéket.',
         value: 'Kognitív képesség érték',
         accuracy: 'Pontosság',
+        accuracy_hint: '0 - bizonytalan, 1 - biztos',
         accuracy_validation_error: 'A pontosság értéke 0 és 1 között lehet.',
+        float_profile_value_validation_error: 'A profilérték 0 és 2 között lehet, ahol 1.0 az átlagos értéket jelenti.',
         value_unknown: 'Ismeretlen',
         value_yes: 'Igen',
         value_no: 'Nem',

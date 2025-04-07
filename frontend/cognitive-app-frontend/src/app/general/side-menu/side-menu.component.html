@@ -1,49 +1,49 @@
 <mat-drawer-container autosize class="menu">
     <mat-drawer [opened]="isDrawerOpenObservable | async" mode="side" class="w-full">
-        <p class="description ml-3" *ngIf="canSeeUserManagement() || canSeeGroupManagement()">
+        <p class="description ml-3" *ngIf="hasAccessToUserManagement() || hasAccessToGroupManagement()">
             {{ text.section_title.admin }}
         </p>
         <mat-divider/>
-        <button mat-menu-item *ngIf="canSeeUserManagement()" routerLink="/admin" [routerLinkActive]="['activeLink']">
+        <button mat-menu-item *ngIf="hasAccessToUserManagement()" routerLink="/admin" [routerLinkActive]="['activeLink']">
             <mat-icon>manage_accounts</mat-icon>
             <span>{{ text.user_management }}</span>
         </button>
-        <button mat-menu-item *ngIf="canSeeUserRegistration()" routerLink="/register-user" [routerLinkActive]="['activeLink']">
+        <button mat-menu-item *ngIf="hasAccessToUserRegistration()" routerLink="/register-user" [routerLinkActive]="['activeLink']">
             <mat-icon>person_add</mat-icon>
             <span>{{ text.user_registration }}</span>
         </button>
-        <button mat-menu-item *ngIf="canSeeGroupManagement()" routerLink="/group-management" [routerLinkActive]="['activeLink']">
+        <button mat-menu-item *ngIf="hasAccessToGroupManagement()" routerLink="/group-management" [routerLinkActive]="['activeLink']">
             <mat-icon>group</mat-icon>
             <span>{{ text.group_management}}</span>
         </button>
-        <button mat-menu-item *ngIf="canSeeUserManagement()" routerLink="/ability" [routerLinkActive]="['activeLink']">
+        <button mat-menu-item *ngIf="hasAccessToUserManagement()" routerLink="/ability" [routerLinkActive]="['activeLink']">
             <mat-icon>saved_search</mat-icon>
             <span>{{ text.ability_management }}</span>
         </button>
 
         <p class="description ml-3">{{ text.section_title.profile }}</p>
         <mat-divider/>
-        <button mat-menu-item *ngIf="loginStatus && isStudent" routerLink="/cognitive-profile"
+        <button mat-menu-item *ngIf="hasAccessToOwnCognitiveProfile()" routerLink="/cognitive-profile"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>psychology</mat-icon>
             <span>{{ text.cognitive_profile }}</span>
         </button>
-        <button mat-menu-item *ngIf="canSeeAdminCognitiveProfile()" routerLink="/cognitive-profile-admin"
+        <button mat-menu-item *ngIf="hasAccessToAdminCognitiveProfile()" routerLink="/cognitive-profile-admin"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>psychology</mat-icon>
-            <span>{{ text.cognitive_profile }}</span>
+            <span>{{ text.admin_cognitive_profile }}</span>
         </button>
-        <button mat-menu-item *ngIf="canSeeAdminCognitiveProfile()" routerLink="/cognitive-profile-edit"
+        <button mat-menu-item *ngIf="hasAccessToAdminCognitiveProfile()" routerLink="/cognitive-profile-edit"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>tune</mat-icon>
             <span>{{ text.cognitive_profile_edit }}</span>
         </button>
-        <button mat-menu-item *ngIf="loginStatus && isStudent" routerLink="/profile-compare"
+        <button mat-menu-item *ngIf="hasAccessToOwnCognitiveProfileCompare()" routerLink="/profile-compare"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>analytics</mat-icon>
-            <span>{{ text.profile_comparison }}</span>
+            <span>{{ text.own_profile_comparison }}</span>
         </button>
-        <button mat-menu-item *ngIf="canSeeAdminCognitiveProfileCompare()" routerLink="/profile-compare-admin"
+        <button mat-menu-item *ngIf="hasAccessToAdminCognitiveProfileCompare()" routerLink="/profile-compare-admin"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>query_stats</mat-icon>
             <span>{{ text.profile_comparison }}</span>
@@ -56,12 +56,12 @@
             <mat-icon>fact_check</mat-icon>
             <span>{{ text.result_management }}</span>
         </button>
-        <button mat-menu-item *ngIf="canSeeGameManagement()" routerLink="/game-management"
+        <button mat-menu-item *ngIf="hasAccessToGameManagement()" routerLink="/game-management"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>sports_esports</mat-icon>
             <span>{{ text.game_management }}</span>
         </button>
-        <button mat-menu-item *ngIf="canSeeRecommendations()" routerLink="/recommendation"
+        <button mat-menu-item *ngIf="hasAccessToRecommendations()" routerLink="/recommendation"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>reviews</mat-icon>
             <span>{{ text.game_recommendation }}</span>
