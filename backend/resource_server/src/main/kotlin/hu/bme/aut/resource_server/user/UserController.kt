@@ -51,7 +51,7 @@ class UserController(
         @RequestParam username: String,
         @RequestBody profile: List<ProfileItem>
     ) : Deferred<List<ProfileItem>> = authService.doIfIsContact(authentication, username) {
-        userService.getUserDtoWithProfileByUsername(username).profile.toList()
+        userService.updateUserProfile(profile, username)
     }
 
     @GetMapping("/groups")

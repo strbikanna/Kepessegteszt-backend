@@ -98,9 +98,14 @@ class UserService(
     }
 
     private fun mapToFloatProfileItem(profileItem: ProfileItem): FloatProfileItem {
+        val valueAsDouble = when (val v = profileItem.value) {
+            is Int -> v.toDouble()
+            is Double -> v
+            else -> throw IllegalArgumentException("Unsupported type for abilityValue: ${v::class}")
+        }
         return FloatProfileItem(
             ability = profileItem.ability,
-            abilityValue = profileItem.value as Double,
+            abilityValue = valueAsDouble,
             abilityAccuracy = profileItem.accuracy
         )
     }
