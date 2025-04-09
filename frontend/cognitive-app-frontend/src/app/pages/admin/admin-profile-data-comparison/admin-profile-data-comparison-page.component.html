@@ -59,7 +59,7 @@
     <button mat-button (click)="onSubmitPrompt()" color="primary" *ngIf="canPrompt()">{{ llmText.prompt_action }}</button>
 
     <h2 class="text-left" *ngIf="!descriptionLoading">{{ llmText.llm_text }}</h2>
-    <p class="description">{{ comparisonDescription?.abilitiesAsText }}</p>
+    <p class="description">{{ comparisonDescription?.generatedText }}</p>
     <mat-progress-bar *ngIf="descriptionLoading" mode="buffer"></mat-progress-bar>
 
 </div>

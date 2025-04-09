@@ -27,7 +27,7 @@
             </mat-form-field>
             <button *ngIf="UserInfo.canSeePromptLlm()" mat-button (click)="onSubmitPrompt()" color="primary">{{text.llm.prompt_action}}</button>
             <h2 class="text-left" *ngIf="profileDescription">{{text.llm.llm_text}}</h2>
-            <p class="description">{{profileDescription?.abilitiesAsText}}</p>
+            <p class="description">{{profileDescription?.generatedText}}</p>
         </div>
 
         <app-date-picker (dateChosen)="onDatesChosen($event)"></app-date-picker>

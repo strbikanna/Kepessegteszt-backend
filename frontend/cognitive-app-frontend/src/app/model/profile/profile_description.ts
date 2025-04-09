@@ -1,4 +1,6 @@
 export interface ProfileDescription{
+    id: number,
     prompt: string;
-    abilitiesAsText: string;
+    generatedText: string;
+    timestamp: Date;
 }
