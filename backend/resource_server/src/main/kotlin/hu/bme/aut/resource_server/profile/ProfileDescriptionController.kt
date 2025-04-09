@@ -35,7 +35,7 @@ class ProfileDescriptionController(
         @RequestParam(required = false) userGroupId: Int?,
         @RequestParam(required = false) prompt: String = "",
         @RequestBody(required = false) filterDto: UserFilterDto?
-    ): AbiltityToTextDto {
+    ): ProfileDescriptionTextDto {
         val username = requestedUsername ?: authentication.name
         return profileDescriptionService.generateComparisonTextToGroup(
             username,

@@ -56,27 +56,31 @@ class ProfileDescriptionService(
         userGroupId: Int?,
         prompt: String,
         userFilter: UserFilterDto?
-    ): AbiltityToTextDto {
+    ): ProfileDescriptionTextDto {
         val userAbilities = userService.getUserDtoWithProfileByUsername(username).profile.toList()
 
         val user = userService.getUserEntityWithProfileByUsername(username)
         val abilities = user.profileFloat.map { it.ability }.toSet()
         if (abilities.isEmpty()) {
-            return AbiltityToTextDto("", "")
+            return ProfileDescriptionTextDto(generatedText =  "")
         }
         val groupAbilities = withContext(Dispatchers.IO) {
             userGroupService.getAbilityToAverageValueInGroup(userGroupId, userFilter, abilities)
         }
         if (groupAbilities.isEmpty()) {
-            return AbiltityToTextDto("", "")
+            return ProfileDescriptionTextDto(generatedText =  "")
         }
         val groupName = userGroupId?.let { userGroupService.getGroupById(it).name } ?: "csoport"
 
-        return abilitiesToTextService.generateFromAbilitiesComparedToGroup(
+        val generated = abilitiesToTextService.generateFromAbilitiesComparedToGroup(
             userAbilities,
             groupAbilities,
             groupName,
             prompt
+        )
+        return ProfileDescriptionTextDto(
+            generatedText = generated.abilitiesAsText,
+            prompt = generated.prompt
         )
 
     }
