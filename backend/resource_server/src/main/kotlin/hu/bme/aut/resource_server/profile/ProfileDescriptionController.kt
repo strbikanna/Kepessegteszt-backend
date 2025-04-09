@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 
-@RestController("/profile_description")
+@RestController
+@RequestMapping("/profile_description")
 class ProfileDescriptionController(
     private val profileDescriptionService: ProfileDescriptionService
 ) {
@@ -21,7 +22,9 @@ class ProfileDescriptionController(
         @RequestParam(required = false) prompt: String = "",
     ): ProfileDescriptionTextDto {
         val username = requestedUsername ?: authentication.name
-        return profileDescriptionService.getProfileDescriptionOfUser(username, prompt)
+        return if (prompt.isBlank())
+            profileDescriptionService.getProfileDescriptionOfUser(username) else
+            profileDescriptionService.generateProfileDescriptionOfUser(username, prompt)
     }
 
     @PostMapping("/compared-to-group")

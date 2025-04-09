@@ -46,6 +46,7 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
         this.chosenUsername = user.username;
         this.name = user.firstName + ' ' + user.lastName;
         this.loadingProfile = true;
+        this.loadingDescription = true;
         this.loadProfileData();
         this.updateUrlParams();
     }

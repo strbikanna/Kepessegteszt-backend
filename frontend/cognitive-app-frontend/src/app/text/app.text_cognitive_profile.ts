@@ -29,7 +29,7 @@ export const cognitive_profile_text = {
         prompt: 'Prompt',
         prompt_description: 'Próbáld ki egyedi kérdés megadásával a kognitív profil elemzését.',
         prompt_action: 'Profil kiértékelés a megadott kérdés alapján',
-        used_prompt: 'Használt prompt',
+        used_prompt: 'Elemzés saját kérés megadásával',
         llm_text: 'Elemzés',
         empty_description: 'Sajnos nem lehet elkészíteni az elemzést, mert nincs elég adat.',
     },

@@ -19,7 +19,7 @@ class ProfileDescriptionService(
 
     ) {
 
-    suspend fun getProfileDescriptionOfUser(username: String, prompt: String = ""): ProfileDescriptionTextDto =
+    suspend fun getProfileDescriptionOfUser(username: String): ProfileDescriptionTextDto =
         withContext(Dispatchers.IO) {
             val dbEntity = repository.findByUserUsername(username)
             if (dbEntity != null && !isOlderThanOneWeek(dbEntity.timestamp)) {
@@ -29,13 +29,22 @@ class ProfileDescriptionService(
                 deleteProfileDescriptionOfUser(username)
             }
             val user = userService.getUserEntityWithProfileByUsername(username)
-            val generatedText = generateDescriptionText(username, prompt)
+            val generatedText = generateDescriptionText(username, "")
             val newEntity = ProfileDescriptionTextEntity(
                 generatedText = generatedText.abilitiesAsText,
                 user = user
             )
             repository.save(newEntity)
             return@withContext ProfileDescriptionTextDto(newEntity)
+        }
+
+    suspend fun generateProfileDescriptionOfUser(username: String, prompt: String = ""): ProfileDescriptionTextDto =
+        withContext(Dispatchers.IO) {
+            val generatedText = generateDescriptionText(username, prompt)
+            return@withContext ProfileDescriptionTextDto(
+                generatedText = generatedText.abilitiesAsText,
+                prompt = generatedText.prompt
+            )
         }
 
     fun deleteProfileDescriptionOfUser(username: String) {

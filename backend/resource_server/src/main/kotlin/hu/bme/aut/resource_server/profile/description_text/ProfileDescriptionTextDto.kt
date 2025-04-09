@@ -4,6 +4,7 @@ data class ProfileDescriptionTextDto(
     val id: Int? = null,
     val generatedText: String,
     val timestamp: String? = null,
+    val prompt: String? = null,
 ){
     constructor(entity: ProfileDescriptionTextEntity) : this(
         id = entity.id,
