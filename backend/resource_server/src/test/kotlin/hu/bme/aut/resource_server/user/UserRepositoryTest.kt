@@ -3,7 +3,7 @@ package hu.bme.aut.resource_server.user
 import hu.bme.aut.resource_server.TestUtilsService
 import hu.bme.aut.resource_server.profile.EnumProfileItem
 import hu.bme.aut.resource_server.profile.FloatProfileItem
-import hu.bme.aut.resource_server.role.Role
+import hu.bme.aut.resource_server.user.role.Role
 import hu.bme.aut.resource_server.utils.EnumAbilityValue
 import hu.bme.aut.resource_server.utils.RoleName
 import jakarta.transaction.Transactional

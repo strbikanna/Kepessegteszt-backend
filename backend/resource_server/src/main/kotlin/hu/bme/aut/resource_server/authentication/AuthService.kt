@@ -6,7 +6,7 @@ import hu.bme.aut.resource_server.error.notContact
 import hu.bme.aut.resource_server.error.removeUserFailed
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.result.ResultDto
-import hu.bme.aut.resource_server.role.Role
+import hu.bme.aut.resource_server.user.role.Role
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import hu.bme.aut.resource_server.user_group.UserGroupRepository

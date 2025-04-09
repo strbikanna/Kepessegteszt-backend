@@ -3,7 +3,7 @@ package hu.bme.aut.resource_server.result
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
 import hu.bme.aut.resource_server.recommendation.RecommenderService
-import hu.bme.aut.resource_server.role.Role
+import hu.bme.aut.resource_server.user.role.Role
 import hu.bme.aut.resource_server.utils.RoleName
 import jakarta.servlet.http.HttpServletResponse
 import kotlinx.coroutines.*
