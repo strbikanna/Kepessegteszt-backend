@@ -67,8 +67,7 @@ class GameService (
         if(!sameConfigDescription(oldGame, updatedGame)) {
             oldGame.active = false
             gameRepository.save(oldGame)
-            deleteNotCompletedRecommendationsToGame(oldGame)
-
+            
             var newVersionedGame = copyGame(updatedGame).also {
                 it.id = null
                 it.version = oldGame.version + 1
