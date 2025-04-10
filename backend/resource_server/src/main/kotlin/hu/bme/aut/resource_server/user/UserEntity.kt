@@ -3,8 +3,8 @@ package hu.bme.aut.resource_server.user
 import hu.bme.aut.resource_server.profile.EnumProfileItem
 import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.profile.dto.ProfileItem
-import hu.bme.aut.resource_server.role.Role
-import hu.bme.aut.resource_server.role.Subscription
+import hu.bme.aut.resource_server.user.role.Role
+import hu.bme.aut.resource_server.user.role.Subscription
 import hu.bme.aut.resource_server.user_group.group.Group
 import hu.bme.aut.resource_server.user_group.organization.Address
 import hu.bme.aut.resource_server.user_group.organization.Organization

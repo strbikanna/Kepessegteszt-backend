@@ -14,6 +14,7 @@ import {ProfileData} from "../../model/profile/profile_data.model";
 export class CognitiveProfileService {
     snapshotEndpoint = '/profile_snapshot'
     profileEndpoint = '/user/profile'
+    profileDescriptionEndpoint = '/profile_description'
     inspectPath = '/inspect'
 
     constructor(private http: HttpClient, private helper: SimpleHttpService) {
@@ -43,11 +44,12 @@ export class CognitiveProfileService {
         if(username){
             params = params.set('requestedUsername', username);
         }
-        return this.http.get<ProfileDescription>(`${this.helper.baseUrl}${this.profileEndpoint}/abilities-as-text`, {params: params}).pipe(
+        return this.http.get<ProfileDescription>(`${this.helper.baseUrl}${this.profileDescriptionEndpoint}`, {params: params}).pipe(
             map(desc =>{
-                if(desc.abilitiesAsText === ''){
-                    desc.abilitiesAsText = TEXTS.cognitive_profile.llm.empty_description;
+                if(desc.generatedText === ''){
+                    desc.generatedText = TEXTS.cognitive_profile.llm.empty_description;
                 }
+                desc.prompt = prompt ?? '';
                 return desc
             }),
             catchError(this.helper.handleHttpError)
@@ -128,7 +130,8 @@ export class CognitiveProfileService {
     }
 
     updateCurrentProfile(profileData: ProfileData[], username: string): Observable<ProfileData[]> {
-        return this.http.put<ProfileData[]>(`${this.helper.baseUrl}${this.profileEndpoint}?username=${username}`, profileData).pipe(
+        const validProfileData = profileData.filter(item =>  item && item.value != null && item.accuracy != null)
+        return this.http.put<ProfileData[]>(`${this.helper.baseUrl}${this.profileEndpoint}?username=${username}`, validProfileData).pipe(
             catchError(this.helper.handleHttpError)
         )
 

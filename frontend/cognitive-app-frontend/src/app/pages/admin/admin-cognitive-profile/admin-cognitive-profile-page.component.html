@@ -14,20 +14,35 @@
     </div>
     <mat-progress-bar *ngIf="loadingProfile" mode="buffer"></mat-progress-bar>
     <div class="flex w-7 align-items-start flex-column ml-6">
-        <div *ngIf="chosenUsername">
-            <h2 class="text-left my-1" *ngIf="UserInfo.canSeePromptLlm()">{{text.llm.prompt}}</h2>
-            <p class="title text-left" *ngIf="UserInfo.canSeePromptLlm()">{{text.llm.used_prompt}}</p>
-            <p class="description" *ngIf="UserInfo.canSeePromptLlm()">{{profileDescription?.prompt}}</p>
 
+        <div *ngIf="chosenUsername" class="mb-8">
+
+            <!-- LLM description -->
             <mat-progress-bar *ngIf="loadingDescription" mode="buffer"></mat-progress-bar>
-            <h3 *ngIf="UserInfo.canSeePromptLlm()">{{text.llm.prompt_description}}</h3>
-            <mat-form-field *ngIf="UserInfo.canSeePromptLlm()" class="w-full">
-                <mat-label>{{text.llm.prompt}}</mat-label>
-                <textarea matInput [(ngModel)]="prompt"></textarea>
-            </mat-form-field>
-            <button *ngIf="UserInfo.canSeePromptLlm()" mat-button (click)="onSubmitPrompt()" color="primary">{{text.llm.prompt_action}}</button>
             <h2 class="text-left" *ngIf="profileDescription">{{text.llm.llm_text}}</h2>
-            <p class="description">{{profileDescription?.abilitiesAsText}}</p>
+            <p class="description">{{profileDescription?.generatedText}}</p>
+
+            <!-- LLM prompt -->
+            <mat-accordion *ngIf="UserInfo.canSeePromptLlm()" class="my-8">
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <h4>{{text.llm.prompt}}</h4>
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            <p class="description">{{text.llm.used_prompt}}</p>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <p class="description">{{profileDescription?.prompt}}</p>
+
+                    <h3>{{text.llm.prompt_description}}</h3>
+                    <mat-form-field *ngIf="UserInfo.canSeePromptLlm()" class="w-full">
+                        <mat-label>{{text.llm.prompt}}</mat-label>
+                        <textarea matInput [(ngModel)]="prompt"></textarea>
+                    </mat-form-field>
+                    <button mat-button (click)="onSubmitPrompt()" color="primary">{{text.llm.prompt_action}}</button>
+                </mat-expansion-panel>
+            </mat-accordion>
         </div>
 
         <app-date-picker (dateChosen)="onDatesChosen($event)"></app-date-picker>

@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.role
+package hu.bme.aut.resource_server.user.role
 
 import org.springframework.data.repository.CrudRepository
 

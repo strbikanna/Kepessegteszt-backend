@@ -69,7 +69,7 @@ export class CognitiveProfileEditPageComponent implements OnInit {
         this.currentFloatProfile.forEach(profile => {
             this.floatProfileFormItems.push(this.fb.group({
                 ability: [profile.ability, Validators.required],
-                value: profile.value,
+                value: [profile.value, Validators.compose([Validators.min(0.0), Validators.max(2.0)])],
                 accuracy: [profile.accuracy, Validators.compose([Validators.min(0.0), Validators.max(1.0)])]
             }))
         })
@@ -114,6 +114,8 @@ export class CognitiveProfileEditPageComponent implements OnInit {
         if(!this.selectedUser) return;
         this.profileService.updateCurrentProfile([...this.floatProfileFormItems.value, ...this.enumProfileFormItems.value], this.selectedUser?.username).subscribe(data => {
             this.setProfileData(data)
+            this.floatProfileFormItems.clear()
+            this.enumProfileFormItems.clear()
             this.initProfileForms()
         })
     }

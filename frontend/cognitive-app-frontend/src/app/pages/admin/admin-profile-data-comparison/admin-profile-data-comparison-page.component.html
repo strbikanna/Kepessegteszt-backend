@@ -47,19 +47,31 @@
             </div>
         </div>
     </div>
-    <h2 class="text-left my-1" *ngIf="canPrompt()">{{ llmText.prompt }}</h2>
-    <p class="title text-left" *ngIf="canPrompt()">{{ llmText.used_prompt }}</p>
-    <p class="description" *ngIf="canPrompt()">{{ comparisonDescription?.prompt }}</p>
-
-    <h3 *ngIf="canPrompt()">{{ llmText.prompt_description }}</h3>
-    <mat-form-field class="w-full" *ngIf="canPrompt()">
-        <mat-label>{{ llmText.prompt }}</mat-label>
-        <textarea matInput [(ngModel)]="prompt"></textarea>
-    </mat-form-field>
-    <button mat-button (click)="onSubmitPrompt()" color="primary" *ngIf="canPrompt()">{{ llmText.prompt_action }}</button>
 
     <h2 class="text-left" *ngIf="!descriptionLoading">{{ llmText.llm_text }}</h2>
-    <p class="description">{{ comparisonDescription?.abilitiesAsText }}</p>
+    <p class="description" *ngIf="!descriptionLoading">{{ comparisonDescription?.generatedText }}</p>
+
+    <!-- LLM prompt -->
+    <mat-accordion *ngIf="canPrompt()" class="my-8 lg:w-6">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <h4>{{llmText.prompt}}</h4>
+                </mat-panel-title>
+                <mat-panel-description>
+                    <p class="description">{{llmText.used_prompt}}</p>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <p class="description">{{comparisonDescription?.prompt}}</p>
+
+            <h3>{{llmText.prompt_description}}</h3>
+            <mat-form-field *ngIf="canPrompt()" class="w-full">
+                <mat-label>{{llmText.prompt}}</mat-label>
+                <textarea matInput [(ngModel)]="prompt"></textarea>
+            </mat-form-field>
+            <button mat-button (click)="onSubmitPrompt()" color="primary">{{llmText.prompt_action}}</button>
+        </mat-expansion-panel>
+    </mat-accordion>
     <mat-progress-bar *ngIf="descriptionLoading" mode="buffer"></mat-progress-bar>
 
 </div>

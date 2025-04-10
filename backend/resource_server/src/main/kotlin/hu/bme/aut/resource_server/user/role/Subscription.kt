@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.role
+package hu.bme.aut.resource_server.user.role
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
