@@ -48,8 +48,16 @@
         </div>
     </div>
 
-    <h2 class="text-left" *ngIf="!descriptionLoading">{{ llmText.llm_text }}</h2>
+
+    <h2 class="text-left">{{ llmText.llm_text }}</h2>
+    <mat-progress-bar *ngIf="descriptionLoading" mode="buffer" class="my-2"></mat-progress-bar>
     <p class="description" *ngIf="!descriptionLoading">{{ comparisonDescription?.generatedText }}</p>
+    <button mat-flat-button [matTooltip]="llmText.comparison_text_button_info" (click)="onGenerateComparisonDescription()"
+            color="primary" class="mb-5"
+            [disabled]="descriptionLoading">
+        {{llmText.comparison_text_button}}
+    </button>
+
 
     <!-- LLM prompt -->
     <mat-accordion *ngIf="canPrompt()" class="my-8 lg:w-6">
@@ -72,7 +80,6 @@
             <button mat-button (click)="onSubmitPrompt()" color="primary">{{llmText.prompt_action}}</button>
         </mat-expansion-panel>
     </mat-accordion>
-    <mat-progress-bar *ngIf="descriptionLoading" mode="buffer"></mat-progress-bar>
 
 </div>
 

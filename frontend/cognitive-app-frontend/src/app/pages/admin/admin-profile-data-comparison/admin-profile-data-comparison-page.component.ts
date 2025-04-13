@@ -31,7 +31,7 @@ export class AdminProfileDataComparisonPageComponent extends ProfileDataComparis
     protected chosenUsername?: string;
     protected nameOfUser?: string;
     protected comparisonDescription?: ProfileDescription;
-    protected descriptionLoading = true;
+    protected descriptionLoading = false;
     protected prompt?: string;
     private profileStatisticsData: BehaviorSubject<ProfileStatistics[]> = new BehaviorSubject<ProfileStatistics[]>([]);
 
@@ -63,7 +63,16 @@ export class AdminProfileDataComparisonPageComponent extends ProfileDataComparis
                 this.profileStatisticsData.next(data)
             );
         }
+
+    }
+
+    onGenerateComparisonDescription() {
+        if(!this.chosenUsername) return;
+        this.descriptionLoading = true;
         this.service.getComparisonDescription(this.userFilter, this.prompt, this.chosenUsername).subscribe(description => {
+            if(description.generatedText == null || description.generatedText === ''){
+                description.generatedText = this.llmText.empty_description;
+            }
             this.comparisonDescription = description;
             this.descriptionLoading = false;
         })
@@ -84,10 +93,6 @@ export class AdminProfileDataComparisonPageComponent extends ProfileDataComparis
                 this.profileStatisticsData.next(data);
             });
         }
-        this.service.getComparisonDescription(undefined, undefined, username).subscribe(description => {
-            this.comparisonDescription = description;
-            this.descriptionLoading = false;
-        });
         this.onSubmit();
     }
 
