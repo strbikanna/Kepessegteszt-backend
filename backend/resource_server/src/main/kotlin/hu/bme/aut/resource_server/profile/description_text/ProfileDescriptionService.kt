@@ -65,13 +65,13 @@ class ProfileDescriptionService(
 
         val user = userService.getUserEntityWithProfileByUsername(username)
         val abilities = user.profileFloat.map { it.ability }.toSet()
-        if (abilities.isEmpty()) {
+        if (abilities.isEmpty() || userAbilities.none { it.accuracy >= MinAccuracy.VALUE }) {
             return ProfileDescriptionTextDto(generatedText =  "")
         }
         val groupAbilities = withContext(Dispatchers.IO) {
             userGroupService.getAbilityToAverageValueInGroup(userGroupId, userFilter, abilities)
         }
-        if (groupAbilities.isEmpty() || groupAbilities.none { it.accuracy >= MinAccuracy.VALUE }) {
+        if (groupAbilities.isEmpty()) {
             return ProfileDescriptionTextDto(generatedText =  "")
         }
         val groupName = userGroupId?.let { userGroupService.getGroupById(it).name } ?: "csoport"
