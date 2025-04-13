@@ -19,6 +19,10 @@ class ProfileDescriptionService(
 
     ) {
 
+    private object MinAccuracy {
+        const val VALUE = 0.5
+    }
+
     suspend fun getProfileDescriptionOfUser(username: String): ProfileDescriptionTextDto =
         withContext(Dispatchers.IO) {
             val dbEntity = repository.findByUserUsername(username)
@@ -67,7 +71,7 @@ class ProfileDescriptionService(
         val groupAbilities = withContext(Dispatchers.IO) {
             userGroupService.getAbilityToAverageValueInGroup(userGroupId, userFilter, abilities)
         }
-        if (groupAbilities.isEmpty()) {
+        if (groupAbilities.isEmpty() || groupAbilities.none { it.accuracy >= MinAccuracy.VALUE }) {
             return ProfileDescriptionTextDto(generatedText =  "")
         }
         val groupName = userGroupId?.let { userGroupService.getGroupById(it).name } ?: "csoport"
@@ -87,7 +91,7 @@ class ProfileDescriptionService(
 
     private suspend fun generateDescriptionText(username: String, prompt: String): AbiltityToTextDto {
         val userAbilities = userService.getUserDtoWithProfileByUsername(username).profile.toList()
-        if (userAbilities.isEmpty()) {
+        if (userAbilities.isEmpty() || userAbilities.none { it.accuracy >= MinAccuracy.VALUE }) {
             return AbiltityToTextDto("", "")
         }
         return abilitiesToTextService.generateFromAbilities(userAbilities, prompt)
