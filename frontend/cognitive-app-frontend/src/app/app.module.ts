@@ -97,6 +97,7 @@ import { AbilityPageComponent } from './pages/admin/ability-page/ability-page.co
 import { EditableAbilityCardComponent } from './pages/admin/ability-page/editable-ability-card/editable-ability-card.component';
 import { FeatureDescriptionComponent } from './general/feature-description/feature-description.component';
 import { CognitiveProfileEditPageComponent } from './pages/admin/cognitive-profile-edit-page/cognitive-profile-edit-page.component';
+import {GamesComponent} from "./pages/common/games/games.component";
 
 
 @NgModule({
@@ -116,6 +117,7 @@ import { CognitiveProfileEditPageComponent } from './pages/admin/cognitive-profi
         FileUploadComponent,
         EditGameFormComponent,
         GameCardComponent,
+        GamesComponent,
         CalculationDialogComponent,
         RecommendationPageComponent,
         ProfileDataComparisonPageComponent,
@@ -217,6 +219,9 @@ import { CognitiveProfileEditPageComponent } from './pages/admin/cognitive-profi
             useClass: GlobalErrorhandlerService,
         },
         provideRouter(appRoutes, withComponentInputBinding()),
+    ],
+    exports: [
+        GameCardComponent
     ],
     bootstrap: [AppComponent]
 })

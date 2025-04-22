@@ -12,7 +12,7 @@ export const TEXTS = {
         logout: 'Kijelentkezés',
         delete_account: 'Fiók törlése',
         home: 'Cognitive App',
-        games: 'Játékok',
+        games: 'Játékok megtekintése',
         profile: 'Profil',
         cognitive_profile: 'Kognitív profil',
         admin_cognitive_profile: 'Kapcsolatok kognitív profilja',
@@ -39,21 +39,9 @@ export const TEXTS = {
     },
     ability_page: abilityPage,
     games: {
-        menu: {
-            teacher_recommendation: 'Tanári ajánlások',
-            scientist_recommendation: 'Kutatók ajánlásai',
-            games_for_you: 'Játékok neked',
-            all_games: 'Összes játék',
-        },
-        game_card: {
-            play: 'Játék indítása',
-        },
-        progress: {
-            loading_game: 'Játék betöltése...',
-        },
-        error: {
-            empty_content: 'Még nem érkezett ajánlás',
-        }
+        title: 'Játékok',
+        description: 'Megtekintheted az Android alkalmazásban elérhető játékokat.',
+        download_link: 'Android alkalmazás letöltése',
     },
     user_info: {
         description: 'Felhasználói profil információk',
@@ -273,7 +261,7 @@ export const TEXTS = {
         existing_recommendations: 'Meglévő (nem teljesített) játék-ajánlások',
         visit_profile: 'Kognitív profil megtekintése',
         visit_results: 'A játékhoz tartozó eredmények megtekintése',
-        card:{
+        card: {
             delete_game: 'Ajánlás törlése',
             confirm_title: 'Biztosan törölni szeretnéd ezt a játékbeállítást?',
         }

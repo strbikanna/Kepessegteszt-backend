@@ -1,0 +1,7 @@
+<h1>{{ text.title }}</h1>
+<p class="description">{{ text.description }}</p>
+<div class="games-grid">
+    <div *ngFor="let game of games | async">
+        <app-game-card [game]="game" ></app-game-card>
+    </div>
+</div>

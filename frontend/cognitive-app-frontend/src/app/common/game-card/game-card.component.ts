@@ -23,6 +23,10 @@ export class GameCardComponent implements OnInit {
    */
   @Input() extraButtonText: string | undefined;
   /**
+   * @param displayButtons Whether to display any buttons or not.
+   */
+  @Input() displayButtons: boolean = true;
+  /**
    * @param game Game to be displayed.
    */
   @Input({required: true}) game!: Game

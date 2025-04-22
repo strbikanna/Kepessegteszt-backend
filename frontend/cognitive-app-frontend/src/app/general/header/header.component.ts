@@ -63,6 +63,9 @@ export class HeaderComponent implements OnInit{
     hasAccessToAdminCognitiveProfile(){
         return this.isAdmin || this.isTeacher || this.isScientist || this.isParent
     }
+    hasAccessToCognitiveProfileEdit(){
+        return this.isAdmin  || this.isScientist
+    }
     hasAccessToAdminCognitiveProfileCompare(){
         return this.hasAccessToAdminCognitiveProfile()
     }
@@ -80,6 +83,9 @@ export class HeaderComponent implements OnInit{
     }
     hasAccessToGameManagement(){
         return this.isAdmin || this.isScientist
+    }
+    hasAccessToGames(){
+        return this.isStudent || this.isParent
     }
     hasAccessToRecommendations(){
         return this.isAdmin || this.isScientist || this.isTeacher
