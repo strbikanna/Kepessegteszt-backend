@@ -27,6 +27,7 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
@@ -55,7 +56,8 @@ class AuthServerConfig {
     fun authServerSecurityFilterChain(
         http: HttpSecurity,
         userInfoMapper: UserInfoMapper,
-        logoutSuccessHandler: LogoutSuccessHandler
+        logoutSuccessHandler: LogoutSuccessHandler,
+        logoutErrorHandler: LogoutErrorHandler
     ): SecurityFilterChain {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http)
 
@@ -67,6 +69,7 @@ class AuthServerConfig {
                 }
                 oidc.logoutEndpoint { logout ->
                     logout.logoutResponseHandler(logoutSuccessHandler)
+                    logout.errorResponseHandler(logoutErrorHandler)
                 }
             }
 
@@ -77,20 +80,14 @@ class AuthServerConfig {
             // Redirect to the login page when not authenticated from the authorization endpoint
             .exceptionHandling { exceptions ->
                 exceptions
-                    .authenticationEntryPoint(
-                        CustomAuthenticationEntryPoint()
-                    )
                     .defaultAuthenticationEntryPointFor(
-                        CustomAuthenticationEntryPoint(),
+                        LoginUrlAuthenticationEntryPoint("/login"),
                         MediaTypeRequestMatcher(
                             MediaType.TEXT_HTML,
                         )
                     )
             } // Accept access tokens for User Management and/or Client Registration
             .oauth2ResourceServer { it.jwt(withDefaults()) }
-            .logout {logout ->
-                logout.logoutSuccessUrl("/custom-logout-page") // Redirect to the custom logout page
-            }
 
         return http.build()
     }
@@ -119,11 +116,6 @@ class AuthServerConfig {
                 .formLogin {
                     it.loginPage("/login").permitAll()
                 }
-            .exceptionHandling { exception ->
-                exception.defaultAuthenticationEntryPointFor(
-                    CustomAuthenticationEntryPoint()
-                ) { request -> request.servletPath == "/error" }
-            }
         return http.build()
     }
 
