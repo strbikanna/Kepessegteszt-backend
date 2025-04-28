@@ -42,13 +42,13 @@ class LoginController(
         @RequestHeader(HttpHeaders.USER_AGENT) userAgentString: String,
         model: Model
     ): String {
+        model.addAttribute("user", RegistrationData())
         return registerPageContent(userAgentString, model)
     }
 
     private fun registerPageContent(userAgentString: String, model: Model): String {
         val userAgent = useragentAnalyzer.parse(userAgentString)
         val deviceClass = userAgent.getValue(UserAgent.DEVICE_CLASS)
-        model.addAttribute("user", RegistrationData())
 
         if (deviceClass in MOBILE_DEVICES) {
             return "register-mobile"

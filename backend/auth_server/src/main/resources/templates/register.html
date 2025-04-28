@@ -71,12 +71,20 @@
 </script>
 <script>
     function toggleRegisterButton() {
-        document.getElementById("registerButton").disabled = !(document.getElementById("privacyPolicy").checked
+        document.getElementById("registerButton").disabled = !(
+            document.getElementById("privacyPolicy").checked
             && document.getElementById("firstName").value
             && document.getElementById("lastName").value
-            && document.getElementById("username").value
+            && hasUsername()
             && document.getElementById("email").value && document.getElementById("email").value.includes("@")
             && document.getElementById("password").value);
+    }
+
+    function hasUsername(){
+        return (
+            document.getElementById("username") && document.getElementById("username")?.value ||
+            document.getElementById("username-error") && document.getElementById("username-error")?.value
+        );
     }
 </script>
 </body>
