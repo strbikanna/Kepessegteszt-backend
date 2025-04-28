@@ -53,32 +53,19 @@ class RecommendedGameService(
     @Transactional
     fun getNextChoiceForUser(username: String, acceptedGameIds: List<Int>?): List<RecommendedGameDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
-        val top2Distinct: MutableList<GameEntity> = mutableListOf()
+        val possibleGames: MutableSet<GameEntity> = mutableSetOf()
+        val top2Recommendation: MutableList<RecommendedGameEntity> = mutableListOf()
         val neverPlayedGames = getNeverPlayedGames(user)
-        neverPlayedGames.forEach {
-            if (top2Distinct.size < 2 && !top2Distinct.contains(it)
-                && it.active && (acceptedGameIds?.contains(it.id) == true || acceptedGameIds == null)
-            ) {
-                top2Distinct.add(it)
-            }
+        neverPlayedGames.forEach { game ->
+            tryAddGameAndRecommendation(game, user, acceptedGameIds, possibleGames, top2Recommendation)
         }
-        if (top2Distinct.size < 2) {
+        if (top2Recommendation.size < 2) {
             val latestCompleted = recommendedGameRepository.findLatestCompleted(user)
-            latestCompleted.forEach {
-                if (top2Distinct.size < 2 && !top2Distinct.contains(it.game)
-                    && it.game.active && (acceptedGameIds?.contains(it.game.id) == true || acceptedGameIds == null)
-                ) {
-                    top2Distinct.add(it.game)
-                }
+            latestCompleted.forEach { rg ->
+                tryAddGameAndRecommendation(rg.game, user, acceptedGameIds, possibleGames, top2Recommendation)
             }
         }
-        return top2Distinct.map { game ->
-            recommendedGameRepository.findAllByRecommendedToAndGameAndCompleted(
-                user,
-                game,
-                false
-            ).first().toDto()
-        }
+        return top2Recommendation.map { it.toDto() }
     }
 
     /**
@@ -153,5 +140,26 @@ class RecommendedGameService(
     private fun getNeverPlayedGames(user: UserEntity): List<GameEntity> {
         val neverCompletedRecommendations = recommendedGameRepository.findByRecommendedToAndNeverPlayed(user)
         return neverCompletedRecommendations.map { it.game }
+    }
+
+    private fun tryAddGameAndRecommendation(
+        game: GameEntity,
+        user: UserEntity,
+        acceptedGameIds: List<Int>?,
+        possibleGames: MutableSet<GameEntity>,
+        top2Recommendation: MutableList<RecommendedGameEntity>
+    ) {
+        if (top2Recommendation.size >= 2) return
+        if (!possibleGames.contains(game) && game.active && (acceptedGameIds == null || acceptedGameIds.contains(game.id))) {
+            possibleGames.add(game)
+            val recommendation = recommendedGameRepository.findAllByRecommendedToAndGameAndCompleted(
+                user,
+                game,
+                false
+            ).firstOrNull()
+            if (recommendation != null) {
+                top2Recommendation.add(recommendation)
+            }
+        }
     }
 }
