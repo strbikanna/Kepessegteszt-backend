@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 class RecommenderService(
     @Autowired private var gameRepository: GameRepository,
     @Autowired private var autoRecommendationStrategy: AutoRecommendationStrategy,
-    @Autowired private var suggestApiStrategy: SuggestApiStrategy,
+    //@Autowired private var suggestApiStrategy: SuggestApiStrategy,
     @Autowired private var latestRecommendationStrategy: LatestRecommendationStrategy,
     @Autowired private var defaultRecommendationStrategy: DefaultRecommendationStrategy,
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
