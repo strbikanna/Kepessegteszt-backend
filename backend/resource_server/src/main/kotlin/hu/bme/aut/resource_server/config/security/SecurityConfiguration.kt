@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.config
+package hu.bme.aut.resource_server.config.security
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean

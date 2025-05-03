@@ -36,6 +36,7 @@ dependencies {
     implementation(libs.spring.boot.starter.oauth2.resource)
     implementation(libs.spring.boot.starter.security)
     implementation(libs.spring.boot.starter.web)
+    implementation(libs.spring.jsql.parser)
     implementation(libs.jackson.kotlin)
     //kotlin
     implementation(libs.kotlin.reflect)
@@ -69,6 +70,7 @@ dependencies {
     implementation(libs.langchain4j.openai)
     implementation(libs.langchain4j.gemini)
     implementation(libs.langchain4j.mistral)
+    implementation(libs.langchain4j.experimental.sql)
 }
 
 tasks.withType<KotlinCompile> {

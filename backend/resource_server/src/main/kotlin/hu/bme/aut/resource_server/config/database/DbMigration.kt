@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.config
+package hu.bme.aut.resource_server.config.database
 
 import org.flywaydb.core.Flyway
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy

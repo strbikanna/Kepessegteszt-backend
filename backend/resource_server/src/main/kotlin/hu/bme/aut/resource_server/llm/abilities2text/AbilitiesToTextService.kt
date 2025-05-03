@@ -76,8 +76,8 @@ abstract class AbilitiesToTextService {
             systemMessage,
             UserMessage.from(prompt)
         )
-        val response = model.generate(messages)
-        val result = response.content().text()
+        val response = model.chat(messages)
+        val result = response.aiMessage().text()
 
         log(prompt = prompt, response = result)
         return result

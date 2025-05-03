@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.config
+package hu.bme.aut.resource_server.config.security
 
 import hu.bme.aut.resource_server.user.role.Role
 import hu.bme.aut.resource_server.user.UserEntity

@@ -5,10 +5,17 @@ server:
 spring:
   # Database connection settings, customize if needed
   datasource:
-    url: jdbc:mysql://localhost:3306/cognitive_app
-    username: dev
-    password: dev.1122
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    app-datasource:
+      url: jdbc:mysql://localhost:3306/cognitive_app
+      username: dev
+      password: dev.1122
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+    ai-datasource:
+      url: jdbc:mysql://localhost:3306/cognitive_app
+      username: dev
+      password: dev.1122
+      driver: com.mysql.cj.jdbc.Driver
 
   data:
     rest:
@@ -42,6 +49,7 @@ llms:
   gemini:
     api-key:
     model-name: gemini-1.5-flash
+
 
 app:
   suggest-api: http://localhost:8080/suggest
