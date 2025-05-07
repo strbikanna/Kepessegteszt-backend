@@ -1,0 +1,221 @@
+-- cognitive abilities type can be ENUMERATED or FLOATING
+-- ENUMERATED: it means that the ability can take a finite number of values
+-- FLOATING: it means that the ability can take a continuous number of values
+create table ability
+(
+    code         varchar(5)    not null
+        primary key,
+    name         varchar(50)   not null,
+    description  varchar(1000) null,
+    ability_type varchar(30)   null
+);
+
+-- games are the different cognitive games that can be played
+create table game
+(
+    id                 int auto_increment
+        primary key,
+    version            int        default 1 not null,
+    _name              varchar(100)         not null,
+    _description       varchar(3000)        null,
+    thumbnail_path     varchar(400)         not null,
+    _active            tinyint(1) default 1 null,
+);
+
+-- config items are used to fine-tune the games
+create table config_description_item
+(
+    id            bigint auto_increment
+        primary key,
+    param_name    varchar(100) not null,
+    easiest_value int          not null,
+    hardest_value int          not null,
+    initial_value int          not null,
+    increment     int          not null,
+    description   varchar(255) not null,
+    game_id       int          null,
+    constraint fk_config_item_game
+        foreign key (game_id) references game (id)
+);
+
+-- game abilities connect the games with the abilities that are relevant to them e.g. it is necessary
+-- for the game or it can be improved by the game
+create table game_abilities
+(
+    game_id      int        not null,
+    ability_code varchar(5) not null,
+    constraint fk_game_abilities_ability
+        foreign key (ability_code) references ability (code),
+    constraint fk_game_abilities_game
+        foreign key (game_id) references game (id)
+);
+
+create table role
+(
+    _name varchar(30) not null
+        primary key
+);
+
+-- only the user id is needed, the rest of the information is not needed
+-- full user information is not available for security reasons
+-- user id here can be used to identify the user in the system
+create view anonym_user_view as
+select
+    u.id,
+    u.birth_date,
+    u.address_city,
+    u.gender
+from
+    user u;
+
+-- an item in the current cognitive profile of the user
+-- ability_value can be YES, NO, POSSIBLE, INCLINED, UNKNOWN
+create table enum_profile_item
+(
+    id            bigint auto_increment
+        primary key,
+    ability_id    varchar(5)  not null,
+    user_id       int         null,
+    ability_value varchar(30) null,
+    constraint fk_ability_enum_profile
+        foreign key (ability_id) references ability (code),
+    constraint fk_enum_profile_user
+        foreign key (user_id) references user (id)
+);
+
+-- an item in the cognitive profile of the user at a certain point in time
+create table enum_profile_snapshot_item
+(
+    id            bigint auto_increment
+        primary key,
+    ability_id    varchar(5)  not null,
+    user_id       int         not null,
+    _timestamp    datetime    not null,
+    ability_value varchar(30) null,
+    constraint fk_ability_enum_snapshot
+        foreign key (ability_id) references ability (code),
+    constraint fk_enum_snapshot_to_user
+        foreign key (user_id) references user (id)
+);
+
+-- an item in the current cognitive profile of the user
+-- ability_value can be a floating point number, these are the abilities that can be measured with gameplays
+-- 1.0 value means average level of ability and +/- 0.15 means better or worse than average with std deviation
+create table float_profile_item
+(
+    id            bigint auto_increment
+        primary key,
+    ability_id    varchar(5) not null,
+    user_id       int        null,
+    ability_value float      null,
+    constraint fk_ability_float_profile
+        foreign key (ability_id) references ability (code),
+    constraint fk_float_profile_user
+        foreign key (user_id) references user (id)
+);
+
+-- an item in the cognitive profile of the user at a certain point in time
+create table float_profile_snapshot_item
+(
+    id            bigint auto_increment
+        primary key,
+    ability_id    varchar(5) not null,
+    user_id       int        not null,
+    _timestamp    datetime   not null,
+    ability_value float      null,
+    constraint fk_ability_float_snapshot
+        foreign key (ability_id) references ability (code),
+    constraint fk_float_snapshot_to_user
+        foreign key (user_id) references user (id)
+);
+
+-- a game configuration for a user
+-- config corresponds to the name of a game config_item and an integer value to it (within the range of easiest and hardest value)
+-- null recommender means that it is a system recommended game
+create table recommended_game
+(
+    id             bigint auto_increment
+        primary key,
+    _timestamp     datetime             null,
+    config         json                 null,
+    recommender_id int                  null,
+    recommendee_id int                  not null,
+    game_id        int                  not null,
+    completed      tinyint(1) default 0 null,
+    constraint fk_game_recommended
+        foreign key (game_id) references game (id),
+    constraint fk_recommendee
+        foreign key (recommendee_id) references user (id),
+    constraint fk_recommender
+        foreign key (recommender_id) references user (id)
+);
+
+-- a game play is a record of a game played by a user, holds the result and the configuration of the game play
+create table gameplay
+(
+    id                  bigint auto_increment
+        primary key,
+    _timestamp          datetime             not null,
+    result              json                 not null,
+    config              json                 not null,
+    user_id             int                  null,
+    recommended_game_id bigint               null,
+    passed              tinyint(1) default 0 null,
+    constraint fk_game
+        foreign key (recommended_game_id) references recommended_game (id),
+    constraint fk_user
+        foreign key (user_id) references user (id)
+);
+
+
+create table role_to_user
+(
+    user_id int         not null,
+    role_id varchar(30) not null,
+    constraint fk_role_to_user
+        foreign key (user_id) references user (id),
+    constraint fk_user_to_role
+        foreign key (role_id) references role (_name)
+);
+
+create table user_group
+(
+    id                   int auto_increment
+        primary key,
+    _name                varchar(100) not null,
+    address_house_number varchar(10)  null,
+    address_street       varchar(100) null,
+    address_city         varchar(100) null,
+    address_zip          varchar(10)  null,
+    organization_id      int          null,
+    parent_group_id      int          null,
+    group_type           varchar(10)  null,
+    constraint fk_group_organization
+        foreign key (organization_id) references user_group (id),
+    constraint fk_group_parent_group
+        foreign key (parent_group_id) references user_group (id)
+);
+
+create table group_member
+(
+    user_id  int not null,
+    group_id int not null,
+    primary key (user_id, group_id),
+    constraint fk_group_member_group
+        foreign key (group_id) references user_group (id),
+    constraint fk_group_member_user
+        foreign key (user_id) references user (id)
+);
+
+create table org_member
+(
+    user_id int not null,
+    org_id  int not null,
+    primary key (user_id, org_id),
+    constraint fk_org_member_org
+        foreign key (org_id) references user_group (id),
+    constraint fk_org_member_user
+        foreign key (user_id) references user (id)
+);
+
+

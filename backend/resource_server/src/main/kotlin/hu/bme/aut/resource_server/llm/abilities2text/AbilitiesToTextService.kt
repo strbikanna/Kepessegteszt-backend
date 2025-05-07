@@ -46,12 +46,12 @@ abstract class AbilitiesToTextService {
         return callPrompt
     }
 
-    open suspend fun generateFromAbilities(abilities: List<ProfileItem>, prompt: String = ""): AbiltityToTextDto {
+    open suspend fun generateFromAbilities(abilities: List<ProfileItem>, prompt: String = ""): ChatMessageResponse {
         var callPrompt = prompt.ifBlank { promptTemplate }
         callPrompt = putAbilitiesIntoPrompt(abilities, callPrompt)
-        return AbiltityToTextDto(
+        return ChatMessageResponse(
             prompt = callPrompt,
-            abilitiesAsText = generateFromPrompt(callPrompt)
+            response = generateFromPrompt(callPrompt)
         )
     }
 
@@ -60,14 +60,14 @@ abstract class AbilitiesToTextService {
         groupAbilities: List<ProfileItem>,
         groupName: String,
         prompt: String = ""
-    ): AbiltityToTextDto {
+    ): ChatMessageResponse {
         var callPrompt = prompt.ifBlank { promptTemplateWithGroup }
         callPrompt = putAbilitiesIntoPrompt(abilities, callPrompt)
         callPrompt += "A $groupName csoport átlagos értékei:\n"
         callPrompt = putAbilitiesIntoPrompt(groupAbilities, callPrompt)
-        return AbiltityToTextDto(
+        return ChatMessageResponse(
             prompt = callPrompt,
-            abilitiesAsText = generateFromPrompt(callPrompt)
+            response = generateFromPrompt(callPrompt)
         )
     }
 

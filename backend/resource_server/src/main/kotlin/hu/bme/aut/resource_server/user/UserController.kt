@@ -2,7 +2,6 @@ package hu.bme.aut.resource_server.user
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.authentication.AuthService
-import hu.bme.aut.resource_server.llm.abilities2text.AbiltityToTextDto
 import hu.bme.aut.resource_server.profile.dto.ProfileItem
 import hu.bme.aut.resource_server.profile.dto.ProfileItemStatisticsDto
 import hu.bme.aut.resource_server.profile_calculation.calculator.CalculationHelper
@@ -10,8 +9,6 @@ import hu.bme.aut.resource_server.user.filter.UserFilterDto
 import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
 import hu.bme.aut.resource_server.user_group.UserGroupDto
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize

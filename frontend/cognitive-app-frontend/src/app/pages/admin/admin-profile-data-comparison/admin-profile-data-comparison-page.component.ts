@@ -15,6 +15,7 @@ import {Location} from "@angular/common";
 import {ProfileDescription} from "../../../model/profile/profile_description";
 import {imagePaths} from "../../../utils/app.image_resources";
 import {UserInfo} from "../../../auth/userInfo";
+import {DataChatService} from "../../../service/data-chat/data-chat.service";
 
 @Component({
     selector: 'app-admin-profile-data-comparison-page',
@@ -22,7 +23,9 @@ import {UserInfo} from "../../../auth/userInfo";
     styleUrls: ['./admin-profile-data-comparison-page.component.scss']
 })
 export class AdminProfileDataComparisonPageComponent extends ProfileDataComparisonPageComponent {
-    constructor(service: ProfileDataComparisonService, formBuilder: FormBuilder, abilityService: AbilityService,
+    constructor(service: ProfileDataComparisonService, formBuilder: FormBuilder,
+                abilityService: AbilityService,
+                private chatService: DataChatService,
                 private router: Router, private location: Location, private route: ActivatedRoute,
     ) {
         super(service, formBuilder, abilityService);
@@ -119,6 +122,15 @@ export class AdminProfileDataComparisonPageComponent extends ProfileDataComparis
             this.descriptionLoading = false;
         });
     }
+
+    message: string = '';
+    dataChatResponse: string = '';
+    sendChatMessage() {
+        this.chatService.sendQuestion(this.message).subscribe(response => {
+            this.dataChatResponse = response;
+        });
+    }
+
     private updateUrlParams() {
         const params = {
             username: this.chosenUsername,

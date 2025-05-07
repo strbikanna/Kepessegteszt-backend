@@ -1,6 +1,5 @@
 package hu.bme.aut.resource_server.profile
 
-import hu.bme.aut.resource_server.llm.abilities2text.AbiltityToTextDto
 import hu.bme.aut.resource_server.profile.description_text.ProfileDescriptionService
 import hu.bme.aut.resource_server.profile.description_text.ProfileDescriptionTextDto
 import hu.bme.aut.resource_server.user.filter.UserFilterDto

@@ -74,5 +74,13 @@
     </mat-accordion>
     <mat-progress-bar *ngIf="descriptionLoading" mode="buffer"></mat-progress-bar>
 
+    <h3>ChatMessage</h3>
+    <mat-form-field class="w-full">
+        <mat-label>{{llmText.prompt}}</mat-label>
+        <textarea matInput [(ngModel)]="message"></textarea>
+    </mat-form-field>
+    <button mat-button (click)="sendChatMessage()" color="primary">{{llmText.prompt_action}}</button>
+    <p>{{dataChatResponse}}</p>
+
 </div>
 

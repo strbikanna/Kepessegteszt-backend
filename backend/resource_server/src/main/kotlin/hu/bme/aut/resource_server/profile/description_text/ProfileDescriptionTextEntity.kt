@@ -11,6 +11,7 @@ data class ProfileDescriptionTextEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null,
 
+    @Column(name = "generated_text")
     val generatedText: String,
 
     @CreationTimestamp
