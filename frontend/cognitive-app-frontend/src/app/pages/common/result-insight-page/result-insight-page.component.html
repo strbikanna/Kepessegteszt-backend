@@ -7,6 +7,7 @@
                 [searchOnlyContacts]="true"
                 (userSelected)="onUserSelected($event.username)"
                 (userSelectionChanged)="onUserRemoved()"
+                [autoChoose]="true"
                 [multiple]="false">
         </app-user-autocomplete>
     </div>

@@ -51,7 +51,7 @@ export const appRoutes: Routes = [
     {path: 'cognitive-profile-edit', component: CognitiveProfileEditPageComponent, canActivate: [loggedInGuard, cognitiveProfileEditGuard], title: 'Kognitív profil szerkesztése'},
     {path: 'recommendation', component: RecommendationPageComponent, canActivate: [loggedInGuard, recommendationGuard], title: 'Játékok ajánlása'},
     {path: 'result', component: ResultPageComponent, canActivate: [loggedInGuard], title: 'Eredmények megtekintése'},
-    {path: 'result-charts', component: ResultInsightPageComponent, /*canActivate: [loggedInGuard],*/ title: 'Eredmények elemzése'},
+    {path: 'result-charts', component: ResultInsightPageComponent, canActivate: [loggedInGuard], title: 'Eredmények elemzése'},
     {path: 'group-management', component: GroupManagementComponent, canActivate: [loggedInGuard, groupManagementGuard], title: 'Felhasználói csoportok kezelése'},
     {path: 'privacy-policy', component: PrivacyPolicyPageComponent, title: 'Adatvédelmi irányelvek'},
     {path: 'delete-account', component: DeleteAccountComponent, title: 'Felhasználói fiók eltávolítása', canActivate: [loggedInGuard]},

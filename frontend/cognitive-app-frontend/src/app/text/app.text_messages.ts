@@ -287,7 +287,8 @@ export const TEXTS = {
         passed: "Játékeredmény",
         timestamp: "Időpont",
         apply: "Kiválasztás alkalmazása",
-        no_data: "Nincs megjeleníthető eredmény."
+        no_data: "Nincs megjeleníthető eredmény.",
+        result_details: "Részletes eredmények",
 
     }
 }
