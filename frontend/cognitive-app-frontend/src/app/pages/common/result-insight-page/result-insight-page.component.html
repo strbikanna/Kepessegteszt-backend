@@ -1,9 +1,26 @@
 <h2>Result Insight</h2>
 <div class="w-10">
+    <div class="flex mb-5">
+        <div class="mr-5">
+            <h3>Felhasználó</h3>
+            <p class="description">Válaszd ki, kinek az eredményét szeretnéd megtekinteni</p>
+            <app-user-autocomplete
+                    [searchOnlyContacts]="true"
+                    (userSelected)="onUserSelected($event.username)"
+                    (userSelectionChanged)="onUserRemoved()"
+                    [multiple]="false">
+            </app-user-autocomplete>
+        </div>
+        <div>
+            <h3>Játék</h3>
+            <p class="description">Válaszd ki, melyik játék eredményét szeretnéd megtekinteni</p>
+            <app-game-search (onGameSelected)="onGameSelected($event.id)"></app-game-search>
+        </div>
+    </div>
 
     <app-result-chart
-            [resultDataObservable]="mockData"
-            [configItemsObservable]="mockConfigItems"
+            [resultDataObservable]="resultData"
+            [configItemsObservable]="configItems"
     ></app-result-chart>
 </div>
 

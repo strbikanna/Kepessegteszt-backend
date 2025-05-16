@@ -98,6 +98,8 @@ import { EditableAbilityCardComponent } from './pages/admin/ability-page/editabl
 import { FeatureDescriptionComponent } from './general/feature-description/feature-description.component';
 import { CognitiveProfileEditPageComponent } from './pages/admin/cognitive-profile-edit-page/cognitive-profile-edit-page.component';
 import {GamesComponent} from "./pages/common/games/games.component";
+import {ResultInsightPageComponent} from "./pages/common/result-insight-page/result-insight-page.component";
+import {ResultChartComponent} from "./charts/result-chart/result-chart.component";
 
 
 @NgModule({
@@ -124,7 +126,9 @@ import {GamesComponent} from "./pages/common/games/games.component";
         ProfileRadarChartComponent,
         ConfigItemFormComponent,
         ResultInfoCardComponent,
+        ResultInsightPageComponent,
         ResultPageComponent,
+        ResultChartComponent,
         ConfirmDialogComponent,
         CsvDownloadButtonComponent,
         SortControlComponent,
@@ -221,7 +225,8 @@ import {GamesComponent} from "./pages/common/games/games.component";
         provideRouter(appRoutes, withComponentInputBinding()),
     ],
     exports: [
-        GameCardComponent
+        GameCardComponent,
+        UserFilterComponent
     ],
     bootstrap: [AppComponent]
 })

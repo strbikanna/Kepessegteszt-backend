@@ -1,18 +1,80 @@
 import {Component} from '@angular/core';
-import {Observable, of} from "rxjs";
+import {BehaviorSubject, map, Observable, of, tap} from "rxjs";
 import {ResultChartComponent} from "../../../charts/result-chart/result-chart.component";
 import {Result} from "../../../model/result.model";
+import {ResultService, SearchOptions} from "../../../service/result/result.service";
+import {GameSearchComponent} from "../../../common/game-search/game-search.component";
+import {GameManagementService} from "../../../service/game-management/game-management.service";
+import {ConfigItem} from "../../../model/config_item.model";
 
 @Component({
     selector: 'app-result-insight-page',
-    standalone: true,
-    imports: [
-        ResultChartComponent
-    ],
     templateUrl: './result-insight-page.component.html',
     styleUrl: './result-insight-page.component.scss'
 })
 export class ResultInsightPageComponent {
+    private searchOptions: SearchOptions = {
+        sortBy: 'timestamp',
+        sortOrder: 'DESC',
+        pageIndex: 0,
+        pageSize: 5,
+    }
+    resultData: BehaviorSubject<Result[]> = new BehaviorSubject<Result[]>([]);
+    configItems: BehaviorSubject<ConfigItem[]> = new BehaviorSubject<ConfigItem[]>([]);
+
+    constructor(private resultService: ResultService, private gameService: GameManagementService) {
+    }
+
+    onUserSelected(username: string) {
+        this.searchOptions.usernames = [username]
+        this.searchOptions.pageIndex = 0
+        this.onGetResults()
+    }
+
+    onUserRemoved() {
+        this.searchOptions.usernames = []
+        this.searchOptions.pageIndex = 0
+    }
+
+    onGameSelected(gameId?: number) {
+        if (gameId === undefined) {
+            this.searchOptions.gameIds = []
+            return
+        }
+        this.searchOptions.gameIds = [gameId]
+        this.searchOptions.pageIndex = 0
+        this.onGetResults()
+    }
+
+    onNextPage() {
+        this.searchOptions.pageIndex++
+        this.onGetResults()
+    }
+
+    onPreviousPage() {
+        this.searchOptions.pageIndex--
+        if (this.searchOptions.pageIndex < 0) {
+            this.searchOptions.pageIndex = 0
+        }
+        this.onGetResults()
+    }
+
+    onGetResults() {
+        if (!this.searchOptions.usernames || this.searchOptions.usernames.length === 0) {
+            return
+        }
+        if (!this.searchOptions.gameIds || this.searchOptions.gameIds.length === 0) {
+            return
+        }
+        this.resultService.getAllResultsFiltered(this.searchOptions).subscribe(results =>
+            this.resultData.next(results)
+        )
+        this.gameService.getGameById(this.searchOptions.gameIds[0]).subscribe(game => {
+            this.configItems.next(game.configItems)
+        })
+    }
+
+
     mockData: Observable<Result[]> = of([
         {
             id: 2323,

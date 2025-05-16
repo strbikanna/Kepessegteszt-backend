@@ -9,10 +9,6 @@ import * as themeColors from "../../../assets/chart_theme/chart_colors";
 
 @Component({
     selector: 'app-result-chart',
-    standalone: true,
-    imports: [
-        NgxEchartsModule
-    ],
     templateUrl: './result-chart.component.html',
     styleUrl: './result-chart.component.scss'
 })
@@ -132,6 +128,7 @@ export class ResultChartComponent extends ChartComponent {
 
     private observeConfigItems(): void {
         this.configItemsObservable.subscribe(configItems => {
+            console.log('Config items:', configItems);
             this.loading = true;
             this.configItems = configItems;
             if (this.resultData) {
@@ -142,6 +139,7 @@ export class ResultChartComponent extends ChartComponent {
 
     private observeResultData(): void {
         this.resultDataObservable.subscribe(resultData => {
+            console.log('Result data:', resultData);
             this.loading = true;
             this.resultData = resultData;
             if (this.configItems) {
