@@ -1,9 +1,7 @@
 import {Component} from '@angular/core';
-import {BehaviorSubject, map, Observable, of, tap} from "rxjs";
-import {ResultChartComponent} from "../../../charts/result-chart/result-chart.component";
+import {BehaviorSubject, Observable, of, tap} from "rxjs";
 import {Result} from "../../../model/result.model";
 import {ResultService, SearchOptions} from "../../../service/result/result.service";
-import {GameSearchComponent} from "../../../common/game-search/game-search.component";
 import {GameManagementService} from "../../../service/game-management/game-management.service";
 import {ConfigItem} from "../../../model/config_item.model";
 
@@ -66,9 +64,9 @@ export class ResultInsightPageComponent {
         if (!this.searchOptions.gameIds || this.searchOptions.gameIds.length === 0) {
             return
         }
-        this.resultService.getAllResultsFiltered(this.searchOptions).subscribe(results =>
+        this.resultService.getAllResultsFiltered(this.searchOptions).subscribe(results => {
             this.resultData.next(results)
-        )
+        })
         this.gameService.getGameById(this.searchOptions.gameIds[0]).subscribe(game => {
             this.configItems.next(game.configItems)
         })

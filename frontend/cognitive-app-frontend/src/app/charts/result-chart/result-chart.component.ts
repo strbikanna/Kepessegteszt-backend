@@ -1,9 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {ChartComponent} from "../chart/chart.component";
 import {Observable} from "rxjs";
 import {Result} from "../../model/result.model";
 import {ConfigItem} from "../../model/config_item.model";
-import {NgxEchartsModule} from "ngx-echarts";
 import * as themeColors from "../../../assets/chart_theme/chart_colors";
 
 
@@ -27,7 +26,7 @@ export class ResultChartComponent extends ChartComponent {
 
     private setChartOptions(): void {
         const chartData = this.sortData(this.resultData);
-        chartData.forEach(data => data.config = this.scaleData(data, this.configItems));
+        chartData.forEach(data => this.scaleData(data, this.configItems));
         const labels = this.getLabelsForData(chartData);
 
         this.chartOptions = {
@@ -35,7 +34,7 @@ export class ResultChartComponent extends ChartComponent {
                 trigger: 'axis',
                 axisPointer: {
                     type: 'shadow'
-                }
+                },
             },
             toolbox: {
                 right: 20,
@@ -51,7 +50,9 @@ export class ResultChartComponent extends ChartComponent {
             ],
             yAxis: [
                 {
-                    type: 'value'
+                    type: 'value',
+                    min: 0,
+                    max: 100,
                 }
             ],
             series: labels.map((label: string, index: number) => {
@@ -62,7 +63,8 @@ export class ResultChartComponent extends ChartComponent {
                         emphasis: {
                             focus: 'series'
                         },
-                        data: chartData.map((data: Result) => data.config.get(label)),
+                        data: chartData.map((data: Result) => data.config[label]),
+                        barWidth: 40,
                         markPoint: {
                             data: chartData.map((data, index) => {
                                 return {
@@ -82,11 +84,11 @@ export class ResultChartComponent extends ChartComponent {
                     emphasis: {
                         focus: 'series'
                     },
-                    data: chartData.map((data: Result) => data.config.get(label)),
+                    data: chartData.map((data: Result) => data.config[label]),
+                    barWidth: 40,
                 }
             }),
             color: themeColors.colorSet,
-
 
         };
         this.loading = false;
@@ -96,25 +98,35 @@ export class ResultChartComponent extends ChartComponent {
         return data.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
     }
 
-    private scaleData(data: Result, configItems: ConfigItem[]): Map<string, number> {
-        const scaledConfig: Map<string, number> = new Map<string, number>();
+    private scaleData(data: Result, configItems: ConfigItem[]): void {
         Object.keys(data.config).forEach(configName => {
             const configItem = configItems.find(item => item.paramName === configName);
             if (configItem) {
+                console.log(configItem)
                 const value = data.config[configName];
-                const scaledValue = this.resultItemToDifficultyPercent(value, configItem.hardestValue, configItem.easiestValue);
-                scaledConfig.set(configName, scaledValue);
+                data.config[configName] = this.resultItemToDifficultyPercent(value, configItem.hardestValue, configItem.easiestValue);
             }
         })
-        return scaledConfig;
+        if(data.config instanceof Map) {
+            data.config.forEach((value, key) => {
+                const configItem = configItems.find(item => item.paramName === key);
+                if (configItem) {
+                    const scaledValue = this.resultItemToDifficultyPercent(value, configItem.hardestValue, configItem.easiestValue);
+                    data.config.set(key, scaledValue);
+                }
+            })
+        }
     }
 
     private resultItemToDifficultyPercent(value: number, hardestValue: number, easiestValue: number): number {
-        return Math.abs(value - easiestValue) / Math.abs(hardestValue - easiestValue) * 100;
+        if(hardestValue < easiestValue) {
+            return (1 - (Math.abs(value - hardestValue)) / Math.abs(hardestValue - easiestValue)) * 100;
+        }
+        return (Math.abs(value - easiestValue) / Math.abs(hardestValue - easiestValue)) * 100;
     }
 
     private getLabelsForData(data: Result[]): string[] {
-        const configs = data.map(item => Array.from((item.config as Map<string, number>).keys()));
+        const configs = data.map(item => Object.keys(item.config));
         const labels: string[] = [];
         configs.forEach(configKeys => {
             configKeys.forEach(label => {
@@ -128,7 +140,6 @@ export class ResultChartComponent extends ChartComponent {
 
     private observeConfigItems(): void {
         this.configItemsObservable.subscribe(configItems => {
-            console.log('Config items:', configItems);
             this.loading = true;
             this.configItems = configItems;
             if (this.resultData) {
@@ -139,7 +150,6 @@ export class ResultChartComponent extends ChartComponent {
 
     private observeResultData(): void {
         this.resultDataObservable.subscribe(resultData => {
-            console.log('Result data:', resultData);
             this.loading = true;
             this.resultData = resultData;
             if (this.configItems) {
