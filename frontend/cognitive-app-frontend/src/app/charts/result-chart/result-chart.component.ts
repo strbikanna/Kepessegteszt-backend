@@ -4,6 +4,8 @@ import {Observable} from "rxjs";
 import {Result} from "../../model/result.model";
 import {ConfigItem} from "../../model/config_item.model";
 import {NgxEchartsModule} from "ngx-echarts";
+import * as themeColors from "../../../assets/chart_theme/chart_colors";
+
 
 @Component({
     selector: 'app-result-chart',
@@ -28,12 +30,9 @@ export class ResultChartComponent extends ChartComponent {
     }
 
     private setChartOptions(): void {
-        console.log("Result data: ", this.resultData);
         const chartData = this.sortData(this.resultData);
         chartData.forEach(data => data.config = this.scaleData(data, this.configItems));
-        console.log("Chart data: ", chartData);
         const labels = this.getLabelsForData(chartData);
-        console.log("Labels: ", labels);
 
         this.chartOptions = {
             tooltip: {
@@ -41,6 +40,9 @@ export class ResultChartComponent extends ChartComponent {
                 axisPointer: {
                     type: 'shadow'
                 }
+            },
+            toolbox: {
+                right: 20,
             },
             legend: {
                 data: labels,
@@ -56,7 +58,27 @@ export class ResultChartComponent extends ChartComponent {
                     type: 'value'
                 }
             ],
-            series: labels.map((label: string) => {
+            series: labels.map((label: string, index: number) => {
+                if(index === labels.length / 2 || index === (labels.length -1) / 2 ){
+                    return {
+                        name: label,
+                        type: 'bar',
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        data: chartData.map((data: Result) => data.config.get(label)),
+                        markPoint: {
+                            data: chartData.map((data, index) => {
+                                return {
+                                    name: 'Success or Failure',
+                                    coord: [index, 95],
+                                    symbol: data.passed ? 'image://assets/icons/check_circle.svg' : 'image://assets/icons/cancel.svg',
+                                    symbolSize: 40,
+                                }
+                            })
+                        }
+                    }
+                }
                 return {
                     name: label,
                     type: 'bar',
@@ -67,6 +89,8 @@ export class ResultChartComponent extends ChartComponent {
                     data: chartData.map((data: Result) => data.config.get(label)),
                 }
             }),
+            color: themeColors.colorSet,
+
 
         };
         this.loading = false;
