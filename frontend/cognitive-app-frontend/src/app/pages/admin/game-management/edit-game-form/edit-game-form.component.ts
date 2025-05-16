@@ -77,8 +77,8 @@ export class EditGameFormComponent implements OnInit {
             thumbnail: this.game?.thumbnail ?? '',
             active: this.gameForm.controls.active.value ?? true,
             affectedAbilities: this.getFormAffectedAbilities(),
-            configDescription: this.game?.configDescription ?? '',
-            configItems: this.getFormConfigItems()
+            configItems: this.getFormConfigItems(),
+            storedConfig: this.game?.storedConfig ?? false
         }
         if (this.game === undefined) {
             this.service.createGame(game).subscribe(game => {
