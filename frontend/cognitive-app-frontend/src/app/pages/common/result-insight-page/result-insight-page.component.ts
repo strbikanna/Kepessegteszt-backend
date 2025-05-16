@@ -4,6 +4,7 @@ import {Result} from "../../../model/result.model";
 import {ResultService, SearchOptions} from "../../../service/result/result.service";
 import {GameManagementService} from "../../../service/game-management/game-management.service";
 import {ConfigItem} from "../../../model/config_item.model";
+import {TEXTS} from "../../../text/app.text_messages";
 
 @Component({
     selector: 'app-result-insight-page',
@@ -17,6 +18,7 @@ export class ResultInsightPageComponent {
         pageIndex: 0,
         pageSize: 5,
     }
+    texts = TEXTS.result_insight_page
     resultData: BehaviorSubject<Result[]> = new BehaviorSubject<Result[]>([]);
     configItems: BehaviorSubject<ConfigItem[]> = new BehaviorSubject<ConfigItem[]>([]);
 

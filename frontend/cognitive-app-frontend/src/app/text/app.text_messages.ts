@@ -2,6 +2,7 @@ import {text_home} from "./app.text_home";
 import {cognitive_profile_text} from "./app.text_cognitive_profile";
 import {register_user} from "./app.text_register_user";
 import {abilityPage} from "./app.text_ability";
+import {resultChartTexts} from "./app.text.result_chart";
 
 /**
  * Texts displayed in application components.
@@ -81,6 +82,7 @@ export const TEXTS = {
         previousPage: 'Előző oldal',
     },
     register_user_page: register_user,
+    result_insight_page: resultChartTexts,
     admin_page: {
         user_data: {
             first_name: 'Keresztnév',

@@ -69,7 +69,7 @@ export class ResultChartComponent extends ChartComponent {
                             data: chartData.map((data, index) => {
                                 return {
                                     name: 'Success or Failure',
-                                    coord: [index, 95],
+                                    coord: [index, 100],
                                     symbol: data.passed ? 'image://assets/icons/check_circle.svg' : 'image://assets/icons/cancel.svg',
                                     symbolSize: 40,
                                 }
