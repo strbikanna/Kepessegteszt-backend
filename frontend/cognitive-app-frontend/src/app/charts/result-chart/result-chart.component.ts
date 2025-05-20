@@ -64,7 +64,7 @@ export class ResultChartComponent extends ChartComponent {
                             focus: 'series'
                         },
                         data: chartData.map((data: Result) => data.config[label]),
-                        barWidth: 40,
+                        maxBarWidth: 40,
                         markPoint: {
                             data: chartData.map((data, index) => {
                                 return {
@@ -102,7 +102,6 @@ export class ResultChartComponent extends ChartComponent {
         Object.keys(data.config).forEach(configName => {
             const configItem = configItems.find(item => item.paramName === configName);
             if (configItem) {
-                console.log(configItem)
                 const value = data.config[configName];
                 data.config[configName] = this.resultItemToDifficultyPercent(value, configItem.hardestValue, configItem.easiestValue);
             }

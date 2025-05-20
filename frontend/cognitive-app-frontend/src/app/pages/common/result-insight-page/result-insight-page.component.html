@@ -25,6 +25,7 @@
     </button>
     <div class="w-11">
         <h3 class="w-full text-center mb-2 pb-0">{{ texts.chart_title }}</h3>
+        <h5 *ngIf="(resultData | async)?.length === 0 || (configItems | async)?.length === 0">{{texts.no_data}}</h5>
         <app-result-chart
                 [resultDataObservable]="resultData"
                 [configItemsObservable]="configItems"

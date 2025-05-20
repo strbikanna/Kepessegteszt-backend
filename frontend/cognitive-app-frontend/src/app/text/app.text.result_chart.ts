@@ -7,4 +7,5 @@ export const resultChartTexts = {
     tooltip_next: "Későbbi eredmények",
     tooltip_previous: "Korábbi eredmények",
     chart_title: "Legutóbbi eredmények és paraméterek",
+    no_data: "Nincs elérhető adat",
 }
