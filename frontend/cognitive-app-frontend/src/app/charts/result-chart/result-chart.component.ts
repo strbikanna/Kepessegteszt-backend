@@ -85,7 +85,7 @@ export class ResultChartComponent extends ChartComponent {
                         focus: 'series'
                     },
                     data: chartData.map((data: Result) => data.config[label]),
-                    barWidth: 40,
+                    maxBarWidth: 40,
                 }
             }),
             color: themeColors.colorSet,
