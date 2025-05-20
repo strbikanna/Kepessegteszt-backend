@@ -52,7 +52,8 @@ class ProfileDescriptionService(
         }
 
     fun deleteProfileDescriptionOfUser(username: String) {
-        repository.deleteByUserUsername(username)
+        val dbEntity = repository.findByUserUsername(username) ?: return
+        repository.delete(dbEntity)
     }
 
     suspend fun generateComparisonTextToGroup(
