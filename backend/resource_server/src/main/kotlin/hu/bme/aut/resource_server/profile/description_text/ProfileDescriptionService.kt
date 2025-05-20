@@ -19,6 +19,10 @@ class ProfileDescriptionService(
 
     ) {
 
+    private object MinAccuracy {
+        const val VALUE = 0.5
+    }
+
     suspend fun getProfileDescriptionOfUser(username: String): ProfileDescriptionTextDto =
         withContext(Dispatchers.IO) {
             val dbEntity = repository.findByUserUsername(username)
@@ -61,7 +65,7 @@ class ProfileDescriptionService(
 
         val user = userService.getUserEntityWithProfileByUsername(username)
         val abilities = user.profileFloat.map { it.ability }.toSet()
-        if (abilities.isEmpty()) {
+        if (abilities.isEmpty() || userAbilities.none { it.accuracy >= MinAccuracy.VALUE }) {
             return ProfileDescriptionTextDto(generatedText =  "")
         }
         val groupAbilities = withContext(Dispatchers.IO) {
@@ -87,7 +91,7 @@ class ProfileDescriptionService(
 
     private suspend fun generateDescriptionText(username: String, prompt: String): AbiltityToTextDto {
         val userAbilities = userService.getUserDtoWithProfileByUsername(username).profile.toList()
-        if (userAbilities.isEmpty()) {
+        if (userAbilities.isEmpty() || userAbilities.none { it.accuracy >= MinAccuracy.VALUE }) {
             return AbiltityToTextDto("", "")
         }
         return abilitiesToTextService.generateFromAbilities(userAbilities, prompt)

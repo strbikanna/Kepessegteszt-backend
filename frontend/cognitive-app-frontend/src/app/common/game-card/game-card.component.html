@@ -1,6 +1,6 @@
 <mat-card class="{{game.active ? '': 'inactiveGameCard'}}">
     <mat-card-content>
-        <img src="{{game.thumbnail}}">
+        <img src="{{game.thumbnail}}" onerror="this.src = this.imagePaths.defaultGamePicture">
         <div class="content">
             <div class="flex align-items-center justify-content-between">
                 <div class="flex align-items-baseline w-9">
@@ -19,7 +19,7 @@
         </div>
     </mat-card-content>
     <mat-divider></mat-divider>
-    <mat-card-actions *ngIf="buttonText" align="end">
+    <mat-card-actions *ngIf="buttonText && displayButtons" align="end">
         <button *ngIf="extraButtonText" mat-button color="warn" (click)="raiseExtraClickEvent(game)"
                 [disabled]="!game.active">
             {{ extraButtonText }}

@@ -33,7 +33,7 @@
             <mat-icon>psychology</mat-icon>
             <span>{{ text.admin_cognitive_profile }}</span>
         </button>
-        <button mat-menu-item *ngIf="hasAccessToAdminCognitiveProfile()" routerLink="/cognitive-profile-edit"
+        <button mat-menu-item *ngIf="hasAccessToCognitiveProfileEdit()" routerLink="/cognitive-profile-edit"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>tune</mat-icon>
             <span>{{ text.cognitive_profile_edit }}</span>
@@ -60,6 +60,10 @@
                 [routerLinkActive]="['activeLink']">
             <mat-icon>sports_esports</mat-icon>
             <span>{{ text.game_management }}</span>
+        </button>
+        <button mat-menu-item *ngIf="hasAccessToGames()" routerLink="/games">
+            <mat-icon>sports_esports</mat-icon>
+            <span>{{ text.games }}</span>
         </button>
         <button mat-menu-item *ngIf="hasAccessToRecommendations()" routerLink="/recommendation"
                 [routerLinkActive]="['activeLink']">

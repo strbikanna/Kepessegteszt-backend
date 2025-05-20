@@ -31,7 +31,9 @@ export const cognitive_profile_text = {
         prompt_action: 'Profil kiértékelés a megadott kérdés alapján',
         used_prompt: 'Elemzés saját kérés megadásával',
         llm_text: 'Elemzés',
-        empty_description: 'Sajnos nem lehet elkészíteni az elemzést, mert nincs elég adat.',
+        empty_description: 'Sajnos nem lehet elkészíteni az elemzést, mert nincs elég adat, illetve a rendelkezésre álló profiladatok még bizonytalanok.',
+        comparison_text_button: 'Szöveges összehasonlítás készítése',
+        comparison_text_button_info: 'Szöveges elemzés készítése a kognitív profil és a csoport adatainak összehasonlításával.',
     },
     date_picker: {
         see_history: 'Megtekintés korábbi időpontban',

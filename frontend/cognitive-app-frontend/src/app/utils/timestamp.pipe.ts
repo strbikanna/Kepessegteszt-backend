@@ -5,8 +5,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class TimestampPipe implements PipeTransform {
 
-  transform(value: string | Date): string  {
-    return value.toString().replace('T', ' ').replace('Z', '');
+  transform(value: Date): string  {
+    return `${value.toLocaleDateString()} ${value.toLocaleTimeString()}`;
   }
 
 }

@@ -10,12 +10,17 @@
                    (page)="handlePageEvent($event)">
     </mat-paginator>
     <app-csv-download-button *ngIf="isAdmin()" [csvLink]="resultService.csvPath"></app-csv-download-button>
+    <button mat-flat-button routerLink="/result-charts" color="primary" class="ml-5">
+        {{text.result_details}}
+    </button>
 </div>
+
 <div class="flex align-items-center lg:w-4 sm:w-6 justify-content-evenly mb-2">
     <mat-icon color="primary">swap_vert</mat-icon>
     <app-sort-control [sortElements]="sortOptions"
                       (onSort)="onSortElementChosen($event)"></app-sort-control>
 </div>
+
 <mat-drawer-container autosize class="drawerContainer">
     <mat-drawer mode="side" #drawer>
         <div class="toolsContainer">
