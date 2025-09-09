@@ -51,7 +51,6 @@ class UserGroupController(
     @ResponseStatus(HttpStatus.OK)
     @Transactional
     fun getUserGroupById(
-        authentication: Authentication,
         @RequestParam id: Int
     ): UserGroupDto {
         return userGroupService.getById(id).toDto()
@@ -63,7 +62,7 @@ class UserGroupController(
     @Transactional
     fun getChildGroupsOfOrganization(
         @RequestParam("id") id: Int,
-        @PathVariable groupType: String ,
+        @PathVariable groupType: String,
     ): List<UserGroupDto> {
         return when (groupType) {
             "organization" -> userGroupService.getChildrenOfOrganization(id).map { it.toDto() }

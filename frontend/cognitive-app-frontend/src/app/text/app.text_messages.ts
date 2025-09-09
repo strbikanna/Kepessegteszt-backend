@@ -215,7 +215,7 @@ export const TEXTS = {
         select_group_tooltip: 'Csoport kiválasztása a részletek megtekintéséhez',
         members: 'Tagok',
         admins: 'Adminok',
-        cannot_access_data: 'Ennek a csoportnak nem tekintheted meg az adatait, mivel nem vagy tagja.',
+        cannot_access_data: 'Ennek a csoportnak nem tekintheted meg az adatait, mivel nem vagy admin a csoportban.',
         remove_member: 'Eltávolítás a csoportból',
         remove_admin: 'Admin jogok visszavonása',
         create_group: 'Csoport létrehozása',

@@ -34,9 +34,9 @@ export class HeaderComponent implements OnInit{
             this.loginStatus = loginSuccess
             this.isAdmin = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.ADMIN) !== undefined && loginSuccess
             this.isStudent = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.STUDENT) !== undefined && loginSuccess
-            this.isTeacher = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.TEACHER) !== undefined  && this.loginStatus
-            this.isScientist = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.SCIENTIST) !== undefined  && this.loginStatus
-            this.isParent = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.PARENT) !== undefined  && this.loginStatus
+            this.isTeacher = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.TEACHER) !== undefined  && loginSuccess
+            this.isScientist = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.SCIENTIST) !== undefined  && loginSuccess
+            this.isParent = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.PARENT) !== undefined  && loginSuccess
             this.changeDetectorRef.detectChanges()
         });
         this.windowWidth = window.innerWidth;
