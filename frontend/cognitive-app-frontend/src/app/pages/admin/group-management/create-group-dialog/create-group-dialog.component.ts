@@ -1,9 +1,9 @@
 import {Component, Inject} from '@angular/core';
-import {TEXTS} from "../../../../utils/app.text_messages";
-import {User} from "../../../../model/user.model";
+import {TEXTS} from "../../../../text/app.text_messages";
+import {User} from "../../../../model/user/user.model";
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
-import {Organization} from "../../../../model/user-group";
+import {Organization} from "../../../../model/user/user-group";
 
 @Component({
   selector: 'app-create-group-dialog',

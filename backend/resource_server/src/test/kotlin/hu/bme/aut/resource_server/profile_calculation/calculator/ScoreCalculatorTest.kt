@@ -21,11 +21,9 @@ class ScoreCalculatorTest {
             result = mutableMapOf(
                 "passed" to true,
             ),
-            config = game.configDescription
+            config = game.configItems.associate { it.paramName to it.initialValue }.toMutableMap()
         )
-        winGame = TestDataSource.createGameForTest().copy(
-
-        )
+        winGame = TestDataSource.createGameForTest()
     }
 
 
@@ -58,7 +56,7 @@ class ScoreCalculatorTest {
                 "healthPoints" to "5",
                 "maxRound" to "10",
             ),
-            config = game.configDescription
+            config = mutableMapOf()
         )
         val normalizedResults = ScoreCalculator.calculateNormalizedScores(listOf(malformedResult), game)
         assertEquals(0, normalizedResults.size)
@@ -76,7 +74,7 @@ class ScoreCalculatorTest {
                 "maxRound" to "10",
                 "maxHealthPoints" to "mistake",
             ),
-            config = game.configDescription
+            config = mutableMapOf()
         )
         val normalizedResults = ScoreCalculator.calculateNormalizedScores(listOf(malformedResult), game)
         assertEquals(0, normalizedResults.size)

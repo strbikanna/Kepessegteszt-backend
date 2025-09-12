@@ -18,42 +18,48 @@
                 <div class="mb-3">
                     <label for="firstName" class="form-label">Vezetéknév</label>
                     <input type="text" class="form-control" id="firstName" th:field="*{firstName}"
-                           placeholder="Írd be a vezetékneved" required>
+                           placeholder="Írd be a vezetékneved" required onchange="toggleRegisterButton()">
                 </div>
                 <div class="mb-3">
                     <label for="lastName" class="form-label">Keresztnév</label>
                     <input type="text" class="form-control" id="lastName" th:field="*{lastName}"
-                           placeholder="Írd be a keresztneved" required>
+                           placeholder="Írd be a keresztneved" required onchange="toggleRegisterButton()">
                 </div>
                 <div class="mb-3">
                     <label for="username" class="form-label">Felhasználónév</label>
                     <input th:if="!*{error}==true" type="text" class="form-control" id="username" th:field="*{username}"
-                           placeholder="Válassz felhasználónevet" required>
+                           placeholder="Válassz felhasználónevet" required onchange="toggleRegisterButton()">
                     <input th:if="*{error}" type="text" class="form-control alert-danger" id="username-error"
-                           th:field="*{username}" placeholder="Válassz felhasználónevet" required>
+                           th:field="*{username}" placeholder="Válassz felhasználónevet" required onchange="toggleRegisterButton()">
                     <p th:if="*{error}" class="text-danger"> Egyedi felhasználónevet válassz!</p>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email-cím</label>
                     <input type="email" class="form-control" id="email" th:field="*{email}"
-                           placeholder="Add meg az email-címed" required>
+                           placeholder="Add meg az email-címed" required onchange="toggleRegisterButton()">
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Jelszó</label>
                     <input type="password" class="form-control" id="password" th:field="*{password}"
-                           placeholder="Használj erős jelszót" required>
+                           placeholder="Használj erős jelszót" required onchange="toggleRegisterButton()">
                 </div>
                 <div class="mb-3">
                     <label for="userType" class="form-label">Milyen fiókot szeretnél létrehozni?</label>
-                    <select class="form-select" id="userType" th:field="*{role}">
+                    <select class="form-select" id="userType" th:field="*{role}" onclick="toggleRegisterButton()">
                         <option value="student">Diák</option>
                         <option value="teacher">Tanár</option>
                         <option value="parent">Szülő</option>
                         <option value="scientist">Kutató</option>
                     </select>
                 </div>
+                <div class="mb-3">
+                    <input class="form-check-input" type="checkbox" id="privacyPolicy" onclick="toggleRegisterButton()" required>
+                    <label class="form-check-label" for="privacyPolicy">
+                        Elfogadom az <a href="https://coglica.aut.bme.hu/cogniapp/privacy-policy" target="_blank">Adatkezelési irányelveket</a>
+                    </label>
+                </div>
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-dark">Regisztráció</button>
+                    <button type="submit" class="btn btn-dark" id="registerButton" disabled>Regisztráció</button>
                 </div>
             </form>
         </div>
@@ -61,6 +67,25 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.5.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-KyZXEAg3QhqLMpG8r+6lZ/3GGXn8zXCp+HHAAK5FVf33E5I5fh2zA3c5OaF72K0q"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous">
+</script>
+<script>
+    function toggleRegisterButton() {
+        document.getElementById("registerButton").disabled = !(
+            document.getElementById("privacyPolicy").checked
+            && document.getElementById("firstName").value
+            && document.getElementById("lastName").value
+            && hasUsername()
+            && document.getElementById("email").value && document.getElementById("email").value.includes("@")
+            && document.getElementById("password").value);
+    }
+
+    function hasUsername(){
+        return (
+            document.getElementById("username") && document.getElementById("username")?.value ||
+            document.getElementById("username-error") && document.getElementById("username-error")?.value
+        );
+    }
+</script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <div class="profile-container">
     <app-profile-card *ngIf="!loadingProfile" [profileData]="currentProfileData" id="card"></app-profile-card>
     <mat-progress-bar *ngIf="loadingProfile" mode="buffer"></mat-progress-bar>
-    <div class="w-min" *ngIf="!loading">
+    <div class="w-min flex flex-column align-items-start" *ngIf="!loading">
         <h3 >{{text.llm.llm_text}}</h3>
         <p class="description">{{profileDescription}}</p>
         <mat-progress-bar *ngIf="loadingDescription" mode="buffer"></mat-progress-bar>

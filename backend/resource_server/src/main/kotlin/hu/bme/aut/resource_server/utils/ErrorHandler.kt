@@ -1,6 +1,7 @@
 package hu.bme.aut.resource_server.utils
 
-import hu.bme.aut.resource_server.authentication.AuthException
+import hu.bme.aut.resource_server.error.ApiCallException
+import hu.bme.aut.resource_server.error.AuthException
 import hu.bme.aut.resource_server.profile_calculation.error.CalculationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -44,5 +45,11 @@ class ErrorHandler {
     fun handleAuthException(exception: AuthException): ResponseEntity<String>{
         val message = exception.message ?: "Authentication error."
         return ResponseEntity(message, HttpStatus.FORBIDDEN)
+    }
+
+    @ExceptionHandler(ApiCallException::class)
+    fun handleApiCallException(exception: ApiCallException): ResponseEntity<String>{
+        val message = exception.message ?: "Error in communication with the server."
+        return ResponseEntity(message, HttpStatus.EXPECTATION_FAILED)
     }
 }

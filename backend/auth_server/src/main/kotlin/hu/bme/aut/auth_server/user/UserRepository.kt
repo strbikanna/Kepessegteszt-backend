@@ -1,6 +1,5 @@
 package hu.bme.aut.auth_server.user
 
-import hu.bme.aut.auth_server.role.Role
 import hu.bme.aut.auth_server.role.RoleEntity
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable

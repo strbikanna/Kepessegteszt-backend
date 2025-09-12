@@ -1,6 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 
 /**
  * Dialog component to display custom text
@@ -22,10 +22,15 @@ export class AlertDialogComponent {
         title: string;
         message: string;
         detail: string;
+        onOk?: () => void;
       },
   ) {
     if (data?.title) this.title = data.title;
     if (data?.message) this.message = data.message;
     if (data?.detail) this.detail = data.detail;
+  }
+
+  onOk() {
+    this.data.onOk?.()
   }
 }

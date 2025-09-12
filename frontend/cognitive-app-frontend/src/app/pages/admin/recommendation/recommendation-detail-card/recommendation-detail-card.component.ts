@@ -1,11 +1,11 @@
 import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {RecommendedGame} from "../../../../model/recommended_game.model";
-import {TEXTS} from "../../../../utils/app.text_messages";
+import {TEXTS} from "../../../../text/app.text_messages";
 import {MatDialog} from "@angular/material/dialog";
 import {
   AddUserToGroupDialogComponent
 } from "../../group-management/add-user-to-group-dialog/add-user-to-group-dialog.component";
-import {User} from "../../../../model/user.model";
+import {User} from "../../../../model/user/user.model";
 import {ConfirmDialogComponent} from "../../../../common/confirm-dialog/confirm-dialog.component";
 
 @Component({

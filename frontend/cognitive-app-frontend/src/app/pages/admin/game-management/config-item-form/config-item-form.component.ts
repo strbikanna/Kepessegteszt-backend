@@ -8,7 +8,7 @@ import {
     Validators
 } from "@angular/forms";
 import {ConfigItem} from "../../../../model/config_item.model";
-import {TEXTS} from "../../../../utils/app.text_messages";
+import {TEXTS} from "../../../../text/app.text_messages";
 
 @Component({
     selector: 'app-config-item-form',
@@ -19,7 +19,6 @@ export class ConfigItemFormComponent implements ControlValueAccessor, OnInit{
 
     @Input() configItemData: ConfigItem | undefined;
     @Input() initialEditable: boolean = true;
-    @Input() forbiddenParamOrders: number[] = [];
     @Output() delete = new EventEmitter<void>();
     @Output() save = new EventEmitter<ConfigItem>();
 
@@ -30,7 +29,6 @@ export class ConfigItemFormComponent implements ControlValueAccessor, OnInit{
     protected actionTexts = TEXTS.actions
     protected editable = true
     protected configItem : ConfigItem | undefined;
-    protected minParamOrder: number = 1;
 
     private areValuesValid: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         const configItem = this.getConfigItemFromForm(control);
@@ -42,11 +40,6 @@ export class ConfigItemFormComponent implements ControlValueAccessor, OnInit{
                 && configItem.increment === 0);
         return validConfig ? null : {invalidValues: true};
     }
-    private paramOrderValid: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-        const paramOrder = control.value
-        if(this.configItem?.paramOrder === paramOrder) return null;
-        return this.forbiddenParamOrders.includes(paramOrder) ? {invalidParamOrder: true} : null;
-    }
 
     protected configItemForm = this.fb.group({
         paramName: ['', Validators.required],
@@ -54,7 +47,7 @@ export class ConfigItemFormComponent implements ControlValueAccessor, OnInit{
         hardestValue: [10, Validators.required],
         easiestValue: [1, Validators.required],
         increment: [1, Validators.required],
-        paramOrder: [this.minParamOrder, [Validators.required, Validators.min(this.minParamOrder), this.paramOrderValid]],
+        maxAbilityEffect: [1, [Validators.required]],
         description: ['']
     }, {validators: this.areValuesValid})
 
@@ -64,13 +57,6 @@ export class ConfigItemFormComponent implements ControlValueAccessor, OnInit{
         this.editable = this.initialEditable;
         if (this.configItemData) {
             this.writeValue(this.configItemData);
-        }else{
-            for(let i = 1; i< this.forbiddenParamOrders.length+2; i++){
-                if(!this.forbiddenParamOrders.includes(i)){
-                    this.minParamOrder = i;
-                    break;
-                }
-            }
         }
     }
 
@@ -78,7 +64,6 @@ export class ConfigItemFormComponent implements ControlValueAccessor, OnInit{
         this.configItem = configItem;
         if (this.configItem) {
             this.setFormValues(configItem);
-            this.minParamOrder = this.configItem.paramOrder;
         }
     }
     registerOnChange(fn: any): void {
@@ -121,7 +106,7 @@ export class ConfigItemFormComponent implements ControlValueAccessor, OnInit{
             hardestValue: control.get('hardestValue')?.value!!,
             easiestValue: control.get('easiestValue')?.value!!,
             increment: control.get('increment')?.value!!,
-            paramOrder: control.get('paramOrder')?.value!!,
+            maxAbilityEffect: control.get('maxAbilityEffect')?.value!!,
             description: control.get('description')?.value ?? ''
         };
     }
@@ -132,7 +117,7 @@ export class ConfigItemFormComponent implements ControlValueAccessor, OnInit{
         this.configItemForm.controls.hardestValue.setValue(configItem.hardestValue);
         this.configItemForm.controls.easiestValue.setValue(configItem.easiestValue);
         this.configItemForm.controls.increment.setValue(configItem.increment);
-        this.configItemForm.controls.paramOrder.setValue(configItem.paramOrder);
+        this.configItemForm.controls.maxAbilityEffect.setValue(configItem.maxAbilityEffect);
         this.configItemForm.controls.description.setValue(configItem.description);
     }
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.profile.dto.ProfileItem
 import jakarta.persistence.*
+import java.math.BigDecimal
 
 /**
  * Entity class for cognitive profile items with float values.
@@ -21,12 +22,21 @@ data class FloatProfileItem(
     val ability: AbilityEntity,
 
     @Column
-    var abilityValue: Double
+    var abilityValue: Double,
+
+    /**
+     * The accuracy of the ability value.
+     * @max 1.0
+     * @min 0.0
+     */
+    @Column
+    var abilityAccuracy: Double = 0.0
 ){
     fun toProfileItem(): ProfileItem {
         return ProfileItem(
             ability = ability,
-            value = abilityValue
+            value = abilityValue,
+            accuracy = abilityAccuracy
         )
     }
 }

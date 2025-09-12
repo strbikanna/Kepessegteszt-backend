@@ -1,0 +1,41 @@
+<h2>{{ texts.title }}</h2>
+<div class="flex mb-5">
+    <div class="mr-6">
+        <h3>{{ texts.subtitle_user }}</h3>
+        <p class="description">{{ texts.user_description }}</p>
+        <app-user-autocomplete
+                [searchOnlyContacts]="true"
+                (userSelected)="onUserSelected($event.username)"
+                (userSelectionChanged)="onUserRemoved()"
+                [autoChoose]="true"
+                [multiple]="false">
+        </app-user-autocomplete>
+    </div>
+    <div>
+        <h3>{{ texts.subtitle_game }}</h3>
+        <p class="description">{{ texts.game_description }}</p>
+        <app-game-search (onGameSelected)="onGameSelected($event.id)"></app-game-search>
+    </div>
+</div>
+<div class="w-full flex align-items-center">
+    <button mat-icon-button (click)="onNextPage()"
+            matTooltip="{{texts.tooltip_previous}}"
+            matTooltipPosition="above">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="w-11">
+        <h3 class="w-full text-center mb-2 pb-0">{{ texts.chart_title }}</h3>
+        <h5 *ngIf="(resultData | async)?.length === 0 || (configItems | async)?.length === 0">{{texts.no_data}}</h5>
+        <app-result-chart
+                [resultDataObservable]="resultData"
+                [configItemsObservable]="configItems"
+        ></app-result-chart>
+    </div>
+
+    <button mat-icon-button (click)="onPreviousPage()"
+            matTooltip="{{texts.tooltip_next}}"
+            matTooltipPosition="above">
+        <mat-icon>arrow_forward</mat-icon>
+    </button>
+</div>
+

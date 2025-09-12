@@ -4,12 +4,15 @@
                aria-label="Select page"
                (page)="handlePageEvent($event)">
 </mat-paginator>
+<p class="description">{{text.user_by_name_start}}</p>
+<app-horizontal-scroller [items]="nameStartLetters" (itemSelected)="searchByNameStartsWith($event)" (selectionCleared)="initUsers()" class="mb-5"/>
 <div *ngFor="let user of users | async" class="page-content">
     <div *ngIf="user !== userToEdit" class="user-data-container">
         <div>
             <button mat-button class="name"
-                    (click)="setUpUserToEdit(user)">{{user.firstName}} {{user.lastName}}</button>
-            <p class="username">{{user.username}}</p>
+                    (click)="setUpUserToEdit(user)">{{ user.firstName }} {{ user.lastName }}
+            </button>
+            <p class="username">{{ user.username }}</p>
         </div>
         <div class="role-container">
             <mat-chip *ngIf="user.roles.includes('ADMIN')">ADMIN</mat-chip>
@@ -25,50 +28,53 @@
         <form [formGroup]="userDataForm" (ngSubmit)="saveChangesOfUserToEdit()">
             <div class="user-data-form">
                 <mat-form-field>
-                    <mat-label>{{text.user_data.first_name}}</mat-label>
+                    <mat-label>{{ text.user_data.first_name }}</mat-label>
                     <input matInput formControlName="firstName">
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-label>{{text.user_data.last_name}}</mat-label>
-                    <input matInput formControlName="lastName" >
+                    <mat-label>{{ text.user_data.last_name }}</mat-label>
+                    <input matInput formControlName="lastName">
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-label>{{text.user_data.username}}</mat-label>
-                    <input matInput formControlName="username" >
+                    <mat-label>{{ text.user_data.username }}</mat-label>
+                    <input matInput formControlName="username">
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-label>{{text.user_data.email}}</mat-label>
-                    <input matInput formControlName="email" >
+                    <mat-label>{{ text.user_data.email }}</mat-label>
+                    <input matInput formControlName="email">
                 </mat-form-field>
             </div>
 
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        {{text.user_data.roles}}
+                        {{ text.user_data.roles }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <mat-checkbox *ngFor="let role of actualRolesOfUser(user)" checked="{{true}}"
-                              (change)="onRoleCheckChanged(role, $event)">{{role}}</mat-checkbox>
+                              (change)="onRoleCheckChanged(role, $event)">{{ role }}
+                </mat-checkbox>
                 <mat-checkbox *ngFor="let role of notRolesOfUser(user)"
-                              (change)="onRoleCheckChanged(role, $event)">{{role}}</mat-checkbox>
+                              (change)="onRoleCheckChanged(role, $event)">{{ role }}
+                </mat-checkbox>
                 <div *ngIf="hasRequestedRole(user)">
-                    {{text.actions.role_request}}:
-                    <p *ngFor="let request of requestedRolesOfUser(user)"> {{request}} </p>
+                    {{ text.actions.role_request }}:
+                    <p *ngFor="let request of requestedRolesOfUser(user)"> {{ request }} </p>
                 </div>
 
             </mat-expansion-panel>
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        {{text.user_data.contacts}}
+                        {{ text.user_data.contacts }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <div class="contact-panel">
-                    <app-user-search (onContactSelected)="onAddContact($event)" [userToExclude]="user" [displayCurrentUser]="true"/>
+                    <app-user-search (onContactSelected)="onAddContact($event)" [userToExclude]="user"
+                                     [displayCurrentUser]="true"/>
                     <div class="contact-list">
                         <div *ngFor="let contact of user.contacts" class="existing-contact">
-                            <div>{{contact.firstName}} {{contact.lastName}} </div>
+                            <div>{{ contact.firstName }} {{ contact.lastName }}</div>
                             <button mat-icon-button (click)="onContactDeleted(contact)" type="button" color="warn">
                                 <mat-icon>close</mat-icon>
                             </button>
@@ -77,8 +83,12 @@
                 </div>
             </mat-expansion-panel>
             <div class="end-button-container">
-                <button mat-button (click)="userToEdit = undefined" type="button" color="primary">{{text.actions.cancel}}</button>
-                <button mat-flat-button color="primary" type="submit" [disabled]="!userDataForm.valid">{{text.actions.save}}</button>
+                <button mat-button (click)="userToEdit = undefined" type="button"
+                        color="primary">{{ text.actions.cancel }}
+                </button>
+                <button mat-flat-button color="primary" type="submit"
+                        [disabled]="!userDataForm.valid">{{ text.actions.save }}
+                </button>
             </div>
 
         </form>

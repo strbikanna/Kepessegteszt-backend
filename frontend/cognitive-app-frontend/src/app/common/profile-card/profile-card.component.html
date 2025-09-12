@@ -1,37 +1,33 @@
 <mat-card *ngIf="hasData">
     <mat-card-header>
-        <mat-card-title>{{text.current_profile}}</mat-card-title>
-        <mat-card-subtitle>{{text.current_profile_description}} {{currentDisplayDate()}}</mat-card-subtitle>
+        <mat-card-title>{{ text.current_profile }}</mat-card-title>
+        <mat-card-subtitle>{{ text.current_profile_description }} {{ currentDisplayDate() }}</mat-card-subtitle>
     </mat-card-header>
     <br>
     <mat-card-content class="profile-data-container">
         <div class="left-side">
-            <mat-list role="list" >
-                <div *ngFor="let item of profileDataEntries()" >
-                    <mat-list-item role="listitem" >
-                        <div class="data-holder">
-                            <p>{{item[0].name}}</p>
-                            <mat-chip>{{item[1]}}</mat-chip>
-                        </div>
-                    </mat-list-item>
-                    <div>
-                        <p id="ability-description">{{item[0].description}}</p>
-                    </div>
-                    <mat-divider></mat-divider>
+            <div *ngFor="let item of profileData">
+                <div class="data-holder">
+                    <p>{{ item.ability.name }}</p>
+                    <div class="info" matTooltip="{{item.ability.description}}">
+                        i</div>
+                    <mat-chip>{{ item.value }}</mat-chip>
                 </div>
-            </mat-list>
+                <small>{{ text.ability_value_accuracy }} {{ item.accuracy * 100 | percent }}</small>
+                <mat-divider class="mt-2"></mat-divider>
+            </div>
         </div>
     </mat-card-content>
 </mat-card>
 <div *ngIf="!hasData">
     <mat-card>
         <mat-card-header>
-            <mat-card-title>{{text.no_profile_data_message}}</mat-card-title>
-            <mat-card-subtitle>{{text.no_profile_data_action}}</mat-card-subtitle>
+            <mat-card-title>{{ text.no_profile_data_message }}</mat-card-title>
+            <mat-card-subtitle>{{ text.no_profile_data_action }}</mat-card-subtitle>
         </mat-card-header>
-<!--        <div class="mission-image">-->
-<!--            <img src="../../../assets/logos/mission.png">-->
-<!--        </div>-->
+        <!--        <div class="mission-image">-->
+        <!--            <img src="../../../assets/logos/mission.png">-->
+        <!--        </div>-->
     </mat-card>
 
 </div>

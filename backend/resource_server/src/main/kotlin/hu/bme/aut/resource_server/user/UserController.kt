@@ -43,6 +43,17 @@ class UserController(
         userService.getUserDtoWithProfileByUsername(username).profile.toList()
     }
 
+    @PutMapping("/profile")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_TEACHER', 'ROLE_ADMIN')")
+    fun updateUserProfile(
+        authentication: Authentication,
+        @RequestParam username: String,
+        @RequestBody profile: List<ProfileItem>
+    ) : Deferred<List<ProfileItem>> = authService.doIfIsContact(authentication, username) {
+        userService.updateUserProfile(profile, username)
+    }
+
     @GetMapping("/groups")
     @ResponseStatus(HttpStatus.OK)
     fun getGroupsOfUser(authentication: Authentication): List<UserGroupDto> {
@@ -122,52 +133,6 @@ class UserController(
         }
     }
 
-    @GetMapping("/profile/abilities-as-text")
-    @ResponseStatus(HttpStatus.OK)
-    suspend fun getAbilitiesAsText(
-        authentication: Authentication,
-        @RequestParam(required = false) requestedUsername: String?,
-        @RequestParam(required = false) prompt: String = "",
-    ): AbiltityToTextDto {
-        val username = requestedUsername ?: authentication.name
-        val userAbilities = userService.getUserDtoWithProfileByUsername(username).profile.toList()
-        if(userAbilities.isEmpty()) {
-            return AbiltityToTextDto("", "")
-        }
-        // Should be called in a coroutine or a suspend function
-        return abilitiesToTextService.generateFromAbilities(userAbilities, prompt)
-    }
-
-    @PostMapping("/profile/abilities-as-text-to-group")
-    @ResponseStatus(HttpStatus.OK)
-    suspend fun getAbilitiesAsTextToGroup(
-        authentication: Authentication,
-        @RequestParam(required = false) requestedUsername: String?,
-        @RequestParam(required = false) userGroupId: Int?,
-        @RequestParam(required = false) prompt: String = "",
-        @RequestBody(required = false) filterDto: UserFilterDto?
-    ): AbiltityToTextDto {
-        val username = requestedUsername ?: authentication.name
-        val userAbilities = userService.getUserDtoWithProfileByUsername(username).profile.toList()
-
-        val user = userService.getUserEntityWithProfileByUsername(username)
-        val abilities = user.profileFloat.map { it.ability }.toSet()
-        if(abilities.isEmpty()) {
-            return AbiltityToTextDto("", "")
-        }
-        // IntelliJ IDEA suggests to put it in withContext(Dispatchers.IO) when called in a suspend function
-        val groupAbilities = withContext(Dispatchers.IO) {
-            userGroupService.getAbilityToAverageValueInGroup(userGroupId, filterDto, abilities)
-        }
-        if(groupAbilities.isEmpty()) {
-            return AbiltityToTextDto("", "")
-        }
-        val groupName = userGroupId?.let { userGroupService.getGroupById(it).name } ?: "csoport"
-
-        // Should be called in a coroutine or a suspend function
-        return abilitiesToTextService.generateFromAbilitiesComparedToGroup(userAbilities, groupAbilities, groupName, prompt)
-    }
-
     @GetMapping("/group_profile/all")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_ADMIN')")
@@ -238,6 +203,14 @@ class UserController(
             throw IllegalArgumentException("You can only update your own data.")
         }
         userService.updateUser(user)
+    }
+
+    @DeleteMapping("/me")
+    @ResponseStatus(HttpStatus.OK)
+    suspend fun removeUser(authentication: Authentication) {
+        val username = authentication.name
+        authService.removeUserFromAuthServer(authentication)
+        userService.removeUserForever(username)
     }
 
 }

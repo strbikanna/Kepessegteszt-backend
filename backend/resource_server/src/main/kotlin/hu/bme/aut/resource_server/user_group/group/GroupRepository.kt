@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
 interface GroupRepository : JpaRepository<Group, Int> {
+
+    @Query("SELECT g FROM Group g WHERE g.name LIKE %:name% ORDER BY g.name ASC")
     fun findByNameLikeOrderByNameAsc(name: String): List<Group>
 
     @Query(

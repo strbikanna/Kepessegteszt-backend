@@ -11,8 +11,8 @@ data class ConfigItem(
     @Column(name="param_name")
     val paramName: String,
 
-    @Column(name="param_order")
-    val paramOrder: Int,
+    @Column(name="max_ability_effect")
+    val maxAbilityEffect: Double,
 
     @Column(name="easiest_value")
     val easiestValue: Int,
@@ -29,7 +29,7 @@ data class ConfigItem(
 )
 fun ConfigItem.isSame(other: ConfigItem): Boolean {
     return paramName == other.paramName &&
-            paramOrder == other.paramOrder &&
+            maxAbilityEffect == other.maxAbilityEffect &&
             easiestValue == other.easiestValue &&
             hardestValue == other.hardestValue &&
             initialValue == other.initialValue &&

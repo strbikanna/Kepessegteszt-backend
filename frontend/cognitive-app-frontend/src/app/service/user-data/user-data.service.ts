@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {SimpleHttpService} from "../../utils/simple-http.service";
 import {HttpClient} from "@angular/common/http";
-import {User} from "../../model/user.model";
+import {User} from "../../model/user/user.model";
 import {map, Observable} from "rxjs";
 import {AppConstants} from "../../utils/constants";
-import {AuthUser} from "../../model/user-contacts.model";
+import {AuthUser} from "../../model/user/user-contacts.model";
 
 @Injectable({
     providedIn: 'root'
@@ -42,5 +42,9 @@ export class UserDataService {
 
     updateUserDataAuthServer(user: AuthUser): Observable<AuthUser> {
         return this.http.put<AuthUser>(this.authServerUrl + this.path + `/personal_data/${user.username}`, user)
+    }
+
+    deleteUserForever(): Observable<any> {
+        return this.http.delete(this.httpService.baseUrl + this.path + '/me')
     }
 }

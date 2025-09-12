@@ -5,14 +5,14 @@ import {
 import {ProfileDataComparisonService} from "../../../service/profile-data-comparison/profile-data-comparison.service";
 import {FormBuilder} from "@angular/forms";
 import {AbilityService} from "../../../service/ability/ability.service";
-import {User} from "../../../model/user.model";
-import {TEXTS} from "../../../utils/app.text_messages";
-import {ProfileStatistics} from "../../../model/profile-statistics.model";
+import {User} from "../../../model/user/user.model";
+import {TEXTS} from "../../../text/app.text_messages";
+import {ProfileStatistics} from "../../../model/profile/profile-statistics.model";
 import {BehaviorSubject, map, Observable} from "rxjs";
 import {CandlestickChartDataModel} from "../../../charts/candlestick-chart/candlestick-chart-data.model";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Location} from "@angular/common";
-import {ProfileDescription} from "../../../model/ProfileDescription";
+import {ProfileDescription} from "../../../model/profile/profile_description";
 import {imagePaths} from "../../../utils/app.image_resources";
 import {UserInfo} from "../../../auth/userInfo";
 
@@ -31,7 +31,7 @@ export class AdminProfileDataComparisonPageComponent extends ProfileDataComparis
     protected chosenUsername?: string;
     protected nameOfUser?: string;
     protected comparisonDescription?: ProfileDescription;
-    protected descriptionLoading = true;
+    protected descriptionLoading = false;
     protected prompt?: string;
     private profileStatisticsData: BehaviorSubject<ProfileStatistics[]> = new BehaviorSubject<ProfileStatistics[]>([]);
 
@@ -63,7 +63,16 @@ export class AdminProfileDataComparisonPageComponent extends ProfileDataComparis
                 this.profileStatisticsData.next(data)
             );
         }
+
+    }
+
+    onGenerateComparisonDescription() {
+        if(!this.chosenUsername) return;
+        this.descriptionLoading = true;
         this.service.getComparisonDescription(this.userFilter, this.prompt, this.chosenUsername).subscribe(description => {
+            if(description.generatedText == null || description.generatedText === ''){
+                description.generatedText = this.llmText.empty_description;
+            }
             this.comparisonDescription = description;
             this.descriptionLoading = false;
         })
@@ -84,10 +93,6 @@ export class AdminProfileDataComparisonPageComponent extends ProfileDataComparis
                 this.profileStatisticsData.next(data);
             });
         }
-        this.service.getComparisonDescription(undefined, undefined, username).subscribe(description => {
-            this.comparisonDescription = description;
-            this.descriptionLoading = false;
-        });
         this.onSubmit();
     }
 

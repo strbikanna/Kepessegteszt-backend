@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Ability} from "../../../../model/ability.model";
 import {GameManagementService} from "../../../../service/game-management/game-management.service";
-import {TEXTS} from "../../../../utils/app.text_messages";
+import {TEXTS} from "../../../../text/app.text_messages";
 import {AbilityService} from "../../../../service/ability/ability.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Game} from "../../../../model/game.model";
@@ -36,7 +36,6 @@ export class EditGameFormComponent implements OnInit {
     protected text = TEXTS.game_management.edit_form
     protected thumbnail: string = ''
     protected actionText = TEXTS.actions
-    usedParamOrders: number[] = []
 
     constructor(private service: GameManagementService,
                 private abilityService: AbilityService,
@@ -78,8 +77,8 @@ export class EditGameFormComponent implements OnInit {
             thumbnail: this.game?.thumbnail ?? '',
             active: this.gameForm.controls.active.value ?? true,
             affectedAbilities: this.getFormAffectedAbilities(),
-            configDescription: this.game?.configDescription ?? '',
-            configItems: this.getFormConfigItems()
+            configItems: this.getFormConfigItems(),
+            storedConfig: this.game?.storedConfig ?? false
         }
         if (this.game === undefined) {
             this.service.createGame(game).subscribe(game => {
@@ -141,7 +140,6 @@ export class EditGameFormComponent implements OnInit {
     }
 
     addConfigItem() {
-        const countOfConfigItems = this.gameForm.controls.configItems.length
         const control = new FormControl<ConfigItem>(
             {
                 id: undefined,
@@ -150,7 +148,7 @@ export class EditGameFormComponent implements OnInit {
                 hardestValue: 10,
                 easiestValue: 1,
                 increment: 1,
-                paramOrder: countOfConfigItems + 1,
+                maxAbilityEffect: 1,
                 description: ''
             }
         )
@@ -163,10 +161,7 @@ export class EditGameFormComponent implements OnInit {
     }
 
     onUpdateConfigItem(index: number, configItem: ConfigItem) {
-        let oldConfigItem = this.gameForm.controls.configItems.at(index).value
-        this.usedParamOrders = this.usedParamOrders.filter(order => order !== oldConfigItem?.paramOrder)
         this.gameForm.controls.configItems.at(index).setValue(configItem)
-        this.usedParamOrders.push(configItem.paramOrder)
     }
 
     get configItemsForm() {
@@ -226,7 +221,6 @@ export class EditGameFormComponent implements OnInit {
                 formControls.configItems.push(control)
             })
             this.thumbnail = game.thumbnail
-            this.usedParamOrders = game.configItems.map(item => item.paramOrder)
             this.loading = false;
             this.abilityService.getAllAbilities().subscribe(abilities => {
                 this.setFormAbilities(abilities)

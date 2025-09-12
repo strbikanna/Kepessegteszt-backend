@@ -3,7 +3,7 @@ import {MatPaginator, MatPaginatorIntl, PageEvent} from "@angular/material/pagin
 import {GameManagementService} from "../../../service/game-management/game-management.service";
 import {Observable} from "rxjs";
 import {Game} from "../../../model/game.model";
-import {TEXTS} from "../../../utils/app.text_messages";
+import {TEXTS} from "../../../text/app.text_messages";
 import {Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {CalculationDialogComponent} from "./calculation-dialog/calculation-dialog.component";

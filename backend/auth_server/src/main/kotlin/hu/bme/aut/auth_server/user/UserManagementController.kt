@@ -1,5 +1,6 @@
 package hu.bme.aut.auth_server.user
 
+import hu.bme.aut.auth_server.RegistrationData
 import hu.bme.aut.auth_server.role.Role
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -11,7 +12,8 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/user")
 class UserManagementController(
-    @Autowired private var userService: UserManagementService
+    @Autowired private var userService: UserManagementService,
+    @Autowired private var userRegistrationService: UserRegistrationService,
 ) {
     @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'SCIENTIST', 'PARENT')")
     @GetMapping("/impersonation_contacts")
@@ -50,6 +52,17 @@ class UserManagementController(
         return userService.getUsersWithoutContact(pageNumber, pageSize, null)
     }
 
+    @GetMapping("/all/nameStartsWith")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
+    fun getAllByNameStartsWith(
+        @RequestParam pageNumber: Int = 0,
+        @RequestParam pageSize: Int = 100,
+        @RequestParam nameStartsWith: String,
+    ): List<UserDto> {
+        return userService.getUsersWithoutContactByNameStartsWith(nameStartsWith, pageNumber, pageSize)
+    }
+
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
@@ -79,6 +92,24 @@ class UserManagementController(
         return userService.getContactDtos(user.username)
     }
 
+    @PostMapping("/register_contact")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('TEACHER', 'SCIENTIST', 'PARENT', 'ADMIN')")
+    fun registerContact(authentication: Authentication, @RequestBody contactUser: UserRegistrationData): UserDto {
+        val username = authentication.name
+        val userEmail = userService.getUserDto(username).email
+        val regData = RegistrationData()
+        regData.email = userEmail
+        regData.username = contactUser.username
+        regData.firstName = contactUser.firstName
+        regData.lastName = contactUser.lastName
+        regData.password = contactUser.password
+        regData.role = "STUDENT"
+        val savedUser = userRegistrationService.saveUserOrThrowException(regData, isEnabled = true)
+        userService.addContact(username, savedUser.username)
+        return userService.getUserDto(savedUser.username)
+    }
+
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     fun updateUser(@PathVariable id: Int, @RequestBody user: UserDto): ResponseEntity<UserDto> {
@@ -95,6 +126,12 @@ class UserManagementController(
 
     @GetMapping("/status")
     fun statusTest(): ResponseEntity<String> {
+        return ResponseEntity(HttpStatus.OK)
+    }
+
+    @DeleteMapping("/me")
+    fun deleteUser(authentication: Authentication): ResponseEntity<String> {
+        userService.removeUser(authentication.name)
         return ResponseEntity(HttpStatus.OK)
     }
 }

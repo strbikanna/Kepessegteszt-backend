@@ -23,17 +23,17 @@
             <mat-label>{{texts.increment}}</mat-label>
             <input matInput type="number" formControlName="increment">
         </mat-form-field>
-        <mat-form-field class="paramOrderField">
-            <mat-label>{{texts.param_order}}</mat-label>
-            <input matInput type="number" formControlName="paramOrder">
-            <mat-hint>{{texts.param_order_description}}</mat-hint>
-            <mat-error *ngIf="configItemForm.controls.paramOrder.errors?.['invalidParamOrder']">
-                {{errorMessages.invalid_param_order}}
+        <mat-form-field class="maxAbilityEffectField">
+            <mat-label>{{texts.max_ability_effect}}</mat-label>
+            <input matInput type="number" formControlName="maxAbilityEffect">
+            <mat-hint class="h-10rem">{{texts.max_ability_effect_description}}</mat-hint>
+            <mat-error *ngIf="configItemForm.controls.maxAbilityEffect.errors">
+                {{errorMessages.invalid_max_ability_effect}}
             </mat-error>
         </mat-form-field>
     </div>
     <div>
-        <mat-form-field class="textField">
+        <mat-form-field class="textField mt-4">
             <mat-label>{{texts.description}}</mat-label>
             <textarea matInput placeholder="{{texts.description_placeholder}}" formControlName="description"></textarea>
         </mat-form-field>
@@ -75,8 +75,8 @@
                 <mat-chip>{{configItem.increment}}</mat-chip>
             </div>
             <div class="cardContentItem">
-                <p class="cardLabel">{{texts.param_order}}: </p>
-                <mat-chip>{{configItem.paramOrder}}</mat-chip>
+                <p class="cardLabel">{{texts.max_ability_effect}}: </p>
+                <mat-chip>{{configItem.maxAbilityEffect}}</mat-chip>
             </div>
             <p class="cardLabel">{{texts.description}}:</p>
             <p>{{configItem.description}}</p>

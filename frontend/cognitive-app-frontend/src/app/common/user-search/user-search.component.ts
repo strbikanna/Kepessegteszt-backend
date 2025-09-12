@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ContactService} from "../../service/contact_service/contact.service";
-import {AuthUser} from "../../model/user-contacts.model";
+import {AuthUser} from "../../model/user/user-contacts.model";
 import {FormControl} from "@angular/forms";
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 
 /**
  * Searches users in a user-group

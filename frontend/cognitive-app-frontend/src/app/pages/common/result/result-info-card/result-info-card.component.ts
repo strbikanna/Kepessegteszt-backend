@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Result} from "../../../../model/result.model";
-import {TEXTS} from "../../../../utils/app.text_messages";
+import {TEXTS} from "../../../../text/app.text_messages";
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {ArrayDataSource} from '@angular/cdk/collections';
 

@@ -1,6 +1,6 @@
 package hu.bme.aut.resource_server.game
 
-import hu.bme.aut.resource_server.recommended_game.RecommenderService
+import hu.bme.aut.resource_server.recommendation.RecommenderService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -22,9 +22,9 @@ class GameController(
         @RequestParam(required = false, defaultValue = "0") pageIndex: Int,
         @RequestParam(required = false, defaultValue = "100") pageSize: Int,
         @RequestParam(required = false) active: Boolean?
-    ): List<GameEntity> {
-        return if(active != null) gameService.getGamesByActive(active, pageIndex, pageSize)
-        else gameService.getAllGames(pageIndex, pageSize)
+    ): List<GameDto> {
+        return if(active != null) gameService.getGamesByActive(active, pageIndex, pageSize).map { GameDto(it) }
+        else gameService.getAllGames(pageIndex, pageSize).map { GameDto(it) }
     }
 
     @GetMapping("/count")
@@ -37,27 +37,25 @@ class GameController(
 
     @GetMapping("/{gameId}")
     @ResponseStatus(HttpStatus.OK)
-    fun getGameById(@PathVariable gameId: Int): GameEntity {
-        return gameService.getGameById(gameId).orElseThrow()
+    fun getGameById(@PathVariable gameId: Int): GameDto {
+        return GameDto(
+            gameService.getGameById(gameId).orElseThrow()
+        )
     }
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    fun getGamesByName(@RequestParam name: String): List<GameEntity> {
-        return gameService.getGamesByName(name)
+    fun getGamesByName(@RequestParam name: String): List<GameDto> {
+        return gameService.getGamesByName(name).map { GameDto(it) }
     }
 
 
     @PutMapping("/{gameId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('ADMIN', 'SCIENTIST')")
-    fun updateGame(@RequestBody gameEntity: GameEntity, @PathVariable gameId: Int): GameEntity {
-        if(gameId == gameEntity.id) {
-            val updated = gameService.updateGame(gameEntity)
-            if(updated.id != gameId){
-                recommenderService.createDefaultRecommendationsForGame(updated.id!!)
-            }
-            return updated
+    fun updateGame(@RequestBody gameDto: GameDto, @PathVariable gameId: Int): GameDto {
+        if(gameId == gameDto.id) {
+            return GameDto(gameService.updateGame(gameDto.toGameEntity()))
         } else{
             throw IllegalArgumentException("Game IDs don't match.")
         }
@@ -66,10 +64,10 @@ class GameController(
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
-    fun createGame(@RequestBody gameEntity: GameEntity): GameEntity {
-        val game = gameService.saveGame(gameEntity)
+    fun createGame(@RequestBody gameDto: GameDto): GameDto {
+        val game = gameService.saveGame(gameDto.toGameEntity())
         recommenderService.createDefaultRecommendationsForGame(game.id!!)
-        return game
+        return GameDto(game)
     }
 
     /**
@@ -78,8 +76,10 @@ class GameController(
     @PostMapping("/image/{gameId}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
-    fun uploadThumbnail(@PathVariable gameId: Int, @RequestParam file: MultipartFile): GameEntity{
-        return this.gameService.saveThumbnailForGame(gameId, file)
+    fun uploadThumbnail(@PathVariable gameId: Int, @RequestParam file: MultipartFile): GameDto{
+        return GameDto(
+            this.gameService.saveThumbnailForGame(gameId, file)
+        )
     }
 
     @DeleteMapping("/{gameId}")

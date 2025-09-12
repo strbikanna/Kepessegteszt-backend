@@ -4,6 +4,7 @@ springBootVersion = "3.2.2"
 springDependencyManagementVersion = "1.1.4"
 flywayVersion = "9.22.1"
 openapiwebmvcVersion = "2.2.0"
+uaParserVersion = "7.28.1"
 
 [libraries]
 spring-boot-starter-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
@@ -24,6 +25,8 @@ spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-star
 spring-security-test = { module = "org.springframework.security:spring-security-test" }
 mysql-connector = { module = "com.mysql:mysql-connector-j" }
 lombok = { module = "org.projectlombok:lombok" }
+#useragent parser
+ua-parser= { module = "nl.basjes.parse.useragent:yauaa", version.ref="uaParserVersion" }
 
 [plugins]
 springframework-boot = { id = "org.springframework.boot", version.ref="springBootVersion" }

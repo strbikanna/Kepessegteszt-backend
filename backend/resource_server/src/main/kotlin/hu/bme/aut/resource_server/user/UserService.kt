@@ -1,13 +1,25 @@
 package hu.bme.aut.resource_server.user
 
+import hu.bme.aut.resource_server.profile.EnumProfileItem
+import hu.bme.aut.resource_server.profile.FloatProfileItem
+import hu.bme.aut.resource_server.profile.dto.ProfileItem
+import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
+import hu.bme.aut.resource_server.recommended_game.RecommendedGameService
+import hu.bme.aut.resource_server.result.ResultService
 import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
+import hu.bme.aut.resource_server.utils.AbilityType
+import hu.bme.aut.resource_server.utils.EnumAbilityValue
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
 class UserService(
-        @Autowired private var userRepository: UserRepository,
+    @Autowired private var userRepository: UserRepository,
+    private val profileSnapshotService: ProfileSnapshotService,
+    private val recommendedGameService: RecommendedGameService,
+    private val resultService: ResultService,
 ){
     fun getAllUsers(): List<PlainUserDto>{
         return userRepository.findAll().map { PlainUserDto(it) }
@@ -32,6 +44,7 @@ class UserService(
             user.gender ?: userEntity.gender,
             userEntity.id!!)
     }
+
     fun updateUserProfile(user: UserEntity): UserProfileDto {
         val userEntity = userRepository.findByUsernameWithProfile(user.username).orElseThrow()
         userEntity.profileEnum = user.profileEnum
@@ -42,4 +55,58 @@ class UserService(
         )
     }
 
+    fun updateUserProfile(updatedProfileItems: List<ProfileItem>, username: String): List<ProfileItem> {
+        val userEntity = userRepository.findByUsernameWithProfile(username).orElseThrow()
+        userEntity.profileEnum = updatedProfileItems
+            .filter { it.ability.type == AbilityType.ENUMERATED }
+            .map { mapToEnumProfileItem(it) }.toMutableSet()
+        userEntity.profileFloat = updatedProfileItems
+            .filter { it.ability.type == AbilityType.FLOATING }
+            .map { mapToFloatProfileItem(it) }.toMutableSet()
+        val updatedEntity = userRepository.save(userEntity)
+        return updatedEntity.profileFloat.map { it.toProfileItem() } + updatedEntity.profileEnum.map { it.toProfileItem() }
+    }
+
+    fun saveUser(user: UserEntity){
+        userRepository.save(user)
+    }
+
+    @Transactional
+    fun removeUserForever(username: String){
+        val user = userRepository.findByUsername(username).orElseThrow()
+
+        user.groups.clear()
+        user.organizations.clear()
+        user.profileFloat.clear()
+        user.profileEnum.clear()
+        user.roles.clear()
+        userRepository.save(user)
+
+        profileSnapshotService.deleteAllSnapshotsOfUser(user)
+        recommendedGameService.deleteAllRecommendationsByUser(user)
+        resultService.deleteAllResultsOfUser(user)
+
+        userRepository.deleteAllByUsername(username)
+    }
+
+    private fun mapToEnumProfileItem(profileItem: ProfileItem): EnumProfileItem {
+        return EnumProfileItem(
+            ability = profileItem.ability,
+            abilityValue = EnumAbilityValue.valueOf(profileItem.value as String),
+            abilityAccuracy = profileItem.accuracy
+        )
+    }
+
+    private fun mapToFloatProfileItem(profileItem: ProfileItem): FloatProfileItem {
+        val valueAsDouble = when (val v = profileItem.value) {
+            is Int -> v.toDouble()
+            is Double -> v
+            else -> throw IllegalArgumentException("Unsupported type for abilityValue: ${v::class}")
+        }
+        return FloatProfileItem(
+            ability = profileItem.ability,
+            abilityValue = valueAsDouble,
+            abilityAccuracy = profileItem.accuracy
+        )
+    }
 }

@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbilityFilter, UserFilter} from "./user-filter.model";
 import {FormArray, FormBuilder, Validators} from "@angular/forms";
-import {UserGroup} from "../../model/user_group.model";
+import {UserGroup} from "../../model/user/user_group.model";
 import {Observable} from "rxjs";
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 import {Ability, AbilityType} from "../../model/ability.model";
 import {MatCheckboxChange} from "@angular/material/checkbox";
 

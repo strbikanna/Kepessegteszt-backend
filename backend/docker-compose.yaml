@@ -1,0 +1,17 @@
+services:
+
+  resource-server:
+    build:
+      context: ./resource_server
+    ports:
+      - "8090:8090"
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  auth-server:
+    build:
+      context: ./auth_server
+    ports:
+      - "9000:9000"
+    extra_hosts:
+      - host.docker.internal:host-gateway

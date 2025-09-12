@@ -88,6 +88,19 @@ import { AddUserToGroupDialogComponent } from './pages/admin/group-management/ad
 import { CreateGroupDialogComponent } from './pages/admin/group-management/create-group-dialog/create-group-dialog.component';
 import { CreateOrgDialogComponent } from './pages/admin/group-management/create-org-dialog/create-org-dialog.component';
 import { TimestampPipe } from './utils/timestamp.pipe';
+import { PrivacyPolicyPageComponent } from './general/privacy-policy-page/privacy-policy-page.component';
+import { FooterComponent } from './general/footer/footer.component';
+import { DeleteAccountComponent } from './pages/common/delete-account/delete-account.component';
+import { HorizontalScrollerComponent } from './pages/admin/admin-page/horizontal-scroller/horizontal-scroller.component';
+import { UserRegisterComponent } from './pages/admin/user-register/user-register.component';
+import { AbilityPageComponent } from './pages/admin/ability-page/ability-page.component';
+import { EditableAbilityCardComponent } from './pages/admin/ability-page/editable-ability-card/editable-ability-card.component';
+import { FeatureDescriptionComponent } from './general/feature-description/feature-description.component';
+import { CognitiveProfileEditPageComponent } from './pages/admin/cognitive-profile-edit-page/cognitive-profile-edit-page.component';
+import {GamesComponent} from "./pages/common/games/games.component";
+import {ResultInsightPageComponent} from "./pages/common/result-insight-page/result-insight-page.component";
+import {ResultChartComponent} from "./charts/result-chart/result-chart.component";
+
 
 @NgModule({
     declarations: [
@@ -106,13 +119,16 @@ import { TimestampPipe } from './utils/timestamp.pipe';
         FileUploadComponent,
         EditGameFormComponent,
         GameCardComponent,
+        GamesComponent,
         CalculationDialogComponent,
         RecommendationPageComponent,
         ProfileDataComparisonPageComponent,
         ProfileRadarChartComponent,
         ConfigItemFormComponent,
         ResultInfoCardComponent,
+        ResultInsightPageComponent,
         ResultPageComponent,
+        ResultChartComponent,
         ConfirmDialogComponent,
         CsvDownloadButtonComponent,
         SortControlComponent,
@@ -138,7 +154,16 @@ import { TimestampPipe } from './utils/timestamp.pipe';
         AddUserToGroupDialogComponent,
         CreateGroupDialogComponent,
         CreateOrgDialogComponent,
-        TimestampPipe
+        TimestampPipe,
+        PrivacyPolicyPageComponent,
+        FooterComponent,
+        DeleteAccountComponent,
+        HorizontalScrollerComponent,
+        UserRegisterComponent,
+        AbilityPageComponent,
+        EditableAbilityCardComponent,
+        FeatureDescriptionComponent,
+        CognitiveProfileEditPageComponent
     ],
     imports: [
         BrowserModule,
@@ -198,6 +223,10 @@ import { TimestampPipe } from './utils/timestamp.pipe';
             useClass: GlobalErrorhandlerService,
         },
         provideRouter(appRoutes, withComponentInputBinding()),
+    ],
+    exports: [
+        GameCardComponent,
+        UserFilterComponent
     ],
     bootstrap: [AppComponent]
 })

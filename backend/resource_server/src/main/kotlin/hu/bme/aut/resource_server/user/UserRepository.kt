@@ -76,4 +76,6 @@ interface UserRepository: JpaRepository<UserEntity, Int>, JpaSpecificationExecut
 
     @Query("SELECT u FROM UserEntity u WHERE u.firstName LIKE %:name% OR u.lastName LIKE %:name% OR CONCAT(u.firstName, u.lastName) LIKE %:name%")
     fun searchByName(name: String): List<UserEntity>
+
+    fun deleteAllByUsername(username: String)
 }

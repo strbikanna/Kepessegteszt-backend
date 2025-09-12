@@ -18,6 +18,7 @@ class EmailVerificationController(
     fun verifyEmail(@RequestParam verificationKey: String, @RequestParam username: String): String {
         val verificationSuccess = emailVerificationService.verifyEmail(verificationKey, username)
         if (verificationSuccess) {
+            emailVerificationService.removeVerificationEntity(verificationKey)
             val user = userService.loadUserByUsername(username)
             user.get().enabled = true
             userService.save(user.get())

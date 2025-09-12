@@ -53,7 +53,12 @@ class AuthServerConfig {
      */
     @Bean
     @Order(1)
-    fun authServerSecurityFilterChain(http: HttpSecurity, userInfoMapper: UserInfoMapper): SecurityFilterChain {
+    fun authServerSecurityFilterChain(
+        http: HttpSecurity,
+        userInfoMapper: UserInfoMapper,
+        logoutSuccessHandler: LogoutSuccessHandler,
+        logoutErrorHandler: LogoutErrorHandler
+    ): SecurityFilterChain {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http)
 
         //openID 1.0 connection with custom userinfo endpoint
@@ -62,7 +67,12 @@ class AuthServerConfig {
                 oidc.userInfoEndpoint { userinfo ->
                     userinfo.userInfoMapper { context -> userInfoMapper.mapUserInfo(context) }
                 }
+                oidc.logoutEndpoint { logout ->
+                    logout.logoutResponseHandler(logoutSuccessHandler)
+                    logout.errorResponseHandler(logoutErrorHandler)
+                }
             }
+
 
         http
             .cors(withDefaults())
@@ -72,7 +82,9 @@ class AuthServerConfig {
                 exceptions
                     .defaultAuthenticationEntryPointFor(
                         LoginUrlAuthenticationEntryPoint("/login"),
-                        MediaTypeRequestMatcher(MediaType.TEXT_HTML)
+                        MediaTypeRequestMatcher(
+                            MediaType.TEXT_HTML,
+                        )
                     )
             } // Accept access tokens for User Management and/or Client Registration
             .oauth2ResourceServer { it.jwt(withDefaults()) }
@@ -91,11 +103,12 @@ class AuthServerConfig {
                 .cors(withDefaults())
                 .sessionManagement { SessionCreationPolicy.STATELESS }
                 .authorizeHttpRequests {
-                    it.requestMatchers("/register").permitAll()
+                    it.requestMatchers("/register", "/mobile-logout").permitAll()
                     it.requestMatchers("/v3/api-docs").permitAll()
                     it.requestMatchers("/swagger-ui/**").permitAll()
                     it.requestMatchers("/v3/api-docs/swagger-config").permitAll()
                     it.requestMatchers("/mail/**").permitAll()
+                    it.requestMatchers("/styles/**", "/assets/**").permitAll()
                     it.anyRequest().authenticated()
                 }
                 .oauth2ResourceServer { it.jwt(withDefaults()) }

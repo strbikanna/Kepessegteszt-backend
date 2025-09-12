@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit,} from '@angular/core';
-import {TEXTS} from "../../../../utils/app.text_messages";
+import {TEXTS} from "../../../../text/app.text_messages";
 import {GameManagementService} from "../../../../service/game-management/game-management.service";
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {Observable} from "rxjs";

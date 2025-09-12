@@ -1,16 +1,19 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {Group, Organization} from "../../../model/user-group";
-import {TEXTS} from "../../../utils/app.text_messages";
+import {Group, Organization} from "../../../model/user/user-group";
+import {TEXTS} from "../../../text/app.text_messages";
 import {UserGroupService} from "../../../service/user-group/user-group.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Location} from "@angular/common";
-import {Address, User} from "../../../model/user.model";
+import {Address, User} from "../../../model/user/user.model";
 import {Observable, of} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {AddUserToGroupDialogComponent} from "./add-user-to-group-dialog/add-user-to-group-dialog.component";
 import {CreateGroupDialogComponent} from "./create-group-dialog/create-group-dialog.component";
 import {CreateOrgDialogComponent} from "./create-org-dialog/create-org-dialog.component";
 import {UserInfo} from "../../../auth/userInfo";
+import {UserGroup} from "../../../model/user/user_group.model";
+import {FormControl} from "@angular/forms";
+import {log} from "echarts/types/src/util/log";
 
 
 @Component({
@@ -25,6 +28,7 @@ export class GroupManagementComponent implements OnInit {
     selected: boolean = false
     showCannotAccessData: boolean = false
 
+    searchedGroups?: UserGroup[]
     adminsOfGroup: Observable<User[]> = of([])
     membersOfGroup: Observable<User[]> = of([])
 
@@ -110,9 +114,9 @@ export class GroupManagementComponent implements OnInit {
             this.service.addMemberToGroup(id, username).subscribe(
                 () => this.loadMembersOfGroup(id!!)
             )
-        }else{
+        } else {
             id = this.selectedOrganization?.id
-            if(!!id){
+            if (!!id) {
                 this.service.addMemberToOrganization(id, username).subscribe(
                     () => this.loadMembersOfGroup(id!!)
                 )
@@ -131,8 +135,24 @@ export class GroupManagementComponent implements OnInit {
             )
         }
     }
+
     canCreateOrg(): boolean {
         return UserInfo.isAdmin()
+    }
+
+    searchGroupName = new FormControl('')
+
+    onSearchUserGroup() {
+        if (this.searchGroupName.value) {
+            this.service.searchUserGroup(this.searchGroupName.value).subscribe(groups => {
+                this.searchedGroups = groups
+            })
+        }
+    }
+
+    onClearSearch() {
+        this.searchGroupName.setValue('')
+        this.searchedGroups = undefined
     }
 
     private createGroup(group: { name: string; organization: Organization }) {
@@ -154,7 +174,7 @@ export class GroupManagementComponent implements OnInit {
             } else {
                 this.selectedOrganization = group as Organization
             }
-            if(!group.canWrite){
+            if (!group.canWrite) {
                 this.showCannotAccessData = true
                 return
             }

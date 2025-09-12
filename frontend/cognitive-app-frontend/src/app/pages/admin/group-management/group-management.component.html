@@ -1,30 +1,69 @@
 <h1>{{ text.title }}</h1>
+
+<p class="page-description">{{ text.page_description }}</p> <!-- New Overview text -->
+
 <div class="flex">
-    <div>
-        <app-group-tree (onGroupIdSelectedForDetails)="onGroupIdSelected($event)"></app-group-tree>
+    <div class="group-tree-section">
+        <div>
+            <!-- Search bar or filter section -->
+            <div class="mt-2">
+                <mat-form-field>
+                    <mat-label>{{text.search_group}}</mat-label>
+                    <input matInput placeholder="{{text.search_group_placeholder}}" [formControl]="searchGroupName">
+                    <button matSuffix mat-icon-button (click)="onClearSearch()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+                <button mat-icon-button (click)="onSearchUserGroup()" matTooltip="{{text.search_group}}"
+                        color="primary">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </div>
+
+            <app-group-tree (onGroupIdSelectedForDetails)="onGroupIdSelected($event)" [groups]="searchedGroups">
+            </app-group-tree>
+        </div>
+        <!-- Create Organization Button -->
         <button mat-flat-button (click)="openCreateOrganizationDialog()" color="primary" *ngIf="canCreateOrg()"
                 class="mt-5">
             <mat-icon>add</mat-icon>
             {{ text.create_organization }}
         </button>
     </div>
+
     <div class="ml-8">
-        <h3 *ngIf="selectedGroup" class="ml-8 mb-2">{{ selectedGroup.name }}</h3>
-        <p *ngIf="selectedGroup" class="ml-8 description">{{text.parent_organization_name}} {{ selectedGroup.organization.name }}</p>
-        <h3 *ngIf="selectedOrganization" class="ml-8 mb-2">{{ selectedOrganization.name }}</h3>
-        <p *ngIf="selectedOrganization" class="ml-8 description">
-            {{text.organization_address}}: {{ selectedOrganization.address.zip }} {{ selectedOrganization.address.city }},
-            {{ selectedOrganization.address.street }} {{ selectedOrganization.address.houseNumber }}
-        </p>
+        <!-- Selected Group Details -->
+        <div *ngIf="selectedGroup">
+            <h3 class="ml-8 mb-2">{{ selectedGroup.name }}</h3>
+            <p class="ml-8 description">{{ text.parent_organization_name }} {{ selectedGroup.organization.name }}</p>
+        </div>
 
-        <p *ngIf="showCannotAccessData" class="ml-8 description" >{{text.cannot_access_data}}</p>
+        <!-- Selected Organization Details -->
+        <div *ngIf="selectedOrganization">
+            <h3 class="ml-8 mb-2">{{ selectedOrganization.name }}</h3>
+            <p class="ml-8 description">
+                {{ text.organization_address }}
+                : {{ selectedOrganization.address.zip }} {{ selectedOrganization.address.city }},
+                {{ selectedOrganization.address.street }} {{ selectedOrganization.address.houseNumber }}
+            </p>
+        </div>
 
+        <!-- Placeholder for Group Details -->
+
+        <div *ngIf="!selectedGroup && !selectedOrganization" class="mt-8 ml-8">
+            <p class="description text-lg text-center"><mat-icon class="iconLarge">groups_2</mat-icon></p>
+            <p class="description text-lg">{{ text.group_details }}</p>
+        </div>
+
+        <!-- Cannot Access Data Alert -->
+        <p *ngIf="showCannotAccessData" class="ml-8 description">{{ text.cannot_access_data }}</p>
 
         <div *ngIf="selected" class="flex">
+            <!-- Members Section -->
             <div class="ml-8">
                 <mat-list role="list">
                     <p class="description text-lg font-bold">{{ text.members }}</p>
-                    <mat-list-item *ngFor="let user of membersOfGroup |async">
+                    <mat-list-item *ngFor="let user of membersOfGroup | async">
                         <div class="flex align-items-center">
                             {{ user.firstName + ' ' + user.lastName }}
                             <button mat-icon-button (click)="removeMember(user.username)"
@@ -39,10 +78,12 @@
                     {{ text.add_member }}
                 </button>
             </div>
+
+            <!-- Admins Section -->
             <div class="ml-8">
                 <mat-list role="list">
                     <p class="description text-lg font-bold">{{ text.admins }}</p>
-                    <mat-list-item *ngFor="let user of adminsOfGroup |async">
+                    <mat-list-item *ngFor="let user of adminsOfGroup | async">
                         <div class="flex align-items-center">
                             {{ user.firstName + ' ' + user.lastName }}
                             <button mat-icon-button (click)="removeAdmin(user.username)"
@@ -58,9 +99,13 @@
                 </button>
             </div>
         </div>
+
+        <!-- Create Group Button -->
         <button mat-flat-button (click)="openCreateGroupDialog()" color="primary" *ngIf="selected" class="mt-5 ml-8">
             <mat-icon>add</mat-icon>
             {{ text.create_group }}
         </button>
     </div>
 </div>
+
+

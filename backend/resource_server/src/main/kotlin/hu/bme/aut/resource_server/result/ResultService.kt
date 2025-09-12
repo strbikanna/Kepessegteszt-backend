@@ -24,14 +24,14 @@ class ResultService(
         recommendedGame.completed = true
         recommendedGameRepository.save(recommendedGame)
         val user = recommendedGame.recommendedTo
-        val gameplay = ResultEntity(
+        val result = ResultEntity(
             result = data.result,
             passed = isResultPassed(data.result),
             config = data.newConfig?.toMutableMap() ?: recommendedGame.config.toMutableMap(),
             user = user,
             recommendedGame = recommendedGame
         )
-        return resultRepository.save(gameplay)
+        return resultRepository.save(result)
     }
 
     @Transactional
@@ -156,8 +156,12 @@ class ResultService(
         return resultRepository.count()
     }
 
-    private fun isResultPassed(result: Map<String, Any>): Boolean? {
-        return result["passed"] as Boolean?
+    fun deleteAllResultsOfUser(user: UserEntity) {
+        resultRepository.deleteAllByUser(user)
+    }
+
+    private fun isResultPassed(result: Map<String, Any>): Boolean {
+        return result["passed"] as Boolean? ?: false
     }
 
     private fun convertToDto(result: ResultEntity): ResultDetailsDto {
@@ -168,7 +172,8 @@ class ResultService(
             config = result.config,
             gameId = result.recommendedGame.game.id!!,
             gameName = result.recommendedGame.game.name,
-            username = result.user.username
+            username = result.user.username,
+            passed = result.passed,
         )
     }
 

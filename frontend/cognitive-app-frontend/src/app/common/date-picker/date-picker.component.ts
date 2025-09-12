@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({

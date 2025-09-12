@@ -8,7 +8,7 @@ export interface Game {
     thumbnail: string;
     active: boolean;
     version: number;
-    configDescription: any;
     affectedAbilities: Ability[];
     configItems: ConfigItem[];
+    storedConfig: boolean;
 }

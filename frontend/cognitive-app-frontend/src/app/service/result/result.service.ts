@@ -59,7 +59,7 @@ export class ResultService {
     private mapResult(result: Result): Result {
         return {
             ...result,
-            passed: result.result.passed
+            timestamp: new Date(result.timestamp),
         }
     }
     private defaultSearchOptions: SearchOptions = {

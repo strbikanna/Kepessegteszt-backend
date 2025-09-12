@@ -1,9 +1,9 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {UserGroupSearchService} from "../../service/user-group/user-group-search.service";
-import {UserGroup} from "../../model/user_group.model";
-import {User} from "../../model/user.model";
+import {UserGroup} from "../../model/user/user_group.model";
+import {User} from "../../model/user/user.model";
 import {FormControl} from "@angular/forms";
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 
 @Component({
   selector: 'app-user-search-by-group',

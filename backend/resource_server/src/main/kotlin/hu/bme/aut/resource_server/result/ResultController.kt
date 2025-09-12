@@ -2,14 +2,13 @@ package hu.bme.aut.resource_server.result
 
 import hu.bme.aut.resource_server.authentication.AuthService
 import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
-import hu.bme.aut.resource_server.recommended_game.RecommenderService
-import hu.bme.aut.resource_server.role.Role
+import hu.bme.aut.resource_server.recommendation.RecommenderService
+import hu.bme.aut.resource_server.user.role.Role
 import hu.bme.aut.resource_server.utils.RoleName
 import jakarta.servlet.http.HttpServletResponse
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpHeaders
@@ -31,6 +30,7 @@ class ResultController(
     @Autowired private var authService: AuthService,
     @Autowired private var recommenderService: RecommenderService
 ) {
+    var log: Logger = LoggerFactory.getLogger(ResultController::class.java)
 
     /**
      * Endpoint to save results of a played game.
@@ -38,13 +38,13 @@ class ResultController(
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun saveResult(@RequestBody gameplayData: ResultDto, authentication: Authentication): Long {
-        authService.checkGameAccessAndThrow(authentication, gameplayData)
+    fun saveResult(@RequestBody resultData: ResultDto, authentication: Authentication): Long {
+        authService.checkGameAccessAndThrow(authentication, resultData)
         val username = authentication.name
         if (!profileSnapshotService.existsSnapshotToday(username)) {
             profileSnapshotService.saveSnapshotOfUser(username)
         }
-        val savedResult = resultService.save(gameplayData)
+        val savedResult = resultService.save(resultData)
         val game = resultService.getGameOfResult(savedResult.id!!)
         if (!game.active) {
             throw IllegalArgumentException("Game is not active");
@@ -57,8 +57,13 @@ class ResultController(
         if (nextRecommendation == null) {
             nextRecommendation = recommenderService.createEmptyRecommendation(username, game.id!!)
         }
-        CoroutineScope(Dispatchers.Default).async {
-            val config = recommenderService.createNextRecommendationByResult(savedResult)
+        CoroutineScope(Dispatchers.Default).launch {
+            val config = try {
+                recommenderService.createNextRecommendationByResult(savedResult)
+            } catch (e: Exception) {
+                log.error("Error while creating next recommendation based on result: ${e.message}")
+                emptyMap()
+            }
             nextRecommendation.config = config
             recommenderService.save(nextRecommendation)
         }
@@ -108,8 +113,8 @@ class ResultController(
     ): Deferred<List<ResultDetailsDto>> = CoroutineScope(Dispatchers.IO).async {
         val user = authService.getAuthUserWithRoles(authentication)
         val sort = resultService.convertSortBy(sortBy, sortOrder)
-        if(user.roles.any { it.roleName == RoleName.ADMIN }){
-            return@async if(usernames.isNullOrEmpty()){
+        if (user.roles.any { it.roleName == RoleName.ADMIN }) {
+            return@async if (usernames.isNullOrEmpty()) {
                 resultService.getAllFiltered(gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort))
             } else {
                 resultService.getAllFiltered(usernames, gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort))
@@ -136,13 +141,13 @@ class ResultController(
         @RequestParam usernames: List<String>? = null
     ): Deferred<Long> = CoroutineScope(Dispatchers.IO).async {
         val user = authService.getAuthUserWithRoles(authentication)
-        if(user.roles.none { Role.canGetContacts(it.roleName) }){
+        if (user.roles.none { Role.canGetContacts(it.roleName) }) {
             return@async resultService.getCountByFilters(listOf(authentication.name), gameIds, resultWin)
         }
         val contactUsernames = authService.getContactUsernames(authentication)
 
-        if(user.roles.any { it.roleName == RoleName.ADMIN }){
-            return@async if(usernames.isNullOrEmpty()){
+        if (user.roles.any { it.roleName == RoleName.ADMIN }) {
+            return@async if (usernames.isNullOrEmpty()) {
                 resultService.getCountByFilters(gameIds, resultWin)
             } else {
                 resultService.getCountByFilters(usernames, gameIds, resultWin)

@@ -23,7 +23,7 @@ export const groupManagementGuard: CanActivateFn = (route, state) => {
     )
         return true;
     const router = inject(Router)
-    return router.parseUrl('/')
+    return router.parseUrl('/games')
 };
 
 export const recommendationGuard: CanActivateFn = (route, state) => {
@@ -42,6 +42,17 @@ export const adminCognitiveProfileGuard: CanActivateFn = (route, state) => {
             UserInfo.currentUser.roles.includes(Role.TEACHER) ||
             UserInfo.currentUser.roles.includes(Role.PARENT)
         )
+    )
+        return true;
+    const router = inject(Router)
+    return router.parseUrl('/cognitive-profile')
+};
+
+export const cognitiveProfileEditGuard: CanActivateFn = (route, state) => {
+    if (UserInfo.loginStatus.value && UserInfo.currentUser !== undefined &&
+        (UserInfo.currentUser.roles.includes(Role.SCIENTIST) ||
+            UserInfo.currentUser.roles.includes(Role.ADMIN) ||
+            UserInfo.currentUser.roles.includes(Role.TEACHER))
     )
         return true;
     const router = inject(Router)

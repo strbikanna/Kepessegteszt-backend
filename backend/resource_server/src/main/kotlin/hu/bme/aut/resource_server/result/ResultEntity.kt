@@ -27,7 +27,7 @@ data class ResultEntity(
     val result: Map<String, Any>,
 
     @Column(name = "passed")
-    val passed: Boolean? = null,
+    val passed: Boolean = false,
 
     @JsonIgnore
     @ManyToOne(fetch= FetchType.LAZY)

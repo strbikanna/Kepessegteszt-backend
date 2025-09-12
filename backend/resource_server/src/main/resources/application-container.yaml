@@ -1,13 +1,13 @@
 server:
   # Container port of the app
-  port: 443
+  port: 8090
 
 
 spring:
   datasource:
     # Set the MySQL instance as the datasource that is available for the conatiner
-    url: jdbc:mysql://cognitive-app-db-eu.mysql.database.azure.com:3306/cognitive_backend?serverTimezone=UTC
-    username: backend_user
+    url: jdbc:mysql://${DATABASE_URL}:3306/cognitive_app
+    username: dev
     password: dev.1122
     driver-class-name: com.mysql.cj.jdbc.Driver
 
@@ -25,12 +25,14 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${AUTH_SERVER_URI}
+          issuer-uri: ${AUTH_SERVER_URL}
 
+llms:
+  mistral:
+    api-key: ${MISTRAL_API_KEY}
 
 app:
   python:
-    source-location: ${PYTHON_PATH}
-    models-location: ${PYTHON_PATH}/modellek/
+    exists: false
   thumbnail-location: ${THUMBNAIL_PATH}
   image-path: ${RESOURCE_SERVER_URL}/game_images

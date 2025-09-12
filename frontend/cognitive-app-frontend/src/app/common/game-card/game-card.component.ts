@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 import {Game} from "../../model/game.model";
 import {imagePaths} from "../../utils/app.image_resources";
 
@@ -22,6 +22,10 @@ export class GameCardComponent implements OnInit {
    * @param extraButtonText Text for the secondary button.
    */
   @Input() extraButtonText: string | undefined;
+  /**
+   * @param displayButtons Whether to display any buttons or not.
+   */
+  @Input() displayButtons: boolean = true;
   /**
    * @param game Game to be displayed.
    */

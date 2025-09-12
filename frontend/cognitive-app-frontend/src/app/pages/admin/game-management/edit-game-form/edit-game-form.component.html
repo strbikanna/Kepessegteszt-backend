@@ -15,22 +15,22 @@
     </div>
     <div id="abilities">
         <h4>{{text.affected_abilities}}</h4>
-        <ng-container formArrayName="abilities">
-            <ng-container *ngFor="let abilityForm of abilitiesForm.controls">
+        <div formArrayName="abilities" class="abilitiesContainer">
+            <div *ngFor="let abilityForm of abilitiesForm.controls" class="lg:w-8 sm:w-10">
                 <div [formGroup]="toFromGroup(abilityForm)">
                     <mat-checkbox formControlName="included">
                         {{abilityName(abilityForm)}}
                     </mat-checkbox>
                 </div>
-            </ng-container>
-        </ng-container>
+            </div>
+        </div>
 
     </div>
     <div id="config">
         <h4>{{text.config_description}}</h4>
         <ng-container [formArrayName]="'configItems'">
             <ng-container *ngFor="let configItem of configItemsForm.controls; let i = index">
-                <app-config-item-form [configItemData]="configItem.value" [initialEditable]="configItem.enabled" [forbiddenParamOrders]="usedParamOrders"
+                <app-config-item-form [configItemData]="configItem.value" [initialEditable]="configItem.enabled"
                                         (delete)="onDeleteConfigItem(i)" (save)="onUpdateConfigItem(i, $event)"
                 ></app-config-item-form>
             </ng-container>

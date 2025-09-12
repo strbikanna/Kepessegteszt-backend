@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, EventEmitter, HostListener, OnInit, Output} from '@angular/core';
 import {UserInfo} from "../../auth/userInfo";
 import {Role} from "../../utils/constants";
-import {TEXTS} from "../../utils/app.text_messages";
+import {TEXTS} from "../../text/app.text_messages";
 import {imagePaths} from "../../utils/app.image_resources";
 
 
@@ -19,11 +19,11 @@ export class HeaderComponent implements OnInit{
 
     loginStatus = false;
     isAdmin = false;
-    isAdminOrScientist = false;
     text = TEXTS.menu;
     isTeacher = false;
     isScientist = false;
     isStudent = false;
+    isParent = false;
     protected readonly imagePaths = imagePaths;
     windowWidth!: number;
 
@@ -34,9 +34,9 @@ export class HeaderComponent implements OnInit{
             this.loginStatus = loginSuccess
             this.isAdmin = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.ADMIN) !== undefined && loginSuccess
             this.isStudent = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.STUDENT) !== undefined && loginSuccess
-            this.isAdminOrScientist = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.ADMIN || role.toUpperCase() === Role.SCIENTIST) !== undefined && loginSuccess
             this.isTeacher = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.TEACHER) !== undefined  && this.loginStatus
             this.isScientist = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.SCIENTIST) !== undefined  && this.loginStatus
+            this.isParent = UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.PARENT) !== undefined  && this.loginStatus
             this.changeDetectorRef.detectChanges()
         });
         this.windowWidth = window.innerWidth;
@@ -55,34 +55,40 @@ export class HeaderComponent implements OnInit{
     displayMobileMenu(){
         return this.windowWidth < 768
     }
-    canSeeAdminCognitiveProfile(){
-        return UserInfo.currentUser?.roles.find(
-            role => role.toUpperCase() === Role.TEACHER ||
-                role.toUpperCase() === Role.ADMIN ||
-                role.toUpperCase() === Role.SCIENTIST ||
-                role.toUpperCase() === Role.PARENT
-        ) && this.loginStatus
+
+    hasAccessToOwnCognitiveProfile(){
+        return this.isStudent
     }
-    canSeeAdminCognitiveProfileCompare(){
-        return this.canSeeAdminCognitiveProfile()
+
+    hasAccessToAdminCognitiveProfile(){
+        return this.isAdmin || this.isTeacher || this.isScientist || this.isParent
     }
-    canSeeUserManagement(){
-        return UserInfo.currentUser?.roles.find(role => role.toUpperCase() === Role.ADMIN) && this.loginStatus
+    hasAccessToCognitiveProfileEdit(){
+        return this.isAdmin  || this.isScientist
     }
-    canSeeGroupManagement(){
-        return UserInfo.currentUser?.roles.find(role =>
-            role.toUpperCase() === Role.ADMIN || role.toUpperCase() === Role.TEACHER || role.toUpperCase() === Role.SCIENTIST
-        ) && this.loginStatus
+    hasAccessToAdminCognitiveProfileCompare(){
+        return this.hasAccessToAdminCognitiveProfile()
     }
-    canSeeGameManagement(){
-        return UserInfo.currentUser?.roles.find(role =>
-            role.toUpperCase() === Role.ADMIN || role.toUpperCase() === Role.SCIENTIST
-        ) && this.loginStatus
+    hasAccessToOwnCognitiveProfileCompare(){
+        return this.isStudent
     }
-    canSeeRecommendations(){
-        return UserInfo.currentUser?.roles.find(role =>
-            role.toUpperCase() === Role.ADMIN || role.toUpperCase() === Role.SCIENTIST || role.toUpperCase() === Role.TEACHER
-        ) && this.loginStatus
+    hasAccessToUserRegistration(){
+        return this.isAdmin || this.isTeacher || this.isScientist || this.isParent
+    }
+    hasAccessToUserManagement(){
+        return this.isAdmin
+    }
+    hasAccessToGroupManagement(){
+        return this.isAdmin || this.isTeacher || this.isScientist
+    }
+    hasAccessToGameManagement(){
+        return this.isAdmin || this.isScientist
+    }
+    hasAccessToGames(){
+        return this.isStudent || this.isParent
+    }
+    hasAccessToRecommendations(){
+        return this.isAdmin || this.isScientist || this.isTeacher
     }
 
 }

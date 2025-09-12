@@ -2,7 +2,6 @@ package hu.bme.aut.resource_server.profile_calculation.calculator
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
-import hu.bme.aut.resource_server.recommendation.ModelManager
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import jakarta.transaction.Transactional
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service
 @Service
 class AbilityRateCalculatorService(
     @Autowired private var userRepo: UserRepository,
-    @Autowired private var modelManager: ModelManager
 ) {
     /**
      * Calculates the contribution of each ability to the result.
@@ -24,7 +22,8 @@ class AbilityRateCalculatorService(
      * @param resultValues: n size array with normalized results.
      */
     fun calculateRates(abilityValues: List<List<Double>>, resultValues: List<Double>): List<Double> {
-        return modelManager.calculateRates(abilityValues, resultValues)
+        //TODO
+        return abilityValues.map { 1.0 }
     }
 
     /**

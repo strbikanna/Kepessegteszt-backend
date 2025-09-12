@@ -1,17 +1,18 @@
 package hu.bme.aut.resource_server.authentication
 
+import hu.bme.aut.resource_server.error.ApiCallException
+import hu.bme.aut.resource_server.error.AuthException
+import hu.bme.aut.resource_server.error.notContact
+import hu.bme.aut.resource_server.error.removeUserFailed
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.result.ResultDto
-import hu.bme.aut.resource_server.role.Role
+import hu.bme.aut.resource_server.user.role.Role
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import hu.bme.aut.resource_server.user_group.UserGroupRepository
 import hu.bme.aut.resource_server.user_group.group.Group
 import hu.bme.aut.resource_server.utils.RoleName
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
@@ -41,16 +42,15 @@ class AuthService(
     }
 
     /**
-     * Checks if the gameplay is authorized to save results for the user.
-     * @throws IllegalAccessException if the game_id in the token is either not present
-     * or not matching any game in the database.
+     * Checks if the user is authorized to save results for the gameplay.
+     * @throws IllegalAccessException if the recommendation is not meant for this user.
      */
     @Transactional
     fun checkGameAccessAndThrow(authentication: Authentication, gameplay: ResultDto) {
         val username = authentication.name
         val dbGamePlay = recommendedGameRepository.findById(gameplay.gameplayId).orElseThrow()
         if (username != dbGamePlay.recommendedTo.username) {
-            throw IllegalAccessException("This gameplay is not authorized to save result for this user.")
+            throw IllegalAccessException("This user is not authorized to save result for this gameplay.")
         }
     }
 
@@ -134,6 +134,29 @@ class AuthService(
             return@async emptyList<String>()
         }
         return contacts.await()
+    }
+
+    suspend fun removeUserFromAuthServer(authentication: Authentication) {
+        if (webclient == null) {
+            initWebClient()
+        }
+        val jwt = authentication.principal as Jwt
+        val accessTokenOfUser = jwt.tokenValue
+
+        withContext(Dispatchers.IO) {
+            val requestSpec = webclient!!
+                .delete()
+                .uri("/user/me")
+                .header("Authorization", "Bearer $accessTokenOfUser")
+                .accept(MediaType.APPLICATION_JSON)
+            val responseStatus = requestSpec
+                .retrieve()
+                .toBodilessEntity()
+                .block()?.statusCode
+            if (responseStatus == null || !responseStatus.is2xxSuccessful) {
+                throw ApiCallException().removeUserFailed()
+            }
+        }
     }
 
     @Transactional

@@ -1,14 +1,15 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {CognitiveProfileService} from "../../../service/cognitive-profile/cognitive-profile.service";
 import {CognitiveProfile} from "../../../model/cognitive_profile.model";
 import {DateRange} from "../../../common/date-picker/date-picker.component";
-import {TEXTS} from "../../../utils/app.text_messages";
-import {User} from "../../../model/user.model";
+import {TEXTS} from "../../../text/app.text_messages";
+import {User} from "../../../model/user/user.model";
 import {BehaviorSubject} from "rxjs";
 import {Location} from "@angular/common";
-import {ProfileDescription} from "../../../model/ProfileDescription";
+import {ProfileDescription} from "../../../model/profile/profile_description";
 import {UserInfo} from "../../../auth/userInfo";
+import {ProfileData} from "../../../model/profile/profile_data.model";
 
 @Component({
     selector: 'app-admin-cognitive-profile',
@@ -19,7 +20,7 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
     text = TEXTS.cognitive_profile
     protected chosenUsername?: string;
     protected name?: string;
-    protected currProfileData?: CognitiveProfile;
+    protected currProfileData?: ProfileData[];
     protected profileDescription?: ProfileDescription;
     protected profileHistoryData: BehaviorSubject<CognitiveProfile[]> = new BehaviorSubject<CognitiveProfile[]>([]);
     protected loadingProfile = true;
@@ -45,6 +46,7 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
         this.chosenUsername = user.username;
         this.name = user.firstName + ' ' + user.lastName;
         this.loadingProfile = true;
+        this.loadingDescription = true;
         this.loadProfileData();
         this.updateUrlParams();
     }
@@ -60,8 +62,8 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
                 this.loadingHistory = false
             });
             this.service.getProfileDescription(undefined, this.chosenUsername).subscribe(description => {
-                if(description.abilitiesAsText == null || description.abilitiesAsText === ''){
-                    description.abilitiesAsText = this.text.llm.empty_description;
+                if(description.generatedText == null || description.generatedText === ''){
+                    description.generatedText = this.text.llm.empty_description;
                 }
                 this.profileDescription = description;
                 this.loadingDescription = false
