@@ -3,6 +3,7 @@ package hu.bme.aut.resource_server.user
 import hu.bme.aut.resource_server.user_group.organization.Address
 import hu.bme.aut.resource_server.utils.Gender
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Modifying
@@ -18,6 +19,8 @@ interface UserRepository: JpaRepository<UserEntity, Int>, JpaSpecificationExecut
     fun existsByUsername(username: String): Boolean
 
     fun findByIdIn(ids: List<Int>): List<UserEntity>
+
+    fun findByIdInOrderByLastName(ids: List<Int>, page: PageRequest): List<UserEntity>
 
     @Query("SELECT u.id FROM UserEntity u")
     fun findAllIds(): List<Int>

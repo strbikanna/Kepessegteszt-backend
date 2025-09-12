@@ -92,10 +92,12 @@ class UserGroupController(
     @ResponseStatus(HttpStatus.OK)
     fun getMembersOfGroup(
         authentication: Authentication,
-        @PathVariable groupId: Int
+        @PathVariable groupId: Int,
+        @RequestParam(required = false, defaultValue = "0") pageIndex: Int,
+        @RequestParam(required = false, defaultValue = "20") pageSize: Int
     ): List<PlainUserDto> {
         authService.checkGroupDataReadAndThrow(authentication, groupId)
-        return userGroupService.getAllUsersInGroup(groupId).map { PlainUserDto(it) }
+        return userGroupService.getAllUsersInGroup(groupId, pageIndex, pageSize).map { PlainUserDto(it) }
     }
 
     @GetMapping("/users_to_see")

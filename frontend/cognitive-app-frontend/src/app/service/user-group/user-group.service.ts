@@ -77,8 +77,8 @@ export class UserGroupService {
         return this.http.delete(`${this.httpService.baseUrl}/user_group/member`, {params: params});
     }
 
-    getGroupOrOrgMembers(groupId: number): Observable<User[]> {
-        return this.http.get<User[]>(`${this.httpService.baseUrl}/user_group/members/${groupId}`);
+    getGroupOrOrgMembers(groupId: number, pageIndex: number): Observable<User[]> {
+        return this.http.get<User[]>(`${this.httpService.baseUrl}/user_group/members/${groupId}?pageIndex=${pageIndex}`);
     }
 
     getGroupOrOrgAdmins(groupId: number): Observable<User[]> {
