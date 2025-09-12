@@ -85,7 +85,7 @@ export class HeaderComponent implements OnInit{
         return this.isAdmin || this.isScientist
     }
     hasAccessToGames(){
-        return this.isStudent || this.isParent
+        return this.isStudent || this.isParent || this.isTeacher
     }
     hasAccessToRecommendations(){
         return this.isAdmin || this.isScientist || this.isTeacher

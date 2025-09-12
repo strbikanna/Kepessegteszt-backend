@@ -159,8 +159,10 @@ class UserGroupController(
         @RequestBody group: GroupDto,
         @RequestParam(required = false, value = "parentGroupId") parentGroupId: Int?
     ): UserGroupDto {
-        authService.checkUserGroupWriteAndThrow(authentication, group.organizationDto.id!!)
-        return userGroupService.createGroup(group.name, group.organizationDto.id, parentGroupId).toDto()
+        authService.checkUserGroupWriteAndThrow(authentication, parentGroupId ?: group.organizationDto.id!!)
+        val createdGroup = userGroupService.createGroup(group.name, group.organizationDto.id!!, parentGroupId)
+        userGroupService.addAdminUserToGroup(authentication.name, createdGroup.id!!)
+        return createdGroup.toDto()
     }
 
     @PostMapping("/organization")
@@ -168,7 +170,6 @@ class UserGroupController(
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     fun createOrganization(
-        authentication: Authentication,
         @RequestBody org: OrganizationDto
     ): UserGroupDto {
         return userGroupService.createOrganization(org.name, org.address).toDto()
