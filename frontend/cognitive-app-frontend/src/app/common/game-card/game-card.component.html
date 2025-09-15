@@ -1,6 +1,6 @@
 <mat-card class="{{game.active ? '': 'inactiveGameCard'}}">
     <mat-card-content>
-        <img src="{{game.thumbnail}}" onerror="this.src = this.imagePaths.defaultGamePicture">
+        <img src="{{game.thumbnail}}" (error)="onImageError($event)">
         <div class="content">
             <div class="flex align-items-center justify-content-between">
                 <div class="flex align-items-baseline w-9">

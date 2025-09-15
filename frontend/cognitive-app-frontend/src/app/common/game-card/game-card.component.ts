@@ -59,5 +59,9 @@ export class GameCardComponent implements OnInit {
     return this.game.affectedAbilities.map(a => a.name).join(', ');
   }
 
+  onImageError(event: any) {
+    event.target.src = this.imagePaths.defaultGamePicture;
+  }
+
   protected readonly imagePaths = imagePaths;
 }
