@@ -36,6 +36,21 @@ class EmailVerificationService(
         return message
     }
 
+    fun createForgotPasswordMessage(verificationEntity: EmailVerificationEntity): String {
+        val user = verificationEntity.user
+        val url = UriComponentsBuilder
+            .fromHttpUrl("$appBaseUrl/mail/reset-password")
+            .queryParam("verificationKey", verificationEntity.verificationKey)
+            .queryParam("username", user.username)
+            .build()
+            .toUriString()
+        val message = "Kedves ${user.lastName}!\nElfelejtetted a jelszavad? Ehhez az e-mail címhez ezzel a felhasználónévvel regisztráltál: ${user.username}. " +
+                "Az alábbi linkre kattintva új jelszót adhatsz meg. " +
+                "A link 30 percig érvényes.\n" +
+                "${url}\nÜdv,\nCognitive App Csapat"
+        return message
+    }
+
     /**
      * Verifies the email address of the user
      * based on the verification key and username.

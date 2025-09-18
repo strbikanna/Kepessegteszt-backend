@@ -13,6 +13,13 @@
     <div class="alert alert-danger text-center w-75 mx-auto" role="alert" th:if="${param.error}">
         Helytelen felhasználónév vagy jelszó!
     </div>
+    <!-- Forgot password -->
+    <div class="text-center w-75 mx-auto" th:if="${param.error}">
+        Elfelejtetted a jelszavad?
+        <a type="button" class="link" th:href="@{/forgot-pw}">
+            Itt tudod helyreállítani
+        </a>
+    </div>
 </div>
 
 <div class="mt-2 container-md">
