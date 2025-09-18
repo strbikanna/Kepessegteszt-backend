@@ -159,16 +159,20 @@ export class GroupManagementComponent implements OnInit {
 
     onNextPageOfMembers() {
         this.pageIndex += 1
-        this.loadMembersOfGroup(this.selectedGroup?.id ?? this.selectedOrganization?.id ?? 0)
+        this.loadMembersOfGroup(this.getSelectedGroupId())
     }
 
     onPreviousPageOfMembers() {
         if (this.pageIndex > 0) {
             this.pageIndex -= 1
-            this.loadMembersOfGroup(this.selectedGroup?.id ?? this.selectedOrganization?.id ?? 0)
+            this.loadMembersOfGroup(this.getSelectedGroupId())
         }
     }
 
+
+    private getSelectedGroupId(): number {
+        return this.selectedGroup?.id ?? this.selectedOrganization?.id ?? 0;
+    }
     private createGroup(group: { name: string; organization: Organization }) {
         this.service.createGroup(group, this.selectedGroup?.id).subscribe(group => {
             this.onGroupIdSelected(group.id)
