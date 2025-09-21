@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.recommendation
+package hu.bme.aut.resource_server.recommendation.strategy
 
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.user.UserRepository

@@ -4,7 +4,6 @@ import hu.bme.aut.resource_server.profile_calculation.data.CalculationInfoDto
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
 import hu.bme.aut.resource_server.profile_calculation.service.GameResultProcessingService
 import hu.bme.aut.resource_server.profile_calculation.service.UserProfileUpdaterService
-import hu.bme.aut.resource_server.recommendation.AutoRecommendationStrategy
 import kotlinx.coroutines.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus

@@ -1,6 +1,11 @@
 package hu.bme.aut.resource_server.recommendation
 
 import hu.bme.aut.resource_server.game.GameRepository
+import hu.bme.aut.resource_server.recommendation.special_settings.SPECIAL_SETTING_CONFIG_KEY
+import hu.bme.aut.resource_server.recommendation.strategy.AutoRecommendationStrategy
+import hu.bme.aut.resource_server.recommendation.strategy.DefaultRecommendationStrategy
+import hu.bme.aut.resource_server.recommendation.strategy.LatestRecommendationStrategy
+import hu.bme.aut.resource_server.recommendation.strategy.RecommendationStrategy
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.result.ResultEntity
@@ -67,6 +72,7 @@ class RecommenderService(
         return recommendedGameRepository.save(recommendation)
     }
 
+    @Transactional
     suspend fun createNextRecommendationByResult(gameResult: ResultEntity): Map<String, Any> {
         recommendationStrategies.forEach {
             try {
@@ -77,7 +83,7 @@ class RecommenderService(
                     gameResult.passed
                 )
                 if (config.isNotEmpty()) {
-                    return config
+                    return applySpecialSettings(config, gameResult.user.username)
                 }
             } catch (e: Exception) {
                 log.error("Error while generating recommendation by result: $e")
@@ -146,6 +152,17 @@ class RecommenderService(
                 config = game.configItems.associateBy({ it.paramName }, { it.initialValue })
             )
         )
+    }
+
+    @Transactional
+    fun applySpecialSettings(config: Map<String, Any>, username: String): Map<String, Any> {
+        val user = userRepository.findByUsername(username).orElseThrow()
+        if(user.specialGameSettings.isNotEmpty()){
+            val updatedConfig = config.toMutableMap()
+            updatedConfig[SPECIAL_SETTING_CONFIG_KEY] = user.specialGameSettings.first().distractionType
+            return updatedConfig
+        }
+        return config
     }
 
 }
