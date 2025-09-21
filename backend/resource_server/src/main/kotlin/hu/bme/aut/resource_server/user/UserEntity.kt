@@ -77,7 +77,7 @@ data class UserEntity(
     val groups: MutableSet<Group> = mutableSetOf(),
 
     @ElementCollection
-    @CollectionTable(name = "special_game_settings", joinColumns = [JoinColumn(name = "user_id")])
+    @CollectionTable(name = "special_game_settings", joinColumns = [JoinColumn(name = "fk_user_id")])
     var specialGameSettings: MutableSet<SpecialSettings> = mutableSetOf()
 
     ) {

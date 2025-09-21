@@ -6,7 +6,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
-@RestController("/special-settings")
+@RestController
+@RequestMapping("/special_settings")
 class SpecialSettingsController(
     private var userRepo: UserRepository
 ) {
@@ -26,9 +27,10 @@ class SpecialSettingsController(
     fun updateSpecialGameSettingsOfUser(
         @RequestParam username: String,
         @RequestBody specialSettings: SpecialSettingsDto
-    ) {
+    ): List<SpecialSettingsDto> {
         val user = userRepo.findByUsername(username).orElseThrow()
         user.specialGameSettings = mutableSetOf(SpecialSettings(specialSettings.distractionType))
         userRepo.save(user)
+        return user.specialGameSettings.map { SpecialSettingsDto(it) }
     }
 }
