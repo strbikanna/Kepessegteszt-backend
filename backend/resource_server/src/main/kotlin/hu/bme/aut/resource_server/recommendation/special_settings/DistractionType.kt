@@ -8,4 +8,4 @@ enum class DistractionType {
     PAVLOV
 }
 
-const val  SPECIAL_SETTING_CONFIG_KEY = "distractionType"
+const val  SPECIAL_SETTING_CONFIG_KEY = "distraction"
