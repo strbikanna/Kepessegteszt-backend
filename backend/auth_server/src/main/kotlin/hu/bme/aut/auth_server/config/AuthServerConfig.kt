@@ -103,7 +103,7 @@ class AuthServerConfig {
                 .cors(withDefaults())
                 .sessionManagement { SessionCreationPolicy.STATELESS }
                 .authorizeHttpRequests {
-                    it.requestMatchers("/register", "/mobile-logout").permitAll()
+                    it.requestMatchers("/register", "/mobile-logout", "/forgot-pw").permitAll()
                     it.requestMatchers("/v3/api-docs").permitAll()
                     it.requestMatchers("/swagger-ui/**").permitAll()
                     it.requestMatchers("/v3/api-docs/swagger-config").permitAll()

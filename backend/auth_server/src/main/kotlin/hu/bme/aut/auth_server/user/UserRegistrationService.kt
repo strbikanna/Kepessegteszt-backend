@@ -39,6 +39,14 @@ class UserRegistrationService(
         return userEntity
     }
 
+    fun getUserByUsername(username: String) = userRepository.findByUsername(username)
+
+    fun changePassword(username: String, newPassword: String) {
+        val user = userRepository.findByUsername(username).orElseThrow { IllegalArgumentException("User not found") }
+        user.password = passwordEncoder.encode(newPassword)
+        userRepository.save(user)
+    }
+
     private fun mapRole(role: String): RoleEntity {
         val roleName = when (role.uppercase()) {
             "TEACHER" -> Role.TEACHER_REQUEST
