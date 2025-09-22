@@ -68,4 +68,9 @@ class Organization(
             adminUsernames = admins.map { it.username }
         )
     }
+
+    override fun addAdmin(user: UserEntity) {
+        members.add(user)
+        admins.add(user)
+    }
 }

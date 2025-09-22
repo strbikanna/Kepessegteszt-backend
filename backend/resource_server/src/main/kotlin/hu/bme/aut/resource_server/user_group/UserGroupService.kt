@@ -61,8 +61,7 @@ class UserGroupService(
         val user = userRepository.findByUsername(username).orElseThrow()
         val group = userGroupRepository.findById(groupId).orElseThrow()
         val dbGroup = userGroupRepository.findById(group.id!!).get()
-        dbGroup.admins.add(user)
-        dbGroup.members.add(user)
+        dbGroup.addAdmin(user)
         userGroupRepository.save(group)
     }
 
