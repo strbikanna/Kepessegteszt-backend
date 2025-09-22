@@ -35,7 +35,7 @@ export class CognitiveProfilePageComponent implements OnInit {
             this.loadingProfile = false
         })
         this.service.getProfileDescription().subscribe(description => {
-            this.profileDescription = description.abilitiesAsText
+            this.profileDescription = description.generatedText
             this.loadingDescription = false
         })
         this.service.getLatestProfiles().subscribe(profiles => {

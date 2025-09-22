@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.recommendation
+package hu.bme.aut.resource_server.recommendation.strategy
 
 
 interface RecommendationStrategy {

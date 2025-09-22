@@ -43,6 +43,7 @@ class UserManagementService(
     /**
      * Returns the contacts of the user that are students (aka can be impersonated).
      */
+    @Transactional
     fun getImpersonationContactDtos(username: String): List<UserDto> {
         val userEntity = loadUserByUsernameWithContacts(username)
         if (userEntity.isEmpty) throw UsernameNotFoundException("Invalid username: $username")

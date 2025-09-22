@@ -11,6 +11,7 @@ import {AuthUser} from "../../../model/user/user-contacts.model";
 import {Observable} from "rxjs";
 import {RecommendedGame} from "../../../model/recommended_game.model";
 import {Router} from "@angular/router";
+import SpecialSettings, {DistractionType} from "../../../model/user/special_settings.model";
 
 
 @Component({
@@ -24,6 +25,8 @@ export class RecommendationPageComponent {
     protected chosenGame: Game | undefined;
     protected configForm = this.fb.array<FormGroup>([]);
     protected existingRecommendations: Observable<RecommendedGame[]> = new Observable<RecommendedGame[]>();
+    protected userSpecialSettings: SpecialSettings = {distractionType: DistractionType.NONE};
+    protected distractionTypes = [DistractionType.NONE, DistractionType.COMBINED, DistractionType.SOUND, DistractionType.VISUAL, DistractionType.PAVLOV];
 
 
     constructor(
@@ -49,6 +52,7 @@ export class RecommendationPageComponent {
     onUserSelected(user: AuthUser) {
         this.chosenUser = user;
         this.loadExistingRecommendations(user.username, this.chosenGame?.id);
+        this.loadSpecialSettings(user.username);
     }
 
     isConfigValid: ValidatorFn = (control: AbstractControl) => {
@@ -140,8 +144,23 @@ export class RecommendationPageComponent {
         }
     }
 
+    updateSpecialSettings(){
+        if(!this.chosenUser) return;
+        const settings: SpecialSettings = {distractionType: this.userSpecialSettings.distractionType};
+        this.service.updateSpecialSettingsOfUser(this.chosenUser.username, settings).subscribe( updatedSettings => {
+            this.userSpecialSettings = updatedSettings;
+            this._snackbar.open(this.texts.specialSettings.updated, undefined, {duration: 3000})
+        })
+    }
+
     private loadExistingRecommendations(username: string, gameId?: number) {
         this.existingRecommendations = this.service.getRecommendationsToUserAndGame(username, gameId);
+    }
+
+    private loadSpecialSettings(username: string){
+        this.service.getSpecialSettingsOfUser(username).subscribe(settings => {
+            this.userSpecialSettings = settings ?? {distractionType: DistractionType.NONE};
+        })
     }
 
 }

@@ -32,6 +32,8 @@ export class GroupManagementComponent implements OnInit {
     adminsOfGroup: Observable<User[]> = of([])
     membersOfGroup: Observable<User[]> = of([])
 
+    pageIndex: number = 0
+
     selectedIdKey: string = 'selectedId'
 
     constructor(private service: UserGroupService, private router: Router, private route: ActivatedRoute, private location: Location) {
@@ -155,6 +157,22 @@ export class GroupManagementComponent implements OnInit {
         this.searchedGroups = undefined
     }
 
+    onNextPageOfMembers() {
+        this.pageIndex += 1
+        this.loadMembersOfGroup(this.getSelectedGroupId())
+    }
+
+    onPreviousPageOfMembers() {
+        if (this.pageIndex > 0) {
+            this.pageIndex -= 1
+            this.loadMembersOfGroup(this.getSelectedGroupId())
+        }
+    }
+
+
+    private getSelectedGroupId(): number {
+        return this.selectedGroup?.id ?? this.selectedOrganization?.id ?? 0;
+    }
     private createGroup(group: { name: string; organization: Organization }) {
         this.service.createGroup(group, this.selectedGroup?.id).subscribe(group => {
             this.onGroupIdSelected(group.id)
@@ -187,7 +205,7 @@ export class GroupManagementComponent implements OnInit {
     }
 
     private loadMembersOfGroup(id: number) {
-        this.membersOfGroup = this.service.getGroupOrOrgMembers(id)
+        this.membersOfGroup = this.service.getGroupOrOrgMembers(id, this.pageIndex)
     }
 
     private loadAdminsOfGroup(id: number) {

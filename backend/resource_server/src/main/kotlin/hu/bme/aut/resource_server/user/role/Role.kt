@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.role
+package hu.bme.aut.resource_server.user.role
 
 import hu.bme.aut.resource_server.utils.RoleName
 import jakarta.persistence.*

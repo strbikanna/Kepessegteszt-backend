@@ -56,7 +56,8 @@ class AuthServerConfig {
     fun authServerSecurityFilterChain(
         http: HttpSecurity,
         userInfoMapper: UserInfoMapper,
-        logoutSuccessHandler: LogoutSuccessHandler
+        logoutSuccessHandler: LogoutSuccessHandler,
+        logoutErrorHandler: LogoutErrorHandler
     ): SecurityFilterChain {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http)
 
@@ -68,6 +69,7 @@ class AuthServerConfig {
                 }
                 oidc.logoutEndpoint { logout ->
                     logout.logoutResponseHandler(logoutSuccessHandler)
+                    logout.errorResponseHandler(logoutErrorHandler)
                 }
             }
 
@@ -80,13 +82,12 @@ class AuthServerConfig {
                 exceptions
                     .defaultAuthenticationEntryPointFor(
                         LoginUrlAuthenticationEntryPoint("/login"),
-                        MediaTypeRequestMatcher(MediaType.TEXT_HTML)
+                        MediaTypeRequestMatcher(
+                            MediaType.TEXT_HTML,
+                        )
                     )
             } // Accept access tokens for User Management and/or Client Registration
             .oauth2ResourceServer { it.jwt(withDefaults()) }
-            .logout {logout ->
-                logout.logoutSuccessUrl("/custom-logout-page") // Redirect to the custom logout page
-            }
 
         return http.build()
     }
@@ -102,7 +103,7 @@ class AuthServerConfig {
                 .cors(withDefaults())
                 .sessionManagement { SessionCreationPolicy.STATELESS }
                 .authorizeHttpRequests {
-                    it.requestMatchers("/register", "/mobile-logout").permitAll()
+                    it.requestMatchers("/register", "/mobile-logout", "/forgot-pw").permitAll()
                     it.requestMatchers("/v3/api-docs").permitAll()
                     it.requestMatchers("/swagger-ui/**").permitAll()
                     it.requestMatchers("/v3/api-docs/swagger-config").permitAll()

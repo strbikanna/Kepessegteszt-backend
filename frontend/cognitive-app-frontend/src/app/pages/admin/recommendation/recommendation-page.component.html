@@ -13,7 +13,7 @@
         </div>
         <div class="chipContainer">
             <mat-chip-row *ngIf="chosenUser" (click)="onUserClicked()"
-                      matTooltip="{{texts.visit_profile}}"
+                          matTooltip="{{texts.visit_profile}}"
             >
                 {{ chosenUser.firstName }} {{ chosenUser.lastName }}
                 <button matChipRemove (click)="onRemoveChosenUser()">
@@ -27,11 +27,22 @@
                 </button>
             </mat-chip-row>
         </div>
-
+    </div>
+    <div>
+        <h3 class="title mb-4">{{ texts.specialSettings.distracion }}</h3>
+        <mat-radio-group
+                [(ngModel)]="userSpecialSettings.distractionType">
+            @for (type of distractionTypes; track type) {
+                <mat-radio-button class="example-radio-button" [value]="type">{{ type }}</mat-radio-button>
+            }
+        </mat-radio-group>
+        <button mat-button disabled="{{!chosenUser}}" (click)="updateSpecialSettings()" class="block my-2">
+            {{ texts.specialSettings.save }}
+        </button>
     </div>
 </div>
 <mat-divider/>
-<div class="flex justify-content-between sm:flex-column lg:flex-row">
+<div>
     <div class="w-8 mr-5">
         <div class="configContainer">
             <div *ngFor="let configControl of configForm.controls; let i = index" class="configFormItem">
@@ -60,9 +71,9 @@
         </div>
 
     </div>
-    <div *ngIf="existingRecommendationsEnabled()" class="w-4">
-        <h2 class="title mb-4">{{ texts.existing_recommendations }}</h2>
-        <div class="mb-2" *ngFor="let recommendation of existingRecommendations | async">
+    <h2 class="title mb-4">{{ texts.existing_recommendations }}</h2>
+    <div *ngIf="existingRecommendationsEnabled()" class="w-full recommendationsContainer">
+        <div class="m-2 h-max" *ngFor="let recommendation of existingRecommendations | async">
             <app-recommendation-detail-card [recommendation]="recommendation"
                                             (deleteRecommendation)="onDeleteRecommendation($event)"></app-recommendation-detail-card>
         </div>

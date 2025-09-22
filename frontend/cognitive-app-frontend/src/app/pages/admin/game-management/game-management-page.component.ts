@@ -39,7 +39,7 @@ export class GameManagementPageComponent implements OnInit {
 
     ngOnInit(): void {
         this.games = this.service.getExistingGamesPaged(0, this.defaultPageSize, this.activeFilter);
-        this.service.getGamesCount().subscribe( count => this.dataLength = count)
+        this.service.getGamesCount(this.activeFilter).subscribe( count => this.dataLength = count)
     }
 
     handlePageEvent(event: PageEvent): void {

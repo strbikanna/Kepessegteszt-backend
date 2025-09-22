@@ -51,7 +51,6 @@ class UserGroupController(
     @ResponseStatus(HttpStatus.OK)
     @Transactional
     fun getUserGroupById(
-        authentication: Authentication,
         @RequestParam id: Int
     ): UserGroupDto {
         return userGroupService.getById(id).toDto()
@@ -63,7 +62,7 @@ class UserGroupController(
     @Transactional
     fun getChildGroupsOfOrganization(
         @RequestParam("id") id: Int,
-        @PathVariable groupType: String ,
+        @PathVariable groupType: String,
     ): List<UserGroupDto> {
         return when (groupType) {
             "organization" -> userGroupService.getChildrenOfOrganization(id).map { it.toDto() }
@@ -93,10 +92,12 @@ class UserGroupController(
     @ResponseStatus(HttpStatus.OK)
     fun getMembersOfGroup(
         authentication: Authentication,
-        @PathVariable groupId: Int
+        @PathVariable groupId: Int,
+        @RequestParam(required = false, defaultValue = "0") pageIndex: Int,
+        @RequestParam(required = false, defaultValue = "20") pageSize: Int
     ): List<PlainUserDto> {
         authService.checkGroupDataReadAndThrow(authentication, groupId)
-        return userGroupService.getAllUsersInGroup(groupId).map { PlainUserDto(it) }
+        return userGroupService.getAllUsersInGroup(groupId, pageIndex, pageSize).map { PlainUserDto(it) }
     }
 
     @GetMapping("/users_to_see")
@@ -160,8 +161,10 @@ class UserGroupController(
         @RequestBody group: GroupDto,
         @RequestParam(required = false, value = "parentGroupId") parentGroupId: Int?
     ): UserGroupDto {
-        authService.checkUserGroupWriteAndThrow(authentication, group.organizationDto.id!!)
-        return userGroupService.createGroup(group.name, group.organizationDto.id, parentGroupId).toDto()
+        authService.checkUserGroupWriteAndThrow(authentication, parentGroupId ?: group.organizationDto.id!!)
+        val createdGroup = userGroupService.createGroup(group.name, group.organizationDto.id!!, parentGroupId)
+        userGroupService.addAdminUserToGroup(authentication.name, createdGroup.id!!)
+        return createdGroup.toDto()
     }
 
     @PostMapping("/organization")
@@ -169,7 +172,6 @@ class UserGroupController(
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     fun createOrganization(
-        authentication: Authentication,
         @RequestBody org: OrganizationDto
     ): UserGroupDto {
         return userGroupService.createOrganization(org.name, org.address).toDto()

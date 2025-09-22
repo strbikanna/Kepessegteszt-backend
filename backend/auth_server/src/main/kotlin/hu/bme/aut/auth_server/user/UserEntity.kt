@@ -21,7 +21,7 @@ data class UserEntity(
 
     val username: String,
 
-    val password: String,
+    var password: String,
 
     var enabled: Boolean,
 

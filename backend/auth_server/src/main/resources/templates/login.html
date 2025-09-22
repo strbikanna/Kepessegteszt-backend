@@ -13,6 +13,13 @@
     <div class="alert alert-danger text-center w-75 mx-auto" role="alert" th:if="${param.error}">
         Helytelen felhasználónév vagy jelszó!
     </div>
+    <!-- Forgot password -->
+    <div class="text-center w-75 mx-auto" th:if="${param.error}">
+        Elfelejtetted a jelszavad?
+        <a type="button" class="link" th:href="@{/forgot-pw}">
+            Itt tudod helyreállítani
+        </a>
+    </div>
 </div>
 
 <div class="mt-2 container-md">
@@ -44,4 +51,22 @@
 
 
 </body>
+<!--Handle toggle -->
+<script>
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordField = document.getElementById('password');
+
+    togglePassword.addEventListener('click', function () {
+        // Toggle the type attribute
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+
+        // Toggle the eye / eye-slash icon
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
+
+<!-- Font Awesome for the icon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </html>

@@ -172,7 +172,8 @@ class ResultService(
             config = result.config,
             gameId = result.recommendedGame.game.id!!,
             gameName = result.recommendedGame.game.name,
-            username = result.user.username
+            username = result.user.username,
+            passed = result.passed,
         )
     }
 

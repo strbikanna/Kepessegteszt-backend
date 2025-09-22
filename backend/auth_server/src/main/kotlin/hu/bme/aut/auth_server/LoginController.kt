@@ -32,7 +32,7 @@ class LoginController(
     fun logout(
         @RequestParam(POST_LOGOUT_REDIRECT_URI) redirectUri: String,
         model: Model
-    ): String{
+    ): String {
         model.addAttribute(POST_LOGOUT_REDIRECT_URI, redirectUri)
         return "mobile-logout"
     }
@@ -42,13 +42,38 @@ class LoginController(
         @RequestHeader(HttpHeaders.USER_AGENT) userAgentString: String,
         model: Model
     ): String {
+        model.addAttribute("user", RegistrationData())
         return registerPageContent(userAgentString, model)
+    }
+
+    @GetMapping("/forgot-pw")
+    fun forgotPasswordPage(
+        model: Model
+    ): String {
+        model.addAttribute("user", ForgotPasswordData())
+        return "forgot-password"
+    }
+
+    @PostMapping("/forgot-pw")
+    fun forgotPassword(
+        data: ForgotPasswordData,
+        model: Model
+    ): String {
+        val userEntity = userService.getUserByUsername(data.username)
+        if (userEntity.isEmpty) {
+            data.error = true
+            model.addAttribute("user", data)
+            return "forgot-password"
+        }
+        val verification = emailVerificationService.createVerificationEntity(userEntity.get())
+        val message = emailVerificationService.createForgotPasswordMessage(verification)
+        emailSenderService.sendSimpleEmail(to = userEntity.get().email, text = message)
+        return "password-reset-mail-sent"
     }
 
     private fun registerPageContent(userAgentString: String, model: Model): String {
         val userAgent = useragentAnalyzer.parse(userAgentString)
         val deviceClass = userAgent.getValue(UserAgent.DEVICE_CLASS)
-        model.addAttribute("user", RegistrationData())
 
         if (deviceClass in MOBILE_DEVICES) {
             return "register-mobile"
@@ -62,9 +87,9 @@ class LoginController(
         model: Model,
         @RequestHeader(HttpHeaders.USER_AGENT) userAgentString: String
     ): String {
-        val userEntity = try{
+        val userEntity = try {
             userService.saveUserOrThrowException(user)
-        } catch(ex: IllegalArgumentException) {
+        } catch (ex: IllegalArgumentException) {
             return handleDuplicateUsernameError(user, model, userAgentString)
         }
         sendVerificationMail(userEntity)
@@ -102,4 +127,12 @@ class RegistrationData(
     var password: String = ""
 
     var error = error
+}
+
+class ForgotPasswordData(
+    var verificationCode: String = "",
+    var username: String = ""
+) {
+    var error: Boolean = false
+    var newPassword: String = ""
 }

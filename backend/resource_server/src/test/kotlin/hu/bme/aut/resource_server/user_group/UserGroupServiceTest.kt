@@ -1,7 +1,7 @@
 package hu.bme.aut.resource_server.user_group
 
 import hu.bme.aut.resource_server.TestUtilsService
-import hu.bme.aut.resource_server.role.Role
+import hu.bme.aut.resource_server.user.role.Role
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user_group.group.Group
 import hu.bme.aut.resource_server.user_group.group.GroupRepository

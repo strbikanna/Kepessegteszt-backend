@@ -2,6 +2,7 @@ import {text_home} from "./app.text_home";
 import {cognitive_profile_text} from "./app.text_cognitive_profile";
 import {register_user} from "./app.text_register_user";
 import {abilityPage} from "./app.text_ability";
+import {resultChartTexts} from "./app.text.result_chart";
 
 /**
  * Texts displayed in application components.
@@ -12,11 +13,13 @@ export const TEXTS = {
         logout: 'Kijelentkezés',
         delete_account: 'Fiók törlése',
         home: 'Cognitive App',
-        games: 'Játékok',
+        games: 'Játékok megtekintése',
         profile: 'Profil',
         cognitive_profile: 'Kognitív profil',
+        admin_cognitive_profile: 'Kapcsolatok kognitív profilja',
         cognitive_profile_edit: 'Kognitív profil szerkesztése',
-        profile_comparison: 'Kognitív profil elemzés',
+        profile_comparison: 'Kapcsolatok kognitív profil elemzése',
+        own_profile_comparison: 'Kognitív profil elemzés',
         user_management: 'Felhasználók kezelése',
         ability_management: 'Kognitív képességek kezelése',
         user_registration: 'Felhasználók regisztrálása',
@@ -37,21 +40,9 @@ export const TEXTS = {
     },
     ability_page: abilityPage,
     games: {
-        menu: {
-            teacher_recommendation: 'Tanári ajánlások',
-            scientist_recommendation: 'Kutatók ajánlásai',
-            games_for_you: 'Játékok neked',
-            all_games: 'Összes játék',
-        },
-        game_card: {
-            play: 'Játék indítása',
-        },
-        progress: {
-            loading_game: 'Játék betöltése...',
-        },
-        error: {
-            empty_content: 'Még nem érkezett ajánlás',
-        }
+        title: 'Játékok',
+        description: 'Megtekintheted az Android alkalmazásban elérhető játékokat.',
+        download_link: 'Android alkalmazás letöltése',
     },
     user_info: {
         description: 'Felhasználói profil információk',
@@ -91,6 +82,7 @@ export const TEXTS = {
         previousPage: 'Előző oldal',
     },
     register_user_page: register_user,
+    result_insight_page: resultChartTexts,
     admin_page: {
         user_data: {
             first_name: 'Keresztnév',
@@ -223,7 +215,7 @@ export const TEXTS = {
         select_group_tooltip: 'Csoport kiválasztása a részletek megtekintéséhez',
         members: 'Tagok',
         admins: 'Adminok',
-        cannot_access_data: 'Ennek a csoportnak nem tekintheted meg az adatait, mivel nem vagy tagja.',
+        cannot_access_data: 'Ennek a csoportnak nem tekintheted meg az adatait, mivel nem vagy admin a csoportban.',
         remove_member: 'Eltávolítás a csoportból',
         remove_admin: 'Admin jogok visszavonása',
         create_group: 'Csoport létrehozása',
@@ -263,6 +255,17 @@ export const TEXTS = {
             no_game_selected: 'Válassz ki egy játékot a játékajánláshoz',
             invalid_param: 'A paraméter értéke nem megfelelő.',
         },
+        specialSettings: {
+            distracion: 'Játék közbeni zavarás beállítása',
+            distraction_info: 'Ez a beállításextra zavaró elemeket hoz a játékba.',
+            sound: 'Auditív zavarás',
+            visual: 'Vizuális zavarás',
+            pavlovian: 'Pavlovi zavarás',
+            none: 'Nincs zavarás',
+            combined: 'Auditív és vizuális zavarás',
+            save: 'Beállítás mentése',
+            updated: 'A zavarás beállítása frissítve lett',
+        },
         submit: 'Ajánlás létrehozása',
         chosenUser: 'Kiválasztott játékos',
         chosenGame: 'Kiválasztott játék',
@@ -271,10 +274,10 @@ export const TEXTS = {
         existing_recommendations: 'Meglévő (nem teljesített) játék-ajánlások',
         visit_profile: 'Kognitív profil megtekintése',
         visit_results: 'A játékhoz tartozó eredmények megtekintése',
-        card:{
+        card: {
             delete_game: 'Ajánlás törlése',
             confirm_title: 'Biztosan törölni szeretnéd ezt a játékbeállítást?',
-        }
+        },
     },
     result: {
         result_info: {
@@ -295,7 +298,8 @@ export const TEXTS = {
         passed: "Játékeredmény",
         timestamp: "Időpont",
         apply: "Kiválasztás alkalmazása",
-        no_data: "Nincs megjeleníthető eredmény."
+        no_data: "Nincs megjeleníthető eredmény.",
+        result_details: "Részletes eredmények",
 
     }
 }

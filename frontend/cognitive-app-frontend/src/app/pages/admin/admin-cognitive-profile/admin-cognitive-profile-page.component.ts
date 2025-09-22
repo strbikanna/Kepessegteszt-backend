@@ -46,6 +46,7 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
         this.chosenUsername = user.username;
         this.name = user.firstName + ' ' + user.lastName;
         this.loadingProfile = true;
+        this.loadingDescription = true;
         this.loadProfileData();
         this.updateUrlParams();
     }
@@ -61,8 +62,8 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
                 this.loadingHistory = false
             });
             this.service.getProfileDescription(undefined, this.chosenUsername).subscribe(description => {
-                if(description.abilitiesAsText == null || description.abilitiesAsText === ''){
-                    description.abilitiesAsText = this.text.llm.empty_description;
+                if(description.generatedText == null || description.generatedText === ''){
+                    description.generatedText = this.text.llm.empty_description;
                 }
                 this.profileDescription = description;
                 this.loadingDescription = false

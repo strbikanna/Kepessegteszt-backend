@@ -9,6 +9,7 @@ data class ResultDetailsDto(
     val config: Map<String, Any>,
     val gameId: Int,
     val gameName: String,
-    val username: String
+    val username: String,
+    val passed: Boolean,
 ) {
 }
