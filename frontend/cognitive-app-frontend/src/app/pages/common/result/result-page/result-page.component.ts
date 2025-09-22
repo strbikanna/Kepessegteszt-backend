@@ -115,6 +115,29 @@ export class ResultPageComponent implements OnInit {
         return of([this.text.result_info.passed, this.text.result_info.failed])
     }
 
+    constructCsvPath(): string{
+        let options = this.getSearchOptions();
+        let basePath = this.resultService.csvPath;
+        let params = `?sortBy=${options.sortBy}&sortOrder=${options.sortOrder}`;
+        if(options.pageIndex !== undefined){
+            params += `&pageIndex=${options.pageIndex}`;
+        }
+        if(options.pageSize !== undefined){
+            params += `&pageSize=${options.pageSize}`;
+        }
+        if(options.gameIds){
+            params += `&gameIds=${options.gameIds.join(',')}`;
+        }
+        if(options.usernames && this.canAccessOtherUserData()){
+            params += `&usernames=${options.usernames.join(',')}`;
+        }
+        if(options.passed !== undefined){
+            params += `&resultWin=${options.passed}`;
+        }
+        return basePath + params;
+
+    }
+
 
     private getSearchOptions(): SearchOptions {
         let options: SearchOptions = {
