@@ -152,7 +152,7 @@ class ResultController(
     suspend fun exportResultsToCsv(
         @RequestParam sortBy: String = "timestamp",
         @RequestParam sortOrder: String = "DESC",
-        @RequestParam pageSize: Int = 100,
+        @RequestParam pageSize: Int = 1000,
         @RequestParam pageIndex: Int = 0,
         @RequestParam gameIds: List<Int>? = null,
         @RequestParam resultWin: Boolean? = null,
