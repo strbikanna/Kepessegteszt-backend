@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TEXTS} from "../../text/app.text_messages";
 import {Game} from "../../model/game.model";
-import {imagePaths} from "../../utils/app.image_resources";
+import {imagePaths, onImageError} from "../../utils/app.image_resources";
 
 /**
  * Game card with uniform look.
@@ -59,9 +59,6 @@ export class GameCardComponent implements OnInit {
     return this.game.affectedAbilities.map(a => a.name).join(', ');
   }
 
-  onImageError(event: any) {
-    event.target.src = this.imagePaths.defaultGamePicture;
-  }
-
   protected readonly imagePaths = imagePaths;
+  protected readonly onImageError = onImageError;
 }

@@ -7,6 +7,7 @@ import {
 } from "../../group-management/add-user-to-group-dialog/add-user-to-group-dialog.component";
 import {User} from "../../../../model/user/user.model";
 import {ConfirmDialogComponent} from "../../../../common/confirm-dialog/confirm-dialog.component";
+import {onImageError} from "../../../../utils/app.image_resources";
 
 @Component({
   selector: 'app-recommendation-detail-card',
@@ -41,4 +42,5 @@ export class RecommendationDetailCardComponent {
     this.deleteRecommendation.emit(this.recommendation.id!!);
   }
 
+  protected readonly onImageError = onImageError;
 }
