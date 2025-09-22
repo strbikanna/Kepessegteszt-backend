@@ -110,25 +110,8 @@ class ResultController(
         @RequestParam resultWin: Boolean? = null,
         @RequestParam usernames: List<String>? = null,
         authentication: Authentication
-    ): Deferred<List<ResultDetailsDto>> = CoroutineScope(Dispatchers.IO).async {
-        val user = authService.getAuthUserWithRoles(authentication)
-        val sort = resultService.convertSortBy(sortBy, sortOrder)
-        if (user.roles.any { it.roleName == RoleName.ADMIN }) {
-            return@async if (usernames.isNullOrEmpty()) {
-                resultService.getAllFiltered(gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort))
-            } else {
-                resultService.getAllFiltered(usernames, gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort))
-            }
-        }
-        val contactUsernames = authService.getContactUsernames(authentication)
-        val usernamesToAccess =
-            if (usernames.isNullOrEmpty()) contactUsernames else usernames.filter { contactUsernames.contains(it) }
-
-        return@async resultService.getAllFiltered(
-            usernamesToAccess,
-            gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort)
-        )
-    }
+    ): Deferred<List<ResultDetailsDto>> =
+        getFilteredResults(authentication, sortBy, sortOrder, usernames, gameIds, resultWin, pageIndex, pageSize)
 
 
     @GetMapping("/count")
@@ -166,11 +149,59 @@ class ResultController(
     @ResponseStatus(HttpStatus.OK)
     @Transactional
     @PreAuthorize("hasRole('ADMIN') || hasRole('SCIENTIST')")
-    fun exportResultsToCsv(response: HttpServletResponse) {
+    suspend fun exportResultsToCsv(
+        @RequestParam sortBy: String = "timestamp",
+        @RequestParam sortOrder: String = "DESC",
+        @RequestParam pageSize: Int = 100,
+        @RequestParam pageIndex: Int = 0,
+        @RequestParam gameIds: List<Int>? = null,
+        @RequestParam resultWin: Boolean? = null,
+        @RequestParam usernames: List<String>? = null,
+        authentication: Authentication,
+        response: HttpServletResponse
+    ) {
         response.contentType = "text/csv"
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"results.csv\"")
-        val results = resultService.getAll()
+        val results = getFilteredResults(
+            authentication,
+            sortBy,
+            sortOrder,
+            usernames,
+            gameIds,
+            resultWin,
+            pageIndex,
+            pageSize
+        ).await()
         ExportCsvService.exportCsv(results, response.writer)
+    }
+
+    private fun getFilteredResults(
+        authentication: Authentication,
+        sortBy: String,
+        sortOrder: String,
+        usernames: List<String>?,
+        gameIds: List<Int>?,
+        resultWin: Boolean?,
+        pageIndex: Int,
+        pageSize: Int
+    ) = CoroutineScope(Dispatchers.IO).async {
+        val user = authService.getAuthUserWithRoles(authentication)
+        val sort = resultService.convertSortBy(sortBy, sortOrder)
+        if (user.roles.any { it.roleName == RoleName.ADMIN }) {
+            return@async if (usernames.isNullOrEmpty()) {
+                resultService.getAllFiltered(gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort))
+            } else {
+                resultService.getAllFiltered(usernames, gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort))
+            }
+        }
+        val contactUsernames = authService.getContactUsernames(authentication)
+        val usernamesToAccess =
+            if (usernames.isNullOrEmpty()) contactUsernames else usernames.filter { contactUsernames.contains(it) }
+
+        return@async resultService.getAllFiltered(
+            usernamesToAccess,
+            gameIds, resultWin, PageRequest.of(pageIndex, pageSize, sort)
+        )
     }
 
 }
