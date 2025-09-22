@@ -1,6 +1,7 @@
 package hu.bme.aut.resource_server.recommendation
 
 import hu.bme.aut.resource_server.game.GameRepository
+import hu.bme.aut.resource_server.recommendation.special_settings.DistractionType
 import hu.bme.aut.resource_server.recommendation.special_settings.SPECIAL_SETTING_CONFIG_KEY
 import hu.bme.aut.resource_server.recommendation.strategy.AutoRecommendationStrategy
 import hu.bme.aut.resource_server.recommendation.strategy.DefaultRecommendationStrategy
@@ -157,12 +158,13 @@ class RecommenderService(
     @Transactional
     fun applySpecialSettings(config: Map<String, Any>, username: String): Map<String, Any> {
         val user = userRepository.findByUsername(username).orElseThrow()
+        val updatedConfig = config.toMutableMap()
         if(user.specialGameSettings.isNotEmpty()){
-            val updatedConfig = config.toMutableMap()
             updatedConfig[SPECIAL_SETTING_CONFIG_KEY] = user.specialGameSettings.first().distractionType
             return updatedConfig
         }
-        return config
+        updatedConfig[SPECIAL_SETTING_CONFIG_KEY] = DistractionType.NONE
+        return updatedConfig
     }
 
 }
