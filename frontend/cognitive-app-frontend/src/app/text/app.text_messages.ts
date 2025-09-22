@@ -255,6 +255,17 @@ export const TEXTS = {
             no_game_selected: 'Válassz ki egy játékot a játékajánláshoz',
             invalid_param: 'A paraméter értéke nem megfelelő.',
         },
+        specialSettings: {
+            distracion: 'Játék közbeni zavarás beállítása',
+            distraction_info: 'Ez a beállításextra zavaró elemeket hoz a játékba.',
+            sound: 'Auditív zavarás',
+            visual: 'Vizuális zavarás',
+            pavlovian: 'Pavlovi zavarás',
+            none: 'Nincs zavarás',
+            combined: 'Auditív és vizuális zavarás',
+            save: 'Beállítás mentése',
+            updated: 'A zavarás beállítása frissítve lett',
+        },
         submit: 'Ajánlás létrehozása',
         chosenUser: 'Kiválasztott játékos',
         chosenGame: 'Kiválasztott játék',
@@ -266,7 +277,7 @@ export const TEXTS = {
         card: {
             delete_game: 'Ajánlás törlése',
             confirm_title: 'Biztosan törölni szeretnéd ezt a játékbeállítást?',
-        }
+        },
     },
     result: {
         result_info: {

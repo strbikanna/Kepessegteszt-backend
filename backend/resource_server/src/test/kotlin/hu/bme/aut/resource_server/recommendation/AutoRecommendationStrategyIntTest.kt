@@ -2,6 +2,7 @@ package hu.bme.aut.resource_server.recommendation
 
 import hu.bme.aut.resource_server.TestUtilsService
 import hu.bme.aut.resource_server.profile_calculation.TestDataSource
+import hu.bme.aut.resource_server.recommendation.strategy.AutoRecommendationStrategy
 import hu.bme.aut.resource_server.result.ResultEntity
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
