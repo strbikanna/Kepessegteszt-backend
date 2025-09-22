@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {CognitiveProfile} from "../../model/cognitive_profile.model";
 import {TEXTS} from "../../text/app.text_messages";
-import {ProfileData} from "../../model/profile/profile_data.model";
+import {GenericProfileData} from "../../model/profile/profile_data.model";
 
 @Component({
     selector: 'app-profile-card',
@@ -12,7 +12,7 @@ export class ProfileCardComponent implements OnInit {
     /**
      * User's cognitive profile data to be displayed
      */
-    @Input({required: true}) profileData!: ProfileData[];
+    @Input({required: true}) profileData!: GenericProfileData[];
     @Input({required: false}) timestamp: Date = new Date()
     text = TEXTS.cognitive_profile.card
     hasData = false

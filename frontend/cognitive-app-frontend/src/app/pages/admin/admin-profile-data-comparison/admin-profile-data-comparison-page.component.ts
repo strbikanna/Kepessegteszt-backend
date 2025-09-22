@@ -15,6 +15,7 @@ import {Location} from "@angular/common";
 import {ProfileDescription} from "../../../model/profile/profile_description";
 import {imagePaths} from "../../../utils/app.image_resources";
 import {UserInfo} from "../../../auth/userInfo";
+import {AbilityType} from "../../../model/ability.model";
 
 @Component({
     selector: 'app-admin-profile-data-comparison-page',
@@ -87,7 +88,12 @@ export class AdminProfileDataComparisonPageComponent extends ProfileDataComparis
 
     initDataForUser(username: string) {
         this.groups = this.service.getGroupsOfOtherUser(username);
-        this.userProfileData = this.service.getProfileData(username);
+        this.userProfileData = this.service.getProfileData(username).pipe(
+            map(data =>
+                data.filter(item => item.ability.type === AbilityType.FLOAT)
+                    .map(item => ({...item, value: item.value as number}))
+            )
+        );
         if(this.canSeeStatistics()) {
             this.service.getProfileStatisticsOfGroup(undefined, username).subscribe(data => {
                 this.profileStatisticsData.next(data);

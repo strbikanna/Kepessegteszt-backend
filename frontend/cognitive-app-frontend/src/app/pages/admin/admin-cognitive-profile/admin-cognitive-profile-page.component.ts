@@ -9,7 +9,7 @@ import {BehaviorSubject} from "rxjs";
 import {Location} from "@angular/common";
 import {ProfileDescription} from "../../../model/profile/profile_description";
 import {UserInfo} from "../../../auth/userInfo";
-import {ProfileData} from "../../../model/profile/profile_data.model";
+import {GenericProfileData} from "../../../model/profile/profile_data.model";
 
 @Component({
     selector: 'app-admin-cognitive-profile',
@@ -20,7 +20,7 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
     text = TEXTS.cognitive_profile
     protected chosenUsername?: string;
     protected name?: string;
-    protected currProfileData?: ProfileData[];
+    protected currProfileData?: GenericProfileData[];
     protected profileDescription?: ProfileDescription;
     protected profileHistoryData: BehaviorSubject<CognitiveProfile[]> = new BehaviorSubject<CognitiveProfile[]>([]);
     protected loadingProfile = true;
@@ -54,7 +54,7 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
     loadProfileData() {
         if (this.chosenUsername !== undefined) {
             this.service.getCurrentProfileOfOtherUser(this.chosenUsername).subscribe(profile => {
-                this.currProfileData = profile;
+                this.currProfileData = profile.filter(item => item.value !== "UNKNOWN");
                 this.loadingProfile = false;
             });
             this.service.getLatestProfilesOfOtherUser(this.chosenUsername).subscribe(profiles => {

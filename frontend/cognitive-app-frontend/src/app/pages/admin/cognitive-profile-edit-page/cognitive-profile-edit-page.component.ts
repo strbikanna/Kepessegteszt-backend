@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ProfileData} from "../../../model/profile/profile_data.model";
+import {GenericProfileData} from "../../../model/profile/profile_data.model";
 import {Ability, AbilityType} from "../../../model/ability.model";
 import {AbilityService} from "../../../service/ability/ability.service";
 import {CognitiveProfileService} from "../../../service/cognitive-profile/cognitive-profile.service";
@@ -16,8 +16,8 @@ import {Location} from "@angular/common";
 })
 export class CognitiveProfileEditPageComponent implements OnInit {
 
-    currentFloatProfile: ProfileData[] = []
-    currentEnumProfile: ProfileData[] = []
+    currentFloatProfile: GenericProfileData[] = []
+    currentEnumProfile: GenericProfileData[] = []
     allAbilities: Ability[] = []
     selectedUser: {username: string, firstName: string, lastName: string} | undefined
     text = TEXTS.cognitive_profile.profile_edit
@@ -66,6 +66,9 @@ export class CognitiveProfileEditPageComponent implements OnInit {
     }
 
     private initProfileForms() {
+        this.floatProfileFormItems.clear()
+        this.enumProfileFormItems.clear()
+
         this.currentFloatProfile.forEach(profile => {
             this.floatProfileFormItems.push(this.fb.group({
                 ability: [profile.ability, Validators.required],
@@ -101,7 +104,7 @@ export class CognitiveProfileEditPageComponent implements OnInit {
         });
     }
 
-    private setProfileData(data: ProfileData[]){
+    private setProfileData(data: GenericProfileData[]){
         this.currentFloatProfile = data.filter(profile => profile.ability.type === AbilityType.FLOAT)
         this.currentEnumProfile = data.filter(profile => profile.ability.type === AbilityType.ENUM)
     }
