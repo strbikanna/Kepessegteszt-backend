@@ -1,11 +1,14 @@
 export default interface SpecialSettings {
-    distractionType: DistractionType;
+    distractionTypes: DistractionType[];
+    minInterval?: number;
+    maxInterval?: number;
+    validMinutes: number;
 }
 
 export enum DistractionType{
-    NONE = "NONE",
     SOUND = "SOUND",
     VISUAL = "VISUAL",
-    COMBINED = "COMBINED",
-    PAVLOV = "PAVLOV"
+    PAVLOVIAN = "PAVLOVIAN",
+    BLACKSCREEN = "BLACKSCREEN",
+    NOTIFICATION = "NOTIFICATION"
 }

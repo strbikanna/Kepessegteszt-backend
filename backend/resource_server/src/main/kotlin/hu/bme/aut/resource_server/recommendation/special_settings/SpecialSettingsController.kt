@@ -16,9 +16,9 @@ class SpecialSettingsController(
     @Transactional
     fun getSpecialSettingsOfUser(
         @RequestParam username: String
-    ): List<SpecialSettingsDto> {
+    ): SpecialSettingsDto {
         val user = userRepo.findByUsername(username).orElseThrow()
-        return user.specialGameSettings.map { SpecialSettingsDto(it) }
+        return  SpecialSettingsDto(user.specialGameSettings)
     }
 
     @PutMapping
@@ -27,10 +27,10 @@ class SpecialSettingsController(
     fun updateSpecialGameSettingsOfUser(
         @RequestParam username: String,
         @RequestBody specialSettings: SpecialSettingsDto
-    ): List<SpecialSettingsDto> {
+    ): SpecialSettingsDto {
         val user = userRepo.findByUsername(username).orElseThrow()
-        user.specialGameSettings = mutableSetOf(SpecialSettings(specialSettings.distractionType))
+        user.specialGameSettings = specialSettings.toEntity().toMutableSet()
         userRepo.save(user)
-        return user.specialGameSettings.map { SpecialSettingsDto(it) }
+        return SpecialSettingsDto(user.specialGameSettings)
     }
 }

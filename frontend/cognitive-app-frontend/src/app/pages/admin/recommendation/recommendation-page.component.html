@@ -28,18 +28,7 @@
             </mat-chip-row>
         </div>
     </div>
-    <div>
-        <h3 class="title mb-4">{{ texts.specialSettings.distracion }}</h3>
-        <mat-radio-group
-                [(ngModel)]="userSpecialSettings.distractionType">
-            @for (type of distractionTypes; track type) {
-                <mat-radio-button class="example-radio-button" [value]="type">{{ type }}</mat-radio-button>
-            }
-        </mat-radio-group>
-        <button mat-button disabled="{{!chosenUser}}" (click)="updateSpecialSettings()" class="block my-2">
-            {{ texts.specialSettings.save }}
-        </button>
-    </div>
+    <app-special-settings-form username="{{chosenUser?.username ?? ''}}" (specialSettingsChange)="onUpdateSpecialSettings()"/>
 </div>
 <mat-divider/>
 <div>
