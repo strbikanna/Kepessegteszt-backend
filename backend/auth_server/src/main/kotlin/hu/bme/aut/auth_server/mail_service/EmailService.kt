@@ -16,6 +16,7 @@ class EmailService(@Autowired private var emailSender: JavaMailSender) {
 
     @Value("\${cognitive-app.subject}")
     private lateinit var defaultSubject: String
+
     fun sendSimpleEmail(to: String, subject: String = defaultSubject, text: String) {
         val message = SimpleMailMessage()
         message.from = appEmailAddress

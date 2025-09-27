@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {SimpleHttpService} from "../../utils/simple-http.service";
 import {filter, map, Observable, retry} from "rxjs";
-import {ProfileData} from "../../model/profile/profile_data.model";
+import {GenericProfileData, ProfileData} from "../../model/profile/profile_data.model";
 import {Ability, AbilityType} from "../../model/ability.model";
 import {UserGroup} from "../../model/user/user_group.model";
 import {UserFilter} from "../../common/user-filter/user-filter.model";
@@ -18,16 +18,10 @@ export class ProfileDataComparisonService {
     constructor(private http: HttpClient, private httpService: SimpleHttpService) {
     }
 
-    getProfileData(userName?: string): Observable<ProfileData[]> {
+    getProfileData(userName?: string): Observable<GenericProfileData[]> {
         const route = userName ? '/user/profile/inspect' : '/user/profile';
         const params = userName ? new HttpParams().set('username', userName) : new HttpParams();
-        return this.http.get<ProfileData[]>(this.httpService.baseUrl + route, {params: params}).pipe(
-            map((response: any) => {
-                return response.filter(
-                    (item: any) => item.ability.type === AbilityType.FLOAT.valueOf()
-                )
-            })
-        )
+        return this.http.get<GenericProfileData[]>(this.httpService.baseUrl + route, {params: params})
     }
 
     getGroupsOfUser(): Observable<UserGroup[]> {

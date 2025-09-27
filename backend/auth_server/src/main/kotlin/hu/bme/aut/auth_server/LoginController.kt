@@ -22,6 +22,7 @@ class LoginController(
     @Autowired private var emailSenderService: EmailService,
     @Autowired private var useragentAnalyzer: UserAgentAnalyzer
 ) {
+    private val FORGOT_PW_SUBJECT = "Cognitive App - Jelszó visszaállítás"
 
     @GetMapping("/login")
     fun loginPage(): String {
@@ -67,7 +68,11 @@ class LoginController(
         }
         val verification = emailVerificationService.createVerificationEntity(userEntity.get())
         val message = emailVerificationService.createForgotPasswordMessage(verification)
-        emailSenderService.sendSimpleEmail(to = userEntity.get().email, text = message)
+        emailSenderService.sendSimpleEmail(
+            to = userEntity.get().email,
+            text = message,
+            subject = FORGOT_PW_SUBJECT
+        )
         return "password-reset-mail-sent"
     }
 

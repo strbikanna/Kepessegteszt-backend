@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {EChartsOption} from "echarts";
 import {combineLatestWith, Observable} from "rxjs";
 import {TEXTS} from "../../text/app.text_messages";
-import {ProfileData} from "../../model/profile/profile_data.model";
+import {GenericProfileData, ProfileData} from "../../model/profile/profile_data.model";
 import * as themeColors from "../../../assets/chart_theme/chart_colors";
 
 @Component({
@@ -91,7 +91,7 @@ export class ProfileRadarChartComponent implements OnInit {
         }
     }
 
-    private getRadarData(profileData: ProfileData[]) {
+    private getRadarData(profileData: GenericProfileData[]) {
         return profileData.map(data => data.value)
     }
 }

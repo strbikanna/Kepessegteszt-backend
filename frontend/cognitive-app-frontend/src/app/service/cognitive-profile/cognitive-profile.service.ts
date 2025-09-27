@@ -6,7 +6,7 @@ import {Ability} from "../../model/ability.model";
 import {SimpleHttpService} from "../../utils/simple-http.service";
 import {ProfileDescription} from "../../model/profile/profile_description";
 import {TEXTS} from "../../text/app.text_messages";
-import {ProfileData} from "../../model/profile/profile_data.model";
+import {GenericProfileData} from "../../model/profile/profile_data.model";
 
 @Injectable({
     providedIn: 'root'
@@ -76,8 +76,8 @@ export class CognitiveProfileService {
     /**
      * returns the actual cognitive profile of the user logged in
      */
-    getCurrentProfile(): Observable<ProfileData[]> {
-        return this.http.get<ProfileData[]>(`${this.helper.baseUrl}${this.profileEndpoint}`).pipe(
+    getCurrentProfile(): Observable<GenericProfileData[]> {
+        return this.http.get<GenericProfileData[]>(`${this.helper.baseUrl}${this.profileEndpoint}`).pipe(
             retry(3),
             catchError(this.helper.handleHttpError),
         )
@@ -88,10 +88,10 @@ export class CognitiveProfileService {
      * returns the actual cognitive profile of the given user
      * @param username
      */
-    getCurrentProfileOfOtherUser(username: string): Observable<ProfileData[]> {
+    getCurrentProfileOfOtherUser(username: string): Observable<GenericProfileData[]> {
         let params = new HttpParams()
         params = params.set('username', username)
-        return this.http.get<ProfileData[]>(`${this.helper.baseUrl}${this.profileEndpoint}${this.inspectPath}`, {params: params}).pipe(
+        return this.http.get<GenericProfileData[]>(`${this.helper.baseUrl}${this.profileEndpoint}${this.inspectPath}`, {params: params}).pipe(
             retry(3),
             catchError(this.helper.handleHttpError),
         )
@@ -129,9 +129,9 @@ export class CognitiveProfileService {
         )
     }
 
-    updateCurrentProfile(profileData: ProfileData[], username: string): Observable<ProfileData[]> {
+    updateCurrentProfile(profileData: GenericProfileData[], username: string): Observable<GenericProfileData[]> {
         const validProfileData = profileData.filter(item =>  item && item.value != null && item.accuracy != null)
-        return this.http.put<ProfileData[]>(`${this.helper.baseUrl}${this.profileEndpoint}?username=${username}`, validProfileData).pipe(
+        return this.http.put<GenericProfileData[]>(`${this.helper.baseUrl}${this.profileEndpoint}?username=${username}`, validProfileData).pipe(
             catchError(this.helper.handleHttpError)
         )
 
