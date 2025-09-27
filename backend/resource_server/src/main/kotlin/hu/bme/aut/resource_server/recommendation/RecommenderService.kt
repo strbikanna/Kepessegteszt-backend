@@ -3,6 +3,7 @@ package hu.bme.aut.resource_server.recommendation
 import hu.bme.aut.resource_server.game.GameRepository
 import hu.bme.aut.resource_server.recommendation.special_settings.DistractionType
 import hu.bme.aut.resource_server.recommendation.special_settings.SPECIAL_SETTING_CONFIG_KEY
+import hu.bme.aut.resource_server.recommendation.special_settings.SpecialSettingsDto
 import hu.bme.aut.resource_server.recommendation.strategy.AutoRecommendationStrategy
 import hu.bme.aut.resource_server.recommendation.strategy.DefaultRecommendationStrategy
 import hu.bme.aut.resource_server.recommendation.strategy.LatestRecommendationStrategy
@@ -159,11 +160,7 @@ class RecommenderService(
     fun applySpecialSettings(config: Map<String, Any>, username: String): Map<String, Any> {
         val user = userRepository.findByUsername(username).orElseThrow()
         val updatedConfig = config.toMutableMap()
-        if(user.specialGameSettings.isNotEmpty()){
-            updatedConfig[SPECIAL_SETTING_CONFIG_KEY] = user.specialGameSettings.first().distractionType
-            return updatedConfig
-        }
-        updatedConfig[SPECIAL_SETTING_CONFIG_KEY] = DistractionType.NONE
+        updatedConfig[SPECIAL_SETTING_CONFIG_KEY] = SpecialSettingsDto(user.specialGameSettings)
         return updatedConfig
     }
 

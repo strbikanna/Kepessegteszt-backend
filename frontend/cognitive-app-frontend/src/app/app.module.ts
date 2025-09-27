@@ -100,6 +100,9 @@ import { CognitiveProfileEditPageComponent } from './pages/admin/cognitive-profi
 import {GamesComponent} from "./pages/common/games/games.component";
 import {ResultInsightPageComponent} from "./pages/common/result-insight-page/result-insight-page.component";
 import {ResultChartComponent} from "./charts/result-chart/result-chart.component";
+import {
+    SpecialSettingsFormComponent
+} from "./pages/admin/recommendation/special-settings-form/special-settings-form.component";
 
 
 @NgModule({
@@ -163,7 +166,8 @@ import {ResultChartComponent} from "./charts/result-chart/result-chart.component
         AbilityPageComponent,
         EditableAbilityCardComponent,
         FeatureDescriptionComponent,
-        CognitiveProfileEditPageComponent
+        CognitiveProfileEditPageComponent,
+        SpecialSettingsFormComponent
     ],
     imports: [
         BrowserModule,
