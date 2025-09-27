@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import SpecialSettings, {DistractionType} from "../../../../model/user/special_settings.model";
-import {FormBuilder} from "@angular/forms";
+import {FormBuilder, Validators} from "@angular/forms";
 import {RecommendationService} from "../../../../service/recommendation/recommendation.service";
 import {Observable} from "rxjs";
 import {TEXTS} from "../../../../text/app.text_messages";
@@ -11,11 +11,11 @@ import {TEXTS} from "../../../../text/app.text_messages";
     styleUrl: './special-settings-form.component.scss'
 })
 export class SpecialSettingsFormComponent implements OnInit {
-    @Input({required: true}) username!: string;
+    @Input({required: true}) usernameObservable!: Observable<string>;
+    username?: string;
     @Output() specialSettingsChange = new EventEmitter<void>();
 
     protected userSpecialSettings?: SpecialSettings;
-    protected distractionTypes = [DistractionType.BLACKSCREEN, DistractionType.NOTIFICATION, DistractionType.SOUND, DistractionType.VISUAL, DistractionType.PAVLOVIAN];
     protected readonly texts = TEXTS.recommendation_page.specialSettings
 
 
@@ -24,7 +24,10 @@ export class SpecialSettingsFormComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        if (this.username && this.username !== '') this.loadSpecialSettings(this.username);
+        this.usernameObservable.subscribe(username => {
+            this.username = username;
+            if (this.username && this.username !== '') this.loadSpecialSettings(this.username);
+        })
     }
 
     protected specialSettingsForm = this.fb.group({
@@ -33,10 +36,10 @@ export class SpecialSettingsFormComponent implements OnInit {
         sound: [false, []],
         visual: [false, []],
         pavlovian: [false, []],
-        minInterval: [undefined as number | undefined],
-        maxInterval: [undefined as number | undefined],
-        validMinutes: [15, []],
-    })
+        minInterval: [10, [Validators.required]],
+        maxInterval: [30, [Validators.required]],
+        validMinutes: [15, [Validators.required]],
+    }, { validators: this.intervalValidator });
 
     loadSpecialSettings(username: string) {
         this.service.getSpecialSettingsOfUser(username).subscribe(settings => {
@@ -47,8 +50,8 @@ export class SpecialSettingsFormComponent implements OnInit {
                 sound: settings.distractionTypes.includes(DistractionType.SOUND),
                 visual: settings.distractionTypes.includes(DistractionType.VISUAL),
                 pavlovian: settings.distractionTypes.includes(DistractionType.PAVLOVIAN),
-                minInterval: settings.minInterval,
-                maxInterval: settings.maxInterval,
+                minInterval: settings.minInterval ?? 10,
+                maxInterval: settings.maxInterval ?? 30,
                 validMinutes: settings.validMinutes,
             })
         })
@@ -72,5 +75,18 @@ export class SpecialSettingsFormComponent implements OnInit {
             this.userSpecialSettings = updatedSettings;
             this.specialSettingsChange.emit();
         })
+    }
+
+    isSaveEnabled(): boolean {
+        return this.username !== '' && this.specialSettingsForm.valid;
+    }
+
+    intervalValidator(control: any){
+        const min = control.get('minInterval')?.value;
+        const max = control.get('maxInterval')?.value;
+        if (min != null && max != null && min > max) {
+            return { intervalInvalid: true };
+        }
+        return null;
     }
 }

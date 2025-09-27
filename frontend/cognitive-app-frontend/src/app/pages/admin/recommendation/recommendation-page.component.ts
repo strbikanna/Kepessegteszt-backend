@@ -8,7 +8,7 @@ import {TEXTS} from "../../../text/app.text_messages";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Recommendation} from "../../../model/recommendation.model";
 import {AuthUser} from "../../../model/user/user-contacts.model";
-import {Observable} from "rxjs";
+import {BehaviorSubject, Observable, of} from "rxjs";
 import {RecommendedGame} from "../../../model/recommended_game.model";
 import {Router} from "@angular/router";
 
@@ -21,6 +21,7 @@ import {Router} from "@angular/router";
 export class RecommendationPageComponent {
     protected readonly texts = TEXTS.recommendation_page
     protected chosenUser: User | undefined;
+    protected usernameObservable: BehaviorSubject<string> = new BehaviorSubject<string>('');
     protected chosenGame: Game | undefined;
     protected configForm = this.fb.array<FormGroup>([]);
     protected existingRecommendations: Observable<RecommendedGame[]> = new Observable<RecommendedGame[]>();
@@ -48,6 +49,7 @@ export class RecommendationPageComponent {
 
     onUserSelected(user: AuthUser) {
         this.chosenUser = user;
+        this.usernameObservable.next(user.username);
         this.loadExistingRecommendations(user.username, this.chosenGame?.id);
     }
 

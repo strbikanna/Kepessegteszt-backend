@@ -29,16 +29,12 @@ export class RecommendationService {
 
   getSpecialSettingsOfUser(username: string): Observable<SpecialSettings>{
     let params = new HttpParams().set('username', username);
-    return this.http.get<SpecialSettings[]>(`${this.httpService.baseUrl}/special_settings`, {params: params}).pipe(
-        map(response =>response[0])
-    );
+    return this.http.get<SpecialSettings>(`${this.httpService.baseUrl}/special_settings`, {params: params});
   }
 
   updateSpecialSettingsOfUser(username: string, settings: SpecialSettings): Observable<SpecialSettings>{
     let params = new HttpParams().set('username', username);
-    return this.http.put<SpecialSettings[]>(`${this.httpService.baseUrl}/special_settings`, settings, {params: params}).pipe(
-        map(response =>response[0])
-    );
+    return this.http.put<SpecialSettings>(`${this.httpService.baseUrl}/special_settings`, settings, {params: params});
   }
 
 }

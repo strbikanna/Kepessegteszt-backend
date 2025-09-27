@@ -1,10 +1,13 @@
 package hu.bme.aut.resource_server.recommendation.special_settings
 
+import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/special_settings")
@@ -18,7 +21,8 @@ class SpecialSettingsController(
         @RequestParam username: String
     ): SpecialSettingsDto {
         val user = userRepo.findByUsername(username).orElseThrow()
-        return  SpecialSettingsDto(user.specialGameSettings)
+        deleteInvalidSpecialSettings(user)
+        return SpecialSettingsDto(user.specialGameSettings)
     }
 
     @PutMapping
@@ -32,5 +36,14 @@ class SpecialSettingsController(
         user.specialGameSettings = specialSettings.toEntity().toMutableSet()
         userRepo.save(user)
         return SpecialSettingsDto(user.specialGameSettings)
+    }
+
+    fun deleteInvalidSpecialSettings(user: UserEntity) {
+        val now = LocalDateTime.now()
+        val validSettings = user.specialGameSettings.filter {
+            it.creationTimestamp.plusMinutes(it.validMinutes.toLong()) > now
+        }.toMutableSet()
+        user.specialGameSettings = validSettings
+        userRepo.save(user)
     }
 }
