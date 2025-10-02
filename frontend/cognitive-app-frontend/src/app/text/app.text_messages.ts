@@ -277,6 +277,7 @@ export const TEXTS = {
                 sound: 'Hangok, zajok',
                 visual: 'Vizuális elemek',
                 pavlovian: 'Pavlovi zavarás',
+                vibration: 'Rezgés'
             },
         },
         submit: 'Ajánlás létrehozása',

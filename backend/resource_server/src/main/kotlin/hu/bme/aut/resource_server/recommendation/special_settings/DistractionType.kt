@@ -5,7 +5,8 @@ enum class DistractionType {
     VISUAL,
     SOUND,
     BLACKSCREEN,
-    PAVLOVIAN
+    PAVLOVIAN,
+    VIBRATION
 }
 
 const val  SPECIAL_SETTING_CONFIG_KEY = "distraction"

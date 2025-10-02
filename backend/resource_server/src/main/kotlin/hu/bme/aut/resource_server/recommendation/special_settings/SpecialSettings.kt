@@ -16,7 +16,11 @@ data class SpecialSettings(
     @CreationTimestamp
     var creationTimestamp: LocalDateTime = LocalDateTime.now(),
 
-    val validMinutes: Int = 60
+    val validMinutes: Long = 60
 ) {
+
+    fun isValid(): Boolean{
+        return creationTimestamp.plusMinutes(validMinutes) >= LocalDateTime.now()
+    }
 
 }

@@ -55,7 +55,7 @@ class AuthService(
     }
 
     @Transactional
-    fun checkGameConfigAccessAnThrow(recommendedGameId: Long, authentication: Authentication) {
+    fun checkGameConfigAccessAndThrow(recommendedGameId: Long, authentication: Authentication) {
         val username = authentication.name
         val dbGamePlay = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
         if (username != dbGamePlay.recommendedTo.username) {

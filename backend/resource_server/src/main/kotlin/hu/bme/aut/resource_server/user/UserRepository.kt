@@ -34,6 +34,9 @@ interface UserRepository: JpaRepository<UserEntity, Int>, JpaSpecificationExecut
     @Query("SELECT u FROM UserEntity u JOIN FETCH u.roles WHERE u.username = :username")
     fun findByUsernameWithRoles(username: String): Optional<UserEntity>
 
+    @Query("SELECT u FROM UserEntity u JOIN FETCH u.specialGameSettings WHERE u.username = :username")
+    fun findByUsernameWithSpecialSettings(username: String): Optional<UserEntity>
+
     @Modifying
     @Transactional
     @Query("UPDATE UserEntity u SET u.firstName = :firstName, u.lastName = :lastName, " +

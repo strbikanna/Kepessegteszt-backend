@@ -29,11 +29,23 @@ export class RecommendationService {
 
   getSpecialSettingsOfUser(username: string): Observable<SpecialSettings>{
     let params = new HttpParams().set('username', username);
-    return this.http.get<SpecialSettings>(`${this.httpService.baseUrl}/special_settings`, {params: params});
+    return this.http.get<SpecialSettings>(`${this.httpService.baseUrl}/special_settings`, {params: params}).pipe(
+        map(settings => {
+          if(settings.minInterval)
+            settings.minInterval = settings.minInterval / 1000
+          if(settings.maxInterval)
+            settings.maxInterval = settings.maxInterval / 1000
+          return settings
+        })
+    );
   }
 
   updateSpecialSettingsOfUser(username: string, settings: SpecialSettings): Observable<SpecialSettings>{
     let params = new HttpParams().set('username', username);
+    if(settings.minInterval)
+      settings.minInterval = settings.minInterval * 1000
+    if(settings.maxInterval)
+      settings.maxInterval = settings.maxInterval * 1000
     return this.http.put<SpecialSettings>(`${this.httpService.baseUrl}/special_settings`, settings, {params: params});
   }
 
