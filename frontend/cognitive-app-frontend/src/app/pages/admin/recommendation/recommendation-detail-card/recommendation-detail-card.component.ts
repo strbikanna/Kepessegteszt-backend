@@ -38,6 +38,18 @@ export class RecommendationDetailCardComponent {
     return Object.keys(this.recommendation.config);
   }
 
+  getConfigValue(key: string): string {
+    let value = this.recommendation.config[key]
+    if(value instanceof Object){
+      if(value['distractionTypes']){
+        const distractionTypes = value['distractionTypes']
+        return distractionTypes.length
+      }
+      return ''
+    }
+    return value
+  }
+
   private onRecommendationDelete() {
     this.deleteRecommendation.emit(this.recommendation.id!!);
   }

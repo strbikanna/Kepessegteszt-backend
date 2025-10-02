@@ -2,6 +2,7 @@ package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.GameRepository
+import hu.bme.aut.resource_server.recommendation.RecommenderService
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import jakarta.transaction.Transactional
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
 @Service
@@ -20,6 +22,7 @@ class RecommendedGameService(
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
     @Autowired private var userRepository: UserRepository,
     @Autowired private var gameRepository: GameRepository,
+    private val recommenderService: RecommenderService,
 ) {
     var log: Logger = LoggerFactory.getLogger(RecommendedGameService::class.java)
 
@@ -47,7 +50,9 @@ class RecommendedGameService(
                     PageRequest.of(pageIndex, pageSize, sort)
                 )
             }
-        return recommendedGames.filter { it.game.active }.map { it.toDto() }
+        return recommendedGames
+            .filter { it.game.active }
+            .map { it.apply { config = recommenderService.applySpecialSettings(config, username) }.toDto() }
     }
 
     @Transactional
@@ -65,7 +70,7 @@ class RecommendedGameService(
                 tryAddGameAndRecommendation(rg.game, user, acceptedGameIds, possibleGames, top2Recommendation)
             }
         }
-        return top2Recommendation.map { it.toDto() }
+        return top2Recommendation.map { it.apply { config = recommenderService.applySpecialSettings(config, user.username) }.toDto() }
     }
 
     /**
@@ -75,7 +80,8 @@ class RecommendedGameService(
         var rGame = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
         repeat(10) {
             if (rGame.config.isNotEmpty()) {
-                return@withContext rGame.game.validateConfig(rGame.config)
+                val config = rGame.game.validateConfig(rGame.config)
+                return@withContext recommenderService.applySpecialSettings(config, rGame.recommendedTo.username)
             }
             log.info("Config not found for recommendation with id: $recommendedGameId. Waiting...")
             delay(300)
@@ -96,28 +102,31 @@ class RecommendedGameService(
                 game = game,
                 recommendedTo = recommendedTo,
                 recommender = recommender,
-                config = recommendation.config
+                config = recommenderService.applySpecialSettings(recommendation.config, recommendedTo.username)
             )
         )
     }
 
+    @Transactional
     fun getRecommendationsToUserAndGame(username: String, gameId: Int?, completed: Boolean?): List<RecommendedGameDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
         val page = PageRequest.of(0, 100, Sort.by("timestamp").descending())
         if (gameId == null) {
             return if (completed == null) {
-                recommendedGameRepository.findAllPagedByRecommendedTo(user, page).map { it.toDto() }
+                recommendedGameRepository.findAllPagedByRecommendedTo(user, page)
+                    .map { it.apply { config = recommenderService.applySpecialSettings(config, user.username) }.toDto() }
             } else {
                 recommendedGameRepository.findAllPagedByRecommendedToAndCompleted(user, completed, page)
-                    .map { it.toDto() }
+                    .map { it.apply { config = recommenderService.applySpecialSettings(config, user.username) }.toDto() }
             }
         }
         val game = gameRepository.findById(gameId).orElseThrow()
         return if (completed == null) {
-            recommendedGameRepository.findAllPagedByRecommendedToAndGame(user, game, page).map { it.toDto() }
+            recommendedGameRepository.findAllPagedByRecommendedToAndGame(user, game, page)
+                .map { it.apply { config = recommenderService.applySpecialSettings(config, user.username) }.toDto() }
         } else {
             recommendedGameRepository.findAllPagedByRecommendedToAndCompletedAndGame(user, completed, game, page)
-                .map { it.toDto() }
+                .map { it.apply { config = recommenderService.applySpecialSettings(config, user.username) }.toDto() }
         }
     }
 
@@ -129,12 +138,20 @@ class RecommendedGameService(
         recommendedGameRepository.deleteById(recommendedGameId)
     }
 
-
     fun deleteAllRecommendationsByUser(user: UserEntity) {
         val allRecommendedTo = recommendedGameRepository.findAllByRecommendedTo(user)
         val allRecommendedBy = recommendedGameRepository.findAllByRecommender(user)
         recommendedGameRepository.deleteAll(allRecommendedTo)
         recommendedGameRepository.deleteAll(allRecommendedBy)
+    }
+
+    @Scheduled(cron = "0 0 2 * * *")
+    fun refreshSpecialSettingsOfAllUser() {
+        userRepository.findAllUsernames().forEach { username ->
+            val user = userRepository.findByUsernameWithSpecialSettings(username).get()
+            user.specialGameSettings = user.specialGameSettings.filter { it.isValid() }.toMutableSet()
+            userRepository.save(user)
+        }
     }
 
     private fun getNeverPlayedGames(user: UserEntity): List<GameEntity> {

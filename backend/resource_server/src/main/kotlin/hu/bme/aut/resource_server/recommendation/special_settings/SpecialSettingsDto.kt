@@ -1,5 +1,7 @@
 package hu.bme.aut.resource_server.recommendation.special_settings
 
+import java.io.Serializable
+
 data class SpecialSettingsDto(
     val distractionTypes: MutableSet<DistractionType> = mutableSetOf(),
 
@@ -8,7 +10,7 @@ data class SpecialSettingsDto(
     val maxInterval: Long? = null,
 
     val validMinutes: Long = 60
-) {
+) : Serializable {
     constructor(specialSettings: Set<SpecialSettings>) : this(
         specialSettings.map { it.distractionType }.toMutableSet(),
         specialSettings.firstOrNull()?.minInterval,

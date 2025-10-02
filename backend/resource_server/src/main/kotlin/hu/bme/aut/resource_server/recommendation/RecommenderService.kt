@@ -85,7 +85,7 @@ class RecommenderService(
                     gameResult.passed
                 )
                 if (config.isNotEmpty()) {
-                    return applySpecialSettings(config, gameResult.user.username)
+                    return config
                 }
             } catch (e: Exception) {
                 log.error("Error while generating recommendation by result: $e")
@@ -156,13 +156,11 @@ class RecommenderService(
         )
     }
 
-    @Transactional
     fun applySpecialSettings(config: Map<String, Any>, username: String): Map<String, Any> {
         val user = userRepository.findByUsernameWithSpecialSettings(username).orElseThrow()
-        user.specialGameSettings = user.specialGameSettings.filter { it.isValid() }.toMutableSet()
-        userRepository.save(user)
+        val validSettings = user.specialGameSettings.filter { it.isValid() }.toMutableSet()
         val updatedConfig = config.toMutableMap()
-        updatedConfig[SPECIAL_SETTING_CONFIG_KEY] = SpecialSettingsDto(user.specialGameSettings)
+        updatedConfig[SPECIAL_SETTING_CONFIG_KEY] = SpecialSettingsDto(validSettings)
         return updatedConfig
     }
 
