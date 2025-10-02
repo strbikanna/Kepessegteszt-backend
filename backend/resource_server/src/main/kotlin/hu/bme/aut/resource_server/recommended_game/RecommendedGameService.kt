@@ -145,15 +145,6 @@ class RecommendedGameService(
         recommendedGameRepository.deleteAll(allRecommendedBy)
     }
 
-    @Scheduled(cron = "0 0 2 * * *")
-    fun refreshSpecialSettingsOfAllUser() {
-        userRepository.findAllUsernames().forEach { username ->
-            val user = userRepository.findByUsernameWithSpecialSettings(username).get()
-            user.specialGameSettings = user.specialGameSettings.filter { it.isValid() }.toMutableSet()
-            userRepository.save(user)
-        }
-    }
-
     private fun getNeverPlayedGames(user: UserEntity): List<GameEntity> {
         val neverCompletedRecommendations = recommendedGameRepository.findByRecommendedToAndNeverPlayed(user)
         return neverCompletedRecommendations.map { it.game }

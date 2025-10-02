@@ -6,6 +6,7 @@ import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.http.HttpStatus
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
@@ -37,6 +38,15 @@ class SpecialSettingsController(
         user.specialGameSettings = specialSettings.toEntity().toMutableSet()
         userRepo.save(user)
         return SpecialSettingsDto(user.specialGameSettings)
+    }
+
+    @Scheduled(cron = "0 0 2 * * *")
+    fun refreshSpecialSettingsOfAllUser() {
+        userRepo.findAllUsernames().forEach { username ->
+            val user = userRepo.findByUsernameWithSpecialSettings(username).get()
+            user.specialGameSettings = user.specialGameSettings.filter { it.isValid() }.toMutableSet()
+            userRepo.save(user)
+        }
     }
 
     fun deleteInvalidSpecialSettings(user: UserEntity) {
