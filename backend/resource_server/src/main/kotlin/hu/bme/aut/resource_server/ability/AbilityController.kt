@@ -36,7 +36,7 @@ class AbilityController(
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SCIENTIST')")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     fun createAbility(@RequestBody abilityEntity: AbilityEntity): AbilityEntity {
         return abilityRepository.save(abilityEntity)

@@ -64,7 +64,7 @@ export class HeaderComponent implements OnInit{
         return this.isAdmin || this.isTeacher || this.isScientist || this.isParent
     }
     hasAccessToCognitiveProfileEdit(){
-        return this.isAdmin  || this.isScientist
+        return this.isAdmin
     }
     hasAccessToAdminCognitiveProfileCompare(){
         return this.hasAccessToAdminCognitiveProfile()
