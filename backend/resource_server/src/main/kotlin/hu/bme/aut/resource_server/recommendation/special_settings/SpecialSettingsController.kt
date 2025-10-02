@@ -41,7 +41,7 @@ class SpecialSettingsController(
     fun deleteInvalidSpecialSettings(user: UserEntity) {
         val now = LocalDateTime.now()
         val validSettings = user.specialGameSettings.filter {
-            it.creationTimestamp.plusMinutes(it.validMinutes.toLong()) > now
+            it.creationTimestamp.plusMinutes(it.validMinutes) > now
         }.toMutableSet()
         user.specialGameSettings = validSettings
         userRepo.save(user)

@@ -158,7 +158,9 @@ class RecommenderService(
 
     @Transactional
     fun applySpecialSettings(config: Map<String, Any>, username: String): Map<String, Any> {
-        val user = userRepository.findByUsername(username).orElseThrow()
+        val user = userRepository.findByUsernameWithSpecialSettings(username).orElseThrow()
+        user.specialGameSettings = user.specialGameSettings.filter { it.isValid() }.toMutableSet()
+        userRepository.save(user)
         val updatedConfig = config.toMutableMap()
         updatedConfig[SPECIAL_SETTING_CONFIG_KEY] = SpecialSettingsDto(user.specialGameSettings)
         return updatedConfig

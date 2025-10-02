@@ -7,7 +7,7 @@ data class SpecialSettingsDto(
 
     val maxInterval: Long? = null,
 
-    val validMinutes: Int = 60
+    val validMinutes: Long = 60
 ) {
     constructor(specialSettings: Set<SpecialSettings>) : this(
         specialSettings.map { it.distractionType }.toMutableSet(),

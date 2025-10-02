@@ -53,7 +53,7 @@ class RecommendedGameController(
     @ResponseStatus(HttpStatus.OK)
     fun getRecommendedGameConfig(@PathVariable id: Long, authentication: Authentication): Deferred<Map<String, Any>> =
         CoroutineScope(Dispatchers.Default).async {
-            authService.checkGameConfigAccessAnThrow(id, authentication)
+            authService.checkGameConfigAccessAndThrow(id, authentication)
             val foundConfig = recommendedGameService.getRecommendedGameConfig(id)
             return@async foundConfig ?: emptyMap()
         }
