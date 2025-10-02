@@ -18,11 +18,14 @@
             <mat-checkbox formControlName="pavlovian">
                 {{ texts.distraction_types.pavlovian }}
             </mat-checkbox>
+            <mat-checkbox formControlName="vibration">
+                {{ texts.distraction_types.vibration }}
+            </mat-checkbox>
         </div>
         <h4> {{ texts.min_interval }}</h4>
             <mat-form-field class="w-20rem">
                 <mat-label>{{ texts.min_interval_label }}</mat-label>
-                <input matInput type="number" min="10" step="1" formControlName="minInterval" >
+                <input matInput type="number" min="1" step="1" formControlName="minInterval" >
                 <mat-error *ngIf="specialSettingsForm.hasError('intervalInvalid')">
                     {{ texts.wrong_interval_error }}
                 </mat-error>
@@ -31,7 +34,7 @@
         <h4>{{texts.max_interval}}</h4>
             <mat-form-field class="w-20rem">
                 <mat-label>{{ texts.max_interval_label }}</mat-label>
-                <input matInput type="number" min="10" step="1" formControlName="maxInterval" >
+                <input matInput type="number" min="1" step="1" formControlName="maxInterval" >
                 <mat-error *ngIf="specialSettingsForm.hasError('intervalInvalid')">
                     {{ texts.wrong_interval_error }}
                 </mat-error>

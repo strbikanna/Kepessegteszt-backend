@@ -36,6 +36,7 @@ export class SpecialSettingsFormComponent implements OnInit {
         sound: [false, []],
         visual: [false, []],
         pavlovian: [false, []],
+        vibration: [false, []],
         minInterval: [10, [Validators.required]],
         maxInterval: [30, [Validators.required]],
         validMinutes: [15, [Validators.required]],
@@ -50,6 +51,7 @@ export class SpecialSettingsFormComponent implements OnInit {
                 sound: settings.distractionTypes.includes(DistractionType.SOUND),
                 visual: settings.distractionTypes.includes(DistractionType.VISUAL),
                 pavlovian: settings.distractionTypes.includes(DistractionType.PAVLOVIAN),
+                vibration: settings.distractionTypes.includes(DistractionType.VIBRATION),
                 minInterval: settings.minInterval ?? 10,
                 maxInterval: settings.maxInterval ?? 30,
                 validMinutes: settings.validMinutes,
@@ -70,6 +72,7 @@ export class SpecialSettingsFormComponent implements OnInit {
         if (this.specialSettingsForm.value.sound) settings.distractionTypes.push(DistractionType.SOUND);
         if (this.specialSettingsForm.value.visual) settings.distractionTypes.push(DistractionType.VISUAL);
         if (this.specialSettingsForm.value.pavlovian) settings.distractionTypes.push(DistractionType.PAVLOVIAN);
+        if (this.specialSettingsForm.value.vibration) settings.distractionTypes.push(DistractionType.VIBRATION);
 
         this.service.updateSpecialSettingsOfUser(this.username, settings).subscribe(updatedSettings => {
             this.userSpecialSettings = updatedSettings;
