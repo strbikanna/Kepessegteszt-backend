@@ -19,7 +19,7 @@
                     <mat-icon class="mr-3">settings</mat-icon>
                     <div>
                         <p *ngFor="let key of getConfigKeys()" class="description mt-0 mb-1 w-max">{{ key }}
-                            : {{ recommendation.config[key] }}
+                            : {{ getConfigValue(key) }}
                         </p>
                     </div>
                 </div>

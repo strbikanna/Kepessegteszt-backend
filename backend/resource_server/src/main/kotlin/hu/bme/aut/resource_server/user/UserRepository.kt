@@ -25,16 +25,19 @@ interface UserRepository: JpaRepository<UserEntity, Int>, JpaSpecificationExecut
     @Query("SELECT u.id FROM UserEntity u")
     fun findAllIds(): List<Int>
 
+    @Query("SELECT u.username FROM UserEntity u")
+    fun findAllUsernames(): List<String>
+
     @Query("SELECT u FROM UserEntity u LEFT JOIN FETCH u.profileFloat LEFT JOIN FETCH u.profileEnum WHERE u.id = :id")
     fun findByIdWithProfile(id: Int): Optional<UserEntity>
 
     @Query("SELECT u FROM UserEntity u LEFT JOIN FETCH u.profileFloat LEFT JOIN FETCH u.profileEnum WHERE u.username = :userName")
     fun findByUsernameWithProfile(userName: String): Optional<UserEntity>
 
-    @Query("SELECT u FROM UserEntity u JOIN FETCH u.roles WHERE u.username = :username")
+    @Query("SELECT u FROM UserEntity u LEFT JOIN FETCH u.roles WHERE u.username = :username")
     fun findByUsernameWithRoles(username: String): Optional<UserEntity>
 
-    @Query("SELECT u FROM UserEntity u JOIN FETCH u.specialGameSettings WHERE u.username = :username")
+    @Query("SELECT u FROM UserEntity u LEFT JOIN FETCH u.specialGameSettings WHERE u.username = :username")
     fun findByUsernameWithSpecialSettings(username: String): Optional<UserEntity>
 
     @Modifying

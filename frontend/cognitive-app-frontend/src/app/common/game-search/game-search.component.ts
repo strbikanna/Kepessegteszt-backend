@@ -61,7 +61,8 @@ export class GameSearchComponent implements OnInit {
                 .filter((val, index) => index < 10);
         } else {
             this.service.getGamesByName(filter).subscribe(games => {
-                this.filteredGameOptions = this.createOptionGroups(games);
+                const filtered = games.filter(this.filterGamesBy)
+                this.filteredGameOptions = this.createOptionGroups(filtered);
             });
         }
     }
