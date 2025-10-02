@@ -1,9 +1,11 @@
 package hu.bme.aut.resource_server.recommendation
 
+import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.GameRepository
-import hu.bme.aut.resource_server.recommendation.special_settings.DistractionType
-import hu.bme.aut.resource_server.recommendation.special_settings.SPECIAL_SETTING_CONFIG_KEY
+import hu.bme.aut.resource_server.game.game_config.ConfigItem
+import hu.bme.aut.resource_server.recommendation.special_settings.DISTRACTION_CONFIG_KEY
 import hu.bme.aut.resource_server.recommendation.special_settings.SpecialSettingsDto
+import hu.bme.aut.resource_server.recommendation.special_settings.XP_CONFIG_KEY
 import hu.bme.aut.resource_server.recommendation.strategy.AutoRecommendationStrategy
 import hu.bme.aut.resource_server.recommendation.strategy.DefaultRecommendationStrategy
 import hu.bme.aut.resource_server.recommendation.strategy.LatestRecommendationStrategy
@@ -156,12 +158,16 @@ class RecommenderService(
         )
     }
 
-    fun applySpecialSettings(config: Map<String, Any>, username: String): Map<String, Any> {
+    fun applySpecialSettings(config: Map<String, Any>, gameId: Int, username: String): Map<String, Any> {
         val user = userRepository.findByUsernameWithSpecialSettings(username).orElseThrow()
         val validSettings = user.specialGameSettings.filter { it.isValid() }.toMutableSet()
+        val game = gameRepository.findByIdWithConfigItems(gameId).orElseThrow()
+        val xpGain = XPCalculator.calculateXP(game.configItems, config)
         val updatedConfig = config.toMutableMap()
-        updatedConfig[SPECIAL_SETTING_CONFIG_KEY] = SpecialSettingsDto(validSettings)
+        updatedConfig[DISTRACTION_CONFIG_KEY] = SpecialSettingsDto(validSettings)
+        updatedConfig[XP_CONFIG_KEY] = xpGain
         return updatedConfig
     }
+
 
 }

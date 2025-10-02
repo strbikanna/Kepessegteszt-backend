@@ -9,4 +9,5 @@ enum class DistractionType {
     VIBRATION
 }
 
-const val  SPECIAL_SETTING_CONFIG_KEY = "distraction"
+const val  DISTRACTION_CONFIG_KEY = "distraction"
+const val  XP_CONFIG_KEY = "xp_increment"

@@ -78,7 +78,10 @@ data class UserEntity(
 
     @ElementCollection
     @CollectionTable(name = "special_game_settings", joinColumns = [JoinColumn(name = "fk_user_id")])
-    var specialGameSettings: MutableSet<SpecialSettings> = mutableSetOf()
+    var specialGameSettings: MutableSet<SpecialSettings> = mutableSetOf(),
+
+    @Column(name = "xp")
+    var xP: Int = 0
 
     ) {
     fun getProfile(): MutableSet<ProfileItem> {

@@ -4,25 +4,25 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import java.time.LocalDateTime
 
 data class RecommendedGameDto(
-        val id: Long,
+    val id: Long,
 
-        val gameId: Int,
+    val gameId: Int,
 
-        val name: String,
+    val name: String,
 
-        val description: String,
+    val description: String,
 
-        val thumbnail: String,
+    val thumbnail: String,
 
-        @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
         val recommendationDate: LocalDateTime,
 
-        val recommender: String,
+    val recommender: String,
 
-        val recommendedTo: String,
+    val recommendedTo: String,
 
-        val completed: Boolean,
+    val completed: Boolean,
 
-        val config: Map<String, Any>
+    var config: Map<String, Any>
 ) {
 }
