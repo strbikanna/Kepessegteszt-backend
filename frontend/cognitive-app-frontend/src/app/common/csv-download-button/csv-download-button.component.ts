@@ -28,7 +28,7 @@ export class CsvDownloadButtonComponent {
                 let url = window.URL.createObjectURL(blob);
                  let link = document.createElement('a');
                  link.href = url;
-                 link.setAttribute('download', 'test_res.csv');
+                 link.setAttribute('download', 'results.csv');
                  document.body.appendChild(link);
                  link.click();
             }
