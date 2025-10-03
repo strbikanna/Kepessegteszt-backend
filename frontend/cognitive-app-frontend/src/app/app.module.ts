@@ -103,6 +103,7 @@ import {ResultChartComponent} from "./charts/result-chart/result-chart.component
 import {
     SpecialSettingsFormComponent
 } from "./pages/admin/recommendation/special-settings-form/special-settings-form.component";
+import {CountUpComponent, NumberPipe} from "./common/count-up/count-up.component";
 
 
 @NgModule({
@@ -158,6 +159,7 @@ import {
         CreateGroupDialogComponent,
         CreateOrgDialogComponent,
         TimestampPipe,
+        NumberPipe,
         PrivacyPolicyPageComponent,
         FooterComponent,
         DeleteAccountComponent,
@@ -167,7 +169,8 @@ import {
         EditableAbilityCardComponent,
         FeatureDescriptionComponent,
         CognitiveProfileEditPageComponent,
-        SpecialSettingsFormComponent
+        SpecialSettingsFormComponent,
+        CountUpComponent
     ],
     imports: [
         BrowserModule,

@@ -52,7 +52,9 @@ class RecommendedGameService(
             }
         return recommendedGames
             .filter { it.game.active }
-            .map { it.apply { config = recommenderService.applySpecialSettings(config, username) }.toDto() }
+            .map { it.toDto()
+                .apply { config = recommenderService.applySpecialSettings(config, it.game.id!!, user.username) }
+            }
     }
 
     @Transactional
@@ -70,7 +72,10 @@ class RecommendedGameService(
                 tryAddGameAndRecommendation(rg.game, user, acceptedGameIds, possibleGames, top2Recommendation)
             }
         }
-        return top2Recommendation.map { it.apply { config = recommenderService.applySpecialSettings(config, user.username) }.toDto() }
+        return top2Recommendation
+            .map { it.toDto()
+            .apply { config = recommenderService.applySpecialSettings(config, it.game.id!!, user.username) }
+        }
     }
 
     /**
@@ -81,7 +86,11 @@ class RecommendedGameService(
         repeat(10) {
             if (rGame.config.isNotEmpty()) {
                 val config = rGame.game.validateConfig(rGame.config)
-                return@withContext recommenderService.applySpecialSettings(config, rGame.recommendedTo.username)
+                return@withContext recommenderService.applySpecialSettings(
+                    config,
+                    rGame.game.id!!,
+                    rGame.recommendedTo.username
+                )
             }
             log.info("Config not found for recommendation with id: $recommendedGameId. Waiting...")
             delay(300)
@@ -102,7 +111,11 @@ class RecommendedGameService(
                 game = game,
                 recommendedTo = recommendedTo,
                 recommender = recommender,
-                config = recommenderService.applySpecialSettings(recommendation.config, recommendedTo.username)
+                config = recommenderService.applySpecialSettings(
+                    recommendation.config,
+                    game.id!!,
+                    recommendedTo.username
+                )
             )
         )
     }
@@ -114,19 +127,35 @@ class RecommendedGameService(
         if (gameId == null) {
             return if (completed == null) {
                 recommendedGameRepository.findAllPagedByRecommendedTo(user, page)
-                    .map { it.apply { config = recommenderService.applySpecialSettings(config, user.username) }.toDto() }
+                    .map {
+                        it.toDto()
+                            .apply {
+                                config = recommenderService.applySpecialSettings(config, it.game.id!!, user.username)
+                            }
+                    }
             } else {
                 recommendedGameRepository.findAllPagedByRecommendedToAndCompleted(user, completed, page)
-                    .map { it.apply { config = recommenderService.applySpecialSettings(config, user.username) }.toDto() }
+                    .map {
+                        it.toDto()
+                            .apply {
+                                config = recommenderService.applySpecialSettings(config, it.game.id!!, user.username)
+                            }
+                    }
             }
         }
         val game = gameRepository.findById(gameId).orElseThrow()
         return if (completed == null) {
             recommendedGameRepository.findAllPagedByRecommendedToAndGame(user, game, page)
-                .map { it.apply { config = recommenderService.applySpecialSettings(config, user.username) }.toDto() }
+                .map {
+                    it.toDto()
+                        .apply { config = recommenderService.applySpecialSettings(config, it.game.id!!, user.username) }
+                }
         } else {
             recommendedGameRepository.findAllPagedByRecommendedToAndCompletedAndGame(user, completed, game, page)
-                .map { it.apply { config = recommenderService.applySpecialSettings(config, user.username) }.toDto() }
+                .map {
+                    it.toDto()
+                        .apply { config = recommenderService.applySpecialSettings(config, it.game.id!!, user.username) }
+                }
         }
     }
 

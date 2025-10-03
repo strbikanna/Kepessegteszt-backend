@@ -1,5 +1,6 @@
 export const cognitive_profile_text = {
     title_user: 'kognitív profilja',
+    title_xp: 'XP Pontok: ',
     chart: {
         chart_title: 'Kognitív profil az elmúlt időszakban',
         chart_description: 'A kognitív profilban szereplő képességek, és értékük az elmúlt időszakban',

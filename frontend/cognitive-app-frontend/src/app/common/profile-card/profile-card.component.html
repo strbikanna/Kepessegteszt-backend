@@ -8,7 +8,7 @@
         <div class="left-side">
             <div *ngFor="let item of profileData">
                 <div class="data-holder">
-                    <p>{{ item.ability.name }}</p>
+                    <p>{{ item.ability.name }} ({{item.ability.code}})</p>
                     <div class="info" matTooltip="{{item.ability.description}}">
                         i</div>
                     <mat-chip>{{ item.value }}</mat-chip>
