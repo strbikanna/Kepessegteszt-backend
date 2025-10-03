@@ -34,6 +34,7 @@ class ResultService(
         )
         if(result.passed && (recommendedGame.config[XP_CONFIG_KEY] is Int)){
             user.xP += recommendedGame.config[XP_CONFIG_KEY] as Int
+            userRepository.save(user)
         }
         return resultRepository.save(result)
     }
