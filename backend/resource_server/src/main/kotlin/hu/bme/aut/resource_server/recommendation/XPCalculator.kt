@@ -1,6 +1,7 @@
 package hu.bme.aut.resource_server.recommendation
 
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
+import kotlin.math.max
 
 object XPCalculator {
 
@@ -22,21 +23,21 @@ object XPCalculator {
 
     private fun getMultiplicatorByDifficultyPercent(difficultyPercent: Double): Int {
         return when {
-            difficultyPercent < 10 -> 10
-            difficultyPercent < 20 -> 30
-            difficultyPercent < 50 -> 100
-            difficultyPercent < 80 -> 200
-            else -> 300
+            difficultyPercent <= 10 -> 100
+            difficultyPercent <= 30 -> 300
+            difficultyPercent <= 60 -> 1000
+            difficultyPercent <= 90 -> 2000
+            else -> 3000
         }
     }
 
     private fun difficultyWithLowerHarder(actual: Int, hardest: Int, easiest: Int): Double {
         val interval = (easiest - hardest).toDouble()
-        return (actual - hardest).toDouble() / interval
+        return max((easiest - actual).toDouble() / interval, 0.0)
     }
 
     private fun difficultyWithLowerEasier(actual: Int, hardest: Int, easiest: Int): Double {
         val interval = (hardest - easiest).toDouble()
-        return (actual - easiest).toDouble() / interval
+        return max((actual - easiest).toDouble() / interval, 0.0)
     }
 }
