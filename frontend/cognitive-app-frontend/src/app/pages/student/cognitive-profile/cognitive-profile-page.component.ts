@@ -26,6 +26,7 @@ export class CognitiveProfilePageComponent implements OnInit {
     loadingProfile = true
     loadingDescription = true
     profileTimestamp = new Date()
+    xp = 0
 
     constructor(private service: CognitiveProfileService) {}
 
@@ -42,6 +43,7 @@ export class CognitiveProfilePageComponent implements OnInit {
             this.profileDataHistory.next(profiles)
             this.loading = false
         })
+        this.service.getXp().subscribe(xp => this.xp = xp)
     }
 
     onDateChosen(dateRange: DateRange) {

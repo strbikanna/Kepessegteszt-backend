@@ -2,7 +2,6 @@ package hu.bme.aut.resource_server.user
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.authentication.AuthService
-import hu.bme.aut.resource_server.llm.abilities2text.AbiltityToTextDto
 import hu.bme.aut.resource_server.profile.dto.ProfileItem
 import hu.bme.aut.resource_server.profile.dto.ProfileItemStatisticsDto
 import hu.bme.aut.resource_server.profile_calculation.calculator.CalculationHelper
@@ -205,12 +204,46 @@ class UserController(
         userService.updateUser(user)
     }
 
+    @GetMapping("/xp")
+    @ResponseStatus(HttpStatus.OK)
+    fun getXp(
+        authentication: Authentication
+    ): Int{
+        val user = userService.getUserEntityByUsername(authentication.name)
+        return user.xP
+    }
+
+    @GetMapping("/xp/inspect")
+    @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_ADMIN', 'ROLE_TEACHER', 'ROLE_PARENT')")
+    @ResponseStatus(HttpStatus.OK)
+    fun getXpOfOtherUser(
+        @RequestParam username: String
+    ): Int{
+        val user = userService.getUserEntityByUsername(username)
+        return user.xP
+    }
+
+    @PutMapping("/xp")
+    @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_ADMIN', 'ROLE_TEACHER')")
+    @ResponseStatus(HttpStatus.OK)
+    fun updateXpOfOtherUser(
+        @RequestParam username: String,
+        @RequestParam xp: Int,
+    ): Int{
+        val user = userService.getUserEntityByUsername(username)
+        user.xP = xp
+        userService.saveUser(user)
+        return user.xP
+    }
+
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.OK)
     suspend fun removeUser(authentication: Authentication) {
         val username = authentication.name
         authService.removeUserFromAuthServer(authentication)
-        userService.removeUserForever(username)
+        withContext(Dispatchers.IO) {
+            userService.removeUserForever(username)
+        }
     }
 
 }

@@ -27,6 +27,7 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
     protected loadingHistory = true;
     protected loadingDescription = true;
     protected prompt = '';
+    protected xp = 0
 
     constructor(
         private router: Router,
@@ -68,6 +69,7 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
                 this.profileDescription = description;
                 this.loadingDescription = false
             });
+            this.service.getXpOfUser(this.chosenUsername).subscribe(xp => this.xp = xp)
         }
     }
 

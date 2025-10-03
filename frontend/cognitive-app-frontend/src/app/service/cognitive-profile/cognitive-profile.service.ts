@@ -137,6 +137,16 @@ export class CognitiveProfileService {
 
     }
 
+    getXp(): Observable<number>{
+        return this.http.get<number>(`${this.helper.baseUrl}/user/xp`)
+    }
+    getXpOfUser(username: string): Observable<number>{
+        return this.http.get<number>(`${this.helper.baseUrl}/user/xp/inspect?username=${username}`)
+    }
+    updateXpOfUser(username: string, xp: number): Observable<number>{
+        return this.http.put<number>(`${this.helper.baseUrl}/user/xp?username=${username}?xp=${xp}`, {})
+    }
+
 
     /**
      * converts server data to client side model

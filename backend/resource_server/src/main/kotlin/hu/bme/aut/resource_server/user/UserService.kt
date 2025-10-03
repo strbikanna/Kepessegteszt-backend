@@ -33,6 +33,9 @@ class UserService(
     fun getUserEntityWithProfileByUsername(username: String): UserEntity {
         return userRepository.findByUsernameWithProfile(username).orElseThrow()
     }
+    fun getUserEntityByUsername(username: String): UserEntity {
+        return userRepository.findByUsername(username).orElseThrow()
+    }
 
     fun updateUser(user: PlainUserDto){
         val userEntity = userRepository.findByUsername(user.username).orElseThrow()
