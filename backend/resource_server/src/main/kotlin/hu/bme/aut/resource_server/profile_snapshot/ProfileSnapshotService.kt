@@ -6,6 +6,7 @@ import hu.bme.aut.resource_server.user.UserRepository
 import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -73,8 +74,9 @@ class ProfileSnapshotService(
     }
     fun getSnapshotsOfUser(user: UserEntity, pageIndex: Int = 0, pageSize: Int = 100): List<ProfileSnapshotItem>{
         val snapShots = mutableListOf<ProfileSnapshotItem>()
-        val floatSnapshots = floatProfileSnapshotRepository.findAllPagedByUser(user, PageRequest.of(pageIndex, pageSize))
-        val enumSnapshots = enumProfileSnapshotRepository.findAllPagedByUser(user, PageRequest.of(pageIndex, pageSize))
+        val sort = Sort.by(Sort.Direction.DESC, "timestamp")
+        val floatSnapshots = floatProfileSnapshotRepository.findAllPagedByUser(user, PageRequest.of(pageIndex, pageSize, sort))
+        val enumSnapshots = enumProfileSnapshotRepository.findAllPagedByUser(user, PageRequest.of(pageIndex, pageSize, sort))
         snapShots.addAll(floatSnapshots)
         snapShots.addAll(enumSnapshots)
         return snapShots
