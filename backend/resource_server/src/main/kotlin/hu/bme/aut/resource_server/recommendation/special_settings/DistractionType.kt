@@ -10,4 +10,4 @@ enum class DistractionType {
 }
 
 const val  DISTRACTION_CONFIG_KEY = "distraction"
-const val  XP_CONFIG_KEY = "xp_increment"
+const val  XP_CONFIG_KEY = "xpIncrement"

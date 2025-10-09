@@ -5,7 +5,7 @@ import {CognitiveProfile} from "../../../model/cognitive_profile.model";
 import {DateRange} from "../../../common/date-picker/date-picker.component";
 import {TEXTS} from "../../../text/app.text_messages";
 import {User} from "../../../model/user/user.model";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {Location} from "@angular/common";
 import {ProfileDescription} from "../../../model/profile/profile_description";
 import {UserInfo} from "../../../auth/userInfo";
@@ -27,7 +27,7 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
     protected loadingHistory = true;
     protected loadingDescription = true;
     protected prompt = '';
-    protected xp = 0
+    protected xp : BehaviorSubject<number>   = new BehaviorSubject<number>(0);
 
     constructor(
         private router: Router,
@@ -69,7 +69,9 @@ export class AdminCognitiveProfilePageComponent implements OnInit {
                 this.profileDescription = description;
                 this.loadingDescription = false
             });
-            this.service.getXpOfUser(this.chosenUsername).subscribe(xp => this.xp = xp)
+            this.service.getXpOfUser(this.chosenUsername).subscribe(xp => {
+                this.xp.next(xp);
+            })
         }
     }
 
