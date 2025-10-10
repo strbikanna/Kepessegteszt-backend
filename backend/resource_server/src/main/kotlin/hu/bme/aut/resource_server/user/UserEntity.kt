@@ -19,12 +19,15 @@ data class UserEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null,
 
+    @Column(name = "first_name")
     val firstName: String,
 
+    @Column(name = "last_name")
     val lastName: String,
 
     val username: String,
 
+    @Column(name = "birth_date")
     val birthDate: LocalDate? = null,
 
     @Enumerated(EnumType.STRING)

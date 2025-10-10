@@ -9,7 +9,7 @@ import jakarta.persistence.*
 /**
  * Entity class for profile items with enum value (non-discrete).
  */
-@Entity
+@Entity(name = "enum_profile_item")
 data class EnumProfileItem(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,7 @@ data class EnumProfileItem(
     @JoinColumn(name="ability_id", referencedColumnName = "code")
     val ability: AbilityEntity,
 
-    @Column
+    @Column(name="ability_value")
     @Enumerated(value= EnumType.STRING)
     var abilityValue: EnumAbilityValue = EnumAbilityValue.UNKNOWN,
 
@@ -29,7 +29,7 @@ data class EnumProfileItem(
      * @max 1.0
      * @min 0.0
      */
-    @Column
+    @Column(name="ability_accuracy")
     var abilityAccuracy: Double = 0.0
 ){
     fun toProfileItem(): ProfileItem {

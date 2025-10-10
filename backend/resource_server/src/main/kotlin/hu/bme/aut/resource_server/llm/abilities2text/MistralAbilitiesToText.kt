@@ -8,11 +8,6 @@ import org.springframework.stereotype.Service
 @Service
 @Profile("!test & !local")
 class MistralAbilitiesToText(
-    @Value("\${llms.mistral.api-key}") apiKey: String,
-    @Value("\${llms.mistral.model-name}") modelName: String
+    override val model: MistralAiChatModel
 ) : AbilitiesToTextService() {
-    override val model: MistralAiChatModel = MistralAiChatModel.builder()
-        .apiKey(apiKey)
-        .modelName(modelName)
-        .build()
 }
