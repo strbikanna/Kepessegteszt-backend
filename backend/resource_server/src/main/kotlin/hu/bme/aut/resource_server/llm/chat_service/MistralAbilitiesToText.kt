@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 
 @Service
-//@Profile("!test & !local")
-@Profile("local")
+@Profile("!test & !local")
+//@Profile("local")
 class MistralAbilitiesToText(
     override val model: MistralAiChatModel
 ) : AbilitiesToTextService() {
