@@ -3,6 +3,8 @@ package hu.bme.aut.resource_server.llm.abilities2text
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.model.chat.ChatModel
+import dev.langchain4j.service.AiServices
+import hu.bme.aut.resource_server.llm.tools.KnowledgeBaseTool
 import hu.bme.aut.resource_server.profile.dto.ProfileItem
 
 abstract class AbilitiesToTextService {
@@ -25,6 +27,20 @@ abstract class AbilitiesToTextService {
 
 
     protected abstract val model: ChatModel
+
+    private val abilitiesToTextAgent: AbilitiesToTextAgent by lazy {
+        AiServices.builder(AbilitiesToTextAgent::class.java)
+            .chatModel(model)
+            .tools(KnowledgeBaseTool())
+            .build()
+    }
+
+    private val improveTextAgent: TextImprovementAgent by lazy {
+        AiServices.builder(TextImprovementAgent::class.java)
+            .chatModel(model)
+            .build()
+    }
+
     private var islLoggingEnabled = false
     private var logger: (prompt: String, response: String) -> Unit =
         { prompt, response -> println("Prompt:\n$prompt\nResponse:\n$response\n\n") }
@@ -53,9 +69,11 @@ abstract class AbilitiesToTextService {
     open suspend fun generateFromAbilities(abilities: List<ProfileItem>, prompt: String = ""): ChatMessageResponse {
         var callPrompt = prompt.ifBlank { promptTemplate }
         callPrompt = putAbilitiesIntoPrompt(abilities, callPrompt)
+        var response = abilitiesToTextAgent.convertAbilitiesToText(callPrompt)
+        response = improveTextAgent.improveText(response)
         return ChatMessageResponse(
             prompt = callPrompt,
-            response = generateFromPrompt(callPrompt)
+            response = response
         )
     }
 
@@ -81,7 +99,8 @@ abstract class AbilitiesToTextService {
                     UserMessage.from(prompt)
                 )
 
-        val response = model.chat(messages)
+        val response = model
+            .chat(messages)
         val result = response.aiMessage().text()
         log(prompt = prompt, response = result)
         return result

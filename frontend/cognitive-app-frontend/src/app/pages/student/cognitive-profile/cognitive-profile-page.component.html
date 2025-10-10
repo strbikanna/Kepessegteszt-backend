@@ -3,7 +3,7 @@
     <mat-progress-bar *ngIf="loadingProfile" mode="buffer"></mat-progress-bar>
     <div class="w-min flex flex-column align-items-start" *ngIf="!loading">
         <h3 >{{text.llm.llm_text}}</h3>
-        <p class="description">{{profileDescription}}</p>
+        <p class="description my-3" [innerHTML]="profileDescription"></p>
         <mat-progress-bar *ngIf="loadingDescription" mode="buffer"></mat-progress-bar>
         <app-date-picker (dateChosen)="onDateChosen($event)"></app-date-picker>
     </div>

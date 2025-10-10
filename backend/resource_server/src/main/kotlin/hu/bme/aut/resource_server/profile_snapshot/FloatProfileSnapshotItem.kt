@@ -25,7 +25,7 @@ data class FloatProfileSnapshotItem (
     @JoinColumn(name = "ability_id")
     override val ability: AbilityEntity,
 
-    @Column(name = "ability_vale")
+    //@Column(name = "ability_vale")
     @JsonProperty("value")
     override val abilityValue: Double,
 

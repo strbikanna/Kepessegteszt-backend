@@ -20,7 +20,7 @@
             <!-- LLM description -->
             <mat-progress-bar *ngIf="loadingDescription" mode="buffer"></mat-progress-bar>
             <h2 class="text-left" *ngIf="profileDescription">{{text.llm.llm_text}}</h2>
-            <p class="description">{{profileDescription?.generatedText}}</p>
+            <p class="description my-3" [innerHTML]="profileDescription?.generatedText"></p>
 
             <!-- LLM prompt -->
             <mat-accordion *ngIf="UserInfo.canSeePromptLlm()" class="my-8">

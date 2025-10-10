@@ -35,7 +35,7 @@ class EnumProfileSnapshotItem  (
     @JsonIgnore
     override val user: UserEntity,
 
-    @Column(name= "ability_value")
+    //@Column(name= "ability_value")
     @Enumerated(EnumType.STRING)
     @JsonProperty("value")
     override val abilityValue: EnumAbilityValue,
