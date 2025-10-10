@@ -2,30 +2,32 @@ package hu.bme.aut.resource_server.llm.abilities2text
 
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
-import dev.langchain4j.model.chat.ChatLanguageModel
+import dev.langchain4j.model.chat.ChatModel
 import hu.bme.aut.resource_server.profile.dto.ProfileItem
 
 abstract class AbilitiesToTextService {
-    protected open val promptTemplate = "Alakítsd át a következő Cattell–Horn–Carroll (CHC) elmélet képességértékeket " +
-            "egy rövid szöveges összefoglalóvá a játékos kognitív adottságairól úgy, " +
-            "hogy ne a számértékeket add vissza, hanem fogalmazz mondatokat! " +
-            "Minden képesség átlagos értéke 1,0. A szintek 0,15-ös léptékekkel változnak. " +
-            "Vedd figyelembe azt is, hogy néhány képesség értéke még bizonytalan lehet. Az értékek pontossága 0 és 1.0 közötti érték, ahol 1.0 100%-os bizonyosságot jelent. " +
-            " Legyen változatos a szöveg megfogalmazása, " +
-            "ne csak az átlaghoz hasonlításról szóljon, hanem személyre szabott legyen!\n"
-    protected open val promptTemplateWithGroup = "Alakítsd át a következős Cattell–Horn–Carroll (CHC) elmélet képességértékeket " +
-            "egy rövid összefoglalóvá a játékos kognitív adottságairól az adott csoporthoz képest úgy, \n" +
-            "hogy ne a számértékeket add vissza, hanem fogalmazz mondatokat! Legyen változatos a szöveg megfogalmazása, " +
-            "ne csak az átlaghoz hasonlításról szóljon, hanem személyre szabott legyen! " +
-            "A szintek 0,15-ös léptékekkel változnak.\n"
+    protected open val promptTemplate =
+        "Alakítsd át a következő Cattell–Horn–Carroll (CHC) elmélet képességértékeket " +
+                "egy rövid szöveges összefoglalóvá a játékos kognitív adottságairól úgy, " +
+                "hogy ne a számértékeket add vissza, hanem fogalmazz mondatokat! " +
+                "Minden képesség átlagos értéke 1,0. A szintek 0,15-ös léptékekkel változnak. " +
+                "Vedd figyelembe azt is, hogy néhány képesség értéke még bizonytalan lehet. Az értékek pontossága 0 és 1.0 közötti érték, ahol 1.0 100%-os bizonyosságot jelent. " +
+                " Legyen változatos a szöveg megfogalmazása, " +
+                "ne csak az átlaghoz hasonlításról szóljon, hanem személyre szabott legyen!\n"
+    protected open val promptTemplateWithGroup =
+        "Alakítsd át a következős Cattell–Horn–Carroll (CHC) elmélet képességértékeket " +
+                "egy rövid összefoglalóvá a játékos kognitív adottságairól az adott csoporthoz képest úgy, \n" +
+                "hogy ne a számértékeket add vissza, hanem fogalmazz mondatokat! Legyen változatos a szöveg megfogalmazása, " +
+                "ne csak az átlaghoz hasonlításról szóljon, hanem személyre szabott legyen! " +
+                "A szintek 0,15-ös léptékekkel változnak.\n"
     protected open val systemMessage: SystemMessage = SystemMessage
         .from("Egy gyerek képességeit a szűlőnek értékekről értelmezhető szöveggé alakító asszisztens vagy!")
 
 
-    protected abstract val model: ChatLanguageModel
+    protected abstract val model: ChatModel
     private var islLoggingEnabled = false
-    private var logger: (prompt: String, response: String) -> Unit
-            = { prompt, response -> println("Prompt:\n$prompt\nResponse:\n$response\n\n") }
+    private var logger: (prompt: String, response: String) -> Unit =
+        { prompt, response -> println("Prompt:\n$prompt\nResponse:\n$response\n\n") }
 
     fun setLogging(logging: Boolean, newLogger: ((String, String) -> Unit)? = null) {
         if (newLogger != null) {
@@ -75,12 +77,12 @@ abstract class AbilitiesToTextService {
 
     open suspend fun generateFromPrompt(prompt: String): String {
         val messages = listOf(
-            systemMessage,
-            UserMessage.from(prompt)
-        )
+                    systemMessage,
+                    UserMessage.from(prompt)
+                )
+
         val response = model.chat(messages)
         val result = response.aiMessage().text()
-
         log(prompt = prompt, response = result)
         return result
     }
