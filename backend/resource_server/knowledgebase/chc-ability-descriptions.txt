@@ -1,0 +1,37 @@
+Folyékony intelligencia (Gf): az új problémák megoldására, figyelem összpontosítására és érvelésre, tanulásra, valamint mintázatok felismerésére vonatkozó képességet jelenti. A folyékony intelligenciát alkotó szűkebb képességek közé tartozik az induktív érvelés, a deduktív érvelés és a mennyiségi érvelés.
+Szűkebb képességek: induktív és deduktív érvelés, mennyiségi érvelés, problémamegoldás új helyzetekben.
+
+Megértés-Tudás / Kristályosodott Intelligencia (Gc): a tudás mélysége és szélessége, amelyet a kultúrája értékel. Néhány szűkebb képessége a általános verbális információ, nyelvi fejlődés, lexikai tudás vagy hallási képesség, többek között.
+Szűkebb képességek: lexikai tudás, nyelvi fejlődés, verbális megértés, hallási megértés, általános információk.
+
+Témaspecifikus tudás (Gkn): arra a szintű szakmai tudásra utal, amelyet egy személy a legjobban a választott területén birtokol.
+Szűkebb képességek: technikai tudás, kulturális ismeretek, szakmai tudás, hobbikhoz kapcsolódó ismeretek.
+
+Rövid távú memória (Gsm): az a képesség, hogy információt tároljunk és használjunk, amely a tudatunkban nagyon rövid ideig, általában másodpercekig fennmarad. Szűk képességei a memória terjedelme (egyszerű ismétlés) és a munkamemória kapacitás (az információ tárolásának és manipulálásának képessége).
+Szűkebb képességek: memória terjedelme, munkamemória kapacitás, számterjedelem, hallási ismétlés.
+
+Hosszú távú memória (Glr): ugyanaz, mint a rövid távú memória, de hosszabb időszakokra, percektől évekig. Számos szűk képessége van, mint például az asszociatív memória, a jelentéssel bíró memória, a szabad visszahívás, az ideációs folyékonyság stb.
+Szűkebb képességek: asszociatív memória, jelentéses memória, ideációs folyékonyság, szabad visszahívás, nevek visszaidézése.
+
+Látási feldolgozás (Gv): a vizuális problémák megoldásának képessége vizuális észlelés, elemzés, képzelet, szimuláció és átalakítás révén. Szűkebb képességei közé tartozik a vizualizáció, gyorsított forgatás, vizuális memória, térbeli bejárás vagy észlelési illúziók, többek között.
+Szűkebb képességek: vizualizáció, mentális forgatás, vizuális memória, térbeli bejárás, vizuális részletfelismerés.
+
+Feldolgozási sebesség (Gs): az a sebesség, amellyel egy adott feladatot ismételten el lehet végezni. Szűkebb képességei közé tartozik az írási sebesség, olvasási sebesség, észlelési sebesség, tesztelési sebesség vagy aritmetikai készség.
+Szűkebb képességek: vizuális keresés, szimbolikus összehasonlítás, figyelmi sebesség, észlelési gyorsaság.
+
+Reakció- és döntési sebesség (Gt): az a sebesség, amellyel egyszerű döntéseket hoznak. Szűkebb képességei közé tartozik az egyszerű reakcióidő, a választási reakcióidő, a szemantikai reakcióidő, a szemantikai feldolgozási sebesség, a mentális összehasonlítási sebesség és a vizsgálati idő.
+Szűkebb képességek: egyszerű és választási reakcióidő, szemantikai feldolgozási sebesség, mentális összehasonlítási sebesség.
+
+Pszichomotoros sebesség (Gp): a fizikai testmozgások sebessége és folyékonysága. Néhány szűkebb képessége a végtagmozgás sebessége, írási sebesség, artikuláció sebessége és mozgási idő.
+Szűkebb képességek: kézügyesség, mozgási idő, írási sebesség, artikulációs sebesség, finommotorikus koordináció.
+
+Hallási feldolgozás (Ga): A hangok, beszéd és zenei ingerek észlelésének, elemzésének és megkülönböztetésének képessége.
+Szűkebb képességek: fonetikai kódolás, ritmusérzék, hangmagasság-azonosítás, auditív diszkrimináció, beszédhang-analízis.
+
+Olvasás–Írás képességek (Grw): Az írott szimbólumok dekódolása és kódolása, valamint az írásbeli kommunikáció készsége.
+Szűkebb képességek: olvasási gördülékenység, helyesírás, íráskészség, olvasási megértés.
+
+Mennyiségi tudás (Gq):
+A matematikai fogalmak, mennyiségek és eljárások megértésének és alkalmazásának képessége.
+Szűkebb képességek: számfogalom, mennyiségi érvelés, matematikai tudás, számolási készség, gyakorlati problémamegoldás.
+

@@ -1,0 +1,8 @@
+0 - nincs adat
+> 0.75 - rendkívül visszamaradott
+> 0.85 - visszamaradott
+> 0.90 - fejletlen
+> 1.0 - kissé fejletlen
+> 1.1 - átlagos
+> 1.15 - átlagon felüli
+> 1.25 - rendkívül fejlett

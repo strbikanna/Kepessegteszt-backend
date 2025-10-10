@@ -1,0 +1,48 @@
+Input: Gf - 1.02, Gc - 1.12, Gkn - 0.98, Gq - 0.9, Gsm - 1.1006, Glr - 1.178, Gv - 0.8701, Ga - 0.852, Grw - 1.067, Gs - 1.001, Gt - 1.005, Gp - 0.89
+
+Example answer:
+Kognitív képességprofil
+A vizsgálati eredmények alapján a gyermek gondolkodása, tanulási folyamatai és információfeldolgozása kiegyensúlyozott, több területen is az életkori elvárások felett teljesít. Bizonyos részképességek kiemelkednek, mások kissé lassabban fejlődnek, ami természetes egyéni eltérés, és nem akadályozza a tanulási előrehaladást, ha megfelelően támogatjuk.
+
+Gyermeke általános értelmi fejlettsége kiegyensúlyozott, jó képességű tanuló, aki különösen jól boldogul a nyelvi, fogalmi és emlékezeti feladatokkal. Az erősségei (nyelvi megértés, hosszú távú memória, szókincs) komoly támogatást adnak számára az elméleti tanulásban, a szóbeli kifejezésben és az új ismeretek feldolgozásában.
+A fejlesztendő területek (hallási észlelés, vizuális feldolgozás, finommotorika) célzott gyakorlással jól erősíthetők.
+Összességében egy értelmileg érett, kiegyensúlyozott és tanulásra motiválható gyermekről van szó, akinek sikerét leginkább a gazdag nyelvi környezet, a változatos tanulási helyzetek és a gyakorlati, élményszerű tapasztalatszerzés segíti elő.
+
+
+Képességek részletes elemzése
+
+Folyékony intelligencia (Gf)
+A gyermek új, ismeretlen helyzetekben megfelelően tud gondolkodni és problémákat megoldani. Logikusan következtet, felismeri az alapvető összefüggéseket, de a bonyolultabb, több lépéses feladatokhoz időnként több megfontolásra van szüksége. Megfelelő irányítással és gyakorlattal magabiztosan alkalmaz új stratégiákat, különösen, ha a feladat érdekes vagy személyesen motiváló.
+
+Kristályosodott intelligencia (Gc)
+A gyermek erőssége az általános tudás, a szókincs és a nyelvi megértés. Szívesen és pontosan fejezi ki gondolatait, gazdag szókinccsel és árnyalt megfogalmazásokkal. Jól épít a korábbi ismereteire, és kiválóan értelmezi a tanult fogalmakat. Ez a képesség erős alapot ad minden elméleti tantárgyhoz, különösen az olvasás, a történelem és a nyelvi területek terén.
+
+Témaspecifikus tudás (Gkn)
+A gyermek általános ismeretei megbízhatóak, érdeklődése változatos, de nem irányul még mélyen egy-egy szakterület felé. Ha valamely téma megragadja, gyorsan tanul és pontosan idézi vissza az új információkat, de az érdeklődés irányított fejlesztésével (például projektmunkák, kutatótevékenységek révén) tovább gazdagítható a tudásbázisa.
+
+Mennyiségi tudás (Gq)
+A gyermek jól boldogul a matematikai fogalmakkal, biztonsággal végzi az alapműveleteket, és általában érti a mögöttes logikát is. Az elvontabb matematikai gondolkodás néha több gyakorlást igényel, de a meglévő mennyiségi érzék jó alapot teremt a fejlődéshez. Segít, ha a matematikai gondolkodást gyakorlati példákkal és vizuális eszközökkel is támogatjuk.
+
+Rövid távú memória (Gsm)
+Jól képes rövid ideig információkat megtartani és használni, például több lépéses utasításokat követni vagy fejben számolni. Ez a képesség segíti az iskolai figyelmet és a problémamegoldást. Túlterhelt helyzetben (pl. sok új információ egyszerre) viszont érdemes lehet segíteni jegyzeteléssel vagy vizuális emlékeztetőkkel.
+
+Hosszú távú memória (Glr)
+Ez az egyik legerősebb területe. Gyermeke gyorsan tanul, könnyen megjegyez új ismereteket és hosszabb idő után is pontosan fel tudja idézni azokat. Jellemző rá a kreatív gondolkodás és az, hogy korábbi tapasztalatait új helyzetekben is tudja hasznosítani. Ez a képesség elősegíti az összefüggések felismerését és az önálló tanulást.
+
+Látási feldolgozás (Gv)
+A térbeli viszonyok, ábrák vagy grafikonok értelmezése néha nehezebben megy, főleg, ha sok vizuális elem van jelen. Lehet, hogy több időre van szüksége, míg átlátja az információkat. A fejlődést segíti minden olyan tevékenység, ami a képi észlelést fejleszti – például építőjátékok, térképolvasás, rajzolás vagy logikai kirakók.
+
+Hallási feldolgozás (Ga)
+A hallási észlelés terén némi bizonytalanság mutatkozik: nehezebben különböztet meg hasonló hangzású szavakat, vagy lassabban dolgozza fel a szóban kapott információt. Előfordulhat, hogy többszöri ismétlésre van szüksége, míg biztosan megérti az elhangzottakat. Érdemes vizuális segítségeket (képek, írásbeli instrukciók) is biztosítani számára, valamint a hallási figyelmet célzottan fejlesztő játékokat beépíteni.
+
+Olvasás–Írás (Grw)
+Az olvasási és írási készségei biztos alapokon állnak. Könnyedén olvas, és általában megérti a szövegek lényegét, írásban is világosan fogalmaz. A helyesírása stabil, bár hosszabb vagy bonyolultabb szövegekben előfordulhatnak kisebb figyelmetlenségi hibák. Szeret olvasni, és jól profitál az olvasmányélményekből.
+
+Feldolgozási sebesség (Gs)
+A feladatokat átlagos tempóban végzi, többnyire pontosan, de nem feltétlenül gyorsan. A koncentráció tartós, a munkatempó kiegyensúlyozott. Ha időnyomás alá kerül, kissé visszafogottabbá válhat, de a minőség jellemzően nem romlik.
+
+Reakció- és döntési sebesség (Gt)
+A gyermek reakcióideje és döntéshozatala megfelel az életkori normáknak. Nem siet el döntéseket, de nem is bizonytalan túlságosan. Ez kiegyensúlyozott, nyugodt kognitív stílust jelez, ami kedvező az alapos gondolkodást igénylő tantárgyakhoz.
+
+Pszichomotoros képességek (Gp)
+A finommozgások, kéz-szem koordináció vagy írásmozdulatok terén némi bizonytalanság tapasztalható. Ez gyakran a fejlődés természetes része, és megfelelő fejlesztő játékokkal, sporttal, kézműves tevékenységgel jól erősíthető. Az ügyesség fejlődése segíti az írás tempóját és pontosságát is.
