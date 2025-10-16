@@ -23,11 +23,9 @@ object XPCalculator {
 
     private fun getMultiplicatorByDifficultyPercent(difficultyPercent: Double): Int {
         return when {
-            difficultyPercent <= 10 -> 100
-            difficultyPercent <= 30 -> 300
-            difficultyPercent <= 60 -> 1000
-            difficultyPercent <= 90 -> 2000
-            else -> 3000
+            difficultyPercent <= 50 -> 100
+            difficultyPercent <= 60 -> 500
+            else -> 1000
         }
     }
 

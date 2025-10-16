@@ -39,7 +39,18 @@ class ExportCsvServiceTest {
         `when`(resultEntity.config).thenReturn(mutableMapOf("level" to 1, "difficulty" to "easy"))
         `when`(resultEntity.result).thenReturn(mutableMapOf("passed" to true, "score" to 100))
         val writer = StringWriter()
-        ExportCsvService.exportCsv(listOf(resultEntity), writer)
+        ExportCsvService.exportCsv(listOf(
+            ResultDetailsDto(
+                id = resultEntity.id!!,
+                timestamp = resultEntity.timestamp!!,
+                result = resultEntity.result,
+                config = resultEntity.config,
+                gameName = resultEntity.recommendedGame.game.name,
+                username = resultEntity.user.username,
+                passed = resultEntity.passed,
+                gameId = resultEntity.recommendedGame.game.id!!,
+            )
+        ), writer)
         val csv = writer.toString()
         assertTrue(csv.contains("ID,Timestamp,User ID,Game name,Config,Result,Result passed"))
         assertTrue(csv.contains("\"{level:1,difficulty:easy}\""))

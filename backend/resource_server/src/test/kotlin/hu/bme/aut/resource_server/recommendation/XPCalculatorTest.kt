@@ -21,15 +21,15 @@ class XPCalculatorTest {
 
         var config = mapOf(Pair("p1", 2))
         var xp = XPCalculator.calculateXP(setOf(configItem), config)
-        assertEquals(60, xp)
+        assertEquals(20, xp)
 
         config = mapOf(Pair("p1", 3))
         xp = XPCalculator.calculateXP(setOf(configItem), config)
-        assertEquals(90, xp)
+        assertEquals(30, xp)
 
         config = mapOf(Pair("p1", 6))
         xp = XPCalculator.calculateXP(setOf(configItem), config)
-        assertEquals(600, xp)
+        assertEquals(300, xp)
     }
 
     @Test
@@ -50,26 +50,26 @@ class XPCalculatorTest {
 
         config = mapOf(Pair("p1", 600))
         xp = XPCalculator.calculateXP(setOf(configItem), config)
-        assertEquals(500, xp)
+        assertEquals(50, xp)
 
         config = mapOf(Pair("p1", 300))
         xp = XPCalculator.calculateXP(setOf(configItem), config)
-        assertEquals(1600, xp)
+        assertEquals(800, xp)
     }
 
     @Test
     fun `should calculate XP for multiple ConfigItems`() {
         var config = mapOf(Pair("p1", 1), Pair("p2", 3))
         var xp = XPCalculator.calculateXP(configItems, config)
-        assertEquals(50, xp)
+        assertEquals(20, xp)
 
         config =mapOf(Pair("p1", 2), Pair("p2", 4))
         xp = XPCalculator.calculateXP(configItems, config)
-        assertEquals(230, xp)
+        assertEquals(30, xp)
 
         config = mapOf(Pair("p1", 0), Pair("p2", 7))
         xp = XPCalculator.calculateXP(configItems, config)
-        assertEquals(700, xp)
+        assertEquals(350, xp)
     }
 
     @Test
@@ -80,7 +80,7 @@ class XPCalculatorTest {
 
         config = mapOf(Pair("p1", 20))
         xp = XPCalculator.calculateXP(configItems, config)
-        assertEquals(3000, xp)
+        assertEquals(1000, xp)
     }
 
     private val configItems = setOf(
