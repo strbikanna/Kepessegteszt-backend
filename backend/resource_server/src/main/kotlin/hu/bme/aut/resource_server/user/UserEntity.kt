@@ -3,6 +3,7 @@ package hu.bme.aut.resource_server.user
 import hu.bme.aut.resource_server.profile.EnumProfileItem
 import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.profile.dto.ProfileItem
+import hu.bme.aut.resource_server.recommendation.special_settings.SpecialSettings
 import hu.bme.aut.resource_server.user.role.Role
 import hu.bme.aut.resource_server.user.role.Subscription
 import hu.bme.aut.resource_server.user_group.group.Group
@@ -77,6 +78,13 @@ data class UserEntity(
         inverseJoinColumns = [JoinColumn(name = "group_id", referencedColumnName = "id")],
     )
     val groups: MutableSet<Group> = mutableSetOf(),
+
+    @ElementCollection
+    @CollectionTable(name = "special_game_settings", joinColumns = [JoinColumn(name = "fk_user_id")])
+    var specialGameSettings: MutableSet<SpecialSettings> = mutableSetOf(),
+
+    @Column(name = "xp")
+    var xP: Int = 0
 
     ) {
     fun getProfile(): MutableSet<ProfileItem> {

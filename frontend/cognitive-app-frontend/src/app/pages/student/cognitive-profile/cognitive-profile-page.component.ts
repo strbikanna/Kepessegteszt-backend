@@ -1,14 +1,14 @@
 import { Component, HostListener, OnInit} from '@angular/core';
 import {CognitiveProfileService} from "../../../service/cognitive-profile/cognitive-profile.service";
 import {CognitiveProfile} from "../../../model/cognitive_profile.model";
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, Observable, of} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {TEXTS} from "../../../text/app.text_messages";
 import {UserInfo} from "../../../auth/userInfo";
 import {Role} from "../../../utils/constants";
 import {User} from "../../../model/user/user.model";
 import {DateRange} from "../../../common/date-picker/date-picker.component";
-import {ProfileData} from "../../../model/profile/profile_data.model";
+import {GenericProfileData} from "../../../model/profile/profile_data.model";
 
 @Component({
     selector: 'app-cognitive-profile',
@@ -17,7 +17,7 @@ import {ProfileData} from "../../../model/profile/profile_data.model";
 })
 export class CognitiveProfilePageComponent implements OnInit {
 
-    currentProfileData!: ProfileData[]
+    currentProfileData!: GenericProfileData[]
     profileDescription: string = ''
     profileDataHistory: BehaviorSubject<CognitiveProfile[]> = new BehaviorSubject<CognitiveProfile[]>([])
     text = TEXTS.cognitive_profile
@@ -26,6 +26,7 @@ export class CognitiveProfilePageComponent implements OnInit {
     loadingProfile = true
     loadingDescription = true
     profileTimestamp = new Date()
+    xp: Observable<number> = of(0)
 
     constructor(private service: CognitiveProfileService) {}
 
@@ -42,6 +43,7 @@ export class CognitiveProfilePageComponent implements OnInit {
             this.profileDataHistory.next(profiles)
             this.loading = false
         })
+        this.xp = this.service.getXp()
     }
 
     onDateChosen(dateRange: DateRange) {

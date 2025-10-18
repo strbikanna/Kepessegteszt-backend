@@ -1,13 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ResultService, SearchOptions} from "../../../../service/result/result.service";
-import {GameManagementService} from "../../../../service/game-management/game-management.service";
-import {map, Observable, of} from "rxjs";
+import {Observable, of} from "rxjs";
 import {Result} from "../../../../model/result.model";
 import {Game} from "../../../../model/game.model";
 import {MatPaginator, MatPaginatorIntl, PageEvent} from "@angular/material/paginator";
 import {PaginatorTranslator} from "../../../../common/paginator/paginator-translator";
 import {SortElement} from "../../../../common/sort-control/sort-control.component";
-import {AdminService} from "../../../../service/admin/admin.service";
 import {TEXTS} from "../../../../text/app.text_messages";
 import {UserInfo} from "../../../../auth/userInfo";
 import {AuthUser} from "../../../../model/user/user-contacts.model";
@@ -113,6 +111,29 @@ export class ResultPageComponent implements OnInit {
 
     passedFilterElements(): Observable<string[]>{
         return of([this.text.result_info.passed, this.text.result_info.failed])
+    }
+
+    constructCsvPath(): string{
+        let options = this.getSearchOptions();
+        let basePath = this.resultService.csvPath;
+        let params = `?sortBy=${options.sortBy}&sortOrder=${options.sortOrder}`;
+        if(options.pageIndex !== undefined){
+            params += `&pageIndex=${options.pageIndex}`;
+        }
+        if(options.pageSize !== undefined){
+            params += `&pageSize=${options.pageSize}`;
+        }
+        if(options.gameIds){
+            params += `&gameIds=${options.gameIds.join(',')}`;
+        }
+        if(options.usernames && this.canAccessOtherUserData()){
+            params += `&usernames=${options.usernames.join(',')}`;
+        }
+        if(options.passed !== undefined){
+            params += `&resultWin=${options.passed}`;
+        }
+        return basePath + params;
+
     }
 
 

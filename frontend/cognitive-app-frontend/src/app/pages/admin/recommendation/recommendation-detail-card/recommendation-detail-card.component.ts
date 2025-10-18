@@ -7,6 +7,7 @@ import {
 } from "../../group-management/add-user-to-group-dialog/add-user-to-group-dialog.component";
 import {User} from "../../../../model/user/user.model";
 import {ConfirmDialogComponent} from "../../../../common/confirm-dialog/confirm-dialog.component";
+import {onImageError} from "../../../../utils/app.image_resources";
 
 @Component({
   selector: 'app-recommendation-detail-card',
@@ -37,8 +38,21 @@ export class RecommendationDetailCardComponent {
     return Object.keys(this.recommendation.config);
   }
 
+  getConfigValue(key: string): string {
+    let value = this.recommendation.config[key]
+    if(value instanceof Object){
+      if(value['distractionTypes']){
+        const distractionTypes = value['distractionTypes']
+        return distractionTypes.length
+      }
+      return ''
+    }
+    return value
+  }
+
   private onRecommendationDelete() {
     this.deleteRecommendation.emit(this.recommendation.id!!);
   }
 
+  protected readonly onImageError = onImageError;
 }

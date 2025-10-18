@@ -100,6 +100,11 @@ import { CognitiveProfileEditPageComponent } from './pages/admin/cognitive-profi
 import {GamesComponent} from "./pages/common/games/games.component";
 import {ResultInsightPageComponent} from "./pages/common/result-insight-page/result-insight-page.component";
 import {ResultChartComponent} from "./charts/result-chart/result-chart.component";
+import {
+    SpecialSettingsFormComponent
+} from "./pages/admin/recommendation/special-settings-form/special-settings-form.component";
+import {CountUpComponent, NumberPipe} from "./common/count-up/count-up.component";
+import {ImpersonationHeaderComponent} from "./general/impersonation-header/impersonation-header.component";
 
 
 @NgModule({
@@ -155,6 +160,7 @@ import {ResultChartComponent} from "./charts/result-chart/result-chart.component
         CreateGroupDialogComponent,
         CreateOrgDialogComponent,
         TimestampPipe,
+        NumberPipe,
         PrivacyPolicyPageComponent,
         FooterComponent,
         DeleteAccountComponent,
@@ -163,7 +169,9 @@ import {ResultChartComponent} from "./charts/result-chart/result-chart.component
         AbilityPageComponent,
         EditableAbilityCardComponent,
         FeatureDescriptionComponent,
-        CognitiveProfileEditPageComponent
+        CognitiveProfileEditPageComponent,
+        SpecialSettingsFormComponent,
+        CountUpComponent
     ],
     imports: [
         BrowserModule,
@@ -183,27 +191,13 @@ import {ResultChartComponent} from "./charts/result-chart/result-chart.component
                 silentRenewUrl: `${environment.clientUrl}/silent-renew.html`,
                 renewTimeBeforeTokenExpiresInSeconds: 10,
                 logLevel: LogLevel.Debug,
-            },
-                {
-                    configId: 'gameTokenConfig',
-                    authority: environment.authServerUrl,
-                    redirectUrl: `${environment.clientUrl}/games`,
-                    postLogoutRedirectUri: environment.clientUrl,
-                    clientId: environment.clientId,
-                    scope: 'openid game',
-                    responseType: 'code',
-                    silentRenew: true,
-                    silentRenewUrl: `${environment.clientUrl}/silent-renew.html`,
-                    useRefreshToken: false,
-                    logLevel: LogLevel.Debug,
-                },
-            ],
+            }],
         }),
         MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule, MatTabsModule, MatDialogModule, MatPaginatorModule, MatChipsModule, ReactiveFormsModule, MatInputModule, MatExpansionModule, MatCheckboxModule, MatAutocompleteModule, MatProgressBarModule,
         NgxEchartsModule.forRoot({
             echarts
         }),
-        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule, MatSliderModule, MatSnackBarModule, MatTableModule, MatTreeModule
+        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule, MatSliderModule, MatSnackBarModule, MatTableModule, MatTreeModule, ImpersonationHeaderComponent
     ],
     providers: [
         {

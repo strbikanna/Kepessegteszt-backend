@@ -201,12 +201,46 @@ class UserController(
         userService.updateUser(user)
     }
 
+    @GetMapping("/xp")
+    @ResponseStatus(HttpStatus.OK)
+    fun getXp(
+        authentication: Authentication
+    ): Int{
+        val user = userService.getUserEntityByUsername(authentication.name)
+        return user.xP
+    }
+
+    @GetMapping("/xp/inspect")
+    @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_ADMIN', 'ROLE_TEACHER', 'ROLE_PARENT')")
+    @ResponseStatus(HttpStatus.OK)
+    fun getXpOfOtherUser(
+        @RequestParam username: String
+    ): Int{
+        val user = userService.getUserEntityByUsername(username)
+        return user.xP
+    }
+
+    @PutMapping("/xp")
+    @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_ADMIN', 'ROLE_TEACHER')")
+    @ResponseStatus(HttpStatus.OK)
+    fun updateXpOfOtherUser(
+        @RequestParam username: String,
+        @RequestParam xp: Int,
+    ): Int{
+        val user = userService.getUserEntityByUsername(username)
+        user.xP = xp
+        userService.saveUser(user)
+        return user.xP
+    }
+
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.OK)
     suspend fun removeUser(authentication: Authentication) {
         val username = authentication.name
         authService.removeUserFromAuthServer(authentication)
-        userService.removeUserForever(username)
+        withContext(Dispatchers.IO) {
+            userService.removeUserForever(username)
+        }
     }
 
 }

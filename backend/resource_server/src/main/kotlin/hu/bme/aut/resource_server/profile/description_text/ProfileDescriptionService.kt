@@ -5,6 +5,7 @@ import hu.bme.aut.resource_server.llm.abilities2text.ChatMessageResponse
 import hu.bme.aut.resource_server.user.UserGroupDataService
 import hu.bme.aut.resource_server.user.UserService
 import hu.bme.aut.resource_server.user.filter.UserFilterDto
+import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service
@@ -23,6 +24,7 @@ class ProfileDescriptionService(
         const val VALUE = 0.5
     }
 
+    @Transactional
     suspend fun getProfileDescriptionOfUser(username: String): ProfileDescriptionTextDto =
         withContext(Dispatchers.IO) {
             val dbEntity = repository.findByUserUsername(username)
@@ -51,6 +53,7 @@ class ProfileDescriptionService(
             )
         }
 
+    @Transactional
     fun deleteProfileDescriptionOfUser(username: String) {
         val dbEntity = repository.findByUserUsername(username) ?: return
         repository.delete(dbEntity)

@@ -88,7 +88,7 @@ class UserGroupServiceTest(
         organizationRepository.save(org)
         groupRepository.save(group1)
         userGroupService.removeUserFromGroup(user.username, org.id!!)
-        val allUsersInGroup = userGroupService.getAllUsersInGroup(group1.id!!)
+        val allUsersInGroup = userGroupService.getAllUsersInGroup(group1.id!!,0, 100)
         val modifiedUser = testUtilsService.userRepository.findById(user.id!!)
         assertEquals(0, allUsersInGroup.size)
         assertEquals(0, modifiedUser.get().groups.size)

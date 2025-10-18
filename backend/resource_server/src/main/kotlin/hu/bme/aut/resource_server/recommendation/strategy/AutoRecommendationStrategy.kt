@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.recommendation
+package hu.bme.aut.resource_server.recommendation.strategy
 
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService

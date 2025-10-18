@@ -9,7 +9,7 @@
                    aria-label="Select page"
                    (page)="handlePageEvent($event)">
     </mat-paginator>
-    <app-csv-download-button *ngIf="isAdmin()" [csvLink]="resultService.csvPath"></app-csv-download-button>
+    <app-csv-download-button *ngIf="isAdmin()" [csvLink]="constructCsvPath()"></app-csv-download-button>
     <button mat-flat-button routerLink="/result-charts" color="primary" class="ml-5">
         {{text.result_details}}
     </button>

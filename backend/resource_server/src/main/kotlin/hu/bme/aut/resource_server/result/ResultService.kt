@@ -1,6 +1,8 @@
 package hu.bme.aut.resource_server.result
 
 import hu.bme.aut.resource_server.game.GameEntity
+import hu.bme.aut.resource_server.recommendation.XPCalculator
+import hu.bme.aut.resource_server.recommendation.special_settings.XP_CONFIG_KEY
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.user.UserEntity
@@ -31,6 +33,11 @@ class ResultService(
             user = user,
             recommendedGame = recommendedGame
         )
+        if(result.passed){
+            val xpGain = XPCalculator.calculateXP(recommendedGame.game.configItems, result.config)
+            user.xP += xpGain
+            userRepository.save(user)
+        }
         return resultRepository.save(result)
     }
 

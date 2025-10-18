@@ -1,0 +1,1 @@
+alter table user add column xp int default 0;

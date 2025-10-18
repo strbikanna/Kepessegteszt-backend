@@ -1,6 +1,15 @@
 package hu.bme.aut.resource_server.recommendation
 
+import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.GameRepository
+import hu.bme.aut.resource_server.game.game_config.ConfigItem
+import hu.bme.aut.resource_server.recommendation.special_settings.DISTRACTION_CONFIG_KEY
+import hu.bme.aut.resource_server.recommendation.special_settings.SpecialSettingsDto
+import hu.bme.aut.resource_server.recommendation.special_settings.XP_CONFIG_KEY
+import hu.bme.aut.resource_server.recommendation.strategy.AutoRecommendationStrategy
+import hu.bme.aut.resource_server.recommendation.strategy.DefaultRecommendationStrategy
+import hu.bme.aut.resource_server.recommendation.strategy.LatestRecommendationStrategy
+import hu.bme.aut.resource_server.recommendation.strategy.RecommendationStrategy
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.result.ResultEntity
@@ -67,6 +76,7 @@ class RecommenderService(
         return recommendedGameRepository.save(recommendation)
     }
 
+    @Transactional
     suspend fun createNextRecommendationByResult(gameResult: ResultEntity): Map<String, Any> {
         recommendationStrategies.forEach {
             try {
@@ -147,5 +157,17 @@ class RecommenderService(
             )
         )
     }
+
+    fun applySpecialSettings(config: Map<String, Any>, gameId: Int, username: String): Map<String, Any> {
+        val user = userRepository.findByUsernameWithSpecialSettings(username).orElseThrow()
+        val validSettings = user.specialGameSettings.filter { it.isValid() }.toMutableSet()
+        val game = gameRepository.findByIdWithConfigItems(gameId).orElseThrow()
+        val xpGain = XPCalculator.calculateXP(game.configItems, config)
+        val updatedConfig = config.toMutableMap()
+        updatedConfig[DISTRACTION_CONFIG_KEY] = SpecialSettingsDto(validSettings)
+        updatedConfig[XP_CONFIG_KEY] = xpGain
+        return updatedConfig
+    }
+
 
 }

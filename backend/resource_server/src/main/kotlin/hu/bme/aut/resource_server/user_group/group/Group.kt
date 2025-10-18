@@ -66,4 +66,10 @@ class Group(
         )
     }
 
+    override fun addAdmin(user: UserEntity) {
+        admins.add(user)
+        members.add(user)
+        organization.members.add(user)
+    }
+
 }

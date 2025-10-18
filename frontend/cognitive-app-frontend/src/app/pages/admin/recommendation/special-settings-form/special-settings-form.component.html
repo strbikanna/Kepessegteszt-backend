@@ -1,0 +1,52 @@
+<div>
+    <h3 class="title mb-4">{{ texts.distracion }}</h3>
+    <form [formGroup]="specialSettingsForm">
+        <h4 class="title">{{ texts.diatraction_type }}</h4>
+        <div>
+            <mat-checkbox formControlName="blackScreen">
+                {{ texts.distraction_types.black_screen }}
+            </mat-checkbox>
+            <mat-checkbox formControlName="sound">
+                {{ texts.distraction_types.sound }}
+            </mat-checkbox>
+            <mat-checkbox formControlName="visual">
+                {{ texts.distraction_types.visual }}
+            </mat-checkbox>
+            <mat-checkbox formControlName="notification">
+                {{ texts.distraction_types.notification }}
+            </mat-checkbox>
+            <mat-checkbox formControlName="pavlovian">
+                {{ texts.distraction_types.pavlovian }}
+            </mat-checkbox>
+            <mat-checkbox formControlName="vibration">
+                {{ texts.distraction_types.vibration }}
+            </mat-checkbox>
+        </div>
+        <h4> {{ texts.min_interval }}</h4>
+            <mat-form-field class="w-20rem">
+                <mat-label>{{ texts.min_interval_label }}</mat-label>
+                <input matInput type="number" min="1" step="1" formControlName="minInterval" >
+                <mat-error *ngIf="specialSettingsForm.hasError('intervalInvalid')">
+                    {{ texts.wrong_interval_error }}
+                </mat-error>
+            </mat-form-field>
+
+        <h4>{{texts.max_interval}}</h4>
+            <mat-form-field class="w-20rem">
+                <mat-label>{{ texts.max_interval_label }}</mat-label>
+                <input matInput type="number" min="1" step="1" formControlName="maxInterval" >
+                <mat-error *ngIf="specialSettingsForm.hasError('intervalInvalid')">
+                    {{ texts.wrong_interval_error }}
+                </mat-error>
+            </mat-form-field>
+
+        <h4>{{texts.valid_minutes}}</h4>
+            <mat-form-field class="w-20rem">
+                <mat-label>{{ texts.valid_minutes_label }}</mat-label>
+                <input matInput type="number" min="1" step="1" formControlName="validMinutes">
+            </mat-form-field>
+    </form>
+    <button mat-button disabled="{{!isSaveEnabled()}}" (click)="updateSpecialSettings()" class="block my-2">
+        {{ texts.save }}
+    </button>
+</div>

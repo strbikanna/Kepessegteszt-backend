@@ -3,6 +3,7 @@ package hu.bme.aut.resource_server.user
 import hu.bme.aut.resource_server.user_group.organization.Address
 import hu.bme.aut.resource_server.utils.Gender
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Modifying
@@ -19,8 +20,13 @@ interface UserRepository: JpaRepository<UserEntity, Int>, JpaSpecificationExecut
 
     fun findByIdIn(ids: List<Int>): List<UserEntity>
 
+    fun findByIdInOrderByLastName(ids: List<Int>, page: PageRequest): List<UserEntity>
+
     @Query("SELECT u.id FROM UserEntity u")
     fun findAllIds(): List<Int>
+
+    @Query("SELECT u.username FROM UserEntity u")
+    fun findAllUsernames(): List<String>
 
     @Query("SELECT u FROM UserEntity u LEFT JOIN FETCH u.profileFloat LEFT JOIN FETCH u.profileEnum WHERE u.id = :id")
     fun findByIdWithProfile(id: Int): Optional<UserEntity>
@@ -28,8 +34,11 @@ interface UserRepository: JpaRepository<UserEntity, Int>, JpaSpecificationExecut
     @Query("SELECT u FROM UserEntity u LEFT JOIN FETCH u.profileFloat LEFT JOIN FETCH u.profileEnum WHERE u.username = :userName")
     fun findByUsernameWithProfile(userName: String): Optional<UserEntity>
 
-    @Query("SELECT u FROM UserEntity u JOIN FETCH u.roles WHERE u.username = :username")
+    @Query("SELECT u FROM UserEntity u LEFT JOIN FETCH u.roles WHERE u.username = :username")
     fun findByUsernameWithRoles(username: String): Optional<UserEntity>
+
+    @Query("SELECT u FROM UserEntity u LEFT JOIN FETCH u.specialGameSettings WHERE u.username = :username")
+    fun findByUsernameWithSpecialSettings(username: String): Optional<UserEntity>
 
     @Modifying
     @Transactional

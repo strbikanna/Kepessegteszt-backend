@@ -23,7 +23,7 @@ export const groupManagementGuard: CanActivateFn = (route, state) => {
     )
         return true;
     const router = inject(Router)
-    return router.parseUrl('/games')
+    return router.parseUrl('/')
 };
 
 export const recommendationGuard: CanActivateFn = (route, state) => {

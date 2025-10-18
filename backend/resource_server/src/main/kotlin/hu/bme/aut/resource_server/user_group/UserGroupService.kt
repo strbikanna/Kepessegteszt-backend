@@ -61,8 +61,7 @@ class UserGroupService(
         val user = userRepository.findByUsername(username).orElseThrow()
         val group = userGroupRepository.findById(groupId).orElseThrow()
         val dbGroup = userGroupRepository.findById(group.id!!).get()
-        dbGroup.admins.add(user)
-        dbGroup.members.add(user)
+        dbGroup.addAdmin(user)
         userGroupRepository.save(group)
     }
 
@@ -106,11 +105,10 @@ class UserGroupService(
      * Returns all users in the group or organization based on its id
      */
     @Transactional
-    fun getAllUsersInGroup(groupId: Int): List<UserEntity> {
+    fun getAllUsersInGroup(groupId: Int, pageIndex: Int, pageSize: Int): List<UserEntity> {
         val group = userGroupRepository.findById(groupId).orElseThrow()
-        val dbGroup = userGroupRepository.findById(group.id!!).get()
-        val userIds = dbGroup.getAllUserIds()
-        return userRepository.findByIdIn(userIds.toList())
+        val userIds = group.getAllUserIds()
+        return userRepository.findByIdInOrderByLastName(userIds.toList(), PageRequest.of(pageIndex, pageSize))
     }
 
     @Transactional

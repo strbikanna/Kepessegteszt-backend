@@ -8,7 +8,7 @@
             <!-- Search bar or filter section -->
             <div class="mt-2">
                 <mat-form-field>
-                    <mat-label>{{text.search_group}}</mat-label>
+                    <mat-label>{{ text.search_group }}</mat-label>
                     <input matInput placeholder="{{text.search_group_placeholder}}" [formControl]="searchGroupName">
                     <button matSuffix mat-icon-button (click)="onClearSearch()">
                         <mat-icon>close</mat-icon>
@@ -51,7 +51,9 @@
         <!-- Placeholder for Group Details -->
 
         <div *ngIf="!selectedGroup && !selectedOrganization" class="mt-8 ml-8">
-            <p class="description text-lg text-center"><mat-icon class="iconLarge">groups_2</mat-icon></p>
+            <p class="description text-lg text-center">
+                <mat-icon class="iconLarge">groups_2</mat-icon>
+            </p>
             <p class="description text-lg">{{ text.group_details }}</p>
         </div>
 
@@ -61,8 +63,14 @@
         <div *ngIf="selected" class="flex">
             <!-- Members Section -->
             <div class="ml-8">
+                <p class="description text-lg font-bold">{{ text.members }}</p>
+
+                <div *ngIf="pageIndex !== 0" class="w-full flex justify-content-center mt-3">
+                    <button mat-icon-button (click)="onPreviousPageOfMembers()">
+                        <mat-icon>keyboard_arrow_up</mat-icon>
+                    </button>
+                </div>
                 <mat-list role="list">
-                    <p class="description text-lg font-bold">{{ text.members }}</p>
                     <mat-list-item *ngFor="let user of membersOfGroup | async">
                         <div class="flex align-items-center">
                             {{ user.firstName + ' ' + user.lastName }}
@@ -73,6 +81,11 @@
                         </div>
                     </mat-list-item>
                 </mat-list>
+                <div class="w-full flex justify-content-center mb-3">
+                    <button mat-icon-button (click)="onNextPageOfMembers()">
+                        <mat-icon>keyboard_arrow_down</mat-icon>
+                    </button>
+                </div>
                 <button mat-button (click)="openAddUserDialog(false)" color="primary">
                     <mat-icon>add</mat-icon>
                     {{ text.add_member }}

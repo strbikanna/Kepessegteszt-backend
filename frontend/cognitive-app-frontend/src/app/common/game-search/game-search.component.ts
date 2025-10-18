@@ -21,8 +21,8 @@ export class GameSearchComponent implements OnInit {
     @Output() onGameSelected: EventEmitter<Game> = new EventEmitter<Game>();
     @Output() onMultipleGameSelected: EventEmitter<Game[]> = new EventEmitter<Game[]>();
 
-    protected defaultGameOptions: Game[] = [];
-    protected filteredGameOptions: Game[] = [];
+    protected defaultGameOptions: GameOptionGroup[] = [];
+    protected filteredGameOptions: GameOptionGroup[] = [];
     protected chosenGames: Game[] = [];
     gameAutocompleteForm = new FormControl<Game | string>('')
 
@@ -34,9 +34,10 @@ export class GameSearchComponent implements OnInit {
             this.loadSelectedGames();
         }
         this.service.getExistingGamesPaged(0, 100).subscribe(games => {
-            this.defaultGameOptions = games
+            const gameOptions = games
                 .filter(this.filterGamesBy)
                 .sort((a, b) => a.name.localeCompare(b.name));
+            this.defaultGameOptions = this.createOptionGroups(gameOptions);
             this.filteredGameOptions = this.defaultGameOptions.slice(0, 10);
         });
         this.gameAutocompleteForm.valueChanges.subscribe(value => {
@@ -44,7 +45,7 @@ export class GameSearchComponent implements OnInit {
                 this.filteredGameOptions = this.defaultGameOptions.slice(0, 10);
                 return;
             }
-            const name = typeof value === 'string' ? value : value?.name;
+            const name = (typeof value === 'string') ? value : value?.name;
             this.filterGames(name);
         });
     }
@@ -55,12 +56,13 @@ export class GameSearchComponent implements OnInit {
             this.filteredGameOptions = this.defaultGameOptions.slice(0, 10);
         } else if (filter.length < 3) {
             this.filteredGameOptions = this.defaultGameOptions
-                .filter(option => option.name.toLowerCase().includes(filter))
-                .sort((a, b) => a.name.localeCompare(b.name))
+                .filter(option => option.activeGame.name.toLowerCase().includes(filter))
+                .sort((a, b) => a.activeGame.name.localeCompare(b.activeGame.name))
                 .filter((val, index) => index < 10);
         } else {
             this.service.getGamesByName(filter).subscribe(games => {
-                this.filteredGameOptions = games;
+                const filtered = games.filter(this.filterGamesBy)
+                this.filteredGameOptions = this.createOptionGroups(filtered);
             });
         }
     }
@@ -73,9 +75,9 @@ export class GameSearchComponent implements OnInit {
     onGameChosen() {
         let game: Game;
         if (typeof this.gameAutocompleteForm.value === 'string') {
-            const possibleGame = this.filteredGameOptions.find(game => game.name === this.gameAutocompleteForm.value);
+            const possibleGame = this.filteredGameOptions.find(game => game.activeGame?.name === this.gameAutocompleteForm.value);
             if (possibleGame === undefined) return;
-            game = possibleGame;
+            game = possibleGame.activeGame!;
         } else {
             if (this.gameAutocompleteForm.value === null) return;
             game = this.gameAutocompleteForm.value;
@@ -104,4 +106,33 @@ export class GameSearchComponent implements OnInit {
             })
         })
     }
+    private createOptionGroups(options: Game[]): GameOptionGroup[]{
+        const optionGroup: GameOptionGroup[] = [];
+        options.forEach(game => {
+            let group = optionGroup.find(g => g.activeGame?.name === game.name);
+            if (!group) {
+                group = {activeGame: game, games: []};
+                optionGroup.push(group);
+            }
+            if(game.active){
+                group.activeGame = game;
+            }else{
+                group.games.push(game);
+            }
+        })
+        optionGroup.forEach(group => {
+            if(!group.activeGame && group.games.length > 0){
+                group.activeGame = group.games[0];
+                group.games = group.games.slice(1);
+            }
+        })
+        return optionGroup;
+    }
+
+
+}
+
+interface GameOptionGroup {
+    activeGame: Game;
+    games: Game[];
 }

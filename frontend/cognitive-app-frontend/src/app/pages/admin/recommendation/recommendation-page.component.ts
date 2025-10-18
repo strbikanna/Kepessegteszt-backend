@@ -8,7 +8,7 @@ import {TEXTS} from "../../../text/app.text_messages";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Recommendation} from "../../../model/recommendation.model";
 import {AuthUser} from "../../../model/user/user-contacts.model";
-import {Observable} from "rxjs";
+import {BehaviorSubject, Observable, of} from "rxjs";
 import {RecommendedGame} from "../../../model/recommended_game.model";
 import {Router} from "@angular/router";
 
@@ -21,15 +21,16 @@ import {Router} from "@angular/router";
 export class RecommendationPageComponent {
     protected readonly texts = TEXTS.recommendation_page
     protected chosenUser: User | undefined;
+    protected usernameObservable: BehaviorSubject<string> = new BehaviorSubject<string>('');
     protected chosenGame: Game | undefined;
     protected configForm = this.fb.array<FormGroup>([]);
     protected existingRecommendations: Observable<RecommendedGame[]> = new Observable<RecommendedGame[]>();
 
-
     constructor(
         private service: RecommendationService, private fb: FormBuilder,
         private _snackbar: MatSnackBar, private router: Router
-    ) {}
+    ) {
+    }
 
     onGameSelected(game: Game) {
         this.chosenGame = game;
@@ -48,6 +49,7 @@ export class RecommendationPageComponent {
 
     onUserSelected(user: AuthUser) {
         this.chosenUser = user;
+        this.usernameObservable.next(user.username);
         this.loadExistingRecommendations(user.username, this.chosenGame?.id);
     }
 
@@ -99,7 +101,7 @@ export class RecommendationPageComponent {
         })
     }
 
-    onDeleteRecommendation(id: number){
+    onDeleteRecommendation(id: number) {
         this.service.deleteRecommendation(id).subscribe(() => {
             this._snackbar.open(this.texts.deleted, undefined, {duration: 3000})
             this.loadExistingRecommendations(this.chosenUser!!.username, this.chosenGame?.id)
@@ -114,12 +116,16 @@ export class RecommendationPageComponent {
 
     onUserClicked() {
         if (this.chosenUser) {
-            const params = {username: this.chosenUser.username, name: this.chosenUser.firstName + ' ' + this.chosenUser.lastName}
+            const params = {
+                username: this.chosenUser.username,
+                name: this.chosenUser.firstName + ' ' + this.chosenUser.lastName
+            }
             this.router.navigate(['/cognitive-profile-admin'], {queryParams: params})
         }
     }
-    onGameClicked(){
-        if(this.chosenGame){
+
+    onGameClicked() {
+        if (this.chosenGame) {
             const params = {chosenGameIds: this.chosenGame.id, chosenUserNames: this.chosenUser?.username}
             this.router.navigate(['/result'], {queryParams: params})
         }
@@ -135,9 +141,13 @@ export class RecommendationPageComponent {
         this.chosenGame = undefined;
         this.configForm = this.fb.array<FormGroup>([]);
         this.existingRecommendations = new Observable<RecommendedGame[]>();
-        if(this.chosenUser){
+        if (this.chosenUser) {
             this.loadExistingRecommendations(this.chosenUser.username, undefined);
         }
+    }
+
+    onUpdateSpecialSettings() {
+        this._snackbar.open(this.texts.specialSettings.updated, undefined, {duration: 3000})
     }
 
     private loadExistingRecommendations(username: string, gameId?: number) {

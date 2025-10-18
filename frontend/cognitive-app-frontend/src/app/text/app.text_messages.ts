@@ -37,6 +37,7 @@ export const TEXTS = {
     impersonation: {
         message: 'Bejelentkezhetsz a következő felhasználók nevében, vagy maradhatsz a saját fiókodban.',
         cancel: 'Maradok a saját fiókomban',
+        back: 'Saját fiók',
     },
     ability_page: abilityPage,
     games: {
@@ -215,7 +216,7 @@ export const TEXTS = {
         select_group_tooltip: 'Csoport kiválasztása a részletek megtekintéséhez',
         members: 'Tagok',
         admins: 'Adminok',
-        cannot_access_data: 'Ennek a csoportnak nem tekintheted meg az adatait, mivel nem vagy tagja.',
+        cannot_access_data: 'Ennek a csoportnak nem tekintheted meg az adatait, mivel nem vagy admin a csoportban.',
         remove_member: 'Eltávolítás a csoportból',
         remove_admin: 'Admin jogok visszavonása',
         create_group: 'Csoport létrehozása',
@@ -242,7 +243,8 @@ export const TEXTS = {
         download_info: 'Adatok letöltése CSV fájlként.',
     },
     recommendation_page: {
-        title: 'Játékajánlás',
+        title: 'Speciális játékbeállítások',
+        tab_title: 'Játékajánlás',
         subtitle: 'Játékbeállítás készítése egy felhasználó számára. Válaszd ki a felhasználót és a játékot, majd állítsd be a játékparamétereket.',
         user_autocomplete: {
             label: 'Felhasználó',
@@ -255,6 +257,30 @@ export const TEXTS = {
             no_game_selected: 'Válassz ki egy játékot a játékajánláshoz',
             invalid_param: 'A paraméter értéke nem megfelelő.',
         },
+        specialSettings: {
+            tab_title: 'Játék közbeni zavarás',
+            distracion: 'Játék közbeni zavarás beállítása',
+            distraction_info: 'Ez a beállításextra zavaró elemeket hoz a játékba.',
+            combined: 'Auditív és vizuális zavarás',
+            save: 'Beállítás mentése',
+            updated: 'A zavarás beállítása frissítve lett',
+            diatraction_type: 'Zavarás típusa',
+            min_interval: 'Minimális időköz a zavaró elemek között (másodperc)',
+            min_interval_label: 'Minimális időköz (másodperc)',
+            max_interval: 'Maximális időköz a zavaró elemek között (másodperc)',
+            max_interval_label: 'Maximális időköz (másodperc)',
+            valid_minutes: "Érvényességi idő (perc), amíg a zavaró elemek aktívak",
+            valid_minutes_label: "Érvényességi idő (perc)",
+            wrong_interval_error: 'A maximális időköznek nagyobbnak kell lennie, mint a minimális időköznek.',
+            distraction_types: {
+                black_screen: 'Elsötétülő képernyő',
+                notification: 'Értesítések',
+                sound: 'Hangok, zajok',
+                visual: 'Vizuális elemek',
+                pavlovian: 'Pavlovi zavarás',
+                vibration: 'Rezgés'
+            },
+        },
         submit: 'Ajánlás létrehozása',
         chosenUser: 'Kiválasztott játékos',
         chosenGame: 'Kiválasztott játék',
@@ -266,7 +292,7 @@ export const TEXTS = {
         card: {
             delete_game: 'Ajánlás törlése',
             confirm_title: 'Biztosan törölni szeretnéd ezt a játékbeállítást?',
-        }
+        },
     },
     result: {
         result_info: {
