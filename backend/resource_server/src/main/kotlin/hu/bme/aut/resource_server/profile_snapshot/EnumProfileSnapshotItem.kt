@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 /**
  * Entity class that is a snapshot of a user's cognitive profile item at given time.
  */
-@Entity
+@Entity(name = "enum_profile_snapshot_item")
 class EnumProfileSnapshotItem  (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +35,7 @@ class EnumProfileSnapshotItem  (
     @JsonIgnore
     override val user: UserEntity,
 
-    @Column
+    //@Column(name= "ability_value")
     @Enumerated(EnumType.STRING)
     @JsonProperty("value")
     override val abilityValue: EnumAbilityValue,

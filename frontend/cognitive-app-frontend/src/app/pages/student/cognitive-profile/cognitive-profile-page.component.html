@@ -1,13 +1,13 @@
 <div class="profile-container">
     <app-profile-card *ngIf="!loadingProfile" [profileData]="currentProfileData" id="card"></app-profile-card>
     <mat-progress-bar *ngIf="loadingProfile" mode="buffer"></mat-progress-bar>
-    <div class="w-min flex flex-column align-items-start" *ngIf="!loading">
+    <div class="w-min flex flex-column align-items-start" *ngIf="!loading">    
         <div class="mx-0 flex align-items-center">
             <h3 class="ml-0 mr-4 px-0">{{ text.title_xp }}</h3>
             <app-count-up [target]="xp" class="xpPoints"/>
         </div>
-        <h3>{{ text.llm.llm_text }}</h3>
-        <p class="description">{{ profileDescription }}</p>
+        <h3 >{{text.llm.llm_text}}</h3>
+        <p class="description my-3" [innerHTML]="profileDescription"></p>
         <mat-progress-bar *ngIf="loadingDescription" mode="buffer"></mat-progress-bar>
         <app-date-picker (dateChosen)="onDateChosen($event)"></app-date-picker>
     </div>

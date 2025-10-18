@@ -45,6 +45,7 @@ export class CognitiveProfileService {
             params = params.set('requestedUsername', username);
         }
         return this.http.get<ProfileDescription>(`${this.helper.baseUrl}${this.profileDescriptionEndpoint}`, {params: params}).pipe(
+            retry(2),
             map(desc =>{
                 if(desc.generatedText === ''){
                     desc.generatedText = TEXTS.cognitive_profile.llm.empty_description;

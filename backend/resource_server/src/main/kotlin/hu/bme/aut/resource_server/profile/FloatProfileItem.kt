@@ -10,7 +10,7 @@ import java.math.BigDecimal
  * Entity class for cognitive profile items with float values.
  * A collection of these items represents a cognitive profile.
  */
-@Entity
+@Entity(name = "float_profile_item")
 data class FloatProfileItem(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ data class FloatProfileItem(
     @JoinColumn(name="ability_id", referencedColumnName = "code")
     val ability: AbilityEntity,
 
-    @Column
+    @Column(name = "ability_value")
     var abilityValue: Double,
 
     /**
@@ -29,7 +29,7 @@ data class FloatProfileItem(
      * @max 1.0
      * @min 0.0
      */
-    @Column
+    @Column(name = "ability_accuracy")
     var abilityAccuracy: Double = 0.0
 ){
     fun toProfileItem(): ProfileItem {

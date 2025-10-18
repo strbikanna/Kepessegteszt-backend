@@ -1,7 +1,7 @@
 package hu.bme.aut.resource_server.profile.description_text
 
 import hu.bme.aut.resource_server.llm.abilities2text.AbilitiesToTextService
-import hu.bme.aut.resource_server.llm.abilities2text.AbiltityToTextDto
+import hu.bme.aut.resource_server.llm.abilities2text.ChatMessageResponse
 import hu.bme.aut.resource_server.user.UserGroupDataService
 import hu.bme.aut.resource_server.user.UserService
 import hu.bme.aut.resource_server.user.filter.UserFilterDto
@@ -37,7 +37,7 @@ class ProfileDescriptionService(
             val user = userService.getUserEntityWithProfileByUsername(username)
             val generatedText = generateDescriptionText(username, "")
             val newEntity = ProfileDescriptionTextEntity(
-                generatedText = generatedText.abilitiesAsText,
+                generatedText = generatedText.response,
                 user = user
             )
             repository.save(newEntity)
@@ -48,7 +48,7 @@ class ProfileDescriptionService(
         withContext(Dispatchers.IO) {
             val generatedText = generateDescriptionText(username, prompt)
             return@withContext ProfileDescriptionTextDto(
-                generatedText = generatedText.abilitiesAsText,
+                generatedText = generatedText.response,
                 prompt = generatedText.prompt
             )
         }
@@ -87,16 +87,16 @@ class ProfileDescriptionService(
             prompt
         )
         return ProfileDescriptionTextDto(
-            generatedText = generated.abilitiesAsText,
+            generatedText = generated.response,
             prompt = generated.prompt
         )
 
     }
 
-    private suspend fun generateDescriptionText(username: String, prompt: String): AbiltityToTextDto {
+    private suspend fun generateDescriptionText(username: String, prompt: String): ChatMessageResponse {
         val userAbilities = userService.getUserDtoWithProfileByUsername(username).profile.toList()
-        if (userAbilities.isEmpty() || userAbilities.none { it.accuracy >= MinAccuracy.VALUE }) {
-            return AbiltityToTextDto("", "")
+        if (userAbilities.isEmpty()) {
+            return ChatMessageResponse("", "")
         }
         return abilitiesToTextService.generateFromAbilities(userAbilities, prompt)
     }

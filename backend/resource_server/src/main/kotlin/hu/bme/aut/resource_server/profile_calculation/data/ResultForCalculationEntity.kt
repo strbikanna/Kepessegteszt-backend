@@ -29,6 +29,7 @@ data class ResultForCalculationEntity(
     /**
      * Normalized score, value between 0 and 1.
      */
+    @Column(name = "normalized_result")
     var normalizedResult: Double? = null,
 
     /**

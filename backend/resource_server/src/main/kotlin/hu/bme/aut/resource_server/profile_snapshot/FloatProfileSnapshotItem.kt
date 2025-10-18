@@ -14,7 +14,7 @@ import java.time.LocalDateTime
  * Entity class that is a snapshot of a user's cognitive profile item with float value
  * at given time.
  */
-@Entity
+@Entity(name = "float_profile_snapshot_item")
 data class FloatProfileSnapshotItem (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ data class FloatProfileSnapshotItem (
     @JoinColumn(name = "ability_id")
     override val ability: AbilityEntity,
 
-    @Column
+    //@Column(name = "ability_vale")
     @JsonProperty("value")
     override val abilityValue: Double,
 
