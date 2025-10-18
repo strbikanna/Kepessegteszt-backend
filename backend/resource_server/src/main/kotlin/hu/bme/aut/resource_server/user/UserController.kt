@@ -46,7 +46,7 @@ class UserController(
         authentication: Authentication,
         @RequestParam username: String,
         @RequestBody profile: List<ProfileItem>
-    ) : Deferred<List<ProfileItem>> = authService.doIfIsContact(authentication, username) {
+    ): Deferred<List<ProfileItem>> = authService.doIfIsContact(authentication, username) {
         userService.updateUserProfile(profile, username)
     }
 
@@ -73,7 +73,7 @@ class UserController(
         @PathVariable groupType: String
     ) {
         authService.checkUserGroupWriteAndThrow(authentication, groupId)
-        when(groupType) {
+        when (groupType) {
             "group" -> userGroupService.addUserToGroup(username, groupId)
             "organization" -> userGroupService.addUserToOrganization(username, groupId)
             "org" -> userGroupService.addUserToOrganization(username, groupId)
@@ -205,7 +205,7 @@ class UserController(
     @ResponseStatus(HttpStatus.OK)
     fun getXp(
         authentication: Authentication
-    ): Int{
+    ): Int {
         val user = userService.getUserEntityByUsername(authentication.name)
         return user.xP
     }
@@ -215,7 +215,7 @@ class UserController(
     @ResponseStatus(HttpStatus.OK)
     fun getXpOfOtherUser(
         @RequestParam username: String
-    ): Int{
+    ): Int {
         val user = userService.getUserEntityByUsername(username)
         return user.xP
     }
@@ -226,7 +226,7 @@ class UserController(
     fun updateXpOfOtherUser(
         @RequestParam username: String,
         @RequestParam xp: Int,
-    ): Int{
+    ): Int {
         val user = userService.getUserEntityByUsername(username)
         user.xP = xp
         userService.saveUser(user)
@@ -238,9 +238,7 @@ class UserController(
     suspend fun removeUser(authentication: Authentication) {
         val username = authentication.name
         authService.removeUserFromAuthServer(authentication)
-        withContext(Dispatchers.IO) {
-            userService.removeUserForever(username)
-        }
+        userService.removeUserForever(username)
     }
 
 }
