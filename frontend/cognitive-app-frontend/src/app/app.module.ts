@@ -104,6 +104,7 @@ import {
     SpecialSettingsFormComponent
 } from "./pages/admin/recommendation/special-settings-form/special-settings-form.component";
 import {CountUpComponent, NumberPipe} from "./common/count-up/count-up.component";
+import {ImpersonationHeaderComponent} from "./general/impersonation-header/impersonation-header.component";
 
 
 @NgModule({
@@ -196,7 +197,7 @@ import {CountUpComponent, NumberPipe} from "./common/count-up/count-up.component
         NgxEchartsModule.forRoot({
             echarts
         }),
-        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule, MatSliderModule, MatSnackBarModule, MatTableModule, MatTreeModule
+        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule, MatSliderModule, MatSnackBarModule, MatTableModule, MatTreeModule, ImpersonationHeaderComponent
     ],
     providers: [
         {

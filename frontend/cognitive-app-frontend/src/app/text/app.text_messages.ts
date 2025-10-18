@@ -37,6 +37,7 @@ export const TEXTS = {
     impersonation: {
         message: 'Bejelentkezhetsz a következő felhasználók nevében, vagy maradhatsz a saját fiókodban.',
         cancel: 'Maradok a saját fiókomban',
+        back: 'Saját fiók',
     },
     ability_page: abilityPage,
     games: {
