@@ -106,7 +106,8 @@ class RecommenderService(
         val games = gameRepository
             .findAllByActiveIsTrue()
             .filter { game ->
-                recommendedGameRepository.findAllByRecommendedToAndGame(user, game)
+                //there are no recommendation for the game and the user which is not completed
+                recommendedGameRepository.findAllByRecommendedToAndGameAndCompleted(user, game, false)
                     .isEmpty()
             }
         val recommendations = mutableListOf<RecommendedGameEntity>()
