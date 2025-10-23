@@ -44,16 +44,18 @@ class SuggestApiStrategy(
     ): Map<String, Any> = withContext(Dispatchers.IO) {
         val user = userRepository.findByUsernameWithProfile(username).orElseThrow()
         val game = gameRepository.findByIdWithAbilities(gameId).orElseThrow()
-
-        log.info("Generating recommendation for user: $username, game: $gameId, result: $isResultSuccess")
-
-        return@withContext getSuggestedConfigForGame(user.profileFloat, game.affectedAbilities, gameId, previousConfig, isResultSuccess)
+        if(game.modelId == null){
+            log.trace("Game with id $gameId has no modelId set for suggest-api")
+            return@withContext emptyMap()
+        }
+        log.trace("Generating recommendation for user: $username, game: $gameId, result: $isResultSuccess")
+        return@withContext getSuggestedConfigForGame(user.profileFloat, game.affectedAbilities, game.modelId!!, previousConfig, isResultSuccess)
     }
 
     suspend fun getSuggestedConfigForGame(
         playerAbilities: Set<FloatProfileItem>,
         gameAbilities: Set<AbilityEntity>,
-        gameId: Int,
+        gameId: String,
         previousConfig: Map<String, Any>,
         isResultSuccess: Boolean,
     ): Map<String, Any> {

@@ -6,12 +6,15 @@
         <input matInput formControlName="name">
     </mat-form-field>
     <mat-form-field>
+        <mat-label>{{text.modelId}}</mat-label>
+        <input matInput formControlName="modelId">
+    </mat-form-field>
+    <mat-form-field>
         <mat-label>{{text.description}}</mat-label>
         <textarea matInput formControlName="description"> </textarea>
     </mat-form-field>
     <div id="active">
         <mat-checkbox formControlName="active">{{text.active}}</mat-checkbox>
-
     </div>
     <div id="abilities">
         <h4>{{text.affected_abilities}}</h4>

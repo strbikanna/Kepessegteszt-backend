@@ -23,6 +23,11 @@ open class GameEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     open var id: Int? = null,
 
+    /**
+     * Unique identifier of the game model used in the suggest params api.
+     */
+    open val modelId: String?,
+
     open var version: Int,
 
     @Column(name ="_name")
