@@ -26,7 +26,7 @@ open class GameEntity(
     /**
      * Unique identifier of the game model used in the suggest params api.
      */
-    open val modelId: String?,
+    open val modelId: String? = null,
 
     open var version: Int,
 

@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.recommendation
+package hu.bme.aut.resource_server.recommendation.strategy
 
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
@@ -6,7 +6,6 @@ import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.profile_calculation.TestDataSource
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
-import hu.bme.aut.resource_server.recommendation.strategy.AutoRecommendationStrategy
 import hu.bme.aut.resource_server.user.UserEntity
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals

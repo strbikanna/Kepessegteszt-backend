@@ -62,7 +62,7 @@ class AbilityControllerTest(
     @Test
     fun shouldAddAbility(){
         testService.saveAuthUserWithRights(RoleName.STUDENT, RoleName.ADMIN)
-        val abilityEntity = AbilityEntity("Gt", "testAbility", "testDescription")
+        val abilityEntity = AbilityEntity("Gt", null, "testAbility", "testDescription")
         given(requestSpec)
             .header(testService.authHeaderName, testService.authUsername)
             .body(abilityEntity)
@@ -79,7 +79,7 @@ class AbilityControllerTest(
     fun shouldUpdateAbility(){
         testService.saveAuthUserWithRights(RoleName.STUDENT, RoleName.ADMIN)
         val abilityCount = testService.abilityRepository.count()
-        val abilityEntity = AbilityEntity("Gf", "updated name", "testDescription")
+        val abilityEntity = AbilityEntity("Gf", null,"updated name", "testDescription")
         given(requestSpec)
             .header(testService.authHeaderName, testService.authUsername)
             .body(abilityEntity)
@@ -101,7 +101,7 @@ class AbilityControllerTest(
             .get("${abilityEndpoint}/all")
             .then().statusCode(HttpStatus.OK.value())
 
-        val abilityEntity = AbilityEntity("Gt", "test ability name", "testDescription")
+        val abilityEntity = AbilityEntity("Gt", null, "test ability name", "testDescription")
         //save new ability
         given(requestSpec)
             .header(testService.authHeaderName, testService.authUsername)

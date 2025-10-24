@@ -1,15 +1,10 @@
 package hu.bme.aut.resource_server.recommendation
 
-import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.GameRepository
-import hu.bme.aut.resource_server.game.game_config.ConfigItem
 import hu.bme.aut.resource_server.recommendation.special_settings.DISTRACTION_CONFIG_KEY
 import hu.bme.aut.resource_server.recommendation.special_settings.SpecialSettingsDto
 import hu.bme.aut.resource_server.recommendation.special_settings.XP_CONFIG_KEY
-import hu.bme.aut.resource_server.recommendation.strategy.AutoRecommendationStrategy
-import hu.bme.aut.resource_server.recommendation.strategy.DefaultRecommendationStrategy
-import hu.bme.aut.resource_server.recommendation.strategy.LatestRecommendationStrategy
-import hu.bme.aut.resource_server.recommendation.strategy.RecommendationStrategy
+import hu.bme.aut.resource_server.recommendation.strategy.*
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.result.ResultEntity
@@ -25,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional
 class RecommenderService(
     @Autowired private var gameRepository: GameRepository,
     @Autowired private var autoRecommendationStrategy: AutoRecommendationStrategy,
-    //@Autowired private var suggestApiStrategy: SuggestApiStrategy,
+    @Autowired private var suggestApiStrategy: SuggestApiStrategy,
     @Autowired private var latestRecommendationStrategy: LatestRecommendationStrategy,
     @Autowired private var defaultRecommendationStrategy: DefaultRecommendationStrategy,
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
@@ -38,7 +33,7 @@ class RecommenderService(
     @PostConstruct
     fun initRecommendationStrategies() {
         recommendationStrategies = listOf(
-            //suggestApiStrategy,
+            suggestApiStrategy,
             autoRecommendationStrategy,
             latestRecommendationStrategy,
             defaultRecommendationStrategy

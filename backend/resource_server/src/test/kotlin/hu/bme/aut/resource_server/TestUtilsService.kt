@@ -42,11 +42,32 @@ class TestUtilsService(
     val gameAuthHeaderName = "authGame"
     var authUsername = "authenticated-test-user"
     var authGameId = 1
-    val abilityGf = AbilityEntity(code = "Gf", name = "Fluid intelligence", description = "Ability to discover the underlying characteristic that governs a problem or a set of materials.")
-    val abilityGq = AbilityEntity(code = "Gq", name = "Quantitative knowledge", description = "Range of general knowledge about mathematics.")
-    val abilityGsm = AbilityEntity(code = "Gsm", name = "Short term memory", description = "Ability to attend to and immediately recall temporally ordered elements in the correct order after a single presentation.")
-    val abilityGv = AbilityEntity("Gv", "Visual processing", "?")
-    val abilityColorsense = AbilityEntity("Cls", "Color sense", "If the brain/eye is capable to differentiate colors", AbilityType.ENUMERATED)
+    val abilityGf = AbilityEntity(
+        code = "Gf",
+        modelIndex = 2,
+        name = "Fluid intelligence",
+        description = "Ability to discover the underlying characteristic that governs a problem or a set of materials."
+    )
+    val abilityGq = AbilityEntity(
+        code = "Gq",
+        modelIndex = 3,
+        name = "Quantitative knowledge",
+        description = "Range of general knowledge about mathematics."
+    )
+    val abilityGsm = AbilityEntity(
+        code = "Gsm",
+        modelIndex = 5,
+        name = "Short term memory",
+        description = "Ability to attend to and immediately recall temporally ordered elements in the correct order after a single presentation."
+    )
+    val abilityGv = AbilityEntity("Gv", null, "Visual processing", "?")
+    val abilityColorsense = AbilityEntity(
+        "Cls",
+        null,
+        "Color sense",
+        "If the brain/eye is capable to differentiate colors",
+        AbilityType.ENUMERATED
+    )
 
     fun emptyRepositories() {
         resultForCalcRepository.deleteAll()
@@ -66,33 +87,33 @@ class TestUtilsService(
 
     fun createUnsavedTestUser(): UserEntity {
         val profile = mutableSetOf(
-                FloatProfileItem(
-                        ability = abilityGf,
-                        abilityValue = 10.0
-                ),
-                FloatProfileItem(
-                        ability = abilityGq,
-                        abilityValue = 4.0
-                ),
+            FloatProfileItem(
+                ability = abilityGf,
+                abilityValue = 1.0
+            ),
+            FloatProfileItem(
+                ability = abilityGq,
+                abilityValue = 1.0
+            ),
         )
         return UserEntity(
-                username = "test_user",
-                firstName = "Test",
-                lastName = "User",
-                profileFloat = profile,
-                profileEnum = mutableSetOf(),
-                roles = mutableSetOf(Role(RoleName.STUDENT))
+            username = "test_user",
+            firstName = "Test",
+            lastName = "User",
+            profileFloat = profile,
+            profileEnum = mutableSetOf(),
+            roles = mutableSetOf(Role(RoleName.STUDENT))
         )
     }
 
     fun saveAuthUserWithRights(vararg roles: RoleName): UserEntity {
         val user = UserEntity(
-                username = authUsername,
-                firstName = "Test",
-                lastName = "User",
-                profileFloat = mutableSetOf(),
-                profileEnum = mutableSetOf(),
-                roles = roles.map { Role(it) }.toMutableSet()
+            username = authUsername,
+            firstName = "Test",
+            lastName = "User",
+            profileFloat = mutableSetOf(),
+            profileEnum = mutableSetOf(),
+            roles = roles.map { Role(it) }.toMutableSet()
         )
         return userRepository.save(user)
     }
@@ -101,12 +122,13 @@ class TestUtilsService(
         fillAbilityRepository()
         val abilities = mutableSetOf(abilityGf, abilityGq)
         val game = GameEntity(
-                version = 1,
-                name = "Auth game",
-                thumbnailPath = "test/files/assets",
-                description = "Auth test game description",
-                active = true,
-                affectedAbilities = abilities
+            modelId = "auth_game",
+            version = 1,
+            name = "Auth game",
+            thumbnailPath = "test/files/assets",
+            description = "Auth test game description",
+            active = true,
+            affectedAbilities = abilities
         )
         val entity = gameRepository.save(game)
         authGameId = entity.id!!
@@ -118,34 +140,35 @@ class TestUtilsService(
         val user1 = createUnsavedTestUser().copy(username = "test_user1")
         userRepository.save(user1)
         val profile = mutableSetOf(
-                FloatProfileItem(
-                        ability = abilityGsm,
-                        abilityValue = 2.0
-                ),
-                FloatProfileItem(
-                        ability = abilityGq,
-                        abilityValue = 7.0
-                ),
+            FloatProfileItem(
+                ability = abilityGsm,
+                abilityValue = 2.0
+            ),
+            FloatProfileItem(
+                ability = abilityGq,
+                abilityValue = 7.0
+            ),
         )
         val user2 = UserEntity(
-                username = "test_user2",
-                firstName = "Test",
-                lastName = "User",
-                profileFloat = profile,
-                profileEnum = mutableSetOf(),
-                roles = mutableSetOf(Role(RoleName.STUDENT))
+            username = "test_user2",
+            firstName = "Test",
+            lastName = "User",
+            profileFloat = profile,
+            profileEnum = mutableSetOf(),
+            roles = mutableSetOf(Role(RoleName.STUDENT))
         )
         userRepository.save(user2)
     }
 
     fun createAndSaveGame(): GameEntity {
         val game = GameEntity(
-                version = 1,
-                name = "Test game",
-                thumbnailPath = "test/files/assets",
-                description = "Test game description",
-                active = true,
-                affectedAbilities = mutableSetOf(abilityGf)
+            modelId = "rocket",
+            version = 1,
+            name = "Test game",
+            thumbnailPath = "test/files/assets",
+            description = "Test game description",
+            active = true,
+            affectedAbilities = mutableSetOf(abilityGf)
         )
         return gameRepository.save(game)
     }
@@ -153,9 +176,9 @@ class TestUtilsService(
     fun createAndSaveRecommendedGame(user: UserEntity): RecommendedGameEntity {
         val game = createAndSaveGame()
         val recommendedGameEntity = RecommendedGameEntity(
-                game = game,
-                recommendedTo = user,
-                config = mapOf(),
+            game = game,
+            recommendedTo = user,
+            config = mapOf(),
         )
         return recommendedGameRepository.save(recommendedGameEntity)
     }
@@ -168,10 +191,10 @@ class TestUtilsService(
         json["level"] = 2
         json["passed"] = true
         return ResultEntity(
-                result = json.toMap(),
-                config = mutableMapOf(),
-                user = user,
-                recommendedGame = createAndSaveRecommendedGame(user)
+            result = json.toMap(),
+            config = mutableMapOf(),
+            user = user,
+            recommendedGame = createAndSaveRecommendedGame(user)
         )
     }
 

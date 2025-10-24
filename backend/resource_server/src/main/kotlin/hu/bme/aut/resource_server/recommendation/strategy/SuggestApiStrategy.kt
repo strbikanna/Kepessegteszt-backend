@@ -1,6 +1,7 @@
 package hu.bme.aut.resource_server.recommendation.strategy
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
+import hu.bme.aut.resource_server.ability.AbilityRepository
 import hu.bme.aut.resource_server.error.ApiCallException
 import hu.bme.aut.resource_server.game.GameRepository
 import hu.bme.aut.resource_server.profile.FloatProfileItem
@@ -22,6 +23,7 @@ import org.springframework.web.reactive.function.client.WebClient
 class SuggestApiStrategy(
     private val userRepository: UserRepository,
     private val gameRepository: GameRepository,
+    private val abilityRepository: AbilityRepository,
 ) : RecommendationStrategy {
 
     @Value("\${app.suggest-api}")
@@ -49,22 +51,25 @@ class SuggestApiStrategy(
             return@withContext emptyMap()
         }
         log.trace("Generating recommendation for user: $username, game: $gameId, result: $isResultSuccess")
-        return@withContext getSuggestedConfigForGame(user.profileFloat, game.affectedAbilities, game.modelId!!, previousConfig, isResultSuccess)
+        return@withContext getSuggestedConfigForGame(user.profileFloat, game.modelId!!, previousConfig, isResultSuccess)
     }
 
     suspend fun getSuggestedConfigForGame(
         playerAbilities: Set<FloatProfileItem>,
-        gameAbilities: Set<AbilityEntity>,
         gameId: String,
         previousConfig: Map<String, Any>,
         isResultSuccess: Boolean,
     ): Map<String, Any> {
-        val relevantAbilitiesOrdered = playerAbilities
-            .filter { gameAbilities.contains(it.ability) }
-            .sortedBy { it.ability.code }
+        val allAbilities = abilityRepository.findAll()
+            .filter { it.modelIndex != null }
+            .sortedBy { it.modelIndex }
+        val relevantAbilityValuesOrdered = allAbilities.map { ability ->
+            val playerAbility = playerAbilities.find { it.ability.code == ability.code }
+            playerAbility?.abilityValue ?: 0.0
+        }
 
         val requestDto = SuggestRequestDto(
-            abilities = relevantAbilitiesOrdered.map { it.abilityValue },
+            abilities = relevantAbilityValuesOrdered,
             previousParams = previousConfig.map { it.key to it.value as Int }.toMap(),
             resultSuccess = isResultSuccess,
         )
