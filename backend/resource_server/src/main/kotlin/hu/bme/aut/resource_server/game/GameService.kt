@@ -107,6 +107,7 @@ class GameService (
         affectedAbilities.addAll(game.affectedAbilities)
         return GameEntity(
             id = game.id,
+            modelId = game.modelId,
             name = game.name,
             description = game.description,
             affectedAbilities = affectedAbilities,

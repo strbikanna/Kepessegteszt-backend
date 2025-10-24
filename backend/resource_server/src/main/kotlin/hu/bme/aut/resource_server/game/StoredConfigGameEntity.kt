@@ -10,6 +10,7 @@ import jakarta.persistence.Entity
 @DiscriminatorValue("stored_config")
 class StoredConfigGameEntity(
     id: Int? = null,
+    modelId: String? = null,
     version: Int,
     name: String,
     description: String,
@@ -17,7 +18,7 @@ class StoredConfigGameEntity(
     active: Boolean,
     affectedAbilities: MutableSet<AbilityEntity> = mutableSetOf(),
     configItems: MutableSet<ConfigItem> = mutableSetOf(),
-) : GameEntity(id, version, name, description, thumbnailPath, active, affectedAbilities, configItems) {
+) : GameEntity(id, modelId, version, name, description, thumbnailPath, active, affectedAbilities, configItems) {
 
     override fun validateConfig(config: Map<String, Any>): Map<String, Any> {
         val storedConfigId = config.values.first() as Int

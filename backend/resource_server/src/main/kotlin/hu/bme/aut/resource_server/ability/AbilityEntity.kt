@@ -15,6 +15,11 @@ data class AbilityEntity(
     @Id
     val code: String,
 
+    /**
+     * Optional model index used by external suggest API.
+     */
+    val modelIndex: Int? = null,
+
     val name: String,
 
     val description: String,

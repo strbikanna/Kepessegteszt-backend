@@ -7,6 +7,8 @@ import hu.bme.aut.resource_server.game.game_config.ConfigItem
 data class GameDto(
     val id: Int?,
 
+    val modelId: String?,
+
     val version: Int,
 
     val name: String,
@@ -26,6 +28,7 @@ data class GameDto(
 ) {
     constructor(gameEntity: GameEntity) : this(
         id = gameEntity.id,
+        modelId = gameEntity.modelId,
         version = gameEntity.version,
         name = gameEntity.name,
         description = gameEntity.description,
@@ -40,6 +43,7 @@ data class GameDto(
         return if (storedConfig)
             StoredConfigGameEntity(
                 id = id,
+                modelId = modelId,
                 version = version,
                 name = name,
                 description = description,
@@ -50,6 +54,7 @@ data class GameDto(
             ) else
             GameEntity(
             id = id,
+            modelId = modelId,
             version = version,
             name = name,
             description = description,

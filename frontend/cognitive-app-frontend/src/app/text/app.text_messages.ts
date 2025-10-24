@@ -175,6 +175,7 @@ export const TEXTS = {
             title: 'Játék adatainak szerkesztése',
             data_section_title: 'Játék adatai',
             name: 'Név',
+            modelId: 'Modell ID (neurális háló által használt azonosító)',
             description: 'Leírás',
             thumbnail: 'Borítókép',
             url: 'URL',
