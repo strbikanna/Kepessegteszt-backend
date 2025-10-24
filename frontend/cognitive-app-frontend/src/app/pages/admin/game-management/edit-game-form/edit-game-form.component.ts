@@ -72,7 +72,7 @@ export class EditGameFormComponent implements OnInit {
         this.loading = true;
         const game: Game = {
             id: this.game?.id,
-            modelId: this.game?.modelId,
+            modelId: this.gameForm.controls?.modelId?.value ?? undefined,
             name: this.gameForm.controls.name.value ?? '',
             description: this.gameForm.controls.description.value ?? '',
             version: this.gameForm.controls.version.value ?? 1,
