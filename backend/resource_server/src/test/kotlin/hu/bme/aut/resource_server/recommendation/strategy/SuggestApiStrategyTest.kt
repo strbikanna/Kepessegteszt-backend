@@ -5,6 +5,8 @@ import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
+import hu.bme.aut.resource_server.result.ResultDto
+import hu.bme.aut.resource_server.result.ResultService
 import hu.bme.aut.resource_server.user.UserEntity
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
@@ -14,12 +16,14 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import kotlin.math.abs
 
 @SpringBootTest
 @ActiveProfiles("test")
 class SuggestApiStrategyTest(
     @Autowired private var suggestApiStrategy: SuggestApiStrategy,
-    @Autowired private var testService: TestUtilsService
+    @Autowired private var testService: TestUtilsService,
+    @Autowired private var resultService: ResultService
 ) {
     @BeforeEach
     fun setUp() {
@@ -85,8 +89,9 @@ class SuggestApiStrategyTest(
 
     @Test
     fun `Should not throw when params out of bound`() {
-        testRecommendation.config = configItems.associate { it.paramName to
-                if (it.increment < 0) it.hardestValue - 1 else it.easiestValue - 1
+        testRecommendation.config = configItems.associate {
+            it.paramName to
+                    if (it.increment < 0) it.hardestValue - 1 else it.easiestValue - 1
         }
         runBlocking {
             val suggestedConfig = suggestApiStrategy.generateRecommendationByResult(
@@ -118,7 +123,8 @@ class SuggestApiStrategyTest(
                 previousConfig = testRecommendation.config,
                 isResultSuccess = true
             )
-            val updatedRecommendation = testService.recommendedGameRepository.findByIdWithProfileUpdateItems(testRecommendation.id!!).get()
+            val updatedRecommendation =
+                testService.recommendedGameRepository.findByIdWithProfileUpdateItems(testRecommendation.id!!).get()
             updatedRecommendation.profileUpdateItems.forEach {
                 assertNotNull(it.updatedValue)
             }
@@ -131,6 +137,36 @@ class SuggestApiStrategyTest(
                 assertTrue(it.updatedValue >= correspondingFailureUpdate!!.updatedValue)
             }
 
+        }
+    }
+
+    @Test
+    fun `user profile should be updated when saving result based on suggested update`() {
+        runBlocking {
+            suggestApiStrategy.generateRecommendationByResult(
+                username = testUser.username,
+                gameId = testGame.id!!,
+                recommendedGameId = testRecommendation.id!!,
+                previousConfig = testRecommendation.config,
+                isResultSuccess = true
+            )
+            val resultPassed = ResultDto(
+                result = mapOf(Pair("passed", true)),
+                gameplayId = testRecommendation.id!!,
+            )
+            resultService.updateProfileByResult(resultPassed)
+            val updatedUser = testService.userRepository.findByIdWithProfile(testUser.id!!).get()
+            val recommendedUpdates =
+                testService.recommendedGameRepository.findByIdWithProfileUpdateItems(testRecommendation.id!!)
+                    .get().profileUpdateItems
+            recommendedUpdates
+                .filter { it.validOnSuccess }
+                .forEach { updateItem ->
+                    val userAbility = updatedUser.profileFloat.find { it.ability.code == updateItem.ability.code }
+                    assertNotNull(userAbility)
+                    assertTrue(0.0001 > abs(updateItem.updatedValue - userAbility!!.abilityValue))
+
+                }
         }
     }
 
