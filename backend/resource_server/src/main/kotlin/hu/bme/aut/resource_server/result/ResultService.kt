@@ -55,6 +55,7 @@ class ResultService(
         recommendedGame.profileUpdateItems.filter { it.validOnSuccess == isSuccess }.forEach { updateItem ->
             user.profileFloat.find { it.ability.code == updateItem.ability.code }?.let { profileItem ->
                 profileItem.abilityValue = updateItem.updatedValue
+                profileItem.incrementAccuracy()
             } ?: run {
                 user.profileFloat.add(
                     FloatProfileItem(

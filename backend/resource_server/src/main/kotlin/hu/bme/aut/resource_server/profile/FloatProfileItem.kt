@@ -32,11 +32,18 @@ data class FloatProfileItem(
     @Column(name = "ability_accuracy")
     var abilityAccuracy: Double = 0.0
 ){
+    private object Constants {
+        val ACCURACY_INCREMENT = 0.01
+    }
     fun toProfileItem(): ProfileItem {
         return ProfileItem(
             ability = ability,
             value = abilityValue,
             accuracy = abilityAccuracy
         )
+    }
+
+    fun incrementAccuracy(){
+        abilityAccuracy = (abilityAccuracy + Constants.ACCURACY_INCREMENT).coerceAtMost(1.0)
     }
 }
