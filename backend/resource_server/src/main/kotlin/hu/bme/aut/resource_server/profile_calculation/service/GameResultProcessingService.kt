@@ -56,15 +56,15 @@ class GameResultProcessingService(
      * Deletes these not normalized results and saves only the relevant ones of the new normalized values.
      * As a result new relevant normalized values will be in database, having @param timestamp creation timestamp (default to now).
      */
-    private fun normalizeNewResults(game: GameEntity, timestamp: LocalDateTime = LocalDateTime.now()){
+    private fun normalizeNewResults(game: GameEntity){
         val resultCount = dataService.getCountForNewCalculation(game)
-        val maxPages: Int = (resultCount/defaultPageSize).toInt()
+        val maxPages: Int = (resultCount/defaultPageSize).toInt() + 1
         var results: List<ResultForCalculationEntity>
         var normalizedResults: List<ResultForCalculationEntity>
         for(i in 0 .. maxPages){
             results = dataService.getAllNonNormalizedResultsOfGame(game, PageRequest.of(i, defaultPageSize))
             normalizedResults = calculator.calculateNormalizedScores(results, game)
-            dataService.saveAll( normalizedResults)
+            dataService.saveAll(normalizedResults)
         }
     }
 
@@ -92,7 +92,6 @@ class GameResultProcessingService(
     }
 
     private companion object{
-        val sortOrderNormalizedResultDesc = Sort.by(Sort.Order.desc("normalizedResult"))
         val sortOrderNormalizedResultAsc = Sort.by(Sort.Order.asc("normalizedResult"))
         const val PAGE_SIZE_FOR_MEDIAN = 2
     }

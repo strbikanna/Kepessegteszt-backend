@@ -27,8 +27,7 @@ class ProfileDescriptionService(
     @Transactional
     suspend fun getProfileDescriptionOfUser(username: String): ProfileDescriptionTextDto =
         withContext(Dispatchers.IO) {
-            /*TODO fix error with Query not returning 1 result */
-            val dbEntity = repository.findByUserUsername(username)
+            var dbEntity = repository.findAllByUserUsername(username).firstOrNull()
             if (dbEntity != null && !isOlderThanOneWeek(dbEntity.timestamp)) {
                 return@withContext ProfileDescriptionTextDto(dbEntity)
             }
@@ -56,8 +55,7 @@ class ProfileDescriptionService(
 
     @Transactional
     fun deleteProfileDescriptionOfUser(username: String) {
-        val dbEntity = repository.findByUserUsername(username) ?: return
-        repository.delete(dbEntity)
+        repository.deleteByUserUsername(username)
     }
 
     suspend fun generateComparisonTextToGroup(
@@ -71,13 +69,13 @@ class ProfileDescriptionService(
         val user = userService.getUserEntityWithProfileByUsername(username)
         val abilities = user.profileFloat.map { it.ability }.toSet()
         if (abilities.isEmpty() || userAbilities.none { it.accuracy >= MinAccuracy.VALUE }) {
-            return ProfileDescriptionTextDto(generatedText =  "")
+            return ProfileDescriptionTextDto(generatedText = "")
         }
         val groupAbilities = withContext(Dispatchers.IO) {
             userGroupService.getAbilityToAverageValueInGroup(userGroupId, userFilter, abilities)
         }
         if (groupAbilities.isEmpty()) {
-            return ProfileDescriptionTextDto(generatedText =  "")
+            return ProfileDescriptionTextDto(generatedText = "")
         }
         val groupName = userGroupId?.let { userGroupService.getGroupById(it).name } ?: "csoport"
 

@@ -45,24 +45,6 @@ class UserProfileUpdaterService(
     }
 
     /**
-     * Updates the users float profile by the given ability and value.
-     * Ability accuracy is incremented by 0.1.
-     * @param username the username of the user
-     * @param ability the ability to update
-     * @param updatedValue the new value of the ability
-     */
-    @Transactional
-    fun updateUserProfile(username: String, ability: AbilityEntity, updatedValue: Double){
-        val user = userService.getUserEntityWithProfileByUsername(username)
-        val updateableProfileItem = user.profileFloat.find { it.ability.code == ability.code }
-        updateableProfileItem?.let {
-            it.abilityValue = updatedValue
-            it.abilityAccuracy += ABILITY_ACCURACY_INCREMENT
-        }
-        userService.saveUser(user)
-    }
-
-    /**
      * Updates the user profiles by the first (and only) affected ability of the game.
      * The new ability value is calculated by the following formula:
      * newAbilityValue = 1 + (normalizedResult - mean) / deviation * 0.15
@@ -89,12 +71,13 @@ class UserProfileUpdaterService(
      * Value relevancy is a number between 0 and 1 that expresses how much the new value should change the profile.
      */
 
-    private fun saveNewAbilityValueOfUser(user: UserEntity, ability: AbilityEntity, value: Double, valueRelevancy: Double = 0.5){
+    private fun saveNewAbilityValueOfUser(user: UserEntity, ability: AbilityEntity, value: Double, valueRelevancy: Double = 1.0){
         val oldProfileItem = user.profileFloat.find { it.ability.code == ability.code }
         val newProfileItem = FloatProfileItem(ability = ability, abilityValue = value)
         if(oldProfileItem != null){
             snapshotService.saveSnapshotOfUserAbilities(user, listOf(ability))
             oldProfileItem.abilityValue = value * valueRelevancy + oldProfileItem.abilityValue * (1.0 - valueRelevancy)
+            oldProfileItem.incrementAccuracy()
         }else {
             user.profileFloat.add(newProfileItem)
         }
