@@ -45,6 +45,7 @@ class ResultController(
             profileSnapshotService.saveSnapshotOfUser(username)
         }
         val savedResult = resultService.save(resultData)
+        resultService.updateProfileByResult(resultData)
         val game = resultService.getGameOfResult(savedResult.id!!)
         if (!game.active) {
             throw IllegalArgumentException("Game is not active");

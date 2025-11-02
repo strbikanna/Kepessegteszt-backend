@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import hu.bme.aut.resource_server.game.GameEntity
+import hu.bme.aut.resource_server.profile.ProfileUpdateItem
 import hu.bme.aut.resource_server.user.UserEntity
 import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.*
@@ -43,7 +44,11 @@ data class RecommendedGameEntity(
 
         @ManyToOne
         @JoinColumn(name = "game_id")
-        val game: GameEntity
+        val game: GameEntity,
+
+        @ElementCollection
+        @CollectionTable(name = "PROFILE_UPDATE_ITEM", joinColumns = [JoinColumn(name = "recommended_game_id")])
+        var profileUpdateItems: Set<ProfileUpdateItem> = emptySet()
 )
 
 fun RecommendedGameEntity.toDto(): RecommendedGameDto{

@@ -78,6 +78,7 @@ class RecommenderService(
                 val config = it.generateRecommendationByResult(
                     gameResult.recommendedGame.recommendedTo.username,
                     gameResult.recommendedGame.game.id!!,
+                    gameResult.recommendedGame.id!!,
                     gameResult.config,
                     gameResult.passed
                 )

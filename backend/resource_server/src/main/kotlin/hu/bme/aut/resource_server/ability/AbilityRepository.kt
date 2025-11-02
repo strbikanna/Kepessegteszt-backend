@@ -6,4 +6,5 @@ import java.util.*
 interface AbilityRepository : CrudRepository<AbilityEntity, String> {
     fun findAllByName(name: String): List<AbilityEntity>
     fun findByCode(code: String): Optional<AbilityEntity>
+    fun findByModelIndex(modelIndex: Int): Optional<AbilityEntity>
 }

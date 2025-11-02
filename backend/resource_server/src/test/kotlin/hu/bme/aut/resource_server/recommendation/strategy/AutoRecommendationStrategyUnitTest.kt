@@ -66,6 +66,7 @@ private lateinit var autoRecommendationService : AutoRecommendationStrategy
             val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(
                 user.username,
                 game.id!!,
+                latestRecommendation.id!!,
                 result.config,
                 true
             )
@@ -87,6 +88,7 @@ private lateinit var autoRecommendationService : AutoRecommendationStrategy
             val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(
                 user.username,
                 game.id!!,
+                latestRecommendation.id!!,
                 latestRecommendation.config,
                 true
             )
@@ -113,6 +115,7 @@ private lateinit var autoRecommendationService : AutoRecommendationStrategy
             val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(
                 user.username,
                 game.id!!,
+                latestRecommendation.id!!,
                 latestRecommendation.config,
                 true
             )
@@ -165,6 +168,7 @@ private lateinit var autoRecommendationService : AutoRecommendationStrategy
             val nextRecommendation =  autoRecommendationService.generateRecommendationByResult(
                 user.username,
                 negyszogBlokkok.id!!,
+                latestRecommendation.id!!,
                 latestRecommendation.config,
                 true
             )

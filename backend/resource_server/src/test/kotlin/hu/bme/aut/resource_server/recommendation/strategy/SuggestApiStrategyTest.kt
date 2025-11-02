@@ -57,6 +57,42 @@ class SuggestApiStrategyTest(
             val suggestedConfig = suggestApiStrategy.generateRecommendationByResult(
                 username = testUser.username,
                 gameId = testGame.id!!,
+                recommendedGameId = testRecommendation.id!!,
+                previousConfig = testRecommendation.config,
+                isResultSuccess = true
+            )
+            assertEquals(4, suggestedConfig.size)
+            val difference = suggestedConfig["difference"] as Int
+            val answerTimelimit = suggestedConfig["answer_timelimit"] as Int
+            val visibleTime = suggestedConfig["visible_time"] as Int
+            val questionNumber = suggestedConfig["question_number"] as Int
+            val isDiffHarder = difference in 300..2_000 //should be lower than initial value
+            val isTimeLimitHarder = (answerTimelimit in 2_000..3_000) //should be lower than initial value
+            val isVisibleTimeHarder = (visibleTime in 201..3_000) //should be lower than initial value
+            val isQuestionNumHarder = (questionNumber in 10..15) //should be higher than initial value
+            //at least 3 harder
+            assertTrue(
+                listOf(
+                    isDiffHarder,
+                    isTimeLimitHarder,
+                    isVisibleTimeHarder,
+                    isQuestionNumHarder
+                ).count { it } >= 3
+            )
+
+        }
+    }
+
+    @Test
+    fun `Should not throw when params out of bound`() {
+        testRecommendation.config = configItems.associate { it.paramName to
+                if (it.increment < 0) it.hardestValue - 1 else it.easiestValue - 1
+        }
+        runBlocking {
+            val suggestedConfig = suggestApiStrategy.generateRecommendationByResult(
+                username = testUser.username,
+                gameId = testGame.id!!,
+                recommendedGameId = testRecommendation.id!!,
                 previousConfig = testRecommendation.config,
                 isResultSuccess = true
             )
@@ -73,26 +109,28 @@ class SuggestApiStrategyTest(
     }
 
     @Test
-    fun `Should not throw when params out of bound`() {
-        testRecommendation.config = configItems.associate { it.paramName to
-                if (it.increment < 0) it.hardestValue - 1 else it.easiestValue - 1
-        }
+    fun `should create user profile updates`() {
         runBlocking {
-            val suggestedConfig = suggestApiStrategy.generateRecommendationByResult(
+            suggestApiStrategy.generateRecommendationByResult(
                 username = testUser.username,
                 gameId = testGame.id!!,
+                recommendedGameId = testRecommendation.id!!,
                 previousConfig = testRecommendation.config,
                 isResultSuccess = true
             )
-            assertEquals(4, suggestedConfig.size)
-            val difference = suggestedConfig["difference"] as Int
-            val answerTimelimit = suggestedConfig["answer_timelimit"] as Int
-            val visibleTime = suggestedConfig["visible_time"] as Int
-            val questionNumber = suggestedConfig["question_number"] as Int
-            assertTrue(difference in 300..10_000)
-            assertTrue(answerTimelimit in 2_000..6_000)
-            assertTrue(visibleTime in 201..5_000)
-            assertTrue(questionNumber in 5..15)
+            val updatedRecommendation = testService.recommendedGameRepository.findByIdWithProfileUpdateItems(testRecommendation.id!!).get()
+            updatedRecommendation.profileUpdateItems.forEach {
+                assertNotNull(it.updatedValue)
+            }
+            val successAbilityUpdates = updatedRecommendation.profileUpdateItems.filter { it.validOnSuccess }
+            val failureAbilityUpdates = updatedRecommendation.profileUpdateItems.filter { !it.validOnSuccess }
+            assertEquals(successAbilityUpdates.size, failureAbilityUpdates.size)
+            successAbilityUpdates.forEach {
+                val correspondingFailureUpdate = failureAbilityUpdates.find { fa -> it.ability == fa.ability }
+                assertNotNull(correspondingFailureUpdate)
+                assertTrue(it.updatedValue >= correspondingFailureUpdate!!.updatedValue)
+            }
+
         }
     }
 
@@ -191,8 +229,6 @@ class SuggestApiStrategyTest(
         name = "Fluid intelligence",
         description = "Ability to discover the underlying characteristic that governs a problem or a set of materials."
     )
-
-
 
     private lateinit var testRecommendation: RecommendedGameEntity
 

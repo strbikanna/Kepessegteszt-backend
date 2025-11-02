@@ -27,6 +27,7 @@ class ProfileDescriptionService(
     @Transactional
     suspend fun getProfileDescriptionOfUser(username: String): ProfileDescriptionTextDto =
         withContext(Dispatchers.IO) {
+            /*TODO fix error with Query not returning 1 result */
             val dbEntity = repository.findByUserUsername(username)
             if (dbEntity != null && !isOlderThanOneWeek(dbEntity.timestamp)) {
                 return@withContext ProfileDescriptionTextDto(dbEntity)
