@@ -55,7 +55,8 @@ class ProfileDescriptionService(
 
     @Transactional
     fun deleteProfileDescriptionOfUser(username: String) {
-        repository.deleteByUserUsername(username)
+        val descriptions = repository.findAllByUserUsername(username)
+        repository.deleteAll(descriptions)
     }
 
     suspend fun generateComparisonTextToGroup(
