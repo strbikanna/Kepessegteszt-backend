@@ -6,7 +6,7 @@ import kotlin.math.max
 object XPCalculator {
 
     fun calculateXP(configItems: Set<ConfigItem>, config: Map<String, Any>): Int {
-        var xpGain = 0.0
+        var xpGain = 10.0
         configItems.forEach { item ->
             val configValue = config[item.paramName]
             if (configValue != null && configValue is Int) {
