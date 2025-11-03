@@ -6,7 +6,7 @@ import kotlin.math.max
 object XPCalculator {
 
     fun calculateXP(configItems: Set<ConfigItem>, config: Map<String, Any>): Int {
-        var xpGain = 0
+        var xpGain = 0.0
         configItems.forEach { item ->
             val configValue = config[item.paramName]
             if (configValue != null && configValue is Int) {
@@ -15,10 +15,12 @@ object XPCalculator {
                         difficultyWithLowerHarder(configValue, item.hardestValue, item.easiestValue)
                     else
                         difficultyWithLowerEasier(configValue, item.hardestValue, item.easiestValue)
-                xpGain += (difficulty * getMultiplicatorByDifficultyPercent(difficulty * 100)).toInt()
+                xpGain += difficulty
             }
         }
-        return xpGain / configItems.size
+        return ((xpGain / configItems.size)
+                * getMultiplicatorByDifficultyPercent(xpGain * 100))
+            .toInt()
     }
 
     private fun getMultiplicatorByDifficultyPercent(difficultyPercent: Double): Int {
