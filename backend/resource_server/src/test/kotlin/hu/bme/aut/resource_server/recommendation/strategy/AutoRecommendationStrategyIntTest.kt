@@ -33,6 +33,7 @@ class AutoRecommendationStrategyIntTest(
             val recommendation = autoRecommendationStrategy.generateRecommendationByResult(
                 username,
                 result.recommendedGame.game.id!!,
+                result.recommendedGame.id!!,
                 result.config,
                 true
             )
@@ -60,6 +61,7 @@ class AutoRecommendationStrategyIntTest(
             val recommendation = autoRecommendationStrategy.generateRecommendationByResult(
                 username,
                 game.id!!,
+                currRecommendation.id!!,
                 config,
                 true
             )

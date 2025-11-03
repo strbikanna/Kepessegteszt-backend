@@ -46,6 +46,7 @@ class RecommendationIntegrationTest(
                 val createdConfig = autoRecommendationService.generateRecommendationByResult(
                     user.username,
                     newRGame.game.id!!,
+                    newRGame.id!!,
                     result.config,
                     true
                 )

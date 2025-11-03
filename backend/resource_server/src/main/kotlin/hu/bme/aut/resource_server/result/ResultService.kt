@@ -1,6 +1,7 @@
 package hu.bme.aut.resource_server.result
 
 import hu.bme.aut.resource_server.game.GameEntity
+import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.recommendation.XPCalculator
 import hu.bme.aut.resource_server.recommendation.special_settings.XP_CONFIG_KEY
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
@@ -33,12 +34,37 @@ class ResultService(
             user = user,
             recommendedGame = recommendedGame
         )
-        if(result.passed){
+        if (result.passed) {
             val xpGain = XPCalculator.calculateXP(recommendedGame.game.configItems, result.config)
             user.xP += xpGain
             userRepository.save(user)
         }
         return resultRepository.save(result)
+    }
+
+
+    /**
+     * Updates the user's float profile based on the result success.
+     * Updated values are stored in the corresponding RecommendedGameEntity.
+     */
+    @Transactional
+    fun updateProfileByResult(result: ResultDto) {
+        val recommendedGame = recommendedGameRepository.findById(result.gameplayId).orElseThrow()
+        val isSuccess = isResultPassed(result.result)
+        val user = recommendedGame.recommendedTo
+        recommendedGame.profileUpdateItems.filter { it.validOnSuccess == isSuccess }.forEach { updateItem ->
+            user.profileFloat.find { it.ability.code == updateItem.ability.code }?.let { profileItem ->
+                profileItem.abilityValue = updateItem.updatedValue
+                profileItem.incrementAccuracy()
+            } ?: run {
+                user.profileFloat.add(
+                    FloatProfileItem(
+                        ability = updateItem.ability,
+                        abilityValue = updateItem.updatedValue
+                    )
+                )
+            }
+        }
     }
 
     @Transactional
@@ -54,42 +80,53 @@ class ResultService(
     }
 
     @Transactional
-    fun getAllFiltered(usernames: List<String>,  gameIds: List<Int>?, resultPassed: Boolean?, page: Pageable,): List<ResultDetailsDto> {
+    fun getAllFiltered(
+        usernames: List<String>,
+        gameIds: List<Int>?,
+        resultPassed: Boolean?,
+        page: Pageable,
+    ): List<ResultDetailsDto> {
         val users = userRepository.findAllByUsernameIn(usernames)
         val existsGameFilter = !gameIds.isNullOrEmpty()
         val existsResultFilter = resultPassed != null
-        if(existsGameFilter && existsResultFilter){
-            return resultRepository.findAllByUserInAndPassedAndRecommendedGameGameIdIn(users, resultPassed!!, gameIds!!, page)
+        if (existsGameFilter && existsResultFilter) {
+            return resultRepository.findAllByUserInAndPassedAndRecommendedGameGameIdIn(
+                users,
+                resultPassed!!,
+                gameIds!!,
+                page
+            )
                 .toList()
                 .map { convertToDto(it) }
         }
-        if(existsGameFilter){
+        if (existsGameFilter) {
             return resultRepository.findAllByUserInAndRecommendedGameGameIdIn(users, gameIds!!, page)
                 .toList()
                 .map { convertToDto(it) }
         }
-        if(existsResultFilter){
+        if (existsResultFilter) {
             return resultRepository.findAllByUserInAndPassed(users, resultPassed!!, page)
                 .toList()
                 .map { convertToDto(it) }
         }
         return resultRepository.findAllByUserIn(users, page).toList().map { convertToDto(it) }
     }
+
     @Transactional
-    fun getAllFiltered(gameIds: List<Int>?, resultPassed: Boolean?, page: Pageable,): List<ResultDetailsDto> {
+    fun getAllFiltered(gameIds: List<Int>?, resultPassed: Boolean?, page: Pageable): List<ResultDetailsDto> {
         val existsGameFilter = !gameIds.isNullOrEmpty()
         val existsResultFilter = resultPassed != null
-        if(existsGameFilter && existsResultFilter){
+        if (existsGameFilter && existsResultFilter) {
             return resultRepository.findAllByPassedAndRecommendedGameGameIdIn(resultPassed!!, gameIds!!, page)
                 .toList()
                 .map { convertToDto(it) }
         }
-        if(existsGameFilter){
+        if (existsGameFilter) {
             return resultRepository.findAllByRecommendedGameGameIdIn(gameIds!!, page)
                 .toList()
                 .map { convertToDto(it) }
         }
-        if(existsResultFilter){
+        if (existsResultFilter) {
             return resultRepository.findAllByPassed(resultPassed!!, page)
                 .toList()
                 .map { convertToDto(it) }
@@ -97,39 +134,39 @@ class ResultService(
         return resultRepository.findAll(page).toList().map { convertToDto(it) }
     }
 
-    fun getCountByFilters(usernames: List<String>,  gameIds: List<Int>?, resultPassed: Boolean?): Long{
+    fun getCountByFilters(usernames: List<String>, gameIds: List<Int>?, resultPassed: Boolean?): Long {
         val users = userRepository.findAllByUsernameIn(usernames)
         val existsGameFilter = !gameIds.isNullOrEmpty()
         val existsResultFilter = resultPassed != null
-        if(existsGameFilter && existsResultFilter){
-            return resultRepository.countByUserInAndRecommendedGameGameIdInAndPassed(users,  gameIds!!, resultPassed!!)
+        if (existsGameFilter && existsResultFilter) {
+            return resultRepository.countByUserInAndRecommendedGameGameIdInAndPassed(users, gameIds!!, resultPassed!!)
         }
-        if(existsGameFilter){
+        if (existsGameFilter) {
             return resultRepository.countByUserInAndRecommendedGameGameIdIn(users, gameIds!!)
         }
-        if(existsResultFilter){
+        if (existsResultFilter) {
             return resultRepository.countByUserInAndPassed(users, resultPassed!!)
         }
         return resultRepository.countByUserIn(users)
     }
 
-    fun getCountByFilters(gameIds: List<Int>?, resultPassed: Boolean?): Long{
+    fun getCountByFilters(gameIds: List<Int>?, resultPassed: Boolean?): Long {
         val existsGameFilter = !gameIds.isNullOrEmpty()
         val existsResultFilter = resultPassed != null
-        if(existsGameFilter && existsResultFilter){
+        if (existsGameFilter && existsResultFilter) {
             return resultRepository.countByRecommendedGameGameIdInAndPassed(gameIds!!, resultPassed!!)
         }
-        if(existsGameFilter){
+        if (existsGameFilter) {
             return resultRepository.countByRecommendedGameGameIdIn(gameIds!!)
         }
-        if(existsResultFilter){
+        if (existsResultFilter) {
             return resultRepository.countByPassed(resultPassed!!)
         }
         return resultRepository.count()
     }
 
     @Transactional
-    fun getAll(page: Pageable): List<ResultDetailsDto>{
+    fun getAll(page: Pageable): List<ResultDetailsDto> {
         return resultRepository.findAll(page).content.map { convertToDto(it) }
     }
 
@@ -141,7 +178,8 @@ class ResultService(
     fun getNextRecommendationForGameIfExists(recommendationId: Long, username: String): RecommendedGameEntity? {
         val user = userRepository.findByUsername(username).orElseThrow()
         val game = recommendedGameRepository.findById(recommendationId).orElseThrow().game
-        return recommendedGameRepository.findByRecommendedToAndGameAndCompletedAndRecommender(user, game, false, null).firstOrNull()
+        return recommendedGameRepository.findByRecommendedToAndGameAndCompletedAndRecommender(user, game, false, null)
+            .firstOrNull()
     }
 
     fun convertSortBy(sortBy: String, sortOrder: String): Sort {
@@ -154,6 +192,7 @@ class ResultService(
         }
         return if (sortOrder.uppercase() == "ASC") sort.ascending() else sort.descending()
     }
+
     fun getCountOfResultsByUser(username: String): Long {
         val user = userRepository.findByUsername(username).orElseThrow()
         return resultRepository.countByUser(user)
