@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import {AppConstants} from "../../utils/constants";
 import {Observable, retry} from "rxjs";
 import {AuthUser} from "../../model/user/user-contacts.model";

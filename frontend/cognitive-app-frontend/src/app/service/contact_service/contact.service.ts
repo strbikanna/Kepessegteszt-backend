@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable, retry} from "rxjs";
 import {AuthUser} from "../../model/user/user-contacts.model";
-import {HttpClient, HttpParams} from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import {AppConstants} from "../../utils/constants";
 import {UserInfo} from "../../auth/userInfo";
 

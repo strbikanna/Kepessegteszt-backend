@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './general/login/login.component';
 import { HomeComponent } from './general/home/home.component';
-import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { AuthModule, LogLevel } from 'angular-auth-oidc-client';
 import {provideRouter, RouterModule, withComponentInputBinding} from "@angular/router";
 import {appRoutes} from "./utils/app.routes";
@@ -107,8 +107,7 @@ import {CountUpComponent, NumberPipe} from "./common/count-up/count-up.component
 import {ImpersonationHeaderComponent} from "./general/impersonation-header/impersonation-header.component";
 
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AppComponent,
         LoginComponent,
         HomeComponent,
@@ -173,33 +172,33 @@ import {ImpersonationHeaderComponent} from "./general/impersonation-header/imper
         SpecialSettingsFormComponent,
         CountUpComponent
     ],
-    imports: [
-        BrowserModule,
+    exports: [
+        GameCardComponent,
+        UserFilterComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
         RouterModule.forRoot(appRoutes),
-        HttpClientModule,
         AuthModule.forRoot({
             config: [{
-                configId: 'baseConfig',
-                authority: environment.authServerUrl,
-                redirectUrl: environment.clientUrl,
-                postLogoutRedirectUri: environment.clientUrl,
-                clientId: environment.clientId,
-                scope: 'openid',
-                responseType: 'code',
-                silentRenew: true,
-                useRefreshToken: false,
-                silentRenewUrl: `${environment.clientUrl}/silent-renew.html`,
-                renewTimeBeforeTokenExpiresInSeconds: 10,
-                logLevel: LogLevel.Debug,
-            }],
+                    configId: 'baseConfig',
+                    authority: environment.authServerUrl,
+                    redirectUrl: environment.clientUrl,
+                    postLogoutRedirectUri: environment.clientUrl,
+                    clientId: environment.clientId,
+                    scope: 'openid',
+                    responseType: 'code',
+                    silentRenew: true,
+                    useRefreshToken: false,
+                    silentRenewUrl: `${environment.clientUrl}/silent-renew.html`,
+                    renewTimeBeforeTokenExpiresInSeconds: 10,
+                    logLevel: LogLevel.Debug,
+                }],
         }),
         MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule, MatTabsModule, MatDialogModule, MatPaginatorModule, MatChipsModule, ReactiveFormsModule, MatInputModule, MatExpansionModule, MatCheckboxModule, MatAutocompleteModule, MatProgressBarModule,
         NgxEchartsModule.forRoot({
             echarts
         }),
-        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule, MatSliderModule, MatSnackBarModule, MatTableModule, MatTreeModule, ImpersonationHeaderComponent
-    ],
-    providers: [
+        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule, MatSliderModule, MatSnackBarModule, MatTableModule, MatTreeModule, ImpersonationHeaderComponent], providers: [
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
@@ -217,11 +216,6 @@ import {ImpersonationHeaderComponent} from "./general/impersonation-header/imper
             useClass: GlobalErrorhandlerService,
         },
         provideRouter(appRoutes, withComponentInputBinding()),
-    ],
-    exports: [
-        GameCardComponent,
-        UserFilterComponent
-    ],
-    bootstrap: [AppComponent]
-})
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule { }

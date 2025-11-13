@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import {SimpleHttpService} from "../../utils/simple-http.service";
 import {map, Observable} from "rxjs";
 import {Group, Organization} from "../../model/user/user-group";
