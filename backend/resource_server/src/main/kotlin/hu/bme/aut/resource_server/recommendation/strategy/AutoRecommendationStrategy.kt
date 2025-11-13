@@ -1,7 +1,7 @@
 package hu.bme.aut.resource_server.recommendation.strategy
 
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
-import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
+import hu.bme.aut.resource_server.profile_calculation.service.ResultForCalculationDataService
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

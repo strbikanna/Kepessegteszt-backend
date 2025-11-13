@@ -2,7 +2,7 @@ package hu.bme.aut.resource_server.profile_calculation.calculator
 
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
-import hu.bme.aut.resource_server.profile_calculation.error.CalculationException
+import hu.bme.aut.resource_server.error.CalculationException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import kotlin.math.abs

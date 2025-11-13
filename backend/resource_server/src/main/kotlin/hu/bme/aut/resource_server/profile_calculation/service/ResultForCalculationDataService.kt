@@ -1,9 +1,9 @@
-package hu.bme.aut.resource_server.profile_calculation.data
+package hu.bme.aut.resource_server.profile_calculation.service
 
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.GameRepository
-import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
-import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
+import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
+import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationRepository
 import hu.bme.aut.resource_server.result.ResultRepository
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
