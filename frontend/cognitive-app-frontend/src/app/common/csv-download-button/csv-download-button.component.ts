@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {TEXTS} from "../../text/app.text_messages";
 import {map, Observable, tap} from "rxjs";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {SimpleHttpService} from "../../utils/simple-http.service";
 
 @Component({

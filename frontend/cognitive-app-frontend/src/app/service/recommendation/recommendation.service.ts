@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import {SimpleHttpService} from "../../utils/simple-http.service";
 import {RecommendedGame} from "../../model/recommended_game.model";
 import {map, Observable} from "rxjs";

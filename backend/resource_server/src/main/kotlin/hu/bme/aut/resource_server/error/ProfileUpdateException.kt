@@ -1,4 +1,4 @@
-package hu.bme.aut.resource_server.profile_calculation.error
+package hu.bme.aut.resource_server.error
 
 import java.lang.RuntimeException
 

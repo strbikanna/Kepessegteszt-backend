@@ -3,7 +3,7 @@ import {LoginResponse, OidcSecurityService} from "angular-auth-oidc-client";
 import {User} from "../../model/user/user.model";
 import { Observable} from "rxjs";
 import {UserInfo} from "../../auth/userInfo";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {AppConstants, Role} from "../../utils/constants";
 import {AuthUser} from "../../model/user/user-contacts.model";
 

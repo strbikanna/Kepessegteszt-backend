@@ -45,8 +45,6 @@ dependencies {
     implementation(libs.jackson.jakarta.xmlbind.annotations)
     implementation(libs.hypersistence.hibernate62)
     implementation(libs.json)
-    //jep
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
     //h2
     runtimeOnly(libs.h2)
     implementation(libs.spring.boot.starter.webflux)

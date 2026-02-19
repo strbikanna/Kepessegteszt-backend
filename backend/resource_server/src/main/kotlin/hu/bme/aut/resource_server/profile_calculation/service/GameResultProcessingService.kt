@@ -4,16 +4,12 @@ import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.profile_calculation.calculator.CalculationHelper
 import hu.bme.aut.resource_server.profile_calculation.calculator.ScoreCalculator
 import hu.bme.aut.resource_server.profile_calculation.data.MeanAndDeviation
-import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
 import jakarta.transaction.Transactional
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
 
 /**
  * Service for processing game results.

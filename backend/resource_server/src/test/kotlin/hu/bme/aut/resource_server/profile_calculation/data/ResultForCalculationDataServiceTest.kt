@@ -3,6 +3,7 @@ package hu.bme.aut.resource_server.profile_calculation.data
 import hu.bme.aut.resource_server.TestUtilsService
 import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.profile_calculation.TestDataSource
+import hu.bme.aut.resource_server.profile_calculation.service.ResultForCalculationDataService
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

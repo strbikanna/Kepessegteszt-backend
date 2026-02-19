@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {SimpleHttpService} from "../../utils/simple-http.service";
 import {Observable} from "rxjs";
 import {Ability} from "../../model/ability.model";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
