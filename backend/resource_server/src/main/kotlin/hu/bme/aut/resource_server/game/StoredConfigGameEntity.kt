@@ -21,9 +21,8 @@ class StoredConfigGameEntity(
 ) : GameEntity(id, modelId, version, name, description, thumbnailPath, active, affectedAbilities, configItems) {
 
     override fun validateConfig(config: Map<String, Any>): Map<String, Any> {
-        val storedConfigId = config.values.first() as Int
         return try{
-            StoredRecommendationService.getStoredRecommendationById(storedConfigId)
+            StoredRecommendationService.visitConfig(config)
         }catch (e: Exception){
             throw IllegalArgumentException("Stored recommendation not found with id: $id")
         }
