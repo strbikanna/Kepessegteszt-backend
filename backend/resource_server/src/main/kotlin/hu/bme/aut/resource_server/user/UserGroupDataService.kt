@@ -38,9 +38,14 @@ class UserGroupDataService(
         val orgOfGroup = group.organization
         if(!user.organizations.contains(orgOfGroup)){
             user.organizations.add(orgOfGroup)
+            orgOfGroup.members.add(user)
+            orgRepository.save(orgOfGroup)
         }
         user.groups.add(group)
+        group.members.add(user)
+
         userRepository.save(user)
+        groupRepository.save(group)
     }
 
     @Transactional

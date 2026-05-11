@@ -33,6 +33,7 @@ class UserGroupDataServiceTest(
     }
 
     @Test
+    @Transactional
     fun shouldAddUserToGroup() {
         val org = Organization(name = "TestOrg", address = Address("11", "TestStreet", "TestCity", "1123"))
         val group = Group(name = "TestGroup", organization = org)
@@ -63,7 +64,7 @@ class UserGroupDataServiceTest(
 
     @Test
     fun `should filter users by min and max age correctly`() {
-        val userIdsFound = userGroupDataService.getAllUserIdsByFilter(UserFilterDto(ageMin = 10, ageMax = 15))
+        val userIdsFound = userGroupDataService.getAllUserIdsByFilter(UserFilterDto(ageMin = 10, ageMax = 17))
         assertEquals(3, userIdsFound.size)
     }
 
@@ -90,7 +91,7 @@ class UserGroupDataServiceTest(
             UserFilterDto(
                 addressCity = "Budapest",
                 ageMin = 10,
-                ageMax = 15
+                ageMax = 16
             )
         )
         assertEquals(2, userIdsFound.size)

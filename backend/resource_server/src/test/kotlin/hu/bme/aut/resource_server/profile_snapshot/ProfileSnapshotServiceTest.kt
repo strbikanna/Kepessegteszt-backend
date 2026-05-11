@@ -26,26 +26,38 @@ class ProfileSnapshotServiceTest(
     @Test
     fun shouldSaveSnapshotOfUser(){
         var userEntity = testUtilsService.createUnsavedTestUser()
+        userEntity.profileFloat.forEach { it.abilityAccuracy = 0.9 }
         userEntity = testUtilsService.saveUser(userEntity)
         snapshotService.saveSnapshotOfUser(userEntity)
         val savedSnapshots = snapshotService.getSnapshotsOfUser(PlainUserDto(userEntity))
         assertEquals(2, savedSnapshots.size)
         assertEquals(userEntity.id, savedSnapshots[0].user.id)
         assertEquals(userEntity.id, savedSnapshots[1].user.id)
-        assertTrue(savedSnapshots.any { it.ability.code == "Gf" && it.abilityValue == 10.0})
+        assertTrue(savedSnapshots.any { it.ability.code == "Gf" && it.abilityValue == 1.0})
+    }
+
+    @Test
+    fun shouldNotSaveSnapshotWhenAbilityAccuracyMissing(){
+        var userEntity = testUtilsService.createUnsavedTestUser()
+        userEntity.profileFloat.forEach { it.abilityAccuracy = 0.0 }
+        userEntity = testUtilsService.saveUser(userEntity)
+        snapshotService.saveSnapshotOfUser(userEntity)
+        val savedSnapshots = snapshotService.getSnapshotsOfUser(PlainUserDto(userEntity))
+        assertEquals(0, savedSnapshots.size)
     }
 
 
     @Test
     fun shouldNotChangeSavedSnapshot(){
         var userEntity = testUtilsService.createUnsavedTestUser()
+        userEntity.profileFloat.forEach { it.abilityAccuracy = 0.9 }
         userEntity = testUtilsService.saveUser(userEntity)
         snapshotService.saveSnapshotOfUser(userEntity)
         var snapShotsFound = snapshotService.getSnapshotsOfUser(PlainUserDto(userEntity))
         assertEquals(2, snapShotsFound.size)
 
         userEntity.profileEnum.add(
-            EnumProfileItem(ability=testUtilsService.abilityColorsense, abilityValue= EnumAbilityValue.INCLINED)
+            EnumProfileItem(ability=testUtilsService.abilityColorsense, abilityValue= EnumAbilityValue.INCLINED, abilityAccuracy = 0.9)
         )
         userEntity.profileFloat.find { it.ability.code == "Gf" }!!.abilityValue = 5.2
         testUtilsService.saveUser(userEntity)
@@ -53,13 +65,14 @@ class ProfileSnapshotServiceTest(
 
         snapShotsFound = snapshotService.getSnapshotsOfUser(PlainUserDto(userEntity))
         assertEquals(5, snapShotsFound.size)
-        assertTrue(snapShotsFound.any { it.ability.code == "Gf" && it.abilityValue == 10.0})
+        assertTrue(snapShotsFound.any { it.ability.code == "Gf" && it.abilityValue == 1.0})
         assertTrue(snapShotsFound.any { it.ability.code == "Gf" && it.abilityValue == 5.2})
         assertTrue(snapShotsFound.any { it.abilityValue == EnumAbilityValue.INCLINED})
     }
     @Test
     fun shouldFindSnapshotsOfToday(){
         var userEntity = testUtilsService.createUnsavedTestUser()
+        userEntity.profileFloat.forEach { it.abilityAccuracy = 0.9 }
         userEntity = testUtilsService.saveUser(userEntity)
         //snapshot today will exist
         snapshotService.saveSnapshotOfUser(userEntity)

@@ -10,6 +10,8 @@ restAssuredVersion = "5.3.1"
 hamcrestVersion = "2.2"
 springAzureVersion = "5.7.0"
 langchain4jVersion = "1.7.1"
+wiremockVersion = "3.2.0"
+assertjVersion = "3.24.2"
 
 [libraries]
 spring-boot-starter-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
@@ -48,6 +50,9 @@ langchain4j = { module = "dev.langchain4j:langchain4j", version.ref = "langchain
 langchain4j-openai = { module = "dev.langchain4j:langchain4j-open-ai", version.ref = "langchain4jVersion" }
 langchain4j-gemini = { module = "dev.langchain4j:langchain4j-google-ai-gemini", version.ref = "langchain4jVersion" }
 langchain4j-mistral = { module = "dev.langchain4j:langchain4j-mistral-ai", version.ref = "langchain4jVersion" }
+#wiremock
+wiremock = { module = "org.wiremock.integrations:wiremock-spring-boot", version.ref = "wiremockVersion" }
+assertj = { module = "org.assertj:assertj-core", version.ref = "assertjVersion" }
 
 [plugins]
 springframework-boot = { id = "org.springframework.boot", version.ref="springBootVersion" }

@@ -1,6 +1,5 @@
 package hu.bme.aut.resource_server.recommendation.strategy
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
 import hu.bme.aut.resource_server.TestUtilsService
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.game.GameEntity
@@ -11,35 +10,29 @@ import hu.bme.aut.resource_server.result.ResultService
 import hu.bme.aut.resource_server.user.UserEntity
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.wiremock.spring.ConfigureWireMock
-import org.wiremock.spring.EnableWireMock
 import kotlin.math.abs
 
 
 @SpringBootTest
 @ActiveProfiles("test")
-@EnableWireMock
-@ConfigureWireMock(
-        baseUrlProperties = ["app.suggest-api"],
-)
-class SuggestApiStrategyTest(
+@Tag("e2e")
+class SuggestApiStrategyE2ETest(
     @Autowired private var suggestApiStrategy: SuggestApiStrategy,
     @Autowired private var testService: TestUtilsService,
     @Autowired private var resultService: ResultService,
 ) {
-    @Value("\${app.suggest-api}")
-    private val wireMockUrl: String? = null
 
     @BeforeEach
     fun setUp() {
-        testService.emptyRepositories()
         testService.fillAbilityRepository()
         testService.abilityRepository.saveAll(
             listOf(
@@ -70,7 +63,6 @@ class SuggestApiStrategyTest(
 
     @Test
     fun `Should call suggest api with correct params`() {
-        registerWireMock(testGame.modelId!!,"")
         runBlocking {
             val suggestedConfig = suggestApiStrategy.generateRecommendationByResult(
                 username = testUser.username,
@@ -104,18 +96,6 @@ class SuggestApiStrategyTest(
 
     @Test
     fun `Should not throw when params out of bound`() {
-        registerWireMock( testGame.modelId!!,"""
-                            {
-                                "abilities": [0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                                "prev_params": {
-                                    "difference": 299,
-                                    "answer_timelimit": 1999,
-                                    "visible_time": 200,
-                                    "question_number": 4
-                                 },
-                                "result": true
-                            }
-                        """)
         testRecommendation.config = configItems.associate {
             it.paramName to
                     if (it.increment < 0) it.hardestValue - 1 else it.easiestValue - 1
@@ -142,7 +122,6 @@ class SuggestApiStrategyTest(
 
     @Test
     fun `should create user profile updates`() {
-        registerWireMock(testGame.modelId!!,"")
         runBlocking {
             suggestApiStrategy.generateRecommendationByResult(
                 username = testUser.username,
@@ -170,7 +149,6 @@ class SuggestApiStrategyTest(
 
     @Test
     fun `user profile should be updated when saving result based on suggested update`() {
-        registerWireMock(testGame.modelId!!,"")
         runBlocking {
             suggestApiStrategy.generateRecommendationByResult(
                 username = testUser.username,
@@ -199,49 +177,6 @@ class SuggestApiStrategyTest(
         }
     }
 
-    private fun registerWireMock(gameModelId: String, requestBodyJson: String) {
-        stubFor(
-            post(
-                urlEqualTo("/games/$gameModelId/suggest"),
-            )
-                .withRequestBody(
-                    equalToJson( requestBodyJson.ifBlank {
-                        """
-                            {
-                                "abilities": [0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                                "prev_params": {
-                                    "difference": 2000,
-                                    "answer_timelimit": 3000,
-                                    "visible_time": 3000,
-                                    "question_number": 10
-                                 },
-                                "result": true
-                            }
-                        """.trimIndent()
-                    })
-                )
-                .willReturn(
-                    aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withStatus(200)
-                        .withBody(
-                            """
-            {
-              "abilities_if_failure": [0.0, 0.98, 0.97, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-              "abilities_if_success": [0.0, 1.11, 1.17, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-              "success_rate": 0.75,
-              "suggested_params": {
-                "difference": 1500,
-                "answer_timelimit": 2500,
-                "visible_time": 2500,
-                "question_number": 12
-               }
-            }
-        """
-                        )
-                )
-        );
-    }
 
     private lateinit var testUser: UserEntity
 
@@ -340,6 +275,5 @@ class SuggestApiStrategyTest(
     )
 
     private lateinit var testRecommendation: RecommendedGameEntity
-
 
 }

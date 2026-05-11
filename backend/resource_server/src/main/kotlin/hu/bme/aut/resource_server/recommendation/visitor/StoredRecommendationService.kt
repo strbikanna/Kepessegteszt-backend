@@ -1,8 +1,7 @@
-package hu.bme.aut.resource_server.recommendation
+package hu.bme.aut.resource_server.recommendation.visitor
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import hu.bme.aut.resource_server.recommendation.visitor.GameConfigVisitor
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.ClassPathResource
 

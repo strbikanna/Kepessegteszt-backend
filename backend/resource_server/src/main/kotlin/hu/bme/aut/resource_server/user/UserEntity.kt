@@ -63,20 +63,10 @@ data class UserEntity(
     @JoinColumn(name = "subscription", referencedColumnName = "_name")
     var subscription: Subscription? = null,
 
-    @ManyToMany
-    @JoinTable(
-        name = "org_member",
-        joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "org_id", referencedColumnName = "id")],
-    )
+    @ManyToMany(mappedBy = "members")
     var organizations: MutableSet<Organization> = mutableSetOf(),
 
-    @ManyToMany
-    @JoinTable(
-        name = "group_member",
-        joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "group_id", referencedColumnName = "id")],
-    )
+    @ManyToMany(mappedBy = "members")
     val groups: MutableSet<Group> = mutableSetOf(),
 
     @ElementCollection

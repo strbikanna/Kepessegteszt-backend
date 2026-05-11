@@ -2,7 +2,7 @@ package hu.bme.aut.resource_server.game
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
-import hu.bme.aut.resource_server.recommendation.StoredRecommendationService
+import hu.bme.aut.resource_server.recommendation.visitor.StoredRecommendationService
 import jakarta.persistence.DiscriminatorValue
 import jakarta.persistence.Entity
 

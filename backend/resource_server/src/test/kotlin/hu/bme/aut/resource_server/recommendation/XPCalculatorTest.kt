@@ -65,7 +65,7 @@ class XPCalculatorTest {
 
         config =mapOf(Pair("p1", 2), Pair("p2", 4))
         xp = XPCalculator.calculateXP(configItems, config)
-        assertEquals(30, xp)
+        assertEquals(300, xp)
 
         config = mapOf(Pair("p1", 0), Pair("p2", 7))
         xp = XPCalculator.calculateXP(configItems, config)

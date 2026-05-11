@@ -109,7 +109,7 @@ class RecommendedGameServiceTest(
 
             return@runBlocking found
         }
-        assertEquals(mapOf("Level" to 1), config)
+        assertEquals(1, config?.get("Level"))
     }
 
     @Test
@@ -129,7 +129,7 @@ class RecommendedGameServiceTest(
 
             return@runBlocking found
         }
-        assertEquals(mapOf("Level" to 1), config)
+        assertEquals(1, config?.get("Level"))
     }
 
     @Test

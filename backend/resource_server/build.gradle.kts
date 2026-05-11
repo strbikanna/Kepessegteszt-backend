@@ -60,6 +60,13 @@ dependencies {
     testImplementation(libs.spring.security.test)
     testImplementation(libs.rest.assured)
     testImplementation(libs.hamcrest)
+    testImplementation("org.apache.httpcomponents.client5:httpclient5:5.2.3")
+    testImplementation("org.apache.httpcomponents.core5:httpcore5:5.2.3")
+    testImplementation(libs.wiremock){
+        exclude(group = "org.apache.httpcomponents.client5")
+        exclude(group = "org.apache.httpcomponents.core5")
+    }
+    testImplementation(libs.assertj)
 
     // LangChain
     implementation(libs.langchain4j)
@@ -77,4 +84,10 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.test {
+    useJUnitPlatform {
+        excludeTags("e2e")
+    }
 }
