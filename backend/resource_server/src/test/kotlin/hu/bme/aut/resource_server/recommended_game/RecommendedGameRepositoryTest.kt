@@ -1,8 +1,6 @@
 package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.TestUtilsService
-import hu.bme.aut.resource_server.game.StoredConfigGameEntity
-import hu.bme.aut.resource_server.game.game_config.ConfigItem
 import hu.bme.aut.resource_server.user.role.Role
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
@@ -127,11 +125,11 @@ class RecommendedGameRepositoryTest(
         assertEquals(recommendedGameRepository.findAllByRecommendedTo(testUser).size, 2)
         assertNotNull(recommendedGameRepository.findAllByRecommendedTo(testUser2))
         assertEquals(testUser2, recommendedGameRepository.findAllSortedByRecommendedTo(testUser, Sort.by("recommender").ascending())[0].recommender)
-        assertEquals(testUser2, recommendedGameRepository.findAllPagedByRecommendedTo(testUser, PageRequest.of(0, 1, Sort.by("recommender").ascending()))[0].recommender)
-        assertEquals(testUser3, recommendedGameRepository.findAllPagedByRecommendedTo(testUser, PageRequest.of(1, 1, Sort.by("recommender").ascending()))[0].recommender)
-        assertEquals(testUser3, recommendedGameRepository.findAllPagedByRecommendedTo(testUser, PageRequest.of(0, 2, Sort.by("recommender").ascending()))[1].recommender)
-        assertEquals(1, recommendedGameRepository.findAllPagedByRecommendedTo(testUser, PageRequest.of(0, 1)).size)
-        assertEquals(1, recommendedGameRepository.findAllPagedByRecommendedTo(testUser, PageRequest.of(1, 1)).size)
+        assertEquals(testUser2, recommendedGameRepository.findAllPagedByRecommendedToAndGameActive(testUser,true, PageRequest.of(0, 1, Sort.by("recommender").ascending()))[0].recommender)
+        assertEquals(testUser3, recommendedGameRepository.findAllPagedByRecommendedToAndGameActive(testUser, true,PageRequest.of(1, 1, Sort.by("recommender").ascending()))[0].recommender)
+        assertEquals(testUser3, recommendedGameRepository.findAllPagedByRecommendedToAndGameActive(testUser, true,PageRequest.of(0, 2, Sort.by("recommender").ascending()))[1].recommender)
+        assertEquals(1, recommendedGameRepository.findAllPagedByRecommendedToAndGameActive(testUser, true,PageRequest.of(0, 1)).size)
+        assertEquals(1, recommendedGameRepository.findAllPagedByRecommendedToAndGameActive(testUser, true, PageRequest.of(1, 1)).size)
     }
 
     @Transactional

@@ -55,7 +55,7 @@ class ProfileSnapshotController(
     fun getSnapshotsOfOtherUsers(
         authentication: Authentication,
         @RequestParam(required = true) username: String,
-        @RequestParam(required=false) pageIndex: Int?,
+        @RequestParam(required = false) pageIndex: Int?,
         @RequestParam(required = false) pageSize: Int?,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) startTime: LocalDateTime?,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) endTime: LocalDateTime?,

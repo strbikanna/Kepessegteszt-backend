@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
 @Service
@@ -44,9 +43,10 @@ class RecommendedGameService(
                     user, false, gameRepository.findAllById(acceptedGameIds), PageRequest.of(pageIndex, pageSize, sort)
                 )
             } else {
-                recommendedGameRepository.findAllPagedByRecommendedToAndCompleted(
+                recommendedGameRepository.findAllPagedByRecommendedToAndCompletedAndGameActive(
                     user,
                     false,
+                    true,
                     PageRequest.of(pageIndex, pageSize, sort)
                 )
             }
@@ -126,7 +126,7 @@ class RecommendedGameService(
         val page = PageRequest.of(0, 100, Sort.by("timestamp").descending())
         if (gameId == null) {
             return if (completed == null) {
-                recommendedGameRepository.findAllPagedByRecommendedTo(user, page)
+                recommendedGameRepository.findAllPagedByRecommendedToAndGameActive(user, true, page)
                     .map {
                         it.toDto()
                             .apply {
@@ -134,7 +134,7 @@ class RecommendedGameService(
                             }
                     }
             } else {
-                recommendedGameRepository.findAllPagedByRecommendedToAndCompleted(user, completed, page)
+                recommendedGameRepository.findAllPagedByRecommendedToAndCompletedAndGameActive(user, completed, true, page)
                     .map {
                         it.toDto()
                             .apply {

@@ -65,6 +65,7 @@ class ResultService(
                 )
             }
         }
+        userRepository.save(user)
     }
 
     @Transactional
@@ -166,15 +167,6 @@ class ResultService(
     }
 
     @Transactional
-    fun getAll(page: Pageable): List<ResultDetailsDto> {
-        return resultRepository.findAll(page).content.map { convertToDto(it) }
-    }
-
-    fun getAll(): List<ResultEntity> {
-        return resultRepository.findAll().toList()
-    }
-
-    @Transactional
     fun getNextRecommendationForGameIfExists(recommendationId: Long, username: String): RecommendedGameEntity? {
         val user = userRepository.findByUsername(username).orElseThrow()
         val game = recommendedGameRepository.findById(recommendationId).orElseThrow().game
@@ -191,15 +183,6 @@ class ResultService(
             else -> throw IllegalArgumentException("Invalid sort parameter")
         }
         return if (sortOrder.uppercase() == "ASC") sort.ascending() else sort.descending()
-    }
-
-    fun getCountOfResultsByUser(username: String): Long {
-        val user = userRepository.findByUsername(username).orElseThrow()
-        return resultRepository.countByUser(user)
-    }
-
-    fun getCountOfResults(): Long {
-        return resultRepository.count()
     }
 
     fun deleteAllResultsOfUser(user: UserEntity) {

@@ -50,6 +50,8 @@ class GameService (
 
     fun deleteGame(id: Int) {
         if(gameRepository.existsById(id)) {
+            val game = gameRepository.findById(id).orElseThrow()
+            recommendedGameRepository.deleteByGame(game)
             gameRepository.deleteById(id)
         } else{
             throw IllegalArgumentException("Game ids do not match.")
@@ -128,10 +130,6 @@ class GameService (
             }
         }
         return true
-    }
-
-    private fun deleteNotCompletedRecommendationsToGame(game: GameEntity) {
-        recommendedGameRepository.deleteByGameAndCompletedIsFalse(game)
     }
 
 }

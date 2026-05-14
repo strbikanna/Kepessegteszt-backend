@@ -38,7 +38,7 @@ data class ResultEntity(
     val config: MutableMap<String, Any>,
 
     @JsonIgnore
-    @ManyToOne(fetch= FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     @JoinColumn(name = "recommended_game_id")
     val recommendedGame: RecommendedGameEntity,
 ) {

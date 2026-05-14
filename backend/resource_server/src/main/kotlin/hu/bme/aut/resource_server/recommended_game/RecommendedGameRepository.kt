@@ -6,9 +6,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
-import org.springframework.data.repository.PagingAndSortingRepository
-import java.time.LocalDateTime
 import java.util.*
 
 interface RecommendedGameRepository: JpaRepository<RecommendedGameEntity, Long> {
@@ -16,11 +13,11 @@ interface RecommendedGameRepository: JpaRepository<RecommendedGameEntity, Long> 
     fun findAllByRecommender(recommender: UserEntity): List<RecommendedGameEntity>
     fun findAllByRecommendedToAndGameAndCompleted(recommendedTo: UserEntity, game:GameEntity, completed: Boolean): List<RecommendedGameEntity>
     fun findAllByRecommendedToAndCompleted(recommendedTo: UserEntity, completed: Boolean): List<RecommendedGameEntity>
-    fun findAllPagedByRecommendedToAndCompleted(recommendedTo: UserEntity, completed: Boolean, page: Pageable): List<RecommendedGameEntity>
+    fun findAllPagedByRecommendedToAndCompletedAndGameActive(recommendedTo: UserEntity, completed: Boolean, isGameActive: Boolean = true, page: Pageable): List<RecommendedGameEntity>
     fun findAllPagedByRecommendedToAndCompletedAndGameIn(recommendedTo: UserEntity, completed: Boolean, games: List<GameEntity>, page: Pageable): List<RecommendedGameEntity>
     fun findAllPagedByRecommendedToAndCompletedAndGame(recommendedTo: UserEntity, completed: Boolean, game:GameEntity, page: Pageable): List<RecommendedGameEntity>
     fun findAllPagedByRecommendedToAndGame(recommendedTo: UserEntity, game:GameEntity, page: Pageable): List<RecommendedGameEntity>
-    fun findAllPagedByRecommendedTo(recommendedTo: UserEntity, page: Pageable): List<RecommendedGameEntity>
+    fun findAllPagedByRecommendedToAndGameActive(recommendedTo: UserEntity, gameIsActive: Boolean = true, page: Pageable): List<RecommendedGameEntity>
     fun findAllSortedByRecommendedTo(recommendedTo: UserEntity, sort: Sort): List<RecommendedGameEntity>
     fun findByRecommendedToAndGameAndCompletedAndRecommender(user: UserEntity, game: GameEntity, completed: Boolean, recommender: UserEntity?): List<RecommendedGameEntity>
 
@@ -48,5 +45,5 @@ interface RecommendedGameRepository: JpaRepository<RecommendedGameEntity, Long> 
     )
     fun findByIdWithProfileUpdateItems(id: Long): Optional<RecommendedGameEntity>
 
-    fun deleteByGameAndCompletedIsFalse(game: GameEntity)
+    fun deleteByGame(game: GameEntity)
 }

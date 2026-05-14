@@ -139,21 +139,6 @@ class RecommenderService(
         return recommendedGameRepository.saveAll(recommendations).map { it }
     }
 
-    /**
-     * Creates a default recommendation for the user for the game.
-     */
-    @Transactional
-    fun createDefaultRecommendationToUserForGame(username: String, gameId: Int): RecommendedGameEntity {
-        val user = userRepository.findByUsername(username).orElseThrow()
-        val game = gameRepository.findById(gameId).orElseThrow()
-        return recommendedGameRepository.save(
-            RecommendedGameEntity(
-                game = game,
-                recommendedTo = user,
-                config = game.configItems.associateBy({ it.paramName }, { it.initialValue })
-            )
-        )
-    }
 
     fun applySpecialSettings(config: Map<String, Any>, gameId: Int, username: String): Map<String, Any> {
         val user = userRepository.findByUsernameWithSpecialSettings(username).orElseThrow()
