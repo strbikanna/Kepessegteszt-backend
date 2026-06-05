@@ -1,6 +1,7 @@
 package hu.bme.aut.resource_server.result
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
 import org.slf4j.LoggerFactory
@@ -12,6 +13,7 @@ internal object ExportCsvService{
 
     private val log = LoggerFactory.getLogger(ExportCsvService::class.java)
 
+    @BusinessCritical
     fun exportCsv(results: List<ResultDetailsDto>, writer: Writer) {
         val jsonMapper = jacksonObjectMapper()
         try {

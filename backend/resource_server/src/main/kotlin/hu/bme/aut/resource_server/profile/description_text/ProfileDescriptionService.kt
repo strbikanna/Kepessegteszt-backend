@@ -5,6 +5,7 @@ import hu.bme.aut.resource_server.llm.abilities2text.ChatMessageResponse
 import hu.bme.aut.resource_server.user.UserGroupDataService
 import hu.bme.aut.resource_server.user.UserService
 import hu.bme.aut.resource_server.user.filter.UserFilterDto
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -25,6 +26,7 @@ class ProfileDescriptionService(
     }
 
     @Transactional
+    @BusinessCritical
     suspend fun getProfileDescriptionOfUser(username: String): ProfileDescriptionTextDto =
         withContext(Dispatchers.IO) {
             var dbEntity = repository.findAllByUserUsername(username).firstOrNull()
@@ -54,6 +56,7 @@ class ProfileDescriptionService(
         }
 
     @Transactional
+    @BusinessCritical
     fun deleteProfileDescriptionOfUser(username: String) {
         val descriptions = repository.findAllByUserUsername(username)
         repository.deleteAll(descriptions)

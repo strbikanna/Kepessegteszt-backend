@@ -5,6 +5,7 @@ import hu.bme.aut.resource_server.game.GameRepository
 import hu.bme.aut.resource_server.recommendation.RecommenderService
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -29,6 +30,7 @@ class RecommendedGameService(
      * Get all recommendations to user which are not yet completed.
      */
     @Transactional
+    @BusinessCritical
     fun getAllRecommendedToUser(
         username: String,
         acceptedGameIds: List<Int>?,
@@ -58,6 +60,7 @@ class RecommendedGameService(
     }
 
     @Transactional
+    @BusinessCritical
     fun getNextChoiceForUser(username: String, acceptedGameIds: List<Int>?): List<RecommendedGameDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
         val possibleGames: MutableSet<GameEntity> = mutableSetOf()
@@ -81,6 +84,7 @@ class RecommendedGameService(
     /**
      * Retrieve the configuration of a recommended game. If the configuration is not yet available, it waits for it to be available.
      */
+    @BusinessCritical
     suspend fun getRecommendedGameConfig(recommendedGameId: Long): Map<String, Any>? = withContext(Dispatchers.IO) {
         var rGame = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
         repeat(10) {
@@ -100,6 +104,7 @@ class RecommendedGameService(
         return@withContext emptyMap()
     }
 
+    @BusinessCritical
     fun addRecommendation(recommendation: RecommendationDto, recommenderUsername: String): RecommendedGameEntity {
         val recommender = userRepository.findByUsername(recommenderUsername).orElseThrow()
         val recommendedTo = userRepository.findByUsername(recommendation.recommendedTo)
@@ -121,6 +126,7 @@ class RecommendedGameService(
     }
 
     @Transactional
+    @BusinessCritical
     fun getRecommendationsToUserAndGame(username: String, gameId: Int?, completed: Boolean?): List<RecommendedGameDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
         val page = PageRequest.of(0, 100, Sort.by("timestamp").descending())
@@ -159,6 +165,7 @@ class RecommendedGameService(
         }
     }
 
+    @BusinessCritical
     fun deleteRecommendedGame(recommendedGameId: Long) {
         val rGame = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
         if (rGame.completed) {
@@ -167,6 +174,7 @@ class RecommendedGameService(
         recommendedGameRepository.deleteById(recommendedGameId)
     }
 
+    @BusinessCritical
     fun deleteAllRecommendationsByUser(user: UserEntity) {
         val allRecommendedTo = recommendedGameRepository.findAllByRecommendedTo(user)
         val allRecommendedBy = recommendedGameRepository.findAllByRecommender(user)

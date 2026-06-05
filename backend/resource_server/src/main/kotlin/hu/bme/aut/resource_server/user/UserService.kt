@@ -9,6 +9,7 @@ import hu.bme.aut.resource_server.result.ResultService
 import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
 import hu.bme.aut.resource_server.user.user_dto.UserProfileDto
 import hu.bme.aut.resource_server.utils.AbilityType
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import hu.bme.aut.resource_server.utils.EnumAbilityValue
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,9 +22,11 @@ class UserService(
     private val recommendedGameService: RecommendedGameService,
     private val resultService: ResultService,
 ){
+    @BusinessCritical
     fun getAllUsers(): List<PlainUserDto>{
         return userRepository.findAll().map { PlainUserDto(it) }
     }
+    @BusinessCritical
     fun getUserDtoByUsername(username: String): PlainUserDto {
         return PlainUserDto(userRepository.findByUsername(username).orElseThrow())
     }
@@ -37,6 +40,7 @@ class UserService(
         return userRepository.findByUsername(username).orElseThrow()
     }
 
+    @BusinessCritical
     fun updateUser(user: PlainUserDto){
         val userEntity = userRepository.findByUsername(user.username).orElseThrow()
         userRepository.updateUserData(
@@ -48,6 +52,7 @@ class UserService(
             userEntity.id!!)
     }
 
+    @BusinessCritical
     fun updateUserProfile(user: UserEntity): UserProfileDto {
         val userEntity = userRepository.findByUsernameWithProfile(user.username).orElseThrow()
         userEntity.profileEnum = user.profileEnum
@@ -58,6 +63,7 @@ class UserService(
         )
     }
 
+    @BusinessCritical
     fun updateUserProfile(updatedProfileItems: List<ProfileItem>, username: String): List<ProfileItem> {
         val userEntity = userRepository.findByUsernameWithProfile(username).orElseThrow()
         userEntity.profileEnum = updatedProfileItems
@@ -75,6 +81,7 @@ class UserService(
     }
 
     @Transactional
+    @BusinessCritical
     fun removeUserForever(username: String){
         val user = userRepository.findByUsername(username).orElseThrow()
 

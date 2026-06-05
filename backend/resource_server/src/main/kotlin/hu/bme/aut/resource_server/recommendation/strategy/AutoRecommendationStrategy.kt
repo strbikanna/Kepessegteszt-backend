@@ -2,6 +2,7 @@ package hu.bme.aut.resource_server.recommendation.strategy
 
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
 import hu.bme.aut.resource_server.profile_calculation.service.ResultForCalculationDataService
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -26,6 +27,7 @@ class AutoRecommendationStrategy(
      * The recommendation is created by randomly selecting a config item to change.
      */
     @Transactional
+    @BusinessCritical
     override suspend fun generateRecommendationByResult(
         username: String,
         gameId: Int,

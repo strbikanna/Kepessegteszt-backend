@@ -8,6 +8,7 @@ import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -22,6 +23,7 @@ class ResultService(
 
 ) {
     @Transactional
+    @BusinessCritical
     fun save(data: ResultDto): ResultEntity {
         val recommendedGame = recommendedGameRepository.findById(data.gameplayId).orElseThrow()
         recommendedGame.completed = true
@@ -48,6 +50,7 @@ class ResultService(
      * Updated values are stored in the corresponding RecommendedGameEntity.
      */
     @Transactional
+    @BusinessCritical
     fun updateProfileByResult(result: ResultDto) {
         val recommendedGame = recommendedGameRepository.findById(result.gameplayId).orElseThrow()
         val isSuccess = isResultPassed(result.result)
@@ -69,18 +72,21 @@ class ResultService(
     }
 
     @Transactional
+    @BusinessCritical
     fun getGameOfResult(resultId: Long): GameEntity {
         val result = resultRepository.findById(resultId).orElseThrow()
         return result.recommendedGame.game
     }
 
     @Transactional
+    @BusinessCritical
     fun getAllByUser(username: String, page: Pageable): List<ResultDetailsDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
         return resultRepository.findAllByUser(user, page).content.map { convertToDto(it) }
     }
 
     @Transactional
+    @BusinessCritical
     fun getAllFiltered(
         usernames: List<String>,
         gameIds: List<Int>?,
@@ -114,6 +120,7 @@ class ResultService(
     }
 
     @Transactional
+    @BusinessCritical
     fun getAllFiltered(gameIds: List<Int>?, resultPassed: Boolean?, page: Pageable): List<ResultDetailsDto> {
         val existsGameFilter = !gameIds.isNullOrEmpty()
         val existsResultFilter = resultPassed != null
@@ -167,6 +174,7 @@ class ResultService(
     }
 
     @Transactional
+    @BusinessCritical
     fun getNextRecommendationForGameIfExists(recommendationId: Long, username: String): RecommendedGameEntity? {
         val user = userRepository.findByUsername(username).orElseThrow()
         val game = recommendedGameRepository.findById(recommendationId).orElseThrow().game
@@ -185,10 +193,12 @@ class ResultService(
         return if (sortOrder.uppercase() == "ASC") sort.ascending() else sort.descending()
     }
 
+    @BusinessCritical
     fun deleteAllResultsOfUser(user: UserEntity) {
         resultRepository.deleteAllByUser(user)
     }
 
+    @BusinessCritical
     private fun isResultPassed(result: Map<String, Any>): Boolean {
         return result["passed"] as Boolean? ?: false
     }

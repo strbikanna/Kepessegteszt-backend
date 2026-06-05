@@ -1,34 +1,48 @@
 package hu.bme.aut.resource_server.authentication
 
 import hu.bme.aut.resource_server.error.ApiCallException
-import hu.bme.aut.resource_server.error.removeUserFailed
-import jakarta.validation.constraints.AssertTrue
+import hu.bme.aut.resource_server.user.UserEntity
+import hu.bme.aut.resource_server.user.role.Role
+import hu.bme.aut.resource_server.user_group.UserGroup
+import hu.bme.aut.resource_server.utils.RoleName
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.jwt.Jwt
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
+import java.util.Optional
 
 
-@SpringBootTest
-@ActiveProfiles("test")
-class AuthServiceTest(
-    @Autowired private var authService: AuthService
-) {
+class AuthServiceTest {
+
+    private lateinit var authService: AuthService
+
+    private lateinit var mockRecommendedGameRepository: hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
+    private lateinit var mockUserRepository: hu.bme.aut.resource_server.user.UserRepository
+    private lateinit var mockUserGroupRepository: hu.bme.aut.resource_server.user_group.UserGroupRepository
+
+    @BeforeEach
+    fun setup() {
+        mockRecommendedGameRepository = mock(hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository::class.java)
+        mockUserRepository = mock(hu.bme.aut.resource_server.user.UserRepository::class.java)
+        mockUserGroupRepository = mock(hu.bme.aut.resource_server.user_group.UserGroupRepository::class.java)
+
+        authService = AuthService(
+            mockRecommendedGameRepository,
+            mockUserRepository,
+            mockUserGroupRepository
+        )
+    }
 
     @Test
     fun shouldReturnTrueIfContactExists() {
@@ -82,9 +96,50 @@ class AuthServiceTest(
         Mockito.`when`(mockResponseSpec.toBodilessEntity())
             .thenReturn(Mono.just(ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR)))
 
-        runBlocking {
-            assertThrows<ApiCallException> { authService.removeUserFromAuthServer(mockAuthentication) }
-        }
+        assertThrows<ApiCallException> { runBlocking { authService.removeUserFromAuthServer(mockAuthentication) } }
 
+    }
+
+    @Test
+    fun checkUserGroupWriteAndThrow_allowsAdminUser() {
+        val username = "admin_user"
+        val user = UserEntity(
+            id = 1,
+            firstName = "A",
+            lastName = "B",
+            username = username,
+            roles = mutableSetOf(Role(RoleName.ADMIN))
+        )
+
+        Mockito.`when`(mockUserRepository.findByUsernameWithRoles(username)).thenReturn(Optional.of(user))
+        val mockAuth = mock(Authentication::class.java)
+        Mockito.`when`(mockAuth.name).thenReturn(username)
+
+        // Should not throw for admin
+        authService.checkUserGroupWriteAndThrow(mockAuth, 999)
+    }
+
+    @Test
+    fun checkGroupDataReadAndThrow_throwsWhenNotMemberOrAdmin() {
+        val username = "plain_user"
+        val user = UserEntity(
+            id = 2,
+            firstName = "C",
+            lastName = "D",
+            username = username,
+            roles = mutableSetOf()
+        )
+
+        Mockito.`when`(mockUserRepository.findByUsernameWithRoles(username)).thenReturn(Optional.of(user))
+        val mockAuth = mock(Authentication::class.java)
+        Mockito.`when`(mockAuth.name).thenReturn(username)
+
+        val mockGroup = mock(UserGroup::class.java)
+        Mockito.`when`(mockUserGroupRepository.findById(10)).thenReturn(Optional.of(mockGroup))
+        Mockito.`when`(mockGroup.members).thenReturn(mutableSetOf())
+        Mockito.`when`(mockGroup.admins).thenReturn(mutableSetOf())
+        Mockito.`when`(mockGroup.getAllUserIds()).thenReturn(setOf())
+
+        assertThrows<IllegalAccessException> { authService.checkGroupDataReadAndThrow(mockAuth, 10) }
     }
 }

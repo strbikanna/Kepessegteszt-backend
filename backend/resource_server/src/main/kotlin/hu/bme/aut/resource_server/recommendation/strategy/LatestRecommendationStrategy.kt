@@ -2,6 +2,7 @@ package hu.bme.aut.resource_server.recommendation.strategy
 
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.user.UserRepository
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service
@@ -13,6 +14,7 @@ class LatestRecommendationStrategy(
 ) : RecommendationStrategy {
 
 
+    @BusinessCritical
     override suspend fun generateRecommendationByResult(
         username: String,
         gameId: Int,

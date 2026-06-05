@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.*
 import org.hibernate.annotations.Cascade
@@ -56,6 +57,7 @@ open class GameEntity(
     @Cascade(CascadeType.ALL)
     open var configItems: MutableSet<ConfigItem> = mutableSetOf()
 ){
+    @BusinessCritical
     open fun validateConfig(config: Map<String, Any>): Map<String, Any>{
         return config
     }

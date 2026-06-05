@@ -9,6 +9,7 @@ import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.suggest.SuggestRequestDto
 import hu.bme.aut.resource_server.suggest.SuggestResponseDto
 import hu.bme.aut.resource_server.user.UserRepository
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import jakarta.annotation.PostConstruct
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +41,7 @@ class SuggestApiStrategy(
         webclient = WebClient.create(SUGGEST_API_BASE_URL)
     }
 
+    @BusinessCritical
     override suspend fun generateRecommendationByResult(
         username: String,
         gameId: Int,
@@ -60,6 +62,7 @@ class SuggestApiStrategy(
         return@withContext suggestResponse.config
     }
 
+    @BusinessCritical
     suspend fun getSuggestedConfigForGame(
         playerAbilities: Set<FloatProfileItem>,
         gameId: String,
@@ -99,6 +102,7 @@ class SuggestApiStrategy(
         return nextConfig.await()
     }
 
+    @BusinessCritical
     private fun saveAbilityUpdates(suggestResponseDto: SuggestResponseDto, recommendedGameId: Long) {
         val recommendedGameEntity = recommendedGameRepository.findByIdWithProfileUpdateItems(recommendedGameId).orElseThrow()
         val profileUpdateItems = mutableSetOf<ProfileUpdateItem>()

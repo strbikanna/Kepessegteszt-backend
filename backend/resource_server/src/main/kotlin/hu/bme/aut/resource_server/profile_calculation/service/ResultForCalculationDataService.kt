@@ -7,6 +7,7 @@ import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationR
 import hu.bme.aut.resource_server.result.ResultRepository
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
@@ -31,6 +32,7 @@ class ResultForCalculationDataService(
     /**
      * Returns the count of the non-normalized results for the given game.
      */
+    @BusinessCritical
     fun getCountForNewCalculation(game: GameEntity): Long =
          resultForCalculationRepository.countByGameAndNormalizedResultNull(game)
 
@@ -47,9 +49,11 @@ class ResultForCalculationDataService(
     fun getGameWithAbilities(gameId: Int): GameEntity  = gameRepository.findByIdWithAbilities(gameId).orElseThrow()
     fun getGameWithConfigItems(gameId: Int): GameEntity = gameRepository.findByIdWithConfigItems(gameId).orElseThrow()
 
+    @BusinessCritical
     fun getAllNormalizedResultsOfGame(game: GameEntity) = resultForCalculationRepository.findAllByGameAndNormalizedResultNotNull(game)
     fun deleteAllNormalizedResultsOfGame(game: GameEntity) = resultForCalculationRepository.deleteByGameAndNormalizedResultNotNull(game)
     fun deleteAllNormalizedResultsOfGameAndUser(game: GameEntity, user: UserEntity) = resultForCalculationRepository.deleteByGameAndUserAndNormalizedResultNotNull(game, user)
+    @BusinessCritical
     fun getAllNonNormalizedResultsOfGame(game: GameEntity, page: Pageable) = resultForCalculationRepository.findAllByGameAndNormalizedResultNull(game, page)
     fun delete(result: ResultForCalculationEntity) = resultForCalculationRepository.delete(result)
     fun deleteAll(results: List<ResultForCalculationEntity>) = resultForCalculationRepository.deleteAll(results)
@@ -67,7 +71,9 @@ class ResultForCalculationDataService(
 
     fun getResultById(resultId: Long) = resultRepository.findById(resultId).orElseThrow( )
 
+    @BusinessCritical
     fun getCountOfNormalizedResultsByGameAndUser(game: GameEntity, user: UserEntity) = resultForCalculationRepository.countByGameAndUserAndNormalizedResultNotNull(game, user)
+    @BusinessCritical
     fun getNormalizedResultsByGameAndUserPaged(game: GameEntity, user: UserEntity, page: Pageable) = resultForCalculationRepository.findAllByGameAndUserAndNormalizedResultNotNull(game, user, page)
 
     fun getAllUserIds() = userRepository.findAllIds()

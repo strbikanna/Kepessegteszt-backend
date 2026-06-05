@@ -4,6 +4,7 @@ import hu.bme.aut.resource_server.recommendation.RecommenderService
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import jakarta.transaction.Transactional
 import org.springframework.http.HttpStatus
 import org.springframework.scheduling.annotation.Scheduled
@@ -41,6 +42,7 @@ class SpecialSettingsController(
     }
 
     @Scheduled(cron = "0 0 2 * * *")
+    @BusinessCritical
     fun refreshSpecialSettingsOfAllUser() {
         userRepo.findAllUsernames().forEach { username ->
             val user = userRepo.findByUsernameWithSpecialSettings(username).get()

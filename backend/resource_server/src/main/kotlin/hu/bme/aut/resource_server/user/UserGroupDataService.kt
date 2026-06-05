@@ -8,6 +8,7 @@ import hu.bme.aut.resource_server.user_group.UserGroupDto
 import hu.bme.aut.resource_server.user_group.UserGroupRepository
 import hu.bme.aut.resource_server.user_group.group.GroupRepository
 import hu.bme.aut.resource_server.user_group.organization.OrganizationRepository
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -20,6 +21,7 @@ class UserGroupDataService(
     @Autowired private var uGroupRepository: UserGroupRepository,
 ) {
     @Transactional
+    @BusinessCritical
     fun getGroupsOfUser(username: String): List<UserGroupDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
         val allGroups = mutableListOf(user.groups, user.organizations).flatten().map { it.toDto() }
@@ -32,6 +34,7 @@ class UserGroupDataService(
     }
 
     @Transactional
+    @BusinessCritical
     fun addUserToGroup(username: String, groupId: Int){
         val user = userRepository.findByUsername(username).orElseThrow()
         val group = groupRepository.findById(groupId).orElseThrow()
@@ -49,6 +52,7 @@ class UserGroupDataService(
     }
 
     @Transactional
+    @BusinessCritical
     fun addUserToOrganization(username: String, orgId: Int){
         val user = userRepository.findByUsername(username).orElseThrow()
         val org = orgRepository.findById(orgId).orElseThrow()
@@ -57,6 +61,7 @@ class UserGroupDataService(
     }
 
 
+    @BusinessCritical
     fun getAllUserIdsByFilter(filter: UserFilterDto): List<Int> {
         return userRepository.findAll(UserSpecification(filter)).map { it.id!! }
     }
@@ -92,6 +97,7 @@ class UserGroupDataService(
         return getAbilityToAggregateValuesInGroup(groupId, userFilterDto, abilities, userRepository::getMinOfAbilityValuesInUserGroup)
     }
 
+    @BusinessCritical
     private fun getAbilityToAggregateValuesInGroup(groupId: Int?,
                                                    userFilterDto: UserFilterDto?,
                                                    abilities: Set<AbilityEntity>,

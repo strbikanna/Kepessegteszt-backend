@@ -4,6 +4,7 @@ import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -20,6 +21,7 @@ class ProfileSnapshotService(
         val MIN_ABILITY_ACCURACY_TO_SAVE = 0.8
     }
 
+    @BusinessCritical
     fun saveSnapshotOfUser(user: UserEntity){
         saveFloatProfile(user)
         saveEnumProfile(user)
@@ -28,6 +30,7 @@ class ProfileSnapshotService(
     /**
      * Saves the snapshot of the user's given abilities.
      */
+    @BusinessCritical
     fun saveSnapshotOfUserAbilities(user: UserEntity, abilities: List<AbilityEntity>){
         val floatProfile = user.profileFloat
         val floatProfileSnapshotItems = floatProfile
@@ -44,6 +47,7 @@ class ProfileSnapshotService(
     /**
      * Saves the snapshot of each enum profile item of the user.
      */
+    @BusinessCritical
     private fun saveEnumProfile(user: UserEntity) {
         val enumProfile = user.profileEnum
         val enumProfileSnapshotItems = enumProfile
@@ -55,6 +59,7 @@ class ProfileSnapshotService(
     /**
      * Saves the snapshot of each float profile item of the user.
      */
+    @BusinessCritical
     private fun saveFloatProfile(user: UserEntity) {
         val floatProfile = user.profileFloat
         val profileSnapshotItems = floatProfile
@@ -63,6 +68,7 @@ class ProfileSnapshotService(
         floatProfileSnapshotRepository.saveAll(profileSnapshotItems)
     }
 
+    @BusinessCritical
     fun saveSnapshotOfUser(username: String){
         val entity = userRepository.findByUsernameWithProfile(username).orElseThrow()
         saveSnapshotOfUser(entity)
@@ -72,6 +78,7 @@ class ProfileSnapshotService(
         val entity = userRepository.findByUsername(user.username).orElseThrow()
         return getSnapshotsOfUser(entity)
     }
+    @BusinessCritical
     fun getSnapshotsOfUser(user: UserEntity, pageIndex: Int = 0, pageSize: Int = 100): List<ProfileSnapshotItem>{
         val snapShots = mutableListOf<ProfileSnapshotItem>()
         val sort = Sort.by(Sort.Direction.DESC, "timestamp")
@@ -82,6 +89,7 @@ class ProfileSnapshotService(
         return snapShots
     }
 
+    @BusinessCritical
     fun getSnapshotsOfUserBetween(user: UserEntity, begin: LocalDateTime, end: LocalDateTime): List<ProfileSnapshotItem>{
         val snapShots = mutableListOf<ProfileSnapshotItem>()
         val floatSnapshots = floatProfileSnapshotRepository.findAllByUserAndTimestampBetween(user, begin, end)
@@ -91,6 +99,7 @@ class ProfileSnapshotService(
         return snapShots
     }
 
+    @BusinessCritical
     fun existsSnapshotToday(username: String):Boolean{
         val user = userRepository.findByUsername(username).orElseThrow()
         val todayStart = getTodayStart()

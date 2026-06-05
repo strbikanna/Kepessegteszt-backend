@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.spring)
     alias(libs.plugins.kotlin.jpa)
+    jacoco
 }
 dependencyManagement {
     imports {
@@ -66,7 +67,11 @@ dependencies {
         exclude(group = "org.apache.httpcomponents.client5")
         exclude(group = "org.apache.httpcomponents.core5")
     }
+    testImplementation("io.github.classgraph:classgraph:4.8.172")
+    testImplementation("org.ow2.asm:asm:9.7")
     testImplementation(libs.assertj)
+    testImplementation("io.github.classgraph:classgraph:4.8.172")
+    testImplementation("org.ow2.asm:asm:9.7")
 
     // LangChain
     implementation(libs.langchain4j)
@@ -88,6 +93,32 @@ tasks.withType<Test> {
 
 tasks.test {
     useJUnitPlatform {
-        excludeTags("e2e")
+        excludeTags("e2e", "coverage")
+    }
+    finalizedBy(tasks.jacocoTestReport)
+}
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
     }
 }
+
+
+tasks.register<Test>("businessCriticalCoverage") {
+    description = "Runs BusinessCritical verification after tests and JaCoCo report"
+    group = "verification"
+
+    dependsOn(tasks.named("jacocoTestReport"))
+    shouldRunAfter(tasks.named("test"))
+
+    useJUnitPlatform{
+        includeTags("coverage")
+    }
+    filter {
+        includeTestsMatching("*BusinessCriticalCoverageTest")
+    }
+}
+

@@ -5,6 +5,7 @@ import hu.bme.aut.resource_server.profile_calculation.calculator.CalculationHelp
 import hu.bme.aut.resource_server.profile_calculation.calculator.ScoreCalculator
 import hu.bme.aut.resource_server.profile_calculation.data.MeanAndDeviation
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
@@ -27,6 +28,7 @@ class GameResultProcessingService(
      * Can be used by both multi- and single ability games.
      */
     @Transactional
+    @BusinessCritical
     fun processGameResults(gameId: Int): MeanAndDeviation {
             val game = dataService.getGameWithConfigItems(gameId)
 
@@ -52,6 +54,7 @@ class GameResultProcessingService(
      * Deletes these not normalized results and saves only the relevant ones of the new normalized values.
      * As a result new relevant normalized values will be in database, having @param timestamp creation timestamp (default to now).
      */
+    @BusinessCritical
     private fun normalizeNewResults(game: GameEntity){
         val resultCount = dataService.getCountForNewCalculation(game)
         val maxPages: Int = (resultCount/defaultPageSize).toInt() + 1
@@ -69,6 +72,7 @@ class GameResultProcessingService(
      * Saves only the median value.
      * Deletes the old normalized values.
      */
+    @BusinessCritical
     fun calculateMedianOfEachUser(game: GameEntity){
         val userIds = dataService.getAllUserIds()
         userIds.forEach { userId ->
@@ -92,6 +96,7 @@ class GameResultProcessingService(
         const val PAGE_SIZE_FOR_MEDIAN = 2
     }
 
+    @BusinessCritical
     private fun calculateMedianOfUser(game: GameEntity, userId: Int): Double?{
         val user = dataService.getUserById(userId)
         val countOfNormalizedResults = dataService.getCountOfNormalizedResultsByGameAndUser(game, user)

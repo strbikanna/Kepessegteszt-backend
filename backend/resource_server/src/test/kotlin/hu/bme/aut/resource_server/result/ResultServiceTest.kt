@@ -158,7 +158,7 @@ class ResultServiceTest(
     }
 
     @Test
-    fun shouldGetResultsByResultFilter(){
+    fun shouldGetResultsByFilter(){
         val resultWin = true
         val userNames = listOf(testUser.username)
         val page = Pageable.ofSize(10).withPage(0)
@@ -171,6 +171,19 @@ class ResultServiceTest(
         )).thenReturn(PageImpl(createResults(), PageRequest.of(0, 10), 2))
 
         resultService.getAllFiltered(userNames, null, resultWin, page)
+    }
+
+    @Test
+    fun shouldGetResultsByFilter_2(){
+        val gameIds = listOf(1, 2)
+        val userNames = listOf(testUser.username)
+        val page = Pageable.ofSize(10).withPage(0)
+
+        `when`(resultRepository.findAllByRecommendedGameGameIdIn(
+            listOf(1,2), page
+        )).thenReturn(PageImpl(createResults(), PageRequest.of(0, 10), 2))
+
+        resultService.getAllFiltered(gameIds, null, page)
     }
 
     private var testUser = UserEntity(

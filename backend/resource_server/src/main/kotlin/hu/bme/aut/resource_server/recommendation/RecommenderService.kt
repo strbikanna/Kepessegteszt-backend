@@ -9,6 +9,7 @@ import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.result.ResultEntity
 import hu.bme.aut.resource_server.user.UserRepository
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import jakarta.annotation.PostConstruct
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -45,6 +46,7 @@ class RecommenderService(
      * If the user has no recommendation for a game, a default recommendation is created.
      */
     @Transactional
+    @BusinessCritical
     fun getAllRecommendationToUser(username: String): List<RecommendedGameEntity> {
         val user = userRepository.findByUsername(username).orElseThrow()
         return recommendedGameRepository
@@ -56,6 +58,7 @@ class RecommenderService(
      * Saves an empty recommendation for the user and the game.
      */
     @Transactional
+    @BusinessCritical
     fun createEmptyRecommendation(username: String, gameId: Int): RecommendedGameEntity {
         val user = userRepository.findByUsername(username).orElseThrow()
         val game = gameRepository.findById(gameId).orElseThrow()
@@ -67,11 +70,13 @@ class RecommenderService(
         return recommendedGameRepository.save(recommendation)
     }
 
+    @BusinessCritical
     fun save(recommendation: RecommendedGameEntity): RecommendedGameEntity {
         return recommendedGameRepository.save(recommendation)
     }
 
     @Transactional
+    @BusinessCritical
     suspend fun createNextRecommendationByResult(gameResult: ResultEntity): Map<String, Any> {
         recommendationStrategies.forEach {
             try {
@@ -97,6 +102,7 @@ class RecommenderService(
      * Creates default recommendations for the user for the active games which have no recommendation.
      */
     @Transactional
+    @BusinessCritical
     fun createDefaultRecommendationsForUser(username: String): List<RecommendedGameEntity> {
         val user = userRepository.findByUsername(username).orElseThrow()
         val games = gameRepository
@@ -123,6 +129,7 @@ class RecommenderService(
      * Creates default recommendations for the game for all users even if there is an existing recommendation.
      */
     @Transactional
+    @BusinessCritical
     fun createDefaultRecommendationsForGame(gameId: Int): List<RecommendedGameEntity> {
         val users = userRepository.findAll()
         val game = gameRepository.findById(gameId).orElseThrow()
@@ -139,7 +146,7 @@ class RecommenderService(
         return recommendedGameRepository.saveAll(recommendations).map { it }
     }
 
-
+    @BusinessCritical
     fun applySpecialSettings(config: Map<String, Any>, gameId: Int, username: String): Map<String, Any> {
         val user = userRepository.findByUsernameWithSpecialSettings(username).orElseThrow()
         val validSettings = user.specialGameSettings.filter { it.isValid() }.toMutableSet()

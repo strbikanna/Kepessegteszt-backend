@@ -3,6 +3,7 @@ package hu.bme.aut.resource_server.game
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
 import hu.bme.aut.resource_server.recommendation.visitor.StoredRecommendationService
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import jakarta.persistence.DiscriminatorValue
 import jakarta.persistence.Entity
 
@@ -20,6 +21,7 @@ class StoredConfigGameEntity(
     configItems: MutableSet<ConfigItem> = mutableSetOf(),
 ) : GameEntity(id, modelId, version, name, description, thumbnailPath, active, affectedAbilities, configItems) {
 
+    @BusinessCritical
     override fun validateConfig(config: Map<String, Any>): Map<String, Any> {
         return try{
             StoredRecommendationService.visitConfig(config)

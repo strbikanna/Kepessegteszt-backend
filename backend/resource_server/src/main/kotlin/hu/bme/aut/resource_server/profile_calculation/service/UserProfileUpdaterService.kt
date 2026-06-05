@@ -8,6 +8,7 @@ import hu.bme.aut.resource_server.error.ProfileUpdateException
 import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserService
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -33,6 +34,7 @@ class UserProfileUpdaterService(
      * Updates the user profiles by the normalized results of the game with the given id.
      */
     @Transactional
+    @BusinessCritical
      fun updateUserProfileByResultsOfGame(gameId: Int, normalizationValue: MeanAndDeviation) {
         val game = resultDataService.getGameWithAbilities(gameId)
         if(game.affectedAbilities.isEmpty()){
@@ -46,6 +48,7 @@ class UserProfileUpdaterService(
      * The new ability value is calculated by the following formula:
      * newAbilityValue = 1 + (normalizedResult - mean) / deviation * 0.15
      */
+    @BusinessCritical
     private fun updateUserProfilesOneAbility(game: GameEntity, normalizationValue: MeanAndDeviation, ability: AbilityEntity){
         val normalizedResults = resultDataService.getAllNormalizedResultsOfGame(game)
         normalizedResults.forEach { result ->
@@ -67,6 +70,7 @@ class UserProfileUpdaterService(
      * newAbilityValue = valueRelevancy * newValue + (1 - valueRelevancy) * oldValue.
      * Value relevancy is a number between 0 and 1 that expresses how much the new value should change the profile.
      */
+    @BusinessCritical
     private fun saveNewAbilityValueOfUser(user: UserEntity, ability: AbilityEntity, value: Double, valueRelevancy: Double = 1.0){
         val oldProfileItem = user.profileFloat.find { it.ability.code == ability.code }
         val newProfileItem = FloatProfileItem(ability = ability, abilityValue = value)

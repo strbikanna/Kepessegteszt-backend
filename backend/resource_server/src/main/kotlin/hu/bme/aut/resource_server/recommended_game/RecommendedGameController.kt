@@ -44,7 +44,6 @@ class RecommendedGameController(
         @RequestParam(required = false) gameId: Int?,
         @RequestParam(required= false) completed: Boolean? = false,
         @RequestParam username: String,
-        authentication: Authentication
     ): List<RecommendedGameDto> {
         return recommendedGameService.getRecommendationsToUserAndGame(username, gameId, completed)
     }
