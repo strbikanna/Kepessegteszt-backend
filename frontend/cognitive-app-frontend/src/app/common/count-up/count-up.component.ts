@@ -41,7 +41,7 @@ import {Observable} from "rxjs";
 })
 export class NumberPipe implements PipeTransform {
   transform(value: number): string {
-    return new Intl.NumberFormat('de-DE', {compactDisplay: "long"})
+    return new Intl.NumberFormat('de-DE')
         .format(value).replaceAll('.', ' ');
   }
 }
