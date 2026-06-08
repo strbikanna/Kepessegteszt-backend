@@ -2,6 +2,7 @@ package hu.bme.aut.resource_server.recommendation
 
 import hu.bme.aut.resource_server.TestUtilsService
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
+import hu.bme.aut.resource_server.recommendation.strategy.AutoRecommendationStrategy
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameEntity
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameService
 import hu.bme.aut.resource_server.result.ResultEntity
@@ -45,6 +46,7 @@ class RecommendationIntegrationTest(
                 val createdConfig = autoRecommendationService.generateRecommendationByResult(
                     user.username,
                     newRGame.game.id!!,
+                    newRGame.id!!,
                     result.config,
                     true
                 )

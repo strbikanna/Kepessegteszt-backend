@@ -7,6 +7,7 @@ import hu.bme.aut.resource_server.user_group.group.GroupRepository
 import hu.bme.aut.resource_server.user_group.organization.Address
 import hu.bme.aut.resource_server.user_group.organization.Organization
 import hu.bme.aut.resource_server.user_group.organization.OrganizationRepository
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import hu.bme.aut.resource_server.utils.RoleName
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,6 +27,7 @@ class UserGroupService(
      * Should be called within transaction. (@Transactional)
      */
     @Transactional
+    @BusinessCritical
     fun getAllUserGroups(pageIndex: Int =0, pageSize: Int = 100, authUsername: String): List<UserGroup> {
         val user = userRepository.findByUsername(authUsername).orElseThrow()
         if(user.roles.any{it.roleName == RoleName.ADMIN}){
@@ -35,6 +37,7 @@ class UserGroupService(
     }
 
     @Transactional
+    @BusinessCritical
     fun getAllOrganizations(pageIndex: Int =0, pageSize: Int = 100, authUsername: String): List<Organization> {
         val user = userRepository.findByUsername(authUsername).orElseThrow()
         if(user.roles.any{it.roleName == RoleName.ADMIN}){
@@ -44,6 +47,7 @@ class UserGroupService(
     }
 
     @Transactional
+    @BusinessCritical
     fun getAllGroups(pageIndex: Int =0, pageSize: Int = 100, authUsername: String): List<Group> {
         val user = userRepository.findByUsername(authUsername).orElseThrow()
         if(user.roles.any{it.roleName == RoleName.ADMIN}){
@@ -57,12 +61,12 @@ class UserGroupService(
     }
 
     @Transactional
+    @BusinessCritical
     fun addAdminUserToGroup(username: String, groupId: Int) {
         val user = userRepository.findByUsername(username).orElseThrow()
         val group = userGroupRepository.findById(groupId).orElseThrow()
         val dbGroup = userGroupRepository.findById(group.id!!).get()
-        dbGroup.admins.add(user)
-        dbGroup.members.add(user)
+        dbGroup.addAdmin(user)
         userGroupRepository.save(group)
     }
 
@@ -73,6 +77,7 @@ class UserGroupService(
      * @param group group to remove user from, must have id
      */
     @Transactional
+    @BusinessCritical
     fun removeUserFromGroup(username: String, groupId: Int) {
         val user = userRepository.findByUsername(username).orElseThrow()
         val group = userGroupRepository.findById(groupId).orElseThrow()
@@ -95,6 +100,7 @@ class UserGroupService(
      * @param group group to remove user from, must have id
      */
     @Transactional
+    @BusinessCritical
     fun removeAdminFromGroup(username: String, groupId: Int) {
         val user = userRepository.findByUsername(username).orElseThrow()
         val group = userGroupRepository.findById(groupId).orElseThrow()
@@ -106,14 +112,15 @@ class UserGroupService(
      * Returns all users in the group or organization based on its id
      */
     @Transactional
-    fun getAllUsersInGroup(groupId: Int): List<UserEntity> {
+    @BusinessCritical
+    fun getAllUsersInGroup(groupId: Int, pageIndex: Int, pageSize: Int): List<UserEntity> {
         val group = userGroupRepository.findById(groupId).orElseThrow()
-        val dbGroup = userGroupRepository.findById(group.id!!).get()
-        val userIds = dbGroup.getAllUserIds()
-        return userRepository.findByIdIn(userIds.toList())
+        val userIds = group.getAllUserIds()
+        return userRepository.findByIdInOrderByLastName(userIds.toList(), PageRequest.of(pageIndex, pageSize))
     }
 
     @Transactional
+    @BusinessCritical
     fun getAllUsersToSee(username: String, pageIndex: Int=0, pageSize: Int=100): List<UserEntity> {
         val user = userRepository.findByUsername(username).orElseThrow()
         if(user.roles.any{it.roleName == RoleName.ADMIN}){

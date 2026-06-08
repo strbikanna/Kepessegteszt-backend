@@ -20,3 +20,4 @@ app:
   python:
     # if Python environment is present, set to true
     exists: false
+  suggest-api: ${wiremock.server.baseUrl:http://localhost:8080}

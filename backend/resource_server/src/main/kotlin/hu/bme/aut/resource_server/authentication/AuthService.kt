@@ -11,6 +11,7 @@ import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
 import hu.bme.aut.resource_server.user_group.UserGroupRepository
 import hu.bme.aut.resource_server.user_group.group.Group
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import hu.bme.aut.resource_server.utils.RoleName
 import kotlinx.coroutines.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -55,7 +56,7 @@ class AuthService(
     }
 
     @Transactional
-    fun checkGameConfigAccessAnThrow(recommendedGameId: Long, authentication: Authentication) {
+    fun checkGameConfigAccessAndThrow(recommendedGameId: Long, authentication: Authentication) {
         val username = authentication.name
         val dbGamePlay = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
         if (username != dbGamePlay.recommendedTo.username) {
@@ -63,10 +64,12 @@ class AuthService(
         }
     }
 
+    @BusinessCritical
     fun getAuthUser(authentication: Authentication): UserEntity {
         return userRepository.findByUsername(authentication.name).orElseThrow()
     }
 
+    @BusinessCritical
     fun getAuthUserWithRoles(authentication: Authentication): UserEntity {
         return userRepository.findByUsernameWithRoles(authentication.name).orElseThrow()
     }
@@ -88,6 +91,7 @@ class AuthService(
      * Checks if the user is authorized to see the contact's data.
      * @throws IllegalAccessException if the user is not authorized to see the contact's data.
      */
+    @BusinessCritical
     suspend fun isContact(authentication: Authentication, contactUsername: String): Boolean {
         if (webclient == null) {
             initWebClient()
@@ -160,8 +164,9 @@ class AuthService(
     }
 
     @Transactional
+    @BusinessCritical
     fun checkUserGroupWriteAndThrow(authentication: Authentication, userGroupId: Int) {
-        val user = getAuthUser(authentication)
+        val user = getAuthUserWithRoles(authentication)
         if (isAdmin(user)) {
             return
         }
@@ -187,8 +192,9 @@ class AuthService(
     }
 
     @Transactional
+    @BusinessCritical
     fun checkGroupDataReadAndThrow(authentication: Authentication, userGroupId: Int) {
-        val user = getAuthUser(authentication)
+        val user = getAuthUserWithRoles(authentication)
         if (isAdmin(user)) {
             return
         }

@@ -4,12 +4,11 @@ import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.profile_calculation.data.MeanAndDeviation
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.profile.FloatProfileItem
-import hu.bme.aut.resource_server.profile_calculation.calculator.AbilityRateCalculatorService
-import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationDataService
-import hu.bme.aut.resource_server.profile_calculation.error.ProfileUpdateException
+import hu.bme.aut.resource_server.error.ProfileUpdateException
 import hu.bme.aut.resource_server.profile_snapshot.ProfileSnapshotService
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserService
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service
 @Service
 class UserProfileUpdaterService(
     @Autowired private var snapshotService: ProfileSnapshotService,
-    @Autowired private var abilityRateCalculatorService: AbilityRateCalculatorService,
     @Autowired private var resultDataService: ResultForCalculationDataService,
     @Autowired private var userService: UserService
 ) {
@@ -36,6 +34,7 @@ class UserProfileUpdaterService(
      * Updates the user profiles by the normalized results of the game with the given id.
      */
     @Transactional
+    @BusinessCritical
      fun updateUserProfileByResultsOfGame(gameId: Int, normalizationValue: MeanAndDeviation) {
         val game = resultDataService.getGameWithAbilities(gameId)
         if(game.affectedAbilities.isEmpty()){
@@ -45,28 +44,11 @@ class UserProfileUpdaterService(
     }
 
     /**
-     * Updates the users float profile by the given ability and value.
-     * Ability accuracy is incremented by 0.1.
-     * @param username the username of the user
-     * @param ability the ability to update
-     * @param updatedValue the new value of the ability
-     */
-    @Transactional
-    fun updateUserProfile(username: String, ability: AbilityEntity, updatedValue: Double){
-        val user = userService.getUserEntityWithProfileByUsername(username)
-        val updateableProfileItem = user.profileFloat.find { it.ability.code == ability.code }
-        updateableProfileItem?.let {
-            it.abilityValue = updatedValue
-            it.abilityAccuracy += ABILITY_ACCURACY_INCREMENT
-        }
-        userService.saveUser(user)
-    }
-
-    /**
      * Updates the user profiles by the first (and only) affected ability of the game.
      * The new ability value is calculated by the following formula:
      * newAbilityValue = 1 + (normalizedResult - mean) / deviation * 0.15
      */
+    @BusinessCritical
     private fun updateUserProfilesOneAbility(game: GameEntity, normalizationValue: MeanAndDeviation, ability: AbilityEntity){
         val normalizedResults = resultDataService.getAllNormalizedResultsOfGame(game)
         normalizedResults.forEach { result ->
@@ -88,37 +70,18 @@ class UserProfileUpdaterService(
      * newAbilityValue = valueRelevancy * newValue + (1 - valueRelevancy) * oldValue.
      * Value relevancy is a number between 0 and 1 that expresses how much the new value should change the profile.
      */
-
-    private fun saveNewAbilityValueOfUser(user: UserEntity, ability: AbilityEntity, value: Double, valueRelevancy: Double = 0.5){
+    @BusinessCritical
+    private fun saveNewAbilityValueOfUser(user: UserEntity, ability: AbilityEntity, value: Double, valueRelevancy: Double = 1.0){
         val oldProfileItem = user.profileFloat.find { it.ability.code == ability.code }
         val newProfileItem = FloatProfileItem(ability = ability, abilityValue = value)
         if(oldProfileItem != null){
             snapshotService.saveSnapshotOfUserAbilities(user, listOf(ability))
             oldProfileItem.abilityValue = value * valueRelevancy + oldProfileItem.abilityValue * (1.0 - valueRelevancy)
+            oldProfileItem.incrementAccuracy()
         }else {
             user.profileFloat.add(newProfileItem)
         }
         userService.updateUserProfile(user)
     }
-
-    /**
-     * Updates the user profiles by multiple affected abilities of the game.
-     * Calls neural network to calculate the ability contributions.
-     */
-    private fun updateUserProfilesMultiAbility(game: GameEntity, normalizationValue: MeanAndDeviation){
-        val abilities = game.affectedAbilities
-        val normalizedResults = resultDataService.getAllNormalizedResultsOfGame(game)
-        val inputForCalculation = abilityRateCalculatorService.getAbilityValuesAndValuesFromResultsStructured(normalizedResults, abilities.toList())
-        val abilityContributions = abilityRateCalculatorService.calculateRates(inputForCalculation.first, inputForCalculation.second)
-        normalizedResults.forEach { result ->
-            val difference = result.normalizedResult!! - normalizationValue.mean
-            val abilityValue = 1 + difference/normalizationValue.deviation * DEVIATION_DIFF_MULTIPLICATOR
-            abilities.forEachIndexed { index, ability ->
-                saveNewAbilityValueOfUser(result.user, ability, abilityValue, abilityContributions[index])
-            }
-        }
-
-    }
-
 
 }

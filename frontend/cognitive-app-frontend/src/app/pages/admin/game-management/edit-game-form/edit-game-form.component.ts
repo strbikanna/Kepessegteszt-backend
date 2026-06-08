@@ -22,6 +22,7 @@ export class EditGameFormComponent implements OnInit {
      */
     protected gameForm = this.fb.group({
         name: ['', Validators.required],
+        modelId: [''],
         description: ['', Validators.required],
         version: [{value: 1, disabled: true}, Validators.required],
         thumbnail: [null],
@@ -71,6 +72,7 @@ export class EditGameFormComponent implements OnInit {
         this.loading = true;
         const game: Game = {
             id: this.game?.id,
+            modelId: this.gameForm.controls?.modelId?.value ?? undefined,
             name: this.gameForm.controls.name.value ?? '',
             description: this.gameForm.controls.description.value ?? '',
             version: this.gameForm.controls.version.value ?? 1,
@@ -212,6 +214,7 @@ export class EditGameFormComponent implements OnInit {
             this.game = game;
             const formControls = this.gameForm.controls
             formControls.name.setValue(game.name)
+            formControls.modelId.setValue(game.modelId ?? '')
             formControls.description.setValue(game.description)
             formControls.active.setValue(game.active)
             formControls.version.setValue(game.version)

@@ -2,7 +2,7 @@ package hu.bme.aut.resource_server.utils
 
 import hu.bme.aut.resource_server.error.ApiCallException
 import hu.bme.aut.resource_server.error.AuthException
-import hu.bme.aut.resource_server.profile_calculation.error.CalculationException
+import hu.bme.aut.resource_server.error.CalculationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice

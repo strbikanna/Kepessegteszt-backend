@@ -8,3 +8,7 @@ export const imagePaths = {
     research: `${environment.clientUrl}/assets/logos/research.jpg`,
     noData: `${environment.clientUrl}/assets/logos/astronaut_no_data.png`,
 }
+
+export function onImageError(event: any) {
+    event.target.src = imagePaths.defaultGamePicture;
+}

@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.spring)
     alias(libs.plugins.kotlin.jpa)
+    jacoco
 }
 dependencyManagement {
     imports {
@@ -45,9 +46,6 @@ dependencies {
     implementation(libs.jackson.jakarta.xmlbind.annotations)
     implementation(libs.hypersistence.hibernate62)
     implementation(libs.json)
-    //jep
-    implementation(libs.ninia.jep)
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
     //h2
     runtimeOnly(libs.h2)
     implementation(libs.spring.boot.starter.webflux)
@@ -63,6 +61,17 @@ dependencies {
     testImplementation(libs.spring.security.test)
     testImplementation(libs.rest.assured)
     testImplementation(libs.hamcrest)
+    testImplementation("org.apache.httpcomponents.client5:httpclient5:5.2.3")
+    testImplementation("org.apache.httpcomponents.core5:httpcore5:5.2.3")
+    testImplementation(libs.wiremock){
+        exclude(group = "org.apache.httpcomponents.client5")
+        exclude(group = "org.apache.httpcomponents.core5")
+    }
+    testImplementation("io.github.classgraph:classgraph:4.8.172")
+    testImplementation("org.ow2.asm:asm:9.7")
+    testImplementation(libs.assertj)
+    testImplementation("io.github.classgraph:classgraph:4.8.172")
+    testImplementation("org.ow2.asm:asm:9.7")
 
     // LangChain
     implementation(libs.langchain4j)
@@ -81,3 +90,35 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+tasks.test {
+    useJUnitPlatform {
+        excludeTags("e2e", "coverage")
+    }
+    finalizedBy(tasks.jacocoTestReport)
+}
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+}
+
+
+tasks.register<Test>("businessCriticalCoverage") {
+    description = "Runs BusinessCritical verification after tests and JaCoCo report"
+    group = "verification"
+
+    dependsOn(tasks.named("jacocoTestReport"))
+    shouldRunAfter(tasks.named("test"))
+
+    useJUnitPlatform{
+        includeTags("coverage")
+    }
+    filter {
+        includeTestsMatching("*BusinessCriticalCoverageTest")
+    }
+}
+

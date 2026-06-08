@@ -1,0 +1,6 @@
+<div *ngIf="isImpersonationActive && user">
+    <button mat-flat-button (click)="backToOwnAccount()" color="accent">
+        <mat-icon>arrow_back</mat-icon>
+        {{text.back}}
+    </button>
+</div>

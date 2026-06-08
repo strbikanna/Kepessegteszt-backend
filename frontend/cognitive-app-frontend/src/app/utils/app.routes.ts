@@ -9,9 +9,9 @@ import {EditGameFormComponent} from "../pages/admin/game-management/edit-game-fo
 import {
     adminCognitiveProfileGuard,
     cognitiveProfileEditGuard,
-    gameManagementGuard,
-    groupManagementGuard, recommendationGuard
-} from "../auth/gameManagementGuard";
+    appRoutesGuard,
+    groupManagementGuard, recommendationGuard, PermissionGuard
+} from "../auth/app-routes.guard";
 import {RecommendationPageComponent} from "../pages/admin/recommendation/recommendation-page.component";
 import {ProfileDataComparisonPageComponent} from "../pages/student/profile-data-comparison/profile-data-comparison-page.component";
 import {ResultPageComponent} from "../pages/common/result/result-page/result-page.component";
@@ -33,28 +33,176 @@ import {
 } from "../pages/admin/cognitive-profile-edit-page/cognitive-profile-edit-page.component";
 import {GamesComponent} from "../pages/common/games/games.component";
 import {ResultInsightPageComponent} from "../pages/common/result-insight-page/result-insight-page.component";
+import {Permission} from "./constants";
 
 
 export const appRoutes: Routes = [
-    {path: 'admin', component: AdminPageComponent, canActivate: [adminAuthGuard], title: 'Felhasználók kezelése'},
-    {path: 'ability', component: AbilityPageComponent, canActivate: [adminAuthGuard], title: 'Kognitív képességek'},
-    {path: 'game-management', component: GameManagementPageComponent, canActivate: [gameManagementGuard], title: 'Játékok kezelése'},
-    {path: 'edit-game/:id', component: EditGameFormComponent, canActivate: [gameManagementGuard], title: 'Játék szerkesztése'},
-    {path: 'edit-game', component: EditGameFormComponent, canActivate: [gameManagementGuard], title: 'Játék szerkesztése'},
-    {path: 'games', component: GamesComponent, canActivate: [loggedInGuard], title: 'Játékok'},
-    {path: '', component: HomeComponent, title: 'Cognitive App'},
-    {path: 'profile', component: ProfilePageComponent, canActivate: [loggedInGuard], title: 'Profil'},
-    {path: 'profile-compare', component: ProfileDataComparisonPageComponent, canActivate: [loggedInGuard], title: 'Profil összehasonlítás'},
-    {path: 'profile-compare-admin', component: AdminProfileDataComparisonPageComponent, canActivate: [loggedInGuard, adminCognitiveProfileGuard], title: 'Profil összehasonlítás'},
-    {path: 'cognitive-profile', component: CognitiveProfilePageComponent, canActivate: [loggedInGuard], title: 'Kognitív profil'},
-    {path: 'cognitive-profile-admin', component: AdminCognitiveProfilePageComponent, canActivate: [loggedInGuard, adminCognitiveProfileGuard], title: 'Kognitív profil'},
-    {path: 'cognitive-profile-edit', component: CognitiveProfileEditPageComponent, canActivate: [loggedInGuard, cognitiveProfileEditGuard], title: 'Kognitív profil szerkesztése'},
-    {path: 'recommendation', component: RecommendationPageComponent, canActivate: [loggedInGuard, recommendationGuard], title: 'Játékok ajánlása'},
-    {path: 'result', component: ResultPageComponent, canActivate: [loggedInGuard], title: 'Eredmények megtekintése'},
-    {path: 'result-charts', component: ResultInsightPageComponent, canActivate: [loggedInGuard], title: 'Eredmények elemzése'},
-    {path: 'group-management', component: GroupManagementComponent, canActivate: [loggedInGuard, groupManagementGuard], title: 'Felhasználói csoportok kezelése'},
-    {path: 'privacy-policy', component: PrivacyPolicyPageComponent, title: 'Adatvédelmi irányelvek'},
-    {path: 'delete-account', component: DeleteAccountComponent, title: 'Felhasználói fiók eltávolítása', canActivate: [loggedInGuard]},
-    {path: 'register-user', component: UserRegisterComponent, title: 'Felhasználók regisztrálása', canActivate: [loggedInGuard]},
-    {path: '**', component: NotFoundComponent}
+    {
+        path: 'admin',
+        component: AdminPageComponent,
+        canActivate: [PermissionGuard],
+        data: {
+            permissions: [Permission.MANAGE_USERS_DATA]
+        },
+        title: 'Felhasználók kezelése'
+    },
+    {
+        path: 'ability',
+        component: AbilityPageComponent,
+        canActivate: [PermissionGuard],
+        title: 'Kognitív képességek',
+        data: {
+            permissions: [Permission.MANAGE_ABILITIES, Permission.VIEW_ABILITIES]
+        }
+    },
+    {
+        path: 'game-management',
+        component: GameManagementPageComponent,
+        canActivate: [PermissionGuard],
+        title: 'Játékok kezelése',
+        data: {
+            permissions: [Permission.MANAGE_GAMES]
+        }
+    },
+    {
+        path: 'edit-game/:id',
+        component: EditGameFormComponent,
+        canActivate: [PermissionGuard],
+        title: 'Játék szerkesztése',
+        data: {
+            permissions: [Permission.MANAGE_GAMES]
+        }
+    },
+    {
+        path: 'edit-game',
+        component: EditGameFormComponent,
+        canActivate: [PermissionGuard],
+        title: 'Játék szerkesztése',
+        data: {
+            permissions: [Permission.MANAGE_GAMES]
+        }
+    },
+    {
+        path: 'games',
+        component: GamesComponent,
+        canActivate: [PermissionGuard],
+        title: 'Játékok',
+        data: {
+            permissions: [Permission.VIEW_GAMES]
+        }
+    },
+    {
+        path: '',
+        component: HomeComponent,
+        title: 'Cognitive App'
+    },
+    {
+        path: 'profile',
+        component: ProfilePageComponent,
+        canActivate: [loggedInGuard],
+        title: 'Profil'
+    },
+    {
+        path: 'profile-compare',
+        component: ProfileDataComparisonPageComponent,
+        canActivate: [PermissionGuard],
+        title: 'Profil összehasonlítás',
+        data: {
+            permissions: [Permission.VIEW_OWN_COGNITIVE_PROFILE_COMPARISON]
+        }
+    },
+    {
+        path: 'profile-compare-admin',
+        component: AdminProfileDataComparisonPageComponent,
+        canActivate: [PermissionGuard],
+        title: 'Profil összehasonlítás',
+        data: {
+            permissions: [Permission.VIEW_OTHERS_COGNITIVE_PROFILE_COMPARISON]
+        }
+    },
+    {
+        path: 'cognitive-profile',
+        component: CognitiveProfilePageComponent,
+        canActivate: [PermissionGuard],
+        title: 'Kognitív profil',
+        data: {
+            permissions: [Permission.VIEW_OWN_COGNITIVE_PROFILE]
+        }
+    },
+    {
+        path: 'cognitive-profile-admin',
+        component: AdminCognitiveProfilePageComponent,
+        canActivate: [PermissionGuard],
+        title: 'Kognitív profil',
+        data: {
+            permissions: [Permission.VIEW_OTHERS_COGNITIVE_PROFILES]
+        }
+    },
+    {
+        path: 'cognitive-profile-edit',
+        component: CognitiveProfileEditPageComponent,
+        canActivate: [PermissionGuard],
+        title: 'Kognitív profil szerkesztése',
+        data: {
+            permissions: [Permission.MANAGE_OTHERS_COGNITIVE_PROFILES]
+        }
+    },
+    {
+        path: 'recommendation',
+        component: RecommendationPageComponent,
+        canActivate: [PermissionGuard],
+        title: 'Játékok ajánlása',
+        data: {
+            permissions: [Permission.VIEW_RECOMMENDATIONS, Permission.MANAGE_RECOMMENDATIONS]
+        }
+    },
+    {
+        path: 'result',
+        component: ResultPageComponent,
+        canActivate: [PermissionGuard],
+        title: 'Eredmények megtekintése',
+        data: {
+            permissions: [Permission.VIEW_OWN_RESULTS, Permission.VIEW_OTHERS_RESULTS]
+        }
+    },
+    {
+        path: 'result-charts',
+        component: ResultInsightPageComponent,
+        canActivate: [PermissionGuard],
+        title: 'Eredmények elemzése',
+        data: {
+            permissions: [Permission.VIEW_OWN_RESULTS, Permission.VIEW_OTHERS_RESULTS]
+        }
+    },
+    {
+        path: 'group-management',
+        component: GroupManagementComponent,
+        canActivate: [PermissionGuard],
+        title: 'Felhasználói csoportok kezelése',
+        data: {
+            permissions: [Permission.MANAGE_GROUPS]
+        }
+    },
+    {
+        path: 'privacy-policy',
+        component: PrivacyPolicyPageComponent,
+        title: 'Adatvédelmi irányelvek'
+    },
+    {
+        path: 'delete-account',
+        component: DeleteAccountComponent,
+        title: 'Felhasználói fiók eltávolítása',
+        canActivate: [loggedInGuard]
+    },
+    {
+        path: 'register-user',
+        component: UserRegisterComponent,
+        title: 'Felhasználók regisztrálása',
+        canActivate: [PermissionGuard],
+        data: {
+            permissions: [Permission.MANAGE_USER_REGISTRATION]
+        }
+    },
+    {
+        path: '**', component: NotFoundComponent}
 ];

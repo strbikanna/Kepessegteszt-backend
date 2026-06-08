@@ -74,6 +74,9 @@ class UserManagementController(
     @ResponseStatus(HttpStatus.OK)
     fun getContactsByName(authentication: Authentication, @RequestParam nameText: String): List<UserDto> {
         val username = authentication.name
+        if(userService.getUserDto(username).roles.contains(Role.ADMIN)){
+            return userService.getUsersWithoutContactByName(nameText)
+        }
         return userService.getContactDtosByName(username, nameText)
     }
 

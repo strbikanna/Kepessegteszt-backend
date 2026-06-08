@@ -1,5 +1,6 @@
 package hu.bme.aut.resource_server.ability
 
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -12,6 +13,7 @@ class AbilityController(
         @Autowired private var abilityRepository: AbilityRepository
 ) {
     @GetMapping("/all")
+    @BusinessCritical
     fun getAllAbilities(): ResponseEntity<List<AbilityEntity>> {
         val abilities = abilityRepository.findAll().toList()
         return ResponseEntity(abilities, HttpStatus.OK)
@@ -27,6 +29,7 @@ class AbilityController(
     @PutMapping("/{code}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('SCIENTIST')")
     @ResponseStatus(HttpStatus.OK)
+    @BusinessCritical
     fun updateAbility(@RequestBody abilityEntity: AbilityEntity, @PathVariable code: String): AbilityEntity {
         if(code == abilityEntity.code) {
             return abilityRepository.save(abilityEntity)
@@ -36,8 +39,9 @@ class AbilityController(
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SCIENTIST')")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
+    @BusinessCritical
     fun createAbility(@RequestBody abilityEntity: AbilityEntity): AbilityEntity {
         return abilityRepository.save(abilityEntity)
     }

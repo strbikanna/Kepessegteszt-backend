@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import {AppConstants} from "./constants";
 import {throwError} from "rxjs";
 import {TEXTS} from "../text/app.text_messages";

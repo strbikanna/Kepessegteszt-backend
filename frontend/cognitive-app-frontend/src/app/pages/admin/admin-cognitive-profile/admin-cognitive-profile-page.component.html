@@ -16,11 +16,15 @@
     <div class="flex w-7 align-items-start flex-column ml-6">
 
         <div *ngIf="chosenUsername" class="mb-8">
+            <div class="mx-0 flex align-items-center">
+                <h3 class="ml-0 mr-4 px-0">{{ text.title_xp }}</h3>
+                <app-count-up [target]="xp" class="xpPoints"/>
+            </div>
 
             <!-- LLM description -->
-            <mat-progress-bar *ngIf="loadingDescription" mode="buffer"></mat-progress-bar>
+            <app-long-wait-loading *ngIf="loadingDescription"/>
             <h2 class="text-left" *ngIf="profileDescription">{{text.llm.llm_text}}</h2>
-            <p class="description">{{profileDescription?.generatedText}}</p>
+            <p class="description my-3" [innerHTML]="profileDescription?.generatedText"></p>
 
             <!-- LLM prompt -->
             <mat-accordion *ngIf="UserInfo.canSeePromptLlm()" class="my-8">

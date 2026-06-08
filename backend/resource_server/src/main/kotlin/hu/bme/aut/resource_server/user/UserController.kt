@@ -2,7 +2,6 @@ package hu.bme.aut.resource_server.user
 
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.authentication.AuthService
-import hu.bme.aut.resource_server.llm.abilities2text.AbiltityToTextDto
 import hu.bme.aut.resource_server.profile.dto.ProfileItem
 import hu.bme.aut.resource_server.profile.dto.ProfileItemStatisticsDto
 import hu.bme.aut.resource_server.profile_calculation.calculator.CalculationHelper
@@ -10,8 +9,6 @@ import hu.bme.aut.resource_server.user.filter.UserFilterDto
 import hu.bme.aut.resource_server.user.user_dto.PlainUserDto
 import hu.bme.aut.resource_server.user_group.UserGroupDto
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
@@ -24,7 +21,6 @@ class UserController(
     @Autowired private var userService: UserService,
     @Autowired private var userGroupService: UserGroupDataService,
     @Autowired private var authService: AuthService,
-    @Autowired private var abilitiesToTextService : hu.bme.aut.resource_server.llm.abilities2text.AbilitiesToTextService
 ) {
     @GetMapping("/profile")
     @ResponseStatus(HttpStatus.OK)
@@ -50,7 +46,7 @@ class UserController(
         authentication: Authentication,
         @RequestParam username: String,
         @RequestBody profile: List<ProfileItem>
-    ) : Deferred<List<ProfileItem>> = authService.doIfIsContact(authentication, username) {
+    ): Deferred<List<ProfileItem>> = authService.doIfIsContact(authentication, username) {
         userService.updateUserProfile(profile, username)
     }
 
@@ -77,7 +73,7 @@ class UserController(
         @PathVariable groupType: String
     ) {
         authService.checkUserGroupWriteAndThrow(authentication, groupId)
-        when(groupType) {
+        when (groupType) {
             "group" -> userGroupService.addUserToGroup(username, groupId)
             "organization" -> userGroupService.addUserToOrganization(username, groupId)
             "org" -> userGroupService.addUserToOrganization(username, groupId)
@@ -203,6 +199,38 @@ class UserController(
             throw IllegalArgumentException("You can only update your own data.")
         }
         userService.updateUser(user)
+    }
+
+    @GetMapping("/xp")
+    @ResponseStatus(HttpStatus.OK)
+    fun getXp(
+        authentication: Authentication
+    ): Int {
+        val user = userService.getUserEntityByUsername(authentication.name)
+        return user.xP
+    }
+
+    @GetMapping("/xp/inspect")
+    @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_ADMIN', 'ROLE_TEACHER', 'ROLE_PARENT')")
+    @ResponseStatus(HttpStatus.OK)
+    fun getXpOfOtherUser(
+        @RequestParam username: String
+    ): Int {
+        val user = userService.getUserEntityByUsername(username)
+        return user.xP
+    }
+
+    @PutMapping("/xp")
+    @PreAuthorize("hasAnyRole('ROLE_SCIENTIST', 'ROLE_ADMIN', 'ROLE_TEACHER')")
+    @ResponseStatus(HttpStatus.OK)
+    fun updateXpOfOtherUser(
+        @RequestParam username: String,
+        @RequestParam xp: Int,
+    ): Int {
+        val user = userService.getUserEntityByUsername(username)
+        user.xP = xp
+        userService.saveUser(user)
+        return user.xP
     }
 
     @DeleteMapping("/me")

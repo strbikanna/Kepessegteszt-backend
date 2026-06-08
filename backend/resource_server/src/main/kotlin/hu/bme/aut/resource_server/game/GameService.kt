@@ -4,6 +4,7 @@ import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.game.game_config.isSame
 import hu.bme.aut.resource_server.recommended_game.RecommendedGameRepository
 import hu.bme.aut.resource_server.recommendation.RecommenderService
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -33,9 +34,11 @@ class GameService (
     fun getGameById(id: Int): Optional<GameEntity> {
         return gameRepository.findById(id)
     }
+    @BusinessCritical
     fun getGamesByName(name: String): List<GameEntity> {
         return gameRepository.searchByName(name)
     }
+    @BusinessCritical
     fun getGamesByActive(active: Boolean, pageIndex: Int, pageSize: Int): List<GameEntity> {
         return gameRepository.findByActive(active, PageRequest.of(pageIndex, pageSize)).toList()
     }
@@ -48,8 +51,12 @@ class GameService (
         return gameRepository.save(game)
     }
 
+    @Transactional
+    @BusinessCritical
     fun deleteGame(id: Int) {
         if(gameRepository.existsById(id)) {
+            val game = gameRepository.findById(id).orElseThrow()
+            recommendedGameRepository.deleteByGame(game)
             gameRepository.deleteById(id)
         } else{
             throw IllegalArgumentException("Game ids do not match.")
@@ -62,6 +69,7 @@ class GameService (
      * with higher version number.
      */
     @Transactional
+    @BusinessCritical
     fun updateGame(updatedGame: GameEntity): GameEntity {
         val oldGame = gameRepository.findById(updatedGame.id!!).orElseThrow()
         if(!sameConfigDescription(oldGame, updatedGame)) {
@@ -107,6 +115,7 @@ class GameService (
         affectedAbilities.addAll(game.affectedAbilities)
         return GameEntity(
             id = game.id,
+            modelId = game.modelId,
             name = game.name,
             description = game.description,
             affectedAbilities = affectedAbilities,
@@ -127,10 +136,6 @@ class GameService (
             }
         }
         return true
-    }
-
-    private fun deleteNotCompletedRecommendationsToGame(game: GameEntity) {
-        recommendedGameRepository.deleteByGameAndCompletedIsFalse(game)
     }
 
 }

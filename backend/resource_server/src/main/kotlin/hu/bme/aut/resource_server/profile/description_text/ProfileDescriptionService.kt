@@ -1,10 +1,12 @@
 package hu.bme.aut.resource_server.profile.description_text
 
 import hu.bme.aut.resource_server.llm.abilities2text.AbilitiesToTextService
-import hu.bme.aut.resource_server.llm.abilities2text.AbiltityToTextDto
+import hu.bme.aut.resource_server.llm.abilities2text.ChatMessageResponse
 import hu.bme.aut.resource_server.user.UserGroupDataService
 import hu.bme.aut.resource_server.user.UserService
 import hu.bme.aut.resource_server.user.filter.UserFilterDto
+import hu.bme.aut.resource_server.utils.BusinessCritical
+import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service
@@ -23,9 +25,11 @@ class ProfileDescriptionService(
         const val VALUE = 0.5
     }
 
+    @Transactional
+    @BusinessCritical
     suspend fun getProfileDescriptionOfUser(username: String): ProfileDescriptionTextDto =
         withContext(Dispatchers.IO) {
-            val dbEntity = repository.findByUserUsername(username)
+            var dbEntity = repository.findAllByUserUsername(username).firstOrNull()
             if (dbEntity != null && !isOlderThanOneWeek(dbEntity.timestamp)) {
                 return@withContext ProfileDescriptionTextDto(dbEntity)
             }
@@ -35,7 +39,7 @@ class ProfileDescriptionService(
             val user = userService.getUserEntityWithProfileByUsername(username)
             val generatedText = generateDescriptionText(username, "")
             val newEntity = ProfileDescriptionTextEntity(
-                generatedText = generatedText.abilitiesAsText,
+                generatedText = generatedText.response,
                 user = user
             )
             repository.save(newEntity)
@@ -46,14 +50,16 @@ class ProfileDescriptionService(
         withContext(Dispatchers.IO) {
             val generatedText = generateDescriptionText(username, prompt)
             return@withContext ProfileDescriptionTextDto(
-                generatedText = generatedText.abilitiesAsText,
+                generatedText = generatedText.response,
                 prompt = generatedText.prompt
             )
         }
 
+    @Transactional
+    @BusinessCritical
     fun deleteProfileDescriptionOfUser(username: String) {
-        val dbEntity = repository.findByUserUsername(username) ?: return
-        repository.delete(dbEntity)
+        val descriptions = repository.findAllByUserUsername(username)
+        repository.deleteAll(descriptions)
     }
 
     suspend fun generateComparisonTextToGroup(
@@ -67,13 +73,13 @@ class ProfileDescriptionService(
         val user = userService.getUserEntityWithProfileByUsername(username)
         val abilities = user.profileFloat.map { it.ability }.toSet()
         if (abilities.isEmpty() || userAbilities.none { it.accuracy >= MinAccuracy.VALUE }) {
-            return ProfileDescriptionTextDto(generatedText =  "")
+            return ProfileDescriptionTextDto(generatedText = "")
         }
         val groupAbilities = withContext(Dispatchers.IO) {
             userGroupService.getAbilityToAverageValueInGroup(userGroupId, userFilter, abilities)
         }
         if (groupAbilities.isEmpty()) {
-            return ProfileDescriptionTextDto(generatedText =  "")
+            return ProfileDescriptionTextDto(generatedText = "")
         }
         val groupName = userGroupId?.let { userGroupService.getGroupById(it).name } ?: "csoport"
 
@@ -84,16 +90,16 @@ class ProfileDescriptionService(
             prompt
         )
         return ProfileDescriptionTextDto(
-            generatedText = generated.abilitiesAsText,
+            generatedText = generated.response,
             prompt = generated.prompt
         )
 
     }
 
-    private suspend fun generateDescriptionText(username: String, prompt: String): AbiltityToTextDto {
+    private suspend fun generateDescriptionText(username: String, prompt: String): ChatMessageResponse {
         val userAbilities = userService.getUserDtoWithProfileByUsername(username).profile.toList()
-        if (userAbilities.isEmpty() || userAbilities.none { it.accuracy >= MinAccuracy.VALUE }) {
-            return AbiltityToTextDto("", "")
+        if (userAbilities.isEmpty()) {
+            return ChatMessageResponse("", "")
         }
         return abilitiesToTextService.generateFromAbilities(userAbilities, prompt)
     }

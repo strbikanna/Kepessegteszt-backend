@@ -10,14 +10,6 @@
 
 - Gradle 8.2.1
 - JDK 17+
-- Python 3.9+
-  - tensorflow
-  - statsmodels
-  - scikit-learn
-  - numpy
-  - joblib
-  - jep
-- Jep on classspath
 - MySQL db
 - npm
 - ng CLI
@@ -39,7 +31,6 @@ Az alkalmazás több futtatási profilt használ, ezek közül válasszuk a megf
 ### Kipróbálás
 
 Alapvetően csak az auth-serverrel együtt működik, mivel a legtöbb endpoint védett. Autentikáció nélkül elérhető a swagger dokumentáció: /swagger-ui/index.html, illetve a tárolt képek pl. /game/images/cosmic.jpg
-Python környezet és JEP library jiánya nem okoz fordítás idejű problémát, de bizonyos funkciók exception-t dobnak.
 
 ### REST dokumentáció
 
@@ -61,11 +52,10 @@ Az alkalmazás több futtatási profilt használ, ezek közül válasszuk a megf
 ### Kipróbálás
 
 Postman segítségével kipróbálható, a kliens be van regisztrálva. Id: postman-client-007, secret: 123. Ezen kívül meg kell adni a scope-ot: openid. Opcionális paraméterek küldhetők pl. act_as {username}.
-A mr regisztrált felhasználók belépési adatai megtalálhatók a backend/auth_server/src/main/resources/db/migration/V1_2\_\_init_data.sql fájlban.
 
 ## Frontend
 
-Kliens alkalmazás, mely a két backend-hez kapcsolódik. Néhány Phaser-játék is integrálva van, melyek külön megtalálhatók a cognitive-testing-games repository-ban.
+Kliens alkalmazás, mely a két backend-hez kapcsolódik.
 Futtatás ng server paranccsal alapértelmezs szerint development környezetben történik, localhost:4200 porton.
 A környezeti változók az enviroments/environment.development.ts-ben módosíthatók. Ezek közé tartozik a két szerver URL címe, ill. a frontend címe.
 Megjegyzés: A frontend címének megváltoztatása esetén az auth server registered-client tábláján is módosítni kell, különben nem lehet bejelentkezni.
@@ -84,14 +74,6 @@ Megjegyzés: A frontend címének megváltoztatása esetén az auth server regis
 
 - Gradle 8.2.1
 - JDK 17+
-- Python 3.9+
-  - tensorflow
-  - statsmodels
-  - scikit-learn
-  - numpy
-  - joblib
-  - jep
-- Jep on classpath
 - MySQL db
 - npm
 - ng CLI
@@ -133,9 +115,9 @@ The application uses multiple runtime profiles; choose the appropriate one when 
 
 ### Testing
 
-Can be tested using Postman; the client is registered with ID: postman-client-007, secret: 123. Additionally, the scope must be provided: openid. Optional parameters can be sent, e.g., act_as {username}. The login details for newly registered users can be found in the backend/auth_server/src/main/resources/db/migration/V1_2\_\_init_data.sql file.
+Can be tested using Postman; the client is registered with ID: postman-client-007, secret: 123. Additionally, the scope must be provided: openid. Optional parameters can be sent, e.g., act_as {username}.
 
 ## Frontend
 
-Client application that connects to the two backends. Some Phaser games are integrated, which can be found separately in the cognitive-testing-games repository. By default, it runs with the ng server command in development mode on localhost:4200.
+Client application that connects to the two backends. By default, it runs with the ng server command in development mode on localhost:4200.
 Environment variables can be modified in environments/environment.development.ts. These include the URLs for the two servers and the frontend. Note: Changing the frontend address requires modifying the registered-client table in the auth server; otherwise, login will not be possible.

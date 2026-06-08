@@ -1,6 +1,7 @@
 package hu.bme.aut.resource_server.game
 
 import hu.bme.aut.resource_server.recommendation.RecommenderService
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -18,6 +19,7 @@ class GameController(
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
+    @BusinessCritical
     fun getAllGames(
         @RequestParam(required = false, defaultValue = "0") pageIndex: Int,
         @RequestParam(required = false, defaultValue = "100") pageSize: Int,
@@ -64,6 +66,7 @@ class GameController(
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
+    @BusinessCritical
     fun createGame(@RequestBody gameDto: GameDto): GameDto {
         val game = gameService.saveGame(gameDto.toGameEntity())
         recommenderService.createDefaultRecommendationsForGame(game.id!!)

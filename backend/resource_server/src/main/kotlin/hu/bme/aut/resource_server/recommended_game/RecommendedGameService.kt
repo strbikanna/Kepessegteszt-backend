@@ -2,8 +2,10 @@ package hu.bme.aut.resource_server.recommended_game
 
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.GameRepository
+import hu.bme.aut.resource_server.recommendation.RecommenderService
 import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user.UserRepository
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -20,6 +22,7 @@ class RecommendedGameService(
     @Autowired private var recommendedGameRepository: RecommendedGameRepository,
     @Autowired private var userRepository: UserRepository,
     @Autowired private var gameRepository: GameRepository,
+    private val recommenderService: RecommenderService,
 ) {
     var log: Logger = LoggerFactory.getLogger(RecommendedGameService::class.java)
 
@@ -27,6 +30,7 @@ class RecommendedGameService(
      * Get all recommendations to user which are not yet completed.
      */
     @Transactional
+    @BusinessCritical
     fun getAllRecommendedToUser(
         username: String,
         acceptedGameIds: List<Int>?,
@@ -41,16 +45,22 @@ class RecommendedGameService(
                     user, false, gameRepository.findAllById(acceptedGameIds), PageRequest.of(pageIndex, pageSize, sort)
                 )
             } else {
-                recommendedGameRepository.findAllPagedByRecommendedToAndCompleted(
+                recommendedGameRepository.findAllPagedByRecommendedToAndCompletedAndGameActive(
                     user,
                     false,
+                    true,
                     PageRequest.of(pageIndex, pageSize, sort)
                 )
             }
-        return recommendedGames.filter { it.game.active }.map { it.toDto() }
+        return recommendedGames
+            .filter { it.game.active }
+            .map { it.toDto()
+                .apply { config = recommenderService.applySpecialSettings(config, it.game.id!!, user.username) }
+            }
     }
 
     @Transactional
+    @BusinessCritical
     fun getNextChoiceForUser(username: String, acceptedGameIds: List<Int>?): List<RecommendedGameDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
         val possibleGames: MutableSet<GameEntity> = mutableSetOf()
@@ -65,17 +75,26 @@ class RecommendedGameService(
                 tryAddGameAndRecommendation(rg.game, user, acceptedGameIds, possibleGames, top2Recommendation)
             }
         }
-        return top2Recommendation.map { it.toDto() }
+        return top2Recommendation
+            .map { it.toDto()
+            .apply { config = recommenderService.applySpecialSettings(config, it.game.id!!, user.username) }
+        }
     }
 
     /**
      * Retrieve the configuration of a recommended game. If the configuration is not yet available, it waits for it to be available.
      */
+    @BusinessCritical
     suspend fun getRecommendedGameConfig(recommendedGameId: Long): Map<String, Any>? = withContext(Dispatchers.IO) {
         var rGame = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
         repeat(10) {
             if (rGame.config.isNotEmpty()) {
-                return@withContext rGame.game.validateConfig(rGame.config)
+                val config = rGame.game.validateConfig(rGame.config)
+                return@withContext recommenderService.applySpecialSettings(
+                    config,
+                    rGame.game.id!!,
+                    rGame.recommendedTo.username
+                )
             }
             log.info("Config not found for recommendation with id: $recommendedGameId. Waiting...")
             delay(300)
@@ -85,6 +104,7 @@ class RecommendedGameService(
         return@withContext emptyMap()
     }
 
+    @BusinessCritical
     fun addRecommendation(recommendation: RecommendationDto, recommenderUsername: String): RecommendedGameEntity {
         val recommender = userRepository.findByUsername(recommenderUsername).orElseThrow()
         val recommendedTo = userRepository.findByUsername(recommendation.recommendedTo)
@@ -96,31 +116,56 @@ class RecommendedGameService(
                 game = game,
                 recommendedTo = recommendedTo,
                 recommender = recommender,
-                config = recommendation.config
+                config = recommenderService.applySpecialSettings(
+                    recommendation.config,
+                    game.id!!,
+                    recommendedTo.username
+                )
             )
         )
     }
 
+    @Transactional
+    @BusinessCritical
     fun getRecommendationsToUserAndGame(username: String, gameId: Int?, completed: Boolean?): List<RecommendedGameDto> {
         val user = userRepository.findByUsername(username).orElseThrow()
         val page = PageRequest.of(0, 100, Sort.by("timestamp").descending())
         if (gameId == null) {
             return if (completed == null) {
-                recommendedGameRepository.findAllPagedByRecommendedTo(user, page).map { it.toDto() }
+                recommendedGameRepository.findAllPagedByRecommendedToAndGameActive(user, true, page)
+                    .map {
+                        it.toDto()
+                            .apply {
+                                config = recommenderService.applySpecialSettings(config, it.game.id!!, user.username)
+                            }
+                    }
             } else {
-                recommendedGameRepository.findAllPagedByRecommendedToAndCompleted(user, completed, page)
-                    .map { it.toDto() }
+                recommendedGameRepository.findAllPagedByRecommendedToAndCompletedAndGameActive(user, completed, true, page)
+                    .map {
+                        it.toDto()
+                            .apply {
+                                config = recommenderService.applySpecialSettings(config, it.game.id!!, user.username)
+                            }
+                    }
             }
         }
         val game = gameRepository.findById(gameId).orElseThrow()
         return if (completed == null) {
-            recommendedGameRepository.findAllPagedByRecommendedToAndGame(user, game, page).map { it.toDto() }
+            recommendedGameRepository.findAllPagedByRecommendedToAndGame(user, game, page)
+                .map {
+                    it.toDto()
+                        .apply { config = recommenderService.applySpecialSettings(config, it.game.id!!, user.username) }
+                }
         } else {
             recommendedGameRepository.findAllPagedByRecommendedToAndCompletedAndGame(user, completed, game, page)
-                .map { it.toDto() }
+                .map {
+                    it.toDto()
+                        .apply { config = recommenderService.applySpecialSettings(config, it.game.id!!, user.username) }
+                }
         }
     }
 
+    @BusinessCritical
     fun deleteRecommendedGame(recommendedGameId: Long) {
         val rGame = recommendedGameRepository.findById(recommendedGameId).orElseThrow()
         if (rGame.completed) {
@@ -129,7 +174,7 @@ class RecommendedGameService(
         recommendedGameRepository.deleteById(recommendedGameId)
     }
 
-
+    @BusinessCritical
     fun deleteAllRecommendationsByUser(user: UserEntity) {
         val allRecommendedTo = recommendedGameRepository.findAllByRecommendedTo(user)
         val allRecommendedBy = recommendedGameRepository.findAllByRecommender(user)

@@ -3,6 +3,7 @@ import {ConfigItem} from "./config_item.model";
 
 export interface Game {
     id: number | undefined;
+    modelId: string | undefined;
     name: string;
     description: string;
     thumbnail: string;

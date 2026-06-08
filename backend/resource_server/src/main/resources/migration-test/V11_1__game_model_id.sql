@@ -1,0 +1,1 @@
+alter table game add column model_id varchar(100) default null;

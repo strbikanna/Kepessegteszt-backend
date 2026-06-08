@@ -1,8 +1,10 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ContactService} from "../../service/contact_service/contact.service";
 import {AuthUser} from "../../model/user/user-contacts.model";
-import {FormControl} from "@angular/forms";
+import {FormControl, ReactiveFormsModule} from "@angular/forms";
 import {TEXTS} from "../../text/app.text_messages";
+import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from "@angular/material/autocomplete";
+import {MatFormField, MatHint, MatLabel} from "@angular/material/input";
 
 /**
  * Searches users in a user-group
@@ -10,6 +12,16 @@ import {TEXTS} from "../../text/app.text_messages";
 @Component({
   selector: 'app-user-search',
   templateUrl: './user-search.component.html',
+  standalone: true,
+  imports: [
+    MatAutocomplete,
+    MatOption,
+    MatLabel,
+    MatFormField,
+    MatHint,
+    ReactiveFormsModule,
+    MatAutocompleteTrigger
+  ],
   styleUrls: ['./user-search.component.scss']
 })
 export class UserSearchComponent implements OnInit {

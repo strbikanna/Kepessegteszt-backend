@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import {SimpleHttpService} from "../../utils/simple-http.service";
 import {map, Observable} from "rxjs";
 import {Group, Organization} from "../../model/user/user-group";
@@ -53,7 +53,11 @@ export class UserGroupService {
     }
 
     createGroup(group: {name: string, organization: Organization}, parentGroupId?: number): Observable<Group> {
-        return this.http.post<Group>(`${this.httpService.baseUrl}/user_group/group?parentGroupId=${parentGroupId}`, group).pipe(
+        let url = `${this.httpService.baseUrl}/user_group/group`;
+        if (parentGroupId !== undefined) {
+            url += `?parentGroupId=${parentGroupId}`;
+        }
+        return this.http.post<Group>(url, group).pipe(
             map(group => this.convertGroup(group))
         );
     }
@@ -73,8 +77,8 @@ export class UserGroupService {
         return this.http.delete(`${this.httpService.baseUrl}/user_group/member`, {params: params});
     }
 
-    getGroupOrOrgMembers(groupId: number): Observable<User[]> {
-        return this.http.get<User[]>(`${this.httpService.baseUrl}/user_group/members/${groupId}`);
+    getGroupOrOrgMembers(groupId: number, pageIndex: number): Observable<User[]> {
+        return this.http.get<User[]>(`${this.httpService.baseUrl}/user_group/members/${groupId}?pageIndex=${pageIndex}`);
     }
 
     getGroupOrOrgAdmins(groupId: number): Observable<User[]> {

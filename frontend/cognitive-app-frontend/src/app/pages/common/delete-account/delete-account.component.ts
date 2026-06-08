@@ -1,7 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {FormBuilder, FormControl} from "@angular/forms";
 import {UserDataService} from "../../../service/user-data/user-data.service";
-import {LoginService} from "../../../general/login/login.service";
+import {LoginService} from "../../../service/login/login.service";
 import {Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {ConfirmDialogComponent} from "../../../common/confirm-dialog/confirm-dialog.component";

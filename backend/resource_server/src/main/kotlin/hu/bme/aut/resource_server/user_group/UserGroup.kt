@@ -4,7 +4,7 @@ import hu.bme.aut.resource_server.user.UserEntity
 import hu.bme.aut.resource_server.user_group.group.Group
 import jakarta.persistence.*
 
-@Entity
+@Entity(name = "user_group")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "group_type")
 abstract class UserGroup(
@@ -28,4 +28,5 @@ abstract class UserGroup(
     abstract fun getAllGroups(): List<Group>
     abstract fun getAllUserIds(): Set<Int>
     abstract fun toDto(): UserGroupDto
+    abstract fun addAdmin(user: UserEntity)
 }

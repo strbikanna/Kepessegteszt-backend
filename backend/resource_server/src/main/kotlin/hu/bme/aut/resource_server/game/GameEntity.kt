@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import hu.bme.aut.resource_server.ability.AbilityEntity
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.*
 import org.hibernate.annotations.Cascade
@@ -21,21 +22,27 @@ import org.hibernate.annotations.Type
 open class GameEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = null,
+    open var id: Int? = null,
 
-    var version: Int,
+    /**
+     * Unique identifier of the game model used in the suggest params api.
+     */
+    open val modelId: String? = null,
+
+    open var version: Int,
 
     @Column(name ="_name")
-    var name: String,
+    open var name: String,
 
     @Column(name ="_description")
-    val description: String,
+    open val description: String,
 
     @JsonProperty("thumbnail")
-    var thumbnailPath: String,
+    @Column(name ="thumbnail_path")
+    open var thumbnailPath: String,
 
     @Column(name ="_active")
-    var active: Boolean,
+    open var active: Boolean,
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -43,13 +50,14 @@ open class GameEntity(
         joinColumns = [JoinColumn(name = "game_id")],
         inverseJoinColumns = [JoinColumn(name = "ability_code")]
     )
-    val affectedAbilities: MutableSet<AbilityEntity>,
+    open val affectedAbilities: MutableSet<AbilityEntity>,
 
     @OneToMany
     @JoinColumn(name = "game_id")
     @Cascade(CascadeType.ALL)
-    var configItems: MutableSet<ConfigItem> = mutableSetOf()
+    open var configItems: MutableSet<ConfigItem> = mutableSetOf()
 ){
+    @BusinessCritical
     open fun validateConfig(config: Map<String, Any>): Map<String, Any>{
         return config
     }

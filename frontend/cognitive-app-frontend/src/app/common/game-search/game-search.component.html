@@ -1,20 +1,38 @@
 <div class="game-search mb-2">
-    <mat-form-field>
-        <mat-label>{{text.label}}</mat-label>
+    <mat-form-field class="w-full">
+        <mat-label>{{ text.label }}</mat-label>
         <input type="text"
                placeholder="{{text.placeholder}}"
                aria-label="Text"
                matInput
                [formControl]="gameAutocompleteForm"
-               [matAutocomplete]="auto">
+               [matAutocomplete]="auto"
+        >
         <button *ngIf="gameAutocompleteForm.value" matSuffix mat-icon-button (click)="resetAutoComplete()">
             <mat-icon>close</mat-icon>
         </button>
-        <mat-hint>{{text.hint}}</mat-hint>
-        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="convertDisplay" (optionSelected)="onGameChosen()">
-            <mat-option *ngFor="let option of filteredGameOptions" [value]="option">
-                {{option.name}} ({{option.id}})
-            </mat-option>
+        <mat-hint>{{ text.hint }}</mat-hint>
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="convertDisplay"
+                          (optionSelected)="onGameChosen()" panelWidth="max-content">
+            <ng-container *ngFor="let group of filteredGameOptions">
+                <!-- Parent game option -->
+                <mat-option
+                        *ngIf="group.activeGame"
+                        [value]="group.activeGame"
+                        class="w-max"
+                >
+                    {{ group.activeGame.name }} ({{ group.activeGame.id }})
+                </mat-option>
+
+                <!-- Render child options with indentation -->
+                <ng-container *ngFor="let game of group.games">
+                    <mat-option [value]="game">
+                      <span class="pl-6 block w-max">
+                        {{ game.name }} ({{ game.id }})
+                      </span>
+                    </mat-option>
+                </ng-container>
+            </ng-container>
         </mat-autocomplete>
     </mat-form-field>
 </div>

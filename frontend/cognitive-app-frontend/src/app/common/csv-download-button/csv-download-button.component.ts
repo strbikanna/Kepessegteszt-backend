@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {TEXTS} from "../../text/app.text_messages";
 import {map, Observable, tap} from "rxjs";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {SimpleHttpService} from "../../utils/simple-http.service";
 
 @Component({
@@ -28,7 +28,7 @@ export class CsvDownloadButtonComponent {
                 let url = window.URL.createObjectURL(blob);
                  let link = document.createElement('a');
                  link.href = url;
-                 link.setAttribute('download', 'test_res.csv');
+                 link.setAttribute('download', 'results.csv');
                  document.body.appendChild(link);
                  link.click();
             }

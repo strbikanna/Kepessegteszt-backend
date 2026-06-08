@@ -1,3 +1,5 @@
+import {Role} from "../../utils/constants";
+
 /**
  * User model specifically used for admin page. Only used to get contacts!
  */
@@ -7,7 +9,7 @@ export class AuthUser {
     firstName: string;
     lastName: string;
     email: string;
-    roles: string[];
+    roles: Role[];
     contacts: AuthUser[] | undefined;
 
     constructor(id: number, username: string, firstName: string, lastName: string, email: string, roles: string[], contacts: AuthUser[] | undefined) {
@@ -16,7 +18,7 @@ export class AuthUser {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.roles = roles;
+        this.roles = roles.map(r => r.toUpperCase() as Role);
         this.contacts = contacts;
     }
 }

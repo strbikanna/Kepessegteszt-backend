@@ -2,19 +2,51 @@ import {Component, OnInit} from '@angular/core';
 import {AdminService} from "../../../service/admin/admin.service";
 import {map, Observable} from "rxjs";
 import {AuthUser} from "../../../model/user/user-contacts.model";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {MatPaginatorIntl, PageEvent} from "@angular/material/paginator";
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from "@angular/forms";
+import { MatPaginatorIntl, PageEvent, MatPaginator } from "@angular/material/paginator";
 import {Role} from "../../../utils/constants";
-import {MatCheckboxChange} from "@angular/material/checkbox";
+import { MatCheckboxChange, MatCheckbox } from "@angular/material/checkbox";
 import {TEXTS} from "../../../text/app.text_messages";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {PaginatorTranslator} from "../../../common/paginator/paginator-translator";
+import { HorizontalScrollerComponent } from './horizontal-scroller/horizontal-scroller.component';
+import { NgFor, NgIf, AsyncPipe } from '@angular/common';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatChip } from '@angular/material/chips';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
+import { UserSearchComponent } from '../../../common/user-search/user-search.component';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'app-admin-page',
     templateUrl: './admin-page.component.html',
     styleUrls: ['./admin-page.component.scss'],
-    providers: [{provide: MatPaginatorIntl, useClass: PaginatorTranslator}],
+    providers: [{ provide: MatPaginatorIntl, useClass: PaginatorTranslator }],
+    standalone: true,
+    imports: [
+        MatPaginator,
+        HorizontalScrollerComponent,
+        NgFor,
+        NgIf,
+        MatButton,
+        MatChip,
+        MatIcon,
+        ReactiveFormsModule,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        MatExpansionPanel,
+        MatExpansionPanelHeader,
+        MatExpansionPanelTitle,
+        MatCheckbox,
+        UserSearchComponent,
+        MatIconButton,
+        MatDivider,
+        AsyncPipe,
+    ],
 })
 export class AdminPageComponent implements OnInit {
 
@@ -124,14 +156,14 @@ export class AdminPageComponent implements OnInit {
      * @param checkedState
      */
     onRoleCheckChanged(role: string, checkedState: MatCheckboxChange){
-        role = role.toUpperCase();
+        let userRole = role.toUpperCase() as Role;
         if(checkedState.checked){
-            this.userToEdit?.roles.push(role);
-            if(this.userToEdit?.roles.includes(role + '_REQUEST')){
-                this.userToEdit?.roles.splice(this.userToEdit?.roles.indexOf(role + '_REQUEST'), 1);
+            this.userToEdit?.roles.push(userRole);
+            if(this.userToEdit?.roles.includes(`${role}_REQUEST`.toUpperCase() as Role)){
+                this.userToEdit?.roles.splice(this.userToEdit?.roles.indexOf(`${role}_REQUEST`.toUpperCase() as Role), 1);
             }
         }else{
-            this.userToEdit?.roles.splice(this.userToEdit?.roles.indexOf(role), 1);
+            this.userToEdit?.roles.splice(this.userToEdit?.roles.indexOf(userRole), 1);
         }
     }
     onContactDeleted(contact: AuthUser){
@@ -146,4 +178,5 @@ export class AdminPageComponent implements OnInit {
         this._snackbar.open(this.text.update_success_message, this.text.actions.ok,{duration: 5 * 1000} )
     }
 
+    protected readonly Role = Role;
 }

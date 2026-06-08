@@ -4,10 +4,21 @@ import {
   Input, OnInit,
   Output,
 } from '@angular/core';
+import {MatIcon} from "@angular/material/icon";
+import {MatButton, MatIconButton} from "@angular/material/button";
+import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-horizontal-scroller',
   templateUrl: './horizontal-scroller.component.html',
+  standalone: true,
+  imports: [
+    MatIcon,
+    MatIconButton,
+    MatButton,
+    NgIf,
+    NgForOf
+  ],
   styleUrls: ['./horizontal-scroller.component.scss']
 })
 export class HorizontalScrollerComponent implements OnInit{

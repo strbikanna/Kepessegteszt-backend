@@ -2,7 +2,8 @@ package hu.bme.aut.resource_server.profile_calculation.calculator
 
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.profile_calculation.data.ResultForCalculationEntity
-import hu.bme.aut.resource_server.profile_calculation.error.CalculationException
+import hu.bme.aut.resource_server.error.CalculationException
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import kotlin.math.abs
@@ -18,6 +19,7 @@ object ScoreCalculator {
      * Calculates the normalized score of the results based on the game config.
      * @throws CalculationException if the game config is not set properly
      */
+    @BusinessCritical
     fun calculateNormalizedScores(
         results: List<ResultForCalculationEntity>,
         game: GameEntity
@@ -36,6 +38,7 @@ object ScoreCalculator {
      * where NR - normalized result, D - difficulty, S - score and
      * S, D, NR are in the range of [0, 1]
      */
+    @BusinessCritical
     private fun calculateBasedOnWin(results: List<ResultForCalculationEntity>, game: GameEntity): List<ResultForCalculationEntity> {
         val normalizedResults = mutableListOf<ResultForCalculationEntity>()
         results.forEach { result ->
@@ -58,6 +61,7 @@ object ScoreCalculator {
         return (result.result["passed"] as Boolean?)?.let { if(it) 1.0 else 0.0 }
     }
 
+    @BusinessCritical
     private fun getDifficultyOfResult(result: ResultForCalculationEntity, game: GameEntity): Double {
         var difficulty = 0.0
         var configItemCount = 0

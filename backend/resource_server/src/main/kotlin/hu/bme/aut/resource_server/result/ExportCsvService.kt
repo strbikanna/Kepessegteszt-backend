@@ -1,6 +1,7 @@
 package hu.bme.aut.resource_server.result
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import hu.bme.aut.resource_server.utils.BusinessCritical
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
 import org.slf4j.LoggerFactory
@@ -9,23 +10,26 @@ import java.io.Writer
 
 
 internal object ExportCsvService{
+
     private val log = LoggerFactory.getLogger(ExportCsvService::class.java)
-    fun exportCsv(results: List<ResultEntity>, writer: Writer) {
+
+    @BusinessCritical
+    fun exportCsv(results: List<ResultDetailsDto>, writer: Writer) {
         val jsonMapper = jacksonObjectMapper()
         try {
             CSVPrinter(writer, CSVFormat.EXCEL).use { csvPrinter ->
-                csvPrinter.printRecord("ID", "Timestamp", "User ID", "Game name", "Config", "Result", "Result passed")
+                csvPrinter.printRecord("ID", "Timestamp", "Username", "Game name", "Config", "Result", "Result passed")
                 results.forEach { result ->
                     val configString = jsonMapper.writeValueAsString(result.config).replace("\"", "")
                     val resultString = jsonMapper.writeValueAsString(result.result).replace("\"", "")
                     csvPrinter.printRecord(
                         result.id,
                         result.timestamp,
-                        result.user.id,
-                        result.recommendedGame.game.name,
+                        result.username,
+                        result.gameName,
                         configString,
                         resultString,
-                        result.result["passed"] as Boolean?
+                        result.passed
                     )
                 }
             }

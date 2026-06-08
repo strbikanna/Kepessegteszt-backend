@@ -3,6 +3,7 @@ package hu.bme.aut.resource_server.user
 import hu.bme.aut.resource_server.profile.EnumProfileItem
 import hu.bme.aut.resource_server.profile.FloatProfileItem
 import hu.bme.aut.resource_server.profile.dto.ProfileItem
+import hu.bme.aut.resource_server.recommendation.special_settings.SpecialSettings
 import hu.bme.aut.resource_server.user.role.Role
 import hu.bme.aut.resource_server.user.role.Subscription
 import hu.bme.aut.resource_server.user_group.group.Group
@@ -19,12 +20,15 @@ data class UserEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null,
 
+    @Column(name = "first_name")
     val firstName: String,
 
+    @Column(name = "last_name")
     val lastName: String,
 
     val username: String,
 
+    @Column(name = "birth_date")
     val birthDate: LocalDate? = null,
 
     @Enumerated(EnumType.STRING)
@@ -59,21 +63,18 @@ data class UserEntity(
     @JoinColumn(name = "subscription", referencedColumnName = "_name")
     var subscription: Subscription? = null,
 
-    @ManyToMany
-    @JoinTable(
-        name = "org_member",
-        joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "org_id", referencedColumnName = "id")],
-    )
+    @ManyToMany(mappedBy = "members")
     var organizations: MutableSet<Organization> = mutableSetOf(),
 
-    @ManyToMany
-    @JoinTable(
-        name = "group_member",
-        joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "group_id", referencedColumnName = "id")],
-    )
+    @ManyToMany(mappedBy = "members")
     val groups: MutableSet<Group> = mutableSetOf(),
+
+    @ElementCollection
+    @CollectionTable(name = "special_game_settings", joinColumns = [JoinColumn(name = "fk_user_id")])
+    var specialGameSettings: MutableSet<SpecialSettings> = mutableSetOf(),
+
+    @Column(name = "xp")
+    var xP: Int = 0
 
     ) {
     fun getProfile(): MutableSet<ProfileItem> {

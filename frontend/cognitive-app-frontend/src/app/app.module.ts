@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './general/login/login.component';
 import { HomeComponent } from './general/home/home.component';
-import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { AuthModule, LogLevel } from 'angular-auth-oidc-client';
 import {provideRouter, RouterModule, withComponentInputBinding} from "@angular/router";
 import {appRoutes} from "./utils/app.routes";
@@ -100,15 +100,18 @@ import { CognitiveProfileEditPageComponent } from './pages/admin/cognitive-profi
 import {GamesComponent} from "./pages/common/games/games.component";
 import {ResultInsightPageComponent} from "./pages/common/result-insight-page/result-insight-page.component";
 import {ResultChartComponent} from "./charts/result-chart/result-chart.component";
+import {
+    SpecialSettingsFormComponent
+} from "./pages/admin/recommendation/special-settings-form/special-settings-form.component";
+import {CountUpComponent, NumberPipe} from "./common/count-up/count-up.component";
+import {ImpersonationHeaderComponent} from "./general/impersonation-header/impersonation-header.component";
+import {LongWaitLoadingComponent} from "./common/long-wait-loading/long-wait-loading.component";
 
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AppComponent,
-        LoginComponent,
         HomeComponent,
         ProfilePageComponent,
-        HeaderComponent,
         ImpersonationComponent,
         AlertDialogComponent,
         CognitiveProfilePageComponent,
@@ -140,13 +143,10 @@ import {ResultChartComponent} from "./charts/result-chart/result-chart.component
         RatioScaleComponent,
         UserAutocompleteComponent,
         CandlestickChartComponent,
-        AdminPageComponent,
-        UserSearchComponent,
         AdminCognitiveProfilePageComponent,
         DatePickerComponent,
         UpAndDownButtonComponent,
         AdminProfileDataComparisonPageComponent,
-        SideMenuComponent,
         TrueFalsePipe,
         GroupManagementComponent,
         GroupTreeComponent,
@@ -155,20 +155,24 @@ import {ResultChartComponent} from "./charts/result-chart/result-chart.component
         CreateGroupDialogComponent,
         CreateOrgDialogComponent,
         TimestampPipe,
+        NumberPipe,
         PrivacyPolicyPageComponent,
         FooterComponent,
         DeleteAccountComponent,
-        HorizontalScrollerComponent,
         UserRegisterComponent,
         AbilityPageComponent,
         EditableAbilityCardComponent,
         FeatureDescriptionComponent,
-        CognitiveProfileEditPageComponent
+        CognitiveProfileEditPageComponent,
+        SpecialSettingsFormComponent,
+        CountUpComponent
     ],
-    imports: [
-        BrowserModule,
+    exports: [
+        GameCardComponent,
+        UserFilterComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
         RouterModule.forRoot(appRoutes),
-        HttpClientModule,
         AuthModule.forRoot({
             config: [{
                 configId: 'baseConfig',
@@ -183,29 +187,13 @@ import {ResultChartComponent} from "./charts/result-chart/result-chart.component
                 silentRenewUrl: `${environment.clientUrl}/silent-renew.html`,
                 renewTimeBeforeTokenExpiresInSeconds: 10,
                 logLevel: LogLevel.Debug,
-            },
-                {
-                    configId: 'gameTokenConfig',
-                    authority: environment.authServerUrl,
-                    redirectUrl: `${environment.clientUrl}/games`,
-                    postLogoutRedirectUri: environment.clientUrl,
-                    clientId: environment.clientId,
-                    scope: 'openid game',
-                    responseType: 'code',
-                    silentRenew: true,
-                    silentRenewUrl: `${environment.clientUrl}/silent-renew.html`,
-                    useRefreshToken: false,
-                    logLevel: LogLevel.Debug,
-                },
-            ],
+            }],
         }),
         MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule, MatTabsModule, MatDialogModule, MatPaginatorModule, MatChipsModule, ReactiveFormsModule, MatInputModule, MatExpansionModule, MatCheckboxModule, MatAutocompleteModule, MatProgressBarModule,
         NgxEchartsModule.forRoot({
             echarts
         }),
-        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule, MatSliderModule, MatSnackBarModule, MatTableModule, MatTreeModule
-    ],
-    providers: [
+        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule, MatSliderModule, MatSnackBarModule, MatTableModule, MatTreeModule, ImpersonationHeaderComponent, LoginComponent, HeaderComponent, AdminPageComponent, SideMenuComponent, HorizontalScrollerComponent, UserSearchComponent, LongWaitLoadingComponent], providers: [
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
@@ -223,11 +211,6 @@ import {ResultChartComponent} from "./charts/result-chart/result-chart.component
             useClass: GlobalErrorhandlerService,
         },
         provideRouter(appRoutes, withComponentInputBinding()),
-    ],
-    exports: [
-        GameCardComponent,
-        UserFilterComponent
-    ],
-    bootstrap: [AppComponent]
-})
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule { }

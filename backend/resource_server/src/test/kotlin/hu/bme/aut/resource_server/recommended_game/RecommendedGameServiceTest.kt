@@ -4,11 +4,9 @@ import hu.bme.aut.resource_server.TestUtilsService
 import hu.bme.aut.resource_server.game.GameEntity
 import hu.bme.aut.resource_server.game.StoredConfigGameEntity
 import hu.bme.aut.resource_server.game.game_config.ConfigItem
-import hu.bme.aut.resource_server.user.role.Role
-import hu.bme.aut.resource_server.user.UserEntity
-import hu.bme.aut.resource_server.utils.RoleName
 import kotlinx.coroutines.*
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -109,7 +107,7 @@ class RecommendedGameServiceTest(
 
             return@runBlocking found
         }
-        assertEquals(mapOf("Level" to 1), config)
+        assertEquals(1, config?.get("Level"))
     }
 
     @Test
@@ -129,7 +127,7 @@ class RecommendedGameServiceTest(
 
             return@runBlocking found
         }
-        assertEquals(mapOf("Level" to 1), config)
+        assertEquals(1, config?.get("Level"))
     }
 
     @Test
@@ -176,6 +174,105 @@ class RecommendedGameServiceTest(
         assertEquals(1, config!!["id"])
         assertEquals("EASY", config["difficulty"])
 
+    }
+
+    @Test
+    fun `getRecommendationsToUserAndGame should return only active games when gameId is null`() {
+        // create an active and an inactive game
+        val activeGame = createGame()
+        val inactiveGame = createGame()
+        inactiveGame.active = false
+        val savedActive: GameEntity = testService.gameRepository.save(activeGame)
+        val savedInactive: GameEntity = testService.gameRepository.save(inactiveGame)
+
+        // create recommendations for both games
+        val rActive = RecommendedGameEntity(
+            game = savedActive,
+            recommendedTo = user,
+            config = mapOf(),
+            completed = false
+        )
+        val rInactive = RecommendedGameEntity(
+            game = savedInactive,
+            recommendedTo = user,
+            config = mapOf(),
+            completed = false
+        )
+        testService.recommendedGameRepository.save(rActive)
+        testService.recommendedGameRepository.save(rInactive)
+
+        val results = recommendedGameService.getRecommendationsToUserAndGame(user.username, null, null)
+        // should only contain the recommendation for the active game
+        assertEquals(1, results.size)
+        assertEquals(savedActive.id, results[0].gameId)
+    }
+
+    @Test
+    fun `getRecommendationsToUserAndGame with gameId should return only recommendations for that game`() {
+        val game1 = testService.createAndSaveGame()
+        val game2 = testService.createAndSaveGame()
+
+        // two recommendations for game1 and one for game2
+        val r1 = RecommendedGameEntity(game = game1, recommendedTo = user, config = mapOf(), completed = false)
+        val r2 = RecommendedGameEntity(game = game1, recommendedTo = user, config = mapOf(), completed = true)
+        val r3 = RecommendedGameEntity(game = game2, recommendedTo = user, config = mapOf(), completed = false)
+        testService.recommendedGameRepository.saveAll(listOf(r1, r2, r3))
+
+        val results = recommendedGameService.getRecommendationsToUserAndGame(user.username, game1.id, null)
+        // should return only the two recommendations that belong to game1
+        assertEquals(2, results.size)
+        assertTrue(results.all { it.gameId == game1.id })
+    }
+
+    @Test
+    fun `getAllRecommendedToUser should return only non completed active games and respect acceptedGameIds`() {
+        // create active and inactive games
+        val activeGame = createGame()
+        val inactiveGame = createGame().apply { active = false }
+        val savedActive = testService.gameRepository.save(activeGame)
+        val savedInactive = testService.gameRepository.save(inactiveGame)
+
+        // create recommendations: one active & incomplete, one inactive & incomplete, one active & completed
+        val rActiveIncomplete = RecommendedGameEntity(game = savedActive, recommendedTo = user, config = mapOf(), completed = false)
+        val rInactiveIncomplete = RecommendedGameEntity(game = savedInactive, recommendedTo = user, config = mapOf(), completed = false)
+        val rActiveCompleted = RecommendedGameEntity(game = savedActive, recommendedTo = user, config = mapOf(), completed = true)
+        testService.recommendedGameRepository.saveAll(listOf(rActiveIncomplete, rInactiveIncomplete, rActiveCompleted))
+
+        // when no acceptedGameIds provided, only active and not completed should be returned
+        val results = recommendedGameService.getAllRecommendedToUser(user.username, null)
+        assertEquals(1, results.size)
+        assertEquals(savedActive.id, results[0].gameId)
+
+        // when acceptedGameIds contains only the inactive game's id, result should be empty (inactive filtered out)
+        val resultsAcceptedOnlyInactive = recommendedGameService.getAllRecommendedToUser(user.username, listOf(savedInactive.id!!))
+        assertEquals(0, resultsAcceptedOnlyInactive.size)
+
+        // when acceptedGameIds contains the active game's id, it should be returned
+        val resultsAcceptedActive = recommendedGameService.getAllRecommendedToUser(user.username, listOf(savedActive.id!!))
+        assertEquals(1, resultsAcceptedActive.size)
+        assertEquals(savedActive.id, resultsAcceptedActive[0].gameId)
+    }
+
+    @Test
+    fun `addRecommendation should save recommendation and set recommender and recommendedTo correctly`() {
+        // create and save a recommender user
+        val recommenderUser = testService.createUnsavedTestUser().copy(username = "recommender_user")
+        testService.saveUser(recommenderUser)
+
+        // ensure target user and game exist
+        val targetUser = user
+        val game = testService.createAndSaveGame()
+
+        val dto = RecommendationDto(game.id!!, mapOf("level" to 1), targetUser.username)
+        val savedRecommendation = recommendedGameService.addRecommendation(dto, recommenderUser.username)
+
+        // validate the saved recommendation
+        assertEquals(targetUser.username, savedRecommendation.recommendedTo.username)
+        assertNotNull(savedRecommendation.recommender)
+        assertEquals(recommenderUser.username, savedRecommendation.recommender!!.username)
+        assertEquals(game.id, savedRecommendation.game.id)
+        // config is at least not empty (special settings may be applied)
+        assertTrue(savedRecommendation.config.isNotEmpty())
     }
 
     private fun createRecommendedGame(): RecommendedGameEntity {
