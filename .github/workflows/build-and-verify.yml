@@ -1,0 +1,73 @@
+name: Pull Request Build & Test
+
+on:
+  pull_request:
+    branches:
+      - main
+      - development
+
+jobs:
+  build-and-test-auth-server:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./backend/auth_server/gradlew
+
+      - name: Build and run tests
+        run: ./backend/auth_server/gradlew clean build
+
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            backend/auth_server/build/reports/tests/
+            backend/auth_server/build/test-results/
+            
+  build-and-test-resource-server:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout source resource-server
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./backend/resource_server/gradlew
+
+      - name: Run business critical coverage
+        run: ./backend/resource_server/gradlew businessCriticalCoverage
+
+      - name: Upload test coverage reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            backend/resource_server/build/reports/tests/
+            backend/resource_server/build/test-results/
+          
