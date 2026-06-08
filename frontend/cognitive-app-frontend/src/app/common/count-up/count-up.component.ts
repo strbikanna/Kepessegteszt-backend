@@ -41,15 +41,7 @@ import {Observable} from "rxjs";
 })
 export class NumberPipe implements PipeTransform {
   transform(value: number): string {
-    const millions = Math.floor(value / 1_000_000);
-    const thousands = Math.floor((value % 1_000_000) / 1_000);
-    const rest = value % 1_000;
-    if(millions){
-      return `${millions} ${thousands} ${rest}`
-    }
-    if(thousands){
-      return `${thousands} ${rest}`
-    }
-    else return `${rest}`
+    return new Intl.NumberFormat('de-DE', {compactDisplay: "long"})
+        .format(value).replaceAll('.', ' ');
   }
 }
