@@ -22,7 +22,7 @@
             </div>
 
             <!-- LLM description -->
-            <mat-progress-bar *ngIf="loadingDescription" mode="buffer"></mat-progress-bar>
+            <app-long-wait-loading *ngIf="loadingDescription"/>
             <h2 class="text-left" *ngIf="profileDescription">{{text.llm.llm_text}}</h2>
             <p class="description my-3" [innerHTML]="profileDescription?.generatedText"></p>
 

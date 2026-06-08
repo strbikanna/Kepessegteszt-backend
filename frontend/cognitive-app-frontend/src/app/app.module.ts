@@ -105,14 +105,13 @@ import {
 } from "./pages/admin/recommendation/special-settings-form/special-settings-form.component";
 import {CountUpComponent, NumberPipe} from "./common/count-up/count-up.component";
 import {ImpersonationHeaderComponent} from "./general/impersonation-header/impersonation-header.component";
+import {LongWaitLoadingComponent} from "./common/long-wait-loading/long-wait-loading.component";
 
 
 @NgModule({ declarations: [
         AppComponent,
-        LoginComponent,
         HomeComponent,
         ProfilePageComponent,
-        HeaderComponent,
         ImpersonationComponent,
         AlertDialogComponent,
         CognitiveProfilePageComponent,
@@ -144,13 +143,10 @@ import {ImpersonationHeaderComponent} from "./general/impersonation-header/imper
         RatioScaleComponent,
         UserAutocompleteComponent,
         CandlestickChartComponent,
-        AdminPageComponent,
-        UserSearchComponent,
         AdminCognitiveProfilePageComponent,
         DatePickerComponent,
         UpAndDownButtonComponent,
         AdminProfileDataComparisonPageComponent,
-        SideMenuComponent,
         TrueFalsePipe,
         GroupManagementComponent,
         GroupTreeComponent,
@@ -163,7 +159,6 @@ import {ImpersonationHeaderComponent} from "./general/impersonation-header/imper
         PrivacyPolicyPageComponent,
         FooterComponent,
         DeleteAccountComponent,
-        HorizontalScrollerComponent,
         UserRegisterComponent,
         AbilityPageComponent,
         EditableAbilityCardComponent,
@@ -180,25 +175,25 @@ import {ImpersonationHeaderComponent} from "./general/impersonation-header/imper
         RouterModule.forRoot(appRoutes),
         AuthModule.forRoot({
             config: [{
-                    configId: 'baseConfig',
-                    authority: environment.authServerUrl,
-                    redirectUrl: environment.clientUrl,
-                    postLogoutRedirectUri: environment.clientUrl,
-                    clientId: environment.clientId,
-                    scope: 'openid',
-                    responseType: 'code',
-                    silentRenew: true,
-                    useRefreshToken: false,
-                    silentRenewUrl: `${environment.clientUrl}/silent-renew.html`,
-                    renewTimeBeforeTokenExpiresInSeconds: 10,
-                    logLevel: LogLevel.Debug,
-                }],
+                configId: 'baseConfig',
+                authority: environment.authServerUrl,
+                redirectUrl: environment.clientUrl,
+                postLogoutRedirectUri: environment.clientUrl,
+                clientId: environment.clientId,
+                scope: 'openid',
+                responseType: 'code',
+                silentRenew: true,
+                useRefreshToken: false,
+                silentRenewUrl: `${environment.clientUrl}/silent-renew.html`,
+                renewTimeBeforeTokenExpiresInSeconds: 10,
+                logLevel: LogLevel.Debug,
+            }],
         }),
         MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, BrowserAnimationsModule, MatCardModule, MatListModule, MatTabsModule, MatDialogModule, MatPaginatorModule, MatChipsModule, ReactiveFormsModule, MatInputModule, MatExpansionModule, MatCheckboxModule, MatAutocompleteModule, MatProgressBarModule,
         NgxEchartsModule.forRoot({
             echarts
         }),
-        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule, MatSliderModule, MatSnackBarModule, MatTableModule, MatTreeModule, ImpersonationHeaderComponent], providers: [
+        MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatDividerModule, MatRadioModule, MatTooltipModule, MatButtonToggleModule, FormsModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, MatSidenavModule, MatSliderModule, MatSnackBarModule, MatTableModule, MatTreeModule, ImpersonationHeaderComponent, LoginComponent, HeaderComponent, AdminPageComponent, SideMenuComponent, HorizontalScrollerComponent, UserSearchComponent, LongWaitLoadingComponent], providers: [
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,

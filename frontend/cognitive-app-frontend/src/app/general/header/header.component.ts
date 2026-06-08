@@ -1,14 +1,26 @@
 import {ChangeDetectorRef, Component, EventEmitter, HostListener, OnInit, Output} from '@angular/core';
 import {UserInfo} from "../../auth/userInfo";
-import {Role} from "../../utils/constants";
+import {Permission, Role} from "../../utils/constants";
 import {TEXTS} from "../../text/app.text_messages";
 import {imagePaths} from "../../utils/app.image_resources";
+import { MatToolbar } from '@angular/material/toolbar';
+import { NgIf } from '@angular/common';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ImpersonationHeaderComponent } from '../impersonation-header/impersonation-header.component';
+import { LoginComponent } from '../login/login.component';
+import {HasPermissionDirective} from "../../auth/has-permission.directive";
+import {HasAnyPermissionDirective} from "../../auth/has-any-permission.directive";
 
 
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss']
+    styleUrls: ['./header.component.scss'],
+    standalone: true,
+    imports: [MatToolbar, NgIf, MatIconButton, MatMenuTrigger, MatIcon, RouterLink, MatButton, MatMenu, MatMenuItem, RouterLinkActive, ImpersonationHeaderComponent, LoginComponent, HasPermissionDirective, HasAnyPermissionDirective]
 })
 
 export class HeaderComponent implements OnInit{
@@ -91,4 +103,5 @@ export class HeaderComponent implements OnInit{
         return this.isAdmin || this.isScientist || this.isTeacher
     }
 
+    protected readonly Permission = Permission;
 }

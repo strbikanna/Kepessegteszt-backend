@@ -4,7 +4,7 @@ import {User} from "../../model/user/user.model";
 import {UserInfo} from "../../auth/userInfo";
 import {TEXTS} from "../../text/app.text_messages";
 import {AppConstants, Role} from "../../utils/constants";
-import {LoginService} from "../login/login.service";
+import {LoginService} from "../../service/login/login.service";
 import {NgIf} from "@angular/common";
 import {MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";

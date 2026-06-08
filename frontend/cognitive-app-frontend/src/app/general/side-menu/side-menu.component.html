@@ -4,46 +4,46 @@
             {{ text.section_title.admin }}
         </p>
         <mat-divider/>
-        <button mat-menu-item *ngIf="hasAccessToUserManagement()" routerLink="/admin" [routerLinkActive]="['activeLink']">
+        <button mat-menu-item *appHasPermission="Permission.MANAGE_USERS_DATA" routerLink="/admin" [routerLinkActive]="['activeLink']">
             <mat-icon>manage_accounts</mat-icon>
             <span>{{ text.user_management }}</span>
         </button>
-        <button mat-menu-item *ngIf="hasAccessToUserRegistration()" routerLink="/register-user" [routerLinkActive]="['activeLink']">
+        <button mat-menu-item *appHasPermission="Permission.MANAGE_USER_REGISTRATION"  routerLink="/register-user" [routerLinkActive]="['activeLink']">
             <mat-icon>person_add</mat-icon>
             <span>{{ text.user_registration }}</span>
         </button>
-        <button mat-menu-item *ngIf="hasAccessToGroupManagement()" routerLink="/group-management" [routerLinkActive]="['activeLink']">
+        <button mat-menu-item *appHasPermission="Permission.MANAGE_GROUPS" routerLink="/group-management" [routerLinkActive]="['activeLink']">
             <mat-icon>group</mat-icon>
             <span>{{ text.group_management}}</span>
         </button>
-        <button mat-menu-item *ngIf="hasAccessToUserManagement()" routerLink="/ability" [routerLinkActive]="['activeLink']">
+        <button mat-menu-item  *appHasPermission="Permission.MANAGE_ABILITIES" routerLink="/ability" [routerLinkActive]="['activeLink']">
             <mat-icon>saved_search</mat-icon>
             <span>{{ text.ability_management }}</span>
         </button>
 
         <p class="description ml-3">{{ text.section_title.profile }}</p>
         <mat-divider/>
-        <button mat-menu-item *ngIf="hasAccessToOwnCognitiveProfile()" routerLink="/cognitive-profile"
+        <button mat-menu-item *appHasPermission="Permission.VIEW_OWN_COGNITIVE_PROFILE"  routerLink="/cognitive-profile"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>psychology</mat-icon>
             <span>{{ text.cognitive_profile }}</span>
         </button>
-        <button mat-menu-item *ngIf="hasAccessToAdminCognitiveProfile()" routerLink="/cognitive-profile-admin"
+        <button mat-menu-item *appHasPermission="Permission.VIEW_OTHERS_COGNITIVE_PROFILES" routerLink="/cognitive-profile-admin"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>psychology</mat-icon>
             <span>{{ text.admin_cognitive_profile }}</span>
         </button>
-        <button mat-menu-item *ngIf="hasAccessToCognitiveProfileEdit()" routerLink="/cognitive-profile-edit"
+        <button mat-menu-item *appHasPermission="Permission.MANAGE_OTHERS_COGNITIVE_PROFILES" routerLink="/cognitive-profile-edit"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>tune</mat-icon>
             <span>{{ text.cognitive_profile_edit }}</span>
         </button>
-        <button mat-menu-item *ngIf="hasAccessToOwnCognitiveProfileCompare()" routerLink="/profile-compare"
+        <button mat-menu-item *appHasPermission="Permission.VIEW_OWN_COGNITIVE_PROFILE_COMPARISON" routerLink="/profile-compare"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>analytics</mat-icon>
             <span>{{ text.own_profile_comparison }}</span>
         </button>
-        <button mat-menu-item *ngIf="hasAccessToAdminCognitiveProfileCompare()" routerLink="/profile-compare-admin"
+        <button mat-menu-item *appHasPermission="Permission.VIEW_OTHERS_COGNITIVE_PROFILE_COMPARISON" routerLink="/profile-compare-admin"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>query_stats</mat-icon>
             <span>{{ text.profile_comparison }}</span>
@@ -52,20 +52,20 @@
 
         <p class="description ml-3">{{ text.section_title.game }}</p>
         <mat-divider/>
-        <button mat-menu-item *ngIf="loginStatus" routerLink="/result" [routerLinkActive]="['activeLink']">
+        <button mat-menu-item *appHasAnyPermission="[Permission.VIEW_OTHERS_RESULTS, Permission.VIEW_OWN_RESULTS]" routerLink="/result" [routerLinkActive]="['activeLink']">
             <mat-icon>fact_check</mat-icon>
             <span>{{ text.result_management }}</span>
         </button>
-        <button mat-menu-item *ngIf="hasAccessToGameManagement()" routerLink="/game-management"
+        <button mat-menu-item *appHasPermission="Permission.MANAGE_GAMES" routerLink="/game-management"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>sports_esports</mat-icon>
             <span>{{ text.game_management }}</span>
         </button>
-        <button mat-menu-item *ngIf="hasAccessToGames()" routerLink="/games">
+        <button mat-menu-item *appHasPermission="Permission.VIEW_GAMES" routerLink="/games">
             <mat-icon>sports_esports</mat-icon>
             <span>{{ text.games }}</span>
         </button>
-        <button mat-menu-item *ngIf="hasAccessToRecommendations()" routerLink="/recommendation"
+        <button mat-menu-item *appHasAnyPermission="[Permission.MANAGE_RECOMMENDATIONS]"  routerLink="/recommendation"
                 [routerLinkActive]="['activeLink']">
             <mat-icon>reviews</mat-icon>
             <span>{{ text.game_recommendation }}</span>

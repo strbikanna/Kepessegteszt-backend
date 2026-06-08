@@ -8,7 +8,7 @@
         </div>
         <h3 >{{text.llm.llm_text}}</h3>
         <p class="description my-3" [innerHTML]="profileDescription"></p>
-        <mat-progress-bar *ngIf="loadingDescription" mode="buffer"></mat-progress-bar>
+        <app-long-wait-loading *ngIf="loadingDescription"/>
         <app-date-picker (dateChosen)="onDateChosen($event)"></app-date-picker>
     </div>
 </div>

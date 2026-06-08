@@ -7,7 +7,7 @@ import {UserDataService} from "../../../service/user-data/user-data.service";
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {AlertDialogComponent} from "../../../common/alert-dialog/alert-dialog.component";
-import {LoginService} from "../../../general/login/login.service";
+import {LoginService} from "../../../service/login/login.service";
 import {Router} from "@angular/router";
 
 @Component({

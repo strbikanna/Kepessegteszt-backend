@@ -37,7 +37,9 @@ export class LoginService {
                 const {isAuthenticated, userData, accessToken, idToken, configId} = loginResponse;
                 if (isAuthenticated) {
                     console.log('User authentication successful')
-                    UserInfo.currentUser = this.convertUserData(userData)
+                    const loggedInUser = this.convertUserData(userData)
+                    UserInfo.currentUser = loggedInUser
+                    UserInfo.currentUserSignal.set(loggedInUser)
                     UserInfo.accessToken = accessToken
                 }
                 UserInfo.loginStatus.next(isAuthenticated)
@@ -86,9 +88,6 @@ export class LoginService {
     }
 
     private convertUserData(userInfoResponse: any): AuthUser {
-        console.log('Parsing userinfo: ')
-        console.log(userInfoResponse)
-
         const user: AuthUser = {
             id: userInfoResponse.id,
             username: userInfoResponse.sub,
@@ -98,22 +97,6 @@ export class LoginService {
             roles: userInfoResponse.roles.map((role: string) => role.toUpperCase()),
             contacts: userInfoResponse.contacts
         };
-
-        user.roles = user.roles.map(role => {
-            let roleName = role
-            switch (role) {
-                case Role.SCIENTIST_REQUEST:
-                    roleName = "requested scientist"
-                    break
-                case Role.TEACHER_REQUEST :
-                    roleName = "requested teacher"
-                    break
-                case Role.PARENT_REQUEST :
-                    roleName = "requested parent"
-                    break
-            }
-            return roleName.toUpperCase()
-        })
         return user;
     }
 
@@ -121,6 +104,7 @@ export class LoginService {
         this.oidcSecurityService.getUserData(this.BASE_CONFIG_ID).subscribe(userData => {
             if (userData) {
                 UserInfo.currentUser = this.convertUserData(userData)
+                UserInfo.currentUserSignal.set(UserInfo.currentUser)
                 UserInfo.loginStatus.next(true)
             }
         });

@@ -45,6 +45,12 @@ export const TEXTS = {
         description: 'Megtekintheted az Android alkalmazásban elérhető játékokat.',
         download_link: 'Android alkalmazás letöltése',
     },
+    loading_messages: [
+        'Kognitív képességek kinyerése a tudástárból',
+        'Képességek értelmezése',
+        'Képességértékek kiértékelése',
+        'Szöveges válasz előállítása'
+    ],
     user_info: {
         description: 'Felhasználói profil információk',
         personal_data_title: 'Személyes adatok',

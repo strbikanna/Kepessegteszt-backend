@@ -15,57 +15,57 @@
     </div>
     <mat-menu #menu="matMenu" class="w-12">
         <div *ngIf="displayMobileMenu()">
-            <button mat-menu-item *ngIf="hasAccessToOwnCognitiveProfile()" routerLink="/cognitive-profile">
+            <button mat-menu-item *appHasPermission="Permission.VIEW_OWN_COGNITIVE_PROFILE" routerLink="/cognitive-profile">
                 <mat-icon>psychology</mat-icon>
                 <span>{{ text.cognitive_profile }}</span>
             </button>
-            <button mat-menu-item *ngIf="hasAccessToUserManagement()" routerLink="/admin">
+            <button mat-menu-item *appHasPermission="Permission.MANAGE_USERS_DATA" routerLink="/admin">
                 <mat-icon>manage_accounts</mat-icon>
                 <span>{{ text.user_management }}</span>
             </button>
-            <button mat-menu-item *ngIf="hasAccessToUserRegistration()" routerLink="/register-user">
+            <button mat-menu-item *appHasPermission="Permission.MANAGE_USER_REGISTRATION" routerLink="/register-user">
                 <mat-icon>person_add</mat-icon>
                 <span>{{ text.user_registration }}</span>
             </button>
-            <button mat-menu-item *ngIf="hasAccessToUserManagement()" routerLink="/ability"
+            <button mat-menu-item *appHasPermission="Permission.MANAGE_ABILITIES" routerLink="/ability"
                     [routerLinkActive]="['activeLink']">
                 <mat-icon>saved_search</mat-icon>
                 <span>{{ text.ability_management }}</span>
             </button>
-            <button mat-menu-item *ngIf="hasAccessToGroupManagement()" routerLink="/group-management">
+            <button mat-menu-item *appHasPermission="Permission.MANAGE_GROUPS" routerLink="/group-management">
                 <mat-icon>group</mat-icon>
                 <span>{{ text.group_management }}</span>
             </button>
-            <button mat-menu-item *ngIf="loginStatus" routerLink="/result">
+            <button mat-menu-item *appHasAnyPermission="[Permission.VIEW_OTHERS_RESULTS, Permission.VIEW_OWN_RESULTS]" routerLink="/result">
                 <mat-icon>fact_check</mat-icon>
                 <span>{{ text.result_management }}</span>
             </button>
-            <button mat-menu-item *ngIf="hasAccessToOwnCognitiveProfileCompare()" routerLink="/profile-compare">
+            <button mat-menu-item *appHasPermission="Permission.VIEW_OWN_COGNITIVE_PROFILE_COMPARISON" routerLink="/profile-compare">
                 <mat-icon>analytics</mat-icon>
                 <span>{{ text.own_profile_comparison }}</span>
             </button>
-            <button mat-menu-item *ngIf="hasAccessToAdminCognitiveProfileCompare()"
+            <button mat-menu-item *appHasPermission="Permission.VIEW_OTHERS_COGNITIVE_PROFILE_COMPARISON"
                     routerLink="/profile-compare-admin">
                 <mat-icon>query_stats</mat-icon>
                 <span>{{ text.profile_comparison }}</span>
             </button>
-            <button mat-menu-item *ngIf="hasAccessToGameManagement()" routerLink="/game-management">
+            <button mat-menu-item *appHasPermission="Permission.MANAGE_GAMES" routerLink="/game-management">
                 <mat-icon>sports_esports</mat-icon>
                 <span>{{ text.game_management }}</span>
             </button>
-            <button mat-menu-item *ngIf="hasAccessToGames()" routerLink="/games">
+            <button mat-menu-item *appHasPermission="Permission.VIEW_GAMES" routerLink="/games">
                 <mat-icon>sports_esports</mat-icon>
                 <span>{{ text.games }}</span>
             </button>
-            <button mat-menu-item *ngIf="hasAccessToRecommendations()" routerLink="/recommendation">
+            <button mat-menu-item *appHasAnyPermission="[Permission.MANAGE_RECOMMENDATIONS]" routerLink="/recommendation">
                 <mat-icon>reviews</mat-icon>
                 <span>{{ text.game_recommendation }}</span>
             </button>
-            <button mat-menu-item *ngIf="hasAccessToAdminCognitiveProfile()" routerLink="/cognitive-profile-admin">
+            <button mat-menu-item *appHasPermission="Permission.VIEW_OTHERS_COGNITIVE_PROFILES" routerLink="/cognitive-profile-admin">
                 <mat-icon>psychology</mat-icon>
                 <span>{{ text.cognitive_profile }}</span>
             </button>
-            <button mat-menu-item *ngIf="hasAccessToCognitiveProfileEdit()" routerLink="/cognitive-profile-edit">
+            <button mat-menu-item *appHasPermission="Permission.MANAGE_OTHERS_COGNITIVE_PROFILES" routerLink="/cognitive-profile-edit">
                 <mat-icon>tune</mat-icon>
                 <span>{{ text.cognitive_profile_edit }}</span>
             </button>

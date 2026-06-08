@@ -15,11 +15,11 @@
             <p class="username">{{ user.username }}</p>
         </div>
         <div class="role-container">
-            <mat-chip *ngIf="user.roles.includes('ADMIN')">ADMIN</mat-chip>
-            <mat-chip *ngIf="user.roles.includes('TEACHER')">TANÁR</mat-chip>
-            <mat-chip *ngIf="user.roles.includes('STUDENT')">DIÁK</mat-chip>
-            <mat-chip *ngIf="user.roles.includes('SCIENTIST')">KUTATÓ</mat-chip>
-            <mat-chip *ngIf="user.roles.includes('PARENT')">SZÜLŐ</mat-chip>
+            <mat-chip *ngIf="user.roles.includes(Role.ADMIN)">ADMIN</mat-chip>
+            <mat-chip *ngIf="user.roles.includes(Role.TEACHER)">TANÁR</mat-chip>
+            <mat-chip *ngIf="user.roles.includes(Role.STUDENT)">DIÁK</mat-chip>
+            <mat-chip *ngIf="user.roles.includes(Role.SCIENTIST)">KUTATÓ</mat-chip>
+            <mat-chip *ngIf="user.roles.includes(Role.PARENT)">SZÜLŐ</mat-chip>
             <mat-icon *ngIf="hasRequestedRole(user)">help</mat-icon>
         </div>
     </div>
