@@ -25,10 +25,12 @@ jobs:
           cache: gradle
 
       - name: Make Gradle wrapper executable
-        run: chmod +x ./backend/auth_server/gradlew
+        working-directory: backend/auth_server
+        run: chmod +x ./gradlew
 
       - name: Build and run tests
-        run: ./backend/auth_server/gradlew clean build
+        working-directory: backend/auth_server
+        run: ./gradlew clean build
 
       - name: Upload test reports
         if: failure()
@@ -57,10 +59,12 @@ jobs:
           cache: gradle
 
       - name: Make Gradle wrapper executable
-        run: chmod +x ./backend/resource_server/gradlew
+        working-directory: backend/resource_server
+        run: chmod +x ./gradlew
 
       - name: Run business critical coverage
-        run: ./backend/resource_server/gradlew businessCriticalCoverage
+        working-directory: backend/resource_server
+        run: ./gradlew businessCriticalCoverage
 
       - name: Upload test coverage reports
         if: failure()
